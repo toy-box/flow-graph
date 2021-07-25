@@ -1,0 +1,12 @@
+{
+  "version": "0.4.11",
+  "npmClient": "npm",
+  "useWorkspaces": true,
+  "npmClientArgs": ["--ignore-engines"],
+  "command": {
+    "version": {
+      "forcePublish": true,
+      "exact": true
+    }
+  }
+}

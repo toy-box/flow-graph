@@ -1,0 +1,32 @@
+{
+  "name": "@toy-box/flow-nodes",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "es"
+  ],
+  "scripts": {
+    "build:tsc": "tsc --project tsconfig.build.json --declarationDir ./lib && tsc --project tsconfig.build.json --declarationDir ./es",
+    "build:playground": "webpack-cli --config playground/webpack.prod.ts",
+    "start": "webpack-dev-server --config playground/webpack.dev.ts"
+  },
+  "author": "wishgood@gmail.com",
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@types/react": ">=16.8.0 || >=17.0.0",
+    "@types/react-dom": ">=16.8.0 || >=17.0.0",
+    "react": ">=16.8.0 || >=17.0.0",
+    "react-dom": ">=16.8.0 || >=17.0.0",
+    "react-is": ">=16.8.0 || >=17.0.0"
+  },
+  "dependencies": {
+    "classnames": "^2.3.1"
+  }
+}

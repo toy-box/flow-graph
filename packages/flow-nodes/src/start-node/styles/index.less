@@ -1,0 +1,24 @@
+@import '../../theme.less';
+
+.tbox-flow-start-node {
+  position: relative;
+  width: @node-width;
+  height: @node-height;
+  border: 1px solid fade(black, 10%);
+  border-radius: 50%;
+  background-color: aqua;
+  box-sizing: border-box;
+  &-extend {
+    position: absolute;
+    // display: none;
+    width: 100px;
+    height: 200px;
+    background-color: bisque;
+  }
+  // &.active {
+  //   .tbox-flow-start-node-extend {
+  //     position: absolute;
+  //     display: block;
+  //   }
+  // }
+}
