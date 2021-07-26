@@ -1,7 +1,8 @@
 import { Edge, Graph } from '@antv/x6';
 import '@antv/x6-react-shape';
 import { FlowGraph } from './FlowGraph';
-import { FlowCanavs } from './FlowCanvas';
+import { ICanvas } from './Canvas';
+import { AntvCanavs } from './AntvCanvas';
 import { FlowNode, IFlowNodeProps } from './FlowNode';
 import { uid } from '../shared';
 
@@ -34,14 +35,14 @@ const makeRightSideVertices = (source: FlowNode, target: FlowNode) => {
 export class Flow {
   id: string;
   flowGraph: FlowGraph;
-  canvas?: FlowCanavs<any>;
+  canvas?: ICanvas;
 
   constructor() {
     this.id = uid();
     this.flowGraph = new FlowGraph({});
   }
 
-  setCanvas(canvas: FlowCanavs<any>) {
+  setCanvas(canvas: ICanvas) {
     this.canvas = canvas;
   }
 
@@ -64,7 +65,7 @@ export class Flow {
               target: sourceNode.areaEndNode.id,
               vertices: makeLeftSideVertices(
                 sourceNode,
-                sourceNode.areaEndNode,
+                sourceNode.areaEndNode
               ),
             },
           ]);
@@ -75,7 +76,7 @@ export class Flow {
               target: sourceNode.cycleBegin.id,
               vertices: makeRightSideVertices(
                 sourceNode,
-                sourceNode.cycleBegin,
+                sourceNode.cycleBegin
               ),
             });
           }
@@ -105,11 +106,24 @@ export class Flow {
     if (this.canvas) {
       if (node.type === 'begin') {
         this.canvas.addNode({
-          ...node,
-          component: 'StartNode',
+          id: node.id,
+          type: node.type,
+          x: node.x,
+          y: node.y,
+          width: node.width,
+          height: node.height,
+          sharp: 'StartNode',
         });
       } else {
-        this.canvas.addNode({ ...node, label: node.id });
+        this.canvas.addNode({
+          id: node.id,
+          type: node.type,
+          x: node.x,
+          y: node.y,
+          width: node.width,
+          height: node.height,
+          sharp: 'StartNode',
+        });
       }
     }
   };

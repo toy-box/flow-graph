@@ -1,20 +1,21 @@
-import { Graph, Node, Edge } from '@antv/x6';
 import { JSXElementConstructor } from 'react';
+import { Canvas } from 'butterfly-dag';
+import { ICanvas } from './Canvas';
 
 export interface NodeProps extends Node.Metadata {
   type: string;
 }
 
-export interface FlowCanavsProps<T> {
-  canvas: Graph;
+export interface ButterflyCanavsProps<T> {
+  canvas: Canvas;
   components?: Record<string, JSXElementConstructor<T>>;
 }
 
-export class FlowCanavs<T> {
-  canvas: Graph;
+export class AntvCanavs<T> implements ICanvas {
+  canvas: Canvas;
   components: Record<string, JSXElementConstructor<T>>;
 
-  constructor(props: FlowCanavsProps<T>) {
+  constructor(props: ButterflyCanavsProps<T>) {
     this.canvas = props.canvas;
     this.components = props.components || {};
   }
