@@ -1,22 +1,7 @@
-export interface INodeMeta {
-  id: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  type: string;
-  sharp?: string;
-}
-
-export interface IEdgeMeta {
-  id: string;
-  source: string;
-  target: string;
-}
-
+import { NodeProps, EdgeProps } from '../types';
 export interface ICanvas {
-  addNode: (node: INodeMeta) => void;
-  addNodes: (node: INodeMeta[]) => void;
-  addEdge: (edge: any) => void;
-  addEdges: (edge: any[]) => void;
+  addNode: (node: NodeProps) => void;
+  addNodes: (node: NodeProps[]) => void;
+  addEdge: (edge: EdgeProps) => void;
+  addEdges: (edge: EdgeProps[]) => void;
 }

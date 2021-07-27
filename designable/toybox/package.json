@@ -40,14 +40,13 @@
     "@types/react-dom": ">=16.8.0 || >=17.0.0",
     "antd": "^4.0.0",
     "react": ">=16.8.0 || >=17.0.0",
-    "react-dom": ">=16.8.0",
+    "react-dom": ">=16.8.0 || >=17.0.0",
     "react-is": ">=16.8.0 || >=17.0.0"
   },
   "dependencies": {
     "@toy-box/flow-graph": "^1.0.0",
     "@toy-box/flow-nodes": "^1.0.0",
-    "butterfly-dag": "^4.0.34",
-    "butterfly-react": "^0.0.34-beta"
+    "butterfly-dag": "^4.0.34"
   },
   "publishConfig": {
     "access": "public"

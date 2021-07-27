@@ -1,21 +1,18 @@
 import { JSXElementConstructor } from 'react';
 import { Canvas } from 'butterfly-dag';
 import { ICanvas } from './Canvas';
+import { EdgeProps, NodeProps } from '../types';
 
-export interface NodeProps extends Node.Metadata {
-  type: string;
-}
-
-export interface ButterflyCanavsProps<T> {
+export interface ButterflyCanvasProps<T> {
   canvas: Canvas;
   components?: Record<string, JSXElementConstructor<T>>;
 }
 
-export class AntvCanavs<T> implements ICanvas {
+export class ButterflyCanvas<T> implements ICanvas {
   canvas: Canvas;
   components: Record<string, JSXElementConstructor<T>>;
 
-  constructor(props: ButterflyCanavsProps<T>) {
+  constructor(props: ButterflyCanvasProps<T>) {
     this.canvas = props.canvas;
     this.components = props.components || {};
   }
@@ -47,13 +44,13 @@ export class AntvCanavs<T> implements ICanvas {
     this.canvas.freeze();
   }
 
-  addEdge(edge: Edge.Metadata) {
+  addEdge(edge: EdgeProps) {
     this.canvas.unfreeze();
     this.canvas.addEdge(edge);
     this.canvas.freeze();
   }
 
-  addEdges(edges: Edge.Metadata[]) {
+  addEdges(edges: EdgeProps[]) {
     this.canvas.unfreeze();
     this.canvas.addEdges(edges);
     this.canvas.freeze();

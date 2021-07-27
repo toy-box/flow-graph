@@ -1,6 +1,6 @@
 import { FlowGraph } from './FlowGraph';
-import { FlowNodeType } from '../types';
 import { uid } from '../shared';
+import { FlowNodeType } from '../types';
 
 const CYCLE_FLOW_WIDTH = 40;
 
@@ -86,10 +86,10 @@ export class FlowNode {
   get areaWidth(): number {
     if (this.innerNodes.length > 0) {
       const leftNode = this.innerNodes.reduce((prev, current) =>
-        prev.left > current.left ? current : prev,
+        prev.left > current.left ? current : prev
       );
       const rightNode = this.innerNodes.reduce((prev, current) =>
-        prev.right < current.right ? current : prev,
+        prev.right < current.right ? current : prev
       );
       return (
         rightNode.right -

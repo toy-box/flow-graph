@@ -1,21 +1,18 @@
-import { Graph, Node, Edge } from '@antv/x6';
+import { Graph, Edge } from '@antv/x6';
 import { JSXElementConstructor } from 'react';
 import { ICanvas } from './Canvas';
+import { NodeProps, EdgeProps } from '../types';
 
-export interface NodeProps extends Node.Metadata {
-  type: string;
-}
-
-export interface AntvCanavsProps<T> {
+export interface AntvCanvasProps<T> {
   canvas: Graph;
   components?: Record<string, JSXElementConstructor<T>>;
 }
 
-export class AntvCanavs<T> implements ICanvas {
+export class AntvCanvas<T> implements ICanvas {
   canvas: Graph;
   components: Record<string, JSXElementConstructor<T>>;
 
-  constructor(props: AntvCanavsProps<T>) {
+  constructor(props: AntvCanvasProps<T>) {
     this.canvas = props.canvas;
     this.components = props.components || {};
   }
@@ -47,7 +44,7 @@ export class AntvCanavs<T> implements ICanvas {
     this.canvas.freeze();
   }
 
-  addEdge(edge: Edge.Metadata) {
+  addEdge(edge: EdgeProps) {
     this.canvas.unfreeze();
     this.canvas.addEdge(edge);
     this.canvas.freeze();
