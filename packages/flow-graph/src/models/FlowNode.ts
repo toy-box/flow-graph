@@ -13,6 +13,7 @@ export interface IFlowNodeProps extends Omit<NodeProps, 'id'> {
   x: number;
   y: number;
   targets?: string[];
+  component?: string;
   contenxtMenu?: IContextMenuItem[];
 }
 
@@ -25,6 +26,7 @@ export class FlowNode {
   x: number;
   y: number;
   targets?: string[];
+  component?: string;
   contenxtMenu?: IContextMenuItem[];
 
   constructor(props: IFlowNodeProps, flowGraph: FlowGraph) {
@@ -35,6 +37,7 @@ export class FlowNode {
     this.x = props.x || 0;
     this.y = props.y || 0;
     this.targets = props.targets;
+    this.component = props.component;
     this.contenxtMenu = props.contenxtMenu;
     this.flowGraph = flowGraph;
   }

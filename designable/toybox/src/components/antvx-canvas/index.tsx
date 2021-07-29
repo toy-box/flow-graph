@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { Graph, Shape } from '@antv/x6';
+import { Graph } from '@antv/x6';
 import { AntvCanvas as FlowCanvas } from '@toy-box/flow-graph';
-import { StartNode } from '@toy-box/flow-nodes';
+import { StartNode, ExtendNode } from '@toy-box/flow-nodes';
 import { useFlow } from '../../hooks';
 
 export const AntvxCanvas = () => {
@@ -26,7 +26,8 @@ export const AntvxCanvas = () => {
         flowGraph: flow.flowGraph,
         canvas: graph,
         components: {
-          begin: StartNode,
+          StartNode,
+          ExtendNode,
         },
       })
     );

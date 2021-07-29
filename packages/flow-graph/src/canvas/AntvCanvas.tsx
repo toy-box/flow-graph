@@ -9,9 +9,10 @@ Shape.Edge.config({
     line: {
       targetMarker: null,
       strokeWidth: 6,
-      stroke: '#cfcfcf',
+      stroke: '#d9d9d9',
     },
   },
+  connector: 'rounded',
 });
 
 export interface AntvCanvasProps<T> {
@@ -32,8 +33,9 @@ export class AntvCanvas<T> implements ICanvas {
   }
 
   protected makeNode = (nodeProps: NodeProps) => {
-    const { type, ...node } = nodeProps;
-    const component = this.components[type];
+    const { type, component: componentName, ...node } = nodeProps;
+    const component = this.components[componentName];
+    console.log('componentName', componentName, nodeProps);
     if (component) {
       return {
         ...node,
@@ -45,15 +47,6 @@ export class AntvCanvas<T> implements ICanvas {
       ...node,
     };
   };
-
-  protected makeEdge(edge: EdgeProps) {
-    return Object.assign(edge, {
-      attrs: {
-        stroke: 'red',
-        strokeWidth: 3,
-      },
-    });
-  }
 
   addNode(node: NodeProps) {
     this.canvas.unfreeze();
@@ -68,17 +61,14 @@ export class AntvCanvas<T> implements ICanvas {
   }
 
   addEdge(edge: EdgeProps) {
-    console.log('edge !!!', this.makeEdge(edge));
     this.canvas.unfreeze();
-    this.canvas.addEdge(this.makeEdge(edge));
+    this.canvas.addEdge(edge);
     this.canvas.freeze();
   }
 
   addEdges(edges: EdgeProps[]) {
-    const _edges = edges.map((edge) => this.makeEdge(edge));
-    console.log('edges !!!', _edges);
     this.canvas.unfreeze();
-    this.canvas.addEdges(_edges);
+    this.canvas.addEdges(edges);
     this.canvas.freeze();
   }
 }

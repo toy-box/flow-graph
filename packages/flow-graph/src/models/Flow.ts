@@ -103,30 +103,17 @@ export class Flow {
   }
 
   addGraphNode = (node: FlowNode) => {
-    if (this.canvas) {
-      if (node.type === 'begin') {
-        this.canvas.addNode({
-          id: node.id,
-          type: node.type,
-          x: node.x,
-          y: node.y,
-          width: node.width,
-          height: node.height,
-          component: 'StartNode',
-          contextMenu: node.contenxtMenu,
-        });
-      } else {
-        this.canvas.addNode({
-          id: node.id,
-          type: node.type,
-          x: node.x,
-          y: node.y,
-          width: node.width,
-          height: node.height,
-          component: 'StartNode',
-        });
-      }
-    }
+    this.canvas &&
+      this.canvas.addNode({
+        id: node.id,
+        type: node.type,
+        x: node.x,
+        y: node.y,
+        width: node.width,
+        height: node.height,
+        component: node.component,
+        contextMenu: node.contenxtMenu,
+      });
   };
 
   addGraphEdge = (edge: EdgeProps) => {

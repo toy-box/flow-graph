@@ -1,4 +1,5 @@
 import React, { FC, CSSProperties } from 'react';
+import { PlayFill } from '@airclass/icons';
 import classNames from 'classnames';
 import { Dropdown, Menu } from 'antd';
 import './styles';
@@ -37,7 +38,9 @@ export const StartNode: FC<StartNodeProps> = ({ className, style }) => {
       <div
         className={classNames('tbox-flow-start-node', 'active', className)}
         style={style}
-      ></div>
+      >
+        <PlayFill />
+      </div>
     </Dropdown>
   );
 };
