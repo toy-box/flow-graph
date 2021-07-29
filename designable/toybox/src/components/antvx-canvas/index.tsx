@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { Graph } from '@antv/x6';
-import { FlowCanavs } from '@toy-box/flow-graph';
+import { Graph, Shape } from '@antv/x6';
+import { AntvCanvas as FlowCanvas } from '@toy-box/flow-graph';
 import { StartNode } from '@toy-box/flow-nodes';
 import { useFlow } from '../../hooks';
 
@@ -13,11 +13,8 @@ export const AntvxCanvas = () => {
 
   useEffect(() => {
     const graph = new Graph({
-      container: document.getElementById('flow-canvas') || undefined,
-      scroller: {
-        enabled: true,
-        pannable: true,
-      },
+      container: document.getElementById('flow-canvas'),
+      panning: true,
       grid: true,
       background: {
         color: '#fafafa',
@@ -25,12 +22,13 @@ export const AntvxCanvas = () => {
       frozen: true,
     });
     flow.setCanvas(
-      new FlowCanavs({
+      new FlowCanvas({
+        flowGraph: flow.flowGraph,
         canvas: graph,
         components: {
           begin: StartNode,
         },
-      }),
+      })
     );
   }, []);
 

@@ -1,17 +1,19 @@
 import { FlowGraph } from './FlowGraph';
 import { uid } from '../shared';
-import { FlowNodeType } from '../types';
+import { FlowNodeType, NodeProps } from '../types';
+import { IContextMenuItem } from '../canvas';
 
 const CYCLE_FLOW_WIDTH = 40;
 
-export interface IFlowNodeProps {
+export interface IFlowNodeProps extends Omit<NodeProps, 'id'> {
   id?: string;
-  type?: FlowNodeType;
-  width?: number;
-  height?: number;
-  x?: number;
-  y?: number;
+  type: FlowNodeType;
+  width: number;
+  height: number;
+  x: number;
+  y: number;
   targets?: string[];
+  contenxtMenu?: IContextMenuItem[];
 }
 
 export class FlowNode {
@@ -23,6 +25,7 @@ export class FlowNode {
   x: number;
   y: number;
   targets?: string[];
+  contenxtMenu?: IContextMenuItem[];
 
   constructor(props: IFlowNodeProps, flowGraph: FlowGraph) {
     this.id = props.id || uid();
@@ -32,6 +35,7 @@ export class FlowNode {
     this.x = props.x || 0;
     this.y = props.y || 0;
     this.targets = props.targets;
+    this.contenxtMenu = props.contenxtMenu;
     this.flowGraph = flowGraph;
   }
 

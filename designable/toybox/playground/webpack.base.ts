@@ -14,7 +14,7 @@ const getWorkspaceAlias = () => {
       const { found } = new GlobSync(pattern, { cwd: basePath });
       found.forEach((name) => {
         const pkg = fs.readJSONSync(
-          path.resolve(basePath, name, './package.json'),
+          path.resolve(basePath, name, './package.json')
         );
         results[pkg.name] = path.resolve(basePath, name, './src');
       });
@@ -45,11 +45,27 @@ export default {
   externals: {
     react: 'React',
     'react-dom': 'ReactDOM',
-    moment: 'moment',
     antd: 'antd',
   },
   module: {
     rules: [
+      // {
+      //   test: /\.tsx?$/,
+      //   exclude: /node_modules/,
+      //   use: {
+      //     loader: 'babel-loader',
+      //     options: {
+      //       presets: [
+      //         ['@babel/preset-env', { targets: "defaults" }]
+      //       ],
+      //       plugins: [
+      //         "@babel/plugin-transform-classes",
+      //         "@babel/plugin-transform-typescript",
+      //         "@babel/plugin-transform-react-jsx"
+      //       ]
+      //     }
+      //   }
+      // },
       {
         test: /\.tsx?$/,
         use: [

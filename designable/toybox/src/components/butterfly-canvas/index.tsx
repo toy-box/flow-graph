@@ -1,21 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Canvas } from 'butterfly-dag';
 import { ButterflyCanvas as FlowCanvas } from '@toy-box/flow-graph';
 import { StartNode } from '@toy-box/flow-nodes';
 import { useFlow } from '../../hooks';
 import 'butterfly-dag/dist/index.css';
+import './styles';
 
 export const ButterflyCanvas = () => {
+  const dom = useRef();
   const flow = useFlow();
   const style = {
     width: '1240px',
     height: '960px',
   };
   useEffect(() => {
-    const root = document.getElementById('flow-canvas');
-    console.log('root', root);
     const canvas = new Canvas({
-      root: root,
+      root: dom,
       disLinkable: true, // 可删除连线
       linkable: true, // 可连线
       draggable: true, // 可拖动
@@ -28,6 +28,16 @@ export const ButterflyCanvas = () => {
         },
       },
     });
+    canvas.draw({
+      nodes: [
+        {
+          id: 'org',
+          name: 'org-node',
+          left: 200,
+          top: 200,
+        },
+      ],
+    });
     console.log('FlowCanvas', FlowCanvas);
     flow.setCanvas(
       new FlowCanvas({
@@ -39,5 +49,5 @@ export const ButterflyCanvas = () => {
       })
     );
   });
-  return <div id="flow-canvas" className="flow-canvas"></div>;
+  return <div id="flow-canvas" ref={dom}></div>;
 };

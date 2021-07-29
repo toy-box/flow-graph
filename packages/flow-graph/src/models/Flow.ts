@@ -1,10 +1,10 @@
-import { Edge, Graph } from '@antv/x6';
+import { Edge } from '@antv/x6';
 import '@antv/x6-react-shape';
 import { FlowGraph } from './FlowGraph';
-import { ICanvas } from './Canvas';
-import { AntvCanavs } from './AntvCanvas';
+import { ICanvas } from '../canvas';
 import { FlowNode, IFlowNodeProps } from './FlowNode';
 import { uid } from '../shared';
+import { EdgeProps } from '../types';
 
 const makeForkVertices = (source: FlowNode, target: FlowNode) => {
   return [{ x: target.centerX, y: source.centerY }];
@@ -112,7 +112,8 @@ export class Flow {
           y: node.y,
           width: node.width,
           height: node.height,
-          sharp: 'StartNode',
+          component: 'StartNode',
+          contextMenu: node.contenxtMenu,
         });
       } else {
         this.canvas.addNode({
@@ -122,19 +123,19 @@ export class Flow {
           y: node.y,
           width: node.width,
           height: node.height,
-          sharp: 'StartNode',
+          component: 'StartNode',
         });
       }
     }
   };
 
-  addGraphEdge = (edge: Edge.Metadata) => {
+  addGraphEdge = (edge: EdgeProps) => {
     if (this.canvas) {
       this.canvas.addEdge(edge);
     }
   };
 
-  addGraphEdges = (edges: Edge.Metadata[]) => {
+  addGraphEdges = (edges: EdgeProps[]) => {
     if (this.canvas) {
       this.canvas.addEdges(edges);
     }

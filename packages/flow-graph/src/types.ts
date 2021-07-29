@@ -1,3 +1,5 @@
+import { IContextMenuItem } from './canvas';
+
 export type FlowNodeType =
   | 'begin'
   | 'end'
@@ -16,6 +18,7 @@ export interface NodeProps {
   height: number;
   type: FlowNodeType;
   component: string;
+  contextMenu?: IContextMenuItem[];
 }
 
 export interface Point {
@@ -27,4 +30,5 @@ export interface EdgeProps {
   source: string;
   target: string;
   vertices?: Point[];
+  contextMenu?: IContextMenuItem[];
 }

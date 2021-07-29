@@ -1,5 +1,6 @@
-import React, { FC, CSSProperties, useState } from 'react';
+import React, { FC, CSSProperties } from 'react';
 import classNames from 'classnames';
+import { Dropdown, Menu } from 'antd';
 import './styles';
 
 export interface StartNodeProps {
@@ -8,14 +9,35 @@ export interface StartNodeProps {
 }
 
 export const StartNode: FC<StartNodeProps> = ({ className, style }) => {
-  // const [active, setActive] = useState(false)
-
+  const menu = (
+    <Menu>
+      <Menu.Item>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.antgroup.com"
+        >
+          1st menu item
+        </a>
+      </Menu.Item>
+      <Menu.Item disabled>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.luohanacademy.com"
+        >
+          2rd menu item (disabled)
+        </a>
+      </Menu.Item>
+      <Menu.Item danger>a danger item</Menu.Item>
+    </Menu>
+  );
   return (
-    <div
-      className={classNames('tbox-flow-start-node', 'active', className)}
-      style={style}
-    >
-      <div className="tbox-flow-start-node-extend">extend</div>
-    </div>
+    <Dropdown overlay={menu} trigger={['click']}>
+      <div
+        className={classNames('tbox-flow-start-node', 'active', className)}
+        style={style}
+      ></div>
+    </Dropdown>
   );
 };

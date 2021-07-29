@@ -1,18 +1,32 @@
-import { JSXElementConstructor } from 'react';
-import { Canvas } from 'butterfly-dag';
+import React, { JSXElementConstructor } from 'react';
+import { Graph, Shape } from '@antv/x6';
 import { ICanvas } from './Canvas';
-import { EdgeProps, NodeProps } from '../types';
+import { NodeProps, EdgeProps } from '../types';
+import { FlowGraph } from '../models';
 
-export interface ButterflyCanvasProps<T> {
-  canvas: Canvas;
+Shape.Edge.config({
+  attrs: {
+    line: {
+      targetMarker: null,
+      strokeWidth: 6,
+      stroke: '#cfcfcf',
+    },
+  },
+});
+
+export interface AntvCanvasProps<T> {
+  canvas: Graph;
   components?: Record<string, JSXElementConstructor<T>>;
+  flowGraph: FlowGraph;
 }
 
-export class ButterflyCanvas<T> implements ICanvas {
-  canvas: Canvas;
+export class AntvCanvas<T> implements ICanvas {
+  canvas: Graph;
   components: Record<string, JSXElementConstructor<T>>;
+  flowGraph: FlowGraph;
 
-  constructor(props: ButterflyCanvasProps<T>) {
+  constructor(props: AntvCanvasProps<T>) {
+    this.flowGraph = props.flowGraph;
     this.canvas = props.canvas;
     this.components = props.components || {};
   }
@@ -32,6 +46,15 @@ export class ButterflyCanvas<T> implements ICanvas {
     };
   };
 
+  protected makeEdge(edge: EdgeProps) {
+    return Object.assign(edge, {
+      attrs: {
+        stroke: 'red',
+        strokeWidth: 3,
+      },
+    });
+  }
+
   addNode(node: NodeProps) {
     this.canvas.unfreeze();
     this.canvas.addNode(this.makeNode(node));
@@ -45,14 +68,17 @@ export class ButterflyCanvas<T> implements ICanvas {
   }
 
   addEdge(edge: EdgeProps) {
+    console.log('edge !!!', this.makeEdge(edge));
     this.canvas.unfreeze();
-    this.canvas.addEdge(edge);
+    this.canvas.addEdge(this.makeEdge(edge));
     this.canvas.freeze();
   }
 
   addEdges(edges: EdgeProps[]) {
+    const _edges = edges.map((edge) => this.makeEdge(edge));
+    console.log('edges !!!', _edges);
     this.canvas.unfreeze();
-    this.canvas.addEdges(edges);
+    this.canvas.addEdges(_edges);
     this.canvas.freeze();
   }
 }

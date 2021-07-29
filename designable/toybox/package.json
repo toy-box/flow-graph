@@ -19,7 +19,11 @@
     "start": "webpack-dev-server --config playground/webpack.dev.ts"
   },
   "devDependencies": {
+    "@babel/plugin-transform-classes": "^7.14.5",
+    "@babel/plugin-transform-react-jsx": "^7.14.5",
+    "@babel/plugin-transform-typescript": "^7.14.6",
     "autoprefixer": "^9.0",
+    "babel-loader": "^8.2.2",
     "css-loader": "^5",
     "file-loader": "^5.0.2",
     "fs-extra": "^8.1.0",
@@ -44,6 +48,7 @@
     "react-is": ">=16.8.0 || >=17.0.0"
   },
   "dependencies": {
+    "@antv/x6": "^1.25.0",
     "@toy-box/flow-graph": "^1.0.0",
     "@toy-box/flow-nodes": "^1.0.0",
     "butterfly-dag": "^4.0.34"

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { FlowContext, Flow } from '@toy-box/flow-graph';
-import { ButterflyCanvas, Panel } from '../src';
+import { Panel, AntvxCanvas } from '../src';
 
 const flow = new Flow();
 
@@ -11,7 +11,8 @@ const App = () => {
       <h3>Go Flow</h3>
       <FlowContext.Provider value={flow}>
         <Panel />
-        <ButterflyCanvas />
+        <AntvxCanvas />
+        {/* <AntCanvas /> */}
       </FlowContext.Provider>
     </div>
   );

@@ -58,7 +58,6 @@ export class FlowGraph {
     });
     Object.keys(this.nodeMap).forEach((id) => {
       if (this.nodeMap[id].type === 'cycleBegin') {
-        console.log('cycleBegin areaWidth', this.nodeMap[id].areaWidth);
         this.dg.setNode(id, {
           width: this.nodeMap[id].areaWidth,
           height: this.nodeMap[id].height,

@@ -11,6 +11,12 @@ export const Panel = () => {
         width: 50,
         height: 50,
         targets: ['002'],
+        contextMenu: [
+          {
+            text: 'menu-1',
+            callback: () => console.log('menu-1'),
+          },
+        ],
       },
       {
         id: '002',
