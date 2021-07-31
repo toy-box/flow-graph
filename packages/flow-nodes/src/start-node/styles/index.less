@@ -4,16 +4,16 @@
   position: relative;
   width: @node-width;
   height: @node-height;
-  border: 1px solid fade(black, 10%);
   border-radius: 50%;
-  background-color: aqua;
   box-sizing: border-box;
+  padding: @node-padding;
+  background-color: #52c41a;
   cursor: pointer;
   color: white;
   text-align: center;
-  line-height: @node-width;
-  font-size: 32px;
+  line-height: calc(@node-width - @node-padding * 2);
+  font-size: 36px;
   &:hover {
-    background-color: aquamarine;
+    background-color: #73d13d;
   }
 }

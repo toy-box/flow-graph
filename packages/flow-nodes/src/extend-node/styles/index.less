@@ -1,10 +1,25 @@
 @import '../../theme.less';
 
+@active-color: #2f54eb;
+
 .tbox-flow-extend-node {
-  font-size: 24px;
-  text-align: center;
-  line-height: @node-width;
-  color: #595959;
-  width: @node-width;
-  height: @node-height;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: calc(@node-width / 2);
+  height: calc(@node-height / 2);
+  border-radius: 50%;
+  border: 2px solid #8c8c8c;
+  background-color: white;
+  color: #8c8c8c;
+  font-size: 20px;
+  cursor: pointer;
+  transition-duration: 0.2s;
+  &.active {
+    border-color: @active-color;
+    background-color: @active-color;
+    color: white;
+    transform: rotate(135deg);
+  }
 }

@@ -1,8 +1,19 @@
 @import '../../theme.less';
 
 .tbox-flow-end-node {
+  position: relative;
   width: @node-width;
   height: @node-height;
-  border: 1px solid fade(black, 0.1);
   border-radius: 50%;
+  box-sizing: border-box;
+  padding: @node-padding;
+  background-color: #f5222d;
+  cursor: pointer;
+  color: white;
+  text-align: center;
+  line-height: calc(@node-width - @node-padding * 2);
+  font-size: 36px;
+  &:hover {
+    background-color: #ff4d4f;
+  }
 }

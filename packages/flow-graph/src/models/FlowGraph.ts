@@ -10,8 +10,8 @@ export interface IFlowGraphProps {
 const DAGRE_CONFIG = {
   rankdir: 'TB',
   ranker: 'short-tree',
-  nodesep: 60,
-  ranksep: 120,
+  nodesep: 140,
+  ranksep: 100,
 };
 
 export class FlowGraph {
@@ -57,17 +57,33 @@ export class FlowGraph {
       this.nodeMap[nodeId].setPostion(pos.x, pos.y);
     });
     Object.keys(this.nodeMap).forEach((id) => {
-      if (this.nodeMap[id].type === 'cycleBegin') {
-        this.dg.setNode(id, {
-          width: this.nodeMap[id].areaWidth,
-          height: this.nodeMap[id].height,
-        });
-      }
+      this.dg.setNode(id, {
+        width: this.nodeMap[id].areaWidth,
+        height: this.nodeMap[id].height,
+      });
     });
     dagre.layout(this.dg);
     this.dg.nodes().forEach((nodeId) => {
       const pos = this.dg.node(nodeId);
-      this.nodeMap[nodeId].setPostion(pos.x, pos.y);
+      if (this.nodeMap[nodeId].component === 'ExtendNode') {
+        if (this.nodeMap[nodeId].type === 'cycleBack') {
+          this.nodeMap[nodeId].setPostion(
+            pos.x + this.nodeMap[nodeId].width / 4,
+            pos.y
+          );
+        } else {
+          this.nodeMap[nodeId].setPostion(
+            pos.x + this.nodeMap[nodeId].width / 4,
+            pos.y + this.nodeMap[nodeId].height / 4
+          );
+        }
+        this.nodeMap[nodeId].setSize(
+          this.nodeMap[nodeId].width / 2,
+          this.nodeMap[nodeId].height / 2
+        );
+      } else {
+        this.nodeMap[nodeId].setPostion(pos.x, pos.y);
+      }
     });
   }
 

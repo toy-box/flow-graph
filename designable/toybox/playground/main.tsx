@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { FlowContext, Flow } from '@toy-box/flow-graph';
 import { Panel, AntvxCanvas } from '../src';
+import './theme.less';
 
 const flow = new Flow();
 

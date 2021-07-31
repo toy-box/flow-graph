@@ -3,7 +3,7 @@ import { uid } from '../shared';
 import { FlowNodeType, NodeProps } from '../types';
 import { IContextMenuItem } from '../canvas';
 
-const CYCLE_FLOW_WIDTH = 40;
+const CYCLE_FLOW_WIDTH = 60;
 
 export interface IFlowNodeProps extends Omit<NodeProps, 'id'> {
   id?: string;
@@ -47,6 +47,11 @@ export class FlowNode {
     this.y = y;
   }
 
+  setSize(width: number, height: number) {
+    this.width = width;
+    this.height = height;
+  }
+
   get left() {
     return this.x - this.width / 2;
   }
@@ -84,7 +89,7 @@ export class FlowNode {
   }
 
   get innerNodes() {
-    if (this.isAreaBegin && this.areaEndNode) {
+    if (this.areaEndNode) {
       return this.flowGraph.getInnerNodes(this, this.areaEndNode);
     }
     return [];

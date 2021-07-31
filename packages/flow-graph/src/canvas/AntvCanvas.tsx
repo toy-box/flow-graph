@@ -12,7 +12,12 @@ Shape.Edge.config({
       stroke: '#d9d9d9',
     },
   },
-  connector: 'rounded',
+  connector: {
+    name: 'rounded',
+    args: {
+      radius: 20,
+    },
+  },
 });
 
 export interface AntvCanvasProps<T> {
@@ -35,7 +40,6 @@ export class AntvCanvas<T> implements ICanvas {
   protected makeNode = (nodeProps: NodeProps) => {
     const { type, component: componentName, ...node } = nodeProps;
     const component = this.components[componentName];
-    console.log('componentName', componentName, nodeProps);
     if (component) {
       return {
         ...node,
@@ -45,6 +49,7 @@ export class AntvCanvas<T> implements ICanvas {
     }
     return {
       ...node,
+      label: node.id,
     };
   };
 

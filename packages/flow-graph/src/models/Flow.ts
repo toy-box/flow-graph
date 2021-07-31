@@ -11,24 +11,29 @@ const makeForkVertices = (source: FlowNode, target: FlowNode) => {
 };
 
 const makeJoinVertices = (source: FlowNode, target: FlowNode) => {
-  return [{ x: source.centerX, y: target.centerY }];
+  return [
+    { x: source.centerX, y: target.centerY - target.height * 1.5 },
+    { x: target.centerX, y: target.centerY - target.height * 1.5 },
+  ];
 };
 
-const makeLeftSideVertices = (source: FlowNode, target: FlowNode) => {
+const makeRightCycleVertices = (source: FlowNode, target: FlowNode) => {
+  const width =
+    target.areaWidth > source.areaWidth ? target.areaWidth : source.areaWidth;
+  return [
+    { x: source.centerX, y: source.centerY + source.height * 1.5 },
+    { x: source.centerX + width / 2, y: source.centerY + source.height * 1.5 },
+    { x: source.centerX + width / 2, y: target.centerY },
+  ];
+};
+
+const makeLeftCycleVertices = (source: FlowNode, target: FlowNode) => {
   const width =
     target.areaWidth > source.areaWidth ? target.areaWidth : source.areaWidth;
   return [
     { x: source.centerX - width / 2, y: source.centerY },
-    { x: source.centerX - width / 2, y: target.centerY },
-  ];
-};
-
-const makeRightSideVertices = (source: FlowNode, target: FlowNode) => {
-  const width =
-    target.areaWidth > source.areaWidth ? target.areaWidth : source.areaWidth;
-  return [
-    { x: source.centerX + width / 2, y: source.centerY },
-    { x: source.centerX + width / 2, y: target.centerY },
+    { x: source.centerX - width / 2, y: target.centerY - source.height },
+    { x: source.centerX, y: target.centerY - source.height },
   ];
 };
 
@@ -63,7 +68,7 @@ export class Flow {
             {
               source: edge.v,
               target: sourceNode.areaEndNode.id,
-              vertices: makeLeftSideVertices(
+              vertices: makeLeftCycleVertices(
                 sourceNode,
                 sourceNode.areaEndNode
               ),
@@ -74,7 +79,7 @@ export class Flow {
             this.addGraphEdge({
               source: edge.v,
               target: sourceNode.cycleBegin.id,
-              vertices: makeRightSideVertices(
+              vertices: makeRightCycleVertices(
                 sourceNode,
                 sourceNode.cycleBegin
               ),

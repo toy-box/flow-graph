@@ -1,4 +1,13 @@
-@import '~antd/dist/antd.css';
+@import '~antd/dist/antd.less';
 
-@node-width: 50px;
-@node-height: 50px;
+@prefix: tbox;
+
+@node-width: 56px;
+@node-height: 56px;
+@node-padding: 8px;
+
+.no-padding {
+  .@{ant-prefix}-popover-inner-content {
+    padding: 0;
+  }
+}

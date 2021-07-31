@@ -1,11 +1,23 @@
-import React from 'react';
-import { AddCircleLine } from '@airclass/icons';
+import React, { FC, useState } from 'react';
+import classNames from 'classnames';
+import { PlusOutlined } from '@ant-design/icons';
+import { Popover } from 'antd';
+import { INodeProps } from '../types';
 import './styles';
 
-export const ExtendNode = () => {
+export const ExtendNode: FC<INodeProps> = ({ content }) => {
+  const [active, setActive] = useState(false);
   return (
-    <div className="tbox-flow-extend-node">
-      <AddCircleLine />
-    </div>
+    <Popover
+      trigger="click"
+      onVisibleChange={(visible) => setActive(visible)}
+      placement="bottom"
+      content={content}
+      overlayClassName="no-padding"
+    >
+      <div className={classNames('tbox-flow-extend-node', { active })}>
+        <PlusOutlined />
+      </div>
+    </Popover>
   );
 };

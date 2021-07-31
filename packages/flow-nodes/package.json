@@ -20,15 +20,16 @@
     "access": "public"
   },
   "peerDependencies": {
+    "@airclass/icons": "^4.3.4",
     "@types/react": ">=16.8.0 || >=17.0.0",
     "@types/react-dom": ">=16.8.0 || >=17.0.0",
+    "antd": "^4.0.0",
     "react": ">=16.8.0 || >=17.0.0",
     "react-dom": ">=16.8.0 || >=17.0.0",
-    "react-is": ">=16.8.0 || >=17.0.0",
-    "@airclass/icons": "^4.3.4",
-    "antd": "^4"
+    "react-is": ">=16.8.0 || >=17.0.0"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.6.2",
     "classnames": "^2.3.1"
   }
 }
