@@ -49,8 +49,8 @@
   },
   "dependencies": {
     "@antv/x6": "^1.25.0",
-    "@toy-box/flow-graph": "^1.0.0",
-    "@toy-box/flow-nodes": "^1.0.0",
+    "@toy-box/flow-graph": "1.0.0",
+    "@toy-box/flow-nodes": "1.0.0",
     "butterfly-dag": "^4.0.34"
   },
   "publishConfig": {
