@@ -30,6 +30,6 @@
   "dependencies": {
     "@antv/x6": "^1.24.0",
     "@antv/x6-react-shape": "^1.4.5",
-    "@toy-box/dagre": "^0.8.8-pre"
+    "@toy-box/dagre": "^0.8.14"
   }
 }

@@ -7,7 +7,18 @@ import { uid } from '../shared';
 import { EdgeProps } from '../types';
 
 const makeForkVertices = (source: FlowNode, target: FlowNode) => {
-  return [{ x: target.centerX, y: source.centerY }];
+  const targetLeng = source.targets?.length;
+  let y = source.centerY;
+  const centerIdx = targetLeng ? Math.floor(targetLeng / 2) : null;
+  if (
+    targetLeng &&
+    targetLeng % 2 === 1 &&
+    centerIdx &&
+    source.targets[centerIdx] === target.id
+  ) {
+    y = source.centerY + target.height * 1.5;
+  }
+  return [{ x: target.centerX, y }];
 };
 
 const makeJoinVertices = (source: FlowNode, target: FlowNode) => {
@@ -56,10 +67,14 @@ export class Flow {
     if (this.canvas) {
       const layout = this.flowGraph.layoutData();
       layout.nodes.forEach((node) => this.addGraphNode(node));
+      console.log(layout.edges);
       layout.edges.forEach((edge) => {
         const sourceNode = this.flowGraph.getNode(edge.v);
         const targetNode = this.flowGraph.getNode(edge.w);
-        if (sourceNode.type === 'cycleBegin' && sourceNode.areaEndNode) {
+        if (sourceNode.type === 'cycleBegin') {
+          const cycleEndTargetNode = this.flowGraph.getNode(
+            sourceNode.cycleEndTarget
+          );
           this.addGraphEdges([
             {
               source: edge.v,
@@ -67,14 +82,12 @@ export class Flow {
             },
             {
               source: edge.v,
-              target: sourceNode.areaEndNode.id,
-              vertices: makeLeftCycleVertices(
-                sourceNode,
-                sourceNode.areaEndNode
-              ),
+              // target: sourceNode.areaEndNode.id,
+              target: sourceNode.cycleEndTarget,
+              vertices: makeLeftCycleVertices(sourceNode, cycleEndTargetNode),
             },
           ]);
-        } else if (sourceNode.type === 'cycleBack') {
+        } else if (sourceNode.cycleBegin) {
           if (sourceNode.cycleBegin) {
             this.addGraphEdge({
               source: edge.v,
@@ -91,7 +104,7 @@ export class Flow {
             target: edge.w,
             vertices: makeForkVertices(sourceNode, targetNode),
           });
-        } else if (targetNode.type === 'forkEnd') {
+        } else if (sourceNode.forkEnd) {
           this.addGraphEdge({
             source: edge.v,
             target: edge.w,

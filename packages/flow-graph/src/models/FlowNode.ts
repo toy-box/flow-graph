@@ -14,6 +14,9 @@ export interface IFlowNodeProps extends Omit<NodeProps, 'id'> {
   y: number;
   targets?: string[];
   component?: string;
+  forkEndTarget?: string;
+  cycleBackTarget?: string;
+  cycleEndTarget?: string;
   contenxtMenu?: IContextMenuItem[];
 }
 
@@ -27,6 +30,9 @@ export class FlowNode {
   y: number;
   targets?: string[];
   component?: string;
+  forkEndTarget?: string;
+  cycleBackTarget?: string;
+  cycleEndTarget?: string;
   contenxtMenu?: IContextMenuItem[];
 
   constructor(props: IFlowNodeProps, flowGraph: FlowGraph) {
@@ -38,6 +44,9 @@ export class FlowNode {
     this.y = props.y || 0;
     this.targets = props.targets;
     this.component = props.component;
+    this.cycleBackTarget = props.cycleBackTarget;
+    this.cycleEndTarget = props.cycleEndTarget;
+    this.forkEndTarget = props.forkEndTarget;
     this.contenxtMenu = props.contenxtMenu;
     this.flowGraph = flowGraph;
   }
@@ -127,14 +136,24 @@ export class FlowNode {
   }
 
   get cycleBegin(): FlowNode | undefined {
-    if (this.type === 'cycleEnd') {
-      return Object.keys(this.flowGraph.nodeMap)
-        .map((key) => this.flowGraph.getNode(key))
-        .find((node) => node.cycleEnd === this);
-    }
-    if (this.type === 'cycleBack' && this.targets && this.targets[0]) {
-      return this.flowGraph.getNode(this.targets[0]).cycleBegin;
-    }
-    return undefined;
+    // if (this.type === 'cycleEnd') {
+    //   return Object.keys(this.flowGraph.nodeMap)
+    //     .map((key) => this.flowGraph.getNode(key))
+    //     .find((node) => node.cycleEnd === this);
+    // }
+    // if (this.type === 'cycleBack' && this.targets && this.targets[0]) {
+    //   console.log(this.flowGraph.getNode(this.targets[0]));
+    //   return this.flowGraph.getNode(this.targets[0]).cycleBegin;
+    // }
+    return Object.keys(this.flowGraph.nodeMap)
+      .map((key) => this.flowGraph.getNode(key))
+      .find((node) => node.cycleBackTarget === this.id);
+  }
+
+  get forkEnd(): FlowNode | undefined {
+    const forkEnd1 = Object.keys(this.flowGraph.nodeMap)
+      .map((key) => this.flowGraph.getNode(key))
+      .find((node) => node.forkEndTarget === this.targets[0]);
+    return forkEnd1;
   }
 }

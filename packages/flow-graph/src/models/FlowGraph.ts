@@ -51,7 +51,12 @@ export class FlowGraph {
   }
 
   layout() {
-    dagre.layout(this.dg);
+    // console.log(this.fork, '13223232');
+    const opts = {
+      fork: true,
+    };
+    // const opts = null;
+    dagre.layout(this.dg, opts as any);
     this.dg.nodes().forEach((nodeId) => {
       const pos = this.dg.node(nodeId);
       this.nodeMap[nodeId].setPostion(pos.x, pos.y);
@@ -62,7 +67,7 @@ export class FlowGraph {
         height: this.nodeMap[id].height,
       });
     });
-    dagre.layout(this.dg);
+    dagre.layout(this.dg, opts as any);
     this.dg.nodes().forEach((nodeId) => {
       const pos = this.dg.node(nodeId);
       if (this.nodeMap[nodeId].component === 'ExtendNode') {
@@ -124,10 +129,24 @@ export class FlowGraph {
     const nexts = this.nodeMap[id]?.targets;
     if (nexts && nexts.length > 0) {
       const nextNode = this.getNode(nexts[0]);
+      const isAreaEnd = Object.keys(this.nodeMap)
+        .map((key) => this.getNode(key))
+        .find(
+          (node) =>
+            node.cycleBackTarget === nexts[0] ||
+            node.cycleEndTarget === nexts[0] ||
+            node.forkEndTarget === nexts[0]
+        );
+      // const isCycleEnd = Object.keys(this.nodeMap)
+      //   .map((key) => this.getNode(key))
+      //   .find((node) => node.cycleEndTarget === nexts[0]);
+      // const isForkEnd = Object.keys(this.nodeMap)
+      //   .map((key) => this.getNode(key))
+      //   .find((node) => node.forkEndTarget === nexts[0]);
       if (nextNode.isAreaBegin) {
         return this.getNextAreaEnd(nextNode.id, deep + 1);
       }
-      if (nextNode.isAreaEnd) {
+      if (isAreaEnd) {
         return deep === 0
           ? nextNode
           : this.getNextAreaEnd(nextNode.id, deep - 1);

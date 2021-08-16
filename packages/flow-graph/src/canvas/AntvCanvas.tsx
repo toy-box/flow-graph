@@ -61,7 +61,7 @@ export class AntvCanvas<T> implements ICanvas {
 
   addNodes(nodes: NodeProps[]) {
     this.canvas.unfreeze();
-    this.canvas.addEdges(nodes.map((node) => this.makeNode(node)));
+    this.canvas.addNodes(nodes.map((node) => this.makeNode(node)));
     this.canvas.freeze();
   }
 
