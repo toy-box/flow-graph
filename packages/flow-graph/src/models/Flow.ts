@@ -39,8 +39,15 @@ const makeRightCycleVertices = (source: FlowNode, target: FlowNode) => {
 };
 
 const makeLeftCycleVertices = (source: FlowNode, target: FlowNode) => {
-  const width =
+  // console.log(source, target);
+  let width =
     target.areaWidth > source.areaWidth ? target.areaWidth : source.areaWidth;
+  if (
+    source.cycleBackTarget === source.targets[0] &&
+    target.type === 'cycleEnd'
+  ) {
+    width = source.areaWidth;
+  }
   return [
     { x: source.centerX - width / 2, y: source.centerY },
     { x: source.centerX - width / 2, y: target.centerY - source.height },
@@ -67,7 +74,6 @@ export class Flow {
     if (this.canvas) {
       const layout = this.flowGraph.layoutData();
       layout.nodes.forEach((node) => this.addGraphNode(node));
-      console.log(layout.edges);
       layout.edges.forEach((edge) => {
         const sourceNode = this.flowGraph.getNode(edge.v);
         const targetNode = this.flowGraph.getNode(edge.w);

@@ -126,16 +126,16 @@ export class FlowGraph {
   }
 
   getNextAreaEnd(id: string, deep: number = 0): FlowNode | undefined {
-    const nexts = this.nodeMap[id]?.targets;
+    let nexts = this.nodeMap[id]?.targets;
+    // console.log(deep)
     if (nexts && nexts.length > 0) {
       const nextNode = this.getNode(nexts[0]);
       const isAreaEnd = Object.keys(this.nodeMap)
         .map((key) => this.getNode(key))
         .find(
           (node) =>
-            node.cycleBackTarget === nexts[0] ||
-            node.cycleEndTarget === nexts[0] ||
-            node.forkEndTarget === nexts[0]
+            // node.cycleBackTarget === nexts[0] ||
+            node.cycleEndTarget === nexts[0] || node.forkEndTarget === nexts[0]
         );
       // const isCycleEnd = Object.keys(this.nodeMap)
       //   .map((key) => this.getNode(key))
@@ -162,12 +162,21 @@ export class FlowGraph {
     const nexts = node.nextNodes;
     innerNodes.push(...nexts);
     if (nexts.some((node) => node.id === end.id)) {
-      return innerNodes;
+      return Array.from(new Set(innerNodes));
     }
     nexts.forEach((next) => {
       innerNodes.push(...this.getInnerNodes(next, end));
     });
-    return innerNodes;
+    // const isAreaEnd = Object.keys(this.nodeMap)
+    //   .map((key) => this.getNode(key))
+    //   .find(
+    //     (node) =>
+    //       node.cycleEndTarget === begin.id
+    //   );
+    // if (isAreaEnd) {
+    //   return Array.from(new Set(innerNodes));
+    // }
+    return Array.from(new Set(innerNodes));
   }
 
   layoutData() {

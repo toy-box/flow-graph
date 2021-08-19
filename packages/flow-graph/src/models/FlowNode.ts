@@ -3,7 +3,7 @@ import { uid } from '../shared';
 import { FlowNodeType, NodeProps } from '../types';
 import { IContextMenuItem } from '../canvas';
 
-const CYCLE_FLOW_WIDTH = 60;
+const CYCLE_FLOW_WIDTH = 50;
 
 export interface IFlowNodeProps extends Omit<NodeProps, 'id'> {
   id?: string;
@@ -122,10 +122,10 @@ export class FlowNode {
   }
 
   get innerCycles() {
-    return (
-      this.innerNodes.filter((node) => node.type === 'cycleBegin').length +
-      (this.type === 'cycleBegin' ? 1 : 0)
-    );
+    const nodeLength = this.innerNodes.filter(
+      (node) => node.type === 'cycleBegin'
+    ).length;
+    return nodeLength + (this.type === 'cycleBegin' ? 1 : 0);
   }
 
   get cycleEnd(): FlowNode | undefined {
