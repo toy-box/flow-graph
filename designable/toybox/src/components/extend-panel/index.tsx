@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useNode } from '@toy-box/flow-nodes';
 
-export const ExtendPanel = () => {
+export const ExtendPanel = (props) => {
   const node = useNode();
   const style = {
     width: '100px',
     padding: '8px',
   };
+  const handle = useCallback(() => {
+    props?.closeExtend && props.closeExtend();
+  }, [props?.closeExtend]);
   return (
     <div style={style}>
-      <div>{node.id}</div>
-      <div>循环</div>
-      <div>分支</div>
+      <div>{props.title}</div>
+      <div onClick={handle}>循环</div>
+      <div onClick={handle}>分支</div>
     </div>
   );
 };

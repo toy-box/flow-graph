@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Graph } from '@antv/x6';
+import '@antv/x6-react-shape';
 import { AntvCanvas as FlowCanvas } from '@toy-box/flow-graph';
 import { connect, StartNode, ExtendNode, EndNode } from '@toy-box/flow-nodes';
 import { useFlow } from '../../hooks';
@@ -30,7 +31,7 @@ export const AntvxCanvas = () => {
           StartNode: connect(StartNode, () => {
             return <div>start</div>;
           }),
-          ExtendNode: connect(ExtendNode, ExtendPanel),
+          ExtendNode: connect(ExtendNode, <ExtendPanel title="extend panel" />),
           EndNode: connect(EndNode),
         },
       })

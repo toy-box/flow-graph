@@ -1,6 +1,4 @@
-import { JSXElementConstructor, ReactNode } from 'react';
-import { Node } from '@antv/x6';
-
+import { ReactNode } from 'react';
 export interface INodeProps {
   content?: ReactNode;
 }

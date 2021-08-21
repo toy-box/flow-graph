@@ -49,6 +49,7 @@
   },
   "dependencies": {
     "@antv/x6": "^1.25.0",
+    "@antv/x6-react-shape": "^1.4.5",
     "@toy-box/flow-graph": "1.0.6",
     "@toy-box/flow-nodes": "1.0.6",
     "butterfly-dag": "^4.0.34"

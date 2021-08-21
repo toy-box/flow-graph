@@ -7,12 +7,25 @@ import './styles';
 
 export const ExtendNode: FC<INodeProps> = ({ content }) => {
   const [active, setActive] = useState(false);
+  const renderContent = () => {
+    if (React.isValidElement(content) && content.type) {
+      const { key, props, ...restProps } = content;
+      return {
+        key,
+        props: { ...props, closeExtend: () => setActive(false) },
+        ...restProps,
+      };
+    }
+    return content;
+  };
+
   return (
     <Popover
+      visible={active}
       trigger="click"
       onVisibleChange={(visible) => setActive(visible)}
       placement="bottom"
-      content={content}
+      content={renderContent()}
       overlayClassName="no-padding"
     >
       <div className={classNames('tbox-flow-extend-node', { active })}>
