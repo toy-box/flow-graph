@@ -4,6 +4,7 @@ export const makeBaseNode = (
   x: number,
   y: number,
   title = '',
+  onClick = () => undefined,
   fill = '#ED8A19',
   stroke = 'white',
   iconMarkup: any,
@@ -24,6 +25,19 @@ export const makeBaseNode = (
       {
         tagName: 'text',
         selector: 'title',
+      },
+    ],
+    tools: [
+      {
+        name: 'button',
+        args: {
+          width: 56,
+          height: 56,
+          opacity: 0,
+          cursor: 'pointer',
+          offset: { x: -56, y: -56 },
+          onClick,
+        },
       },
     ],
     attrs: {
@@ -52,10 +66,11 @@ export const makeAssignNode = (
   x: number,
   y: number,
   title?: string,
+  onClick = () => undefined,
   fill?: string,
   stroke?: string
 ) => {
-  return makeBaseNode(x, y, fill, stroke, title, [
+  return makeBaseNode(x, y, title, onClick, fill, stroke, [
     {
       tagName: 'path',
       selector: 'icon',
@@ -70,10 +85,11 @@ export const makeLoopNode = (
   x: number,
   y: number,
   title?: string,
+  onClick = () => undefined,
   fill?: string,
   stroke?: string
 ) => {
-  return makeBaseNode(x, y, fill, stroke, title, [
+  return makeBaseNode(x, y, title, onClick, fill, stroke, [
     {
       tagName: 'path',
       selector: 'icon',
@@ -88,10 +104,11 @@ export const makeSortNode = (
   x: number,
   y: number,
   title?: string,
+  onClick = () => undefined,
   fill?: string,
   stroke?: string
 ) => {
-  return makeBaseNode(x, y, fill, stroke, title, [
+  return makeBaseNode(x, y, title, onClick, fill, stroke, [
     {
       tagName: 'path',
       selector: 'icon',
@@ -106,6 +123,7 @@ export const makeReocrdCreateNode = (
   x: number,
   y: number,
   title?: string,
+  onClick = () => undefined,
   fill?: string,
   stroke?: string
 ) => {
@@ -115,13 +133,14 @@ export const makeReocrdCreateNode = (
       <path d="M15 4H5v16h14V8h-4V4zM3 2.992C3 2.444 3.447 2 3.999 2H16l5 5v13.993A1 1 0 0 1 20.007 22H3.993A1 1 0 0 1 3 21.008V2.992zM11 11V8h2v3h3v2h-3v3h-2v-3H8v-2h3z" />
     </svg>
   `);
-  return makeBaseNode(x, y, fill, stroke, title, markup, attrs);
+  return makeBaseNode(x, y, title, onClick, fill, stroke, markup, attrs);
 };
 
 export const makeReocrdUpdateNode = (
   x: number,
   y: number,
   title?: string,
+  onClick = () => undefined,
   fill?: string,
   stroke?: string
 ) => {
@@ -131,13 +150,14 @@ export const makeReocrdUpdateNode = (
       <path d="M20 2c.552 0 1 .448 1 1v3.757l-2 2V4H5v16h14v-2.758l2-2V21c0 .552-.448 1-1 1H4c-.552 0-1-.448-1-1V3c0-.552.448-1 1-1h16zm1.778 6.808l1.414 1.414L15.414 18l-1.416-.002.002-1.412 7.778-7.778zM13 12v2H8v-2h5zm3-4v2H8V8h8z"/>
     </svg>
   `);
-  return makeBaseNode(x, y, fill, stroke, title, markup, attrs);
+  return makeBaseNode(x, y, title, onClick, fill, stroke, markup, attrs);
 };
 
 export const makeReocrdFindNode = (
   x: number,
   y: number,
   title?: string,
+  onClick = () => undefined,
   fill?: string,
   stroke?: string
 ) => {
@@ -146,13 +166,14 @@ export const makeReocrdFindNode = (
       <path fill="none" d="M0 0h24v24H0z"/><path d="M15 4H5v16h14V8h-4V4zM3 2.992C3 2.444 3.447 2 3.999 2H16l5 5v13.993A1 1 0 0 1 20.007 22H3.993A1 1 0 0 1 3 21.008V2.992zm10.529 11.454a4.002 4.002 0 0 1-4.86-6.274 4 4 0 0 1 6.274 4.86l2.21 2.21-1.414 1.415-2.21-2.21zm-.618-2.032a2 2 0 1 0-2.828-2.828 2 2 0 0 0 2.828 2.828z"/>
     </svg>
   `);
-  return makeBaseNode(x, y, fill, stroke, title, markup, attrs);
+  return makeBaseNode(x, y, title, onClick, fill, stroke, markup, attrs);
 };
 
 export const makeReocrdDeleteNode = (
   x: number,
   y: number,
   title?: string,
+  onClick = () => undefined,
   fill?: string,
   stroke?: string
 ) => {
@@ -162,5 +183,5 @@ export const makeReocrdDeleteNode = (
       <path d="M19 9h-5V4H5v7.857l1.5 1.393L10 9.5l3 5 2-2.5 3 3-3-.5-2 2.5-3-4-3 3.5-2-1.25V20h14V9zm2-1v12.993A1 1 0 0 1 20.007 22H3.993A.993.993 0 0 1 3 21.008V2.992C3 2.455 3.449 2 4.002 2h10.995L21 8z"/>
     </svg>
   `);
-  return makeBaseNode(x, y, fill, stroke, title, markup, attrs);
+  return makeBaseNode(x, y, title, onClick, fill, stroke, markup, attrs);
 };

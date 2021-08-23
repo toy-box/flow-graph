@@ -1,4 +1,11 @@
-export const makeDecisionNode = (x: number, y: number, label: string) => {
+import { Node } from '@antv/x6';
+
+export const makeDecisionNode = (
+  x: number,
+  y: number,
+  label: string,
+  onClick = () => undefined
+): Node.Metadata => {
   return {
     shape: 'polygon',
     x,
@@ -7,7 +14,7 @@ export const makeDecisionNode = (x: number, y: number, label: string) => {
     height: 56,
     markup: [
       {
-        tagName: 'polygon',
+        tagName: 'rect',
         selector: 'body',
       },
       {
@@ -21,6 +28,19 @@ export const makeDecisionNode = (x: number, y: number, label: string) => {
       {
         tagName: 'text',
         selector: 'title',
+      },
+    ],
+    tools: [
+      {
+        name: 'button',
+        args: {
+          width: 56,
+          height: 56,
+          opacity: 0,
+          cursor: 'pointer',
+          offset: { x: -56, y: -56 },
+          onClick,
+        },
       },
     ],
     attrs: {
