@@ -14,7 +14,7 @@ export const makeDecisionNode = (
     height: 56,
     markup: [
       {
-        tagName: 'rect',
+        tagName: 'polygon',
         selector: 'body',
       },
       {
