@@ -12,6 +12,7 @@ export interface IFlowNodeProps extends Omit<NodeProps, 'id'> {
   height: number;
   x: number;
   y: number;
+  label?: string;
   targets?: string[];
   component?: string;
   forkEndTarget?: string;
@@ -28,6 +29,7 @@ export class FlowNode {
   flowGraph: FlowGraph;
   x: number;
   y: number;
+  label?: string;
   targets?: string[];
   component?: string;
   forkEndTarget?: string;
@@ -42,7 +44,7 @@ export class FlowNode {
     this.height = props.height || 100;
     this.x = props.x || 0;
     this.y = props.y || 0;
-    this.targets = props.targets;
+    (this.label = props.label), (this.targets = props.targets);
     this.component = props.component;
     this.cycleBackTarget = props.cycleBackTarget;
     this.cycleEndTarget = props.cycleEndTarget;

@@ -18,6 +18,7 @@ export interface NodeProps {
   height: number;
   type: FlowNodeType;
   component?: string;
+  label?: string;
   contextMenu?: IContextMenuItem[];
 }
 

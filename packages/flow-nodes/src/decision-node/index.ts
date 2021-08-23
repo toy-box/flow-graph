@@ -1,10 +1,4 @@
-export const makeDecisionNode = (
-  x: number,
-  y: number,
-  fill: string,
-  stroke: string,
-  title: string
-) => {
+export const makeDecisionNode = (x: number, y: number, label: string) => {
   return {
     shape: 'polygon',
     x,
@@ -31,7 +25,7 @@ export const makeDecisionNode = (
     ],
     attrs: {
       title: {
-        text: title,
+        text: label,
         refX: 80,
         refY: 10,
       },

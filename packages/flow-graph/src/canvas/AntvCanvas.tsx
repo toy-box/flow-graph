@@ -1,5 +1,5 @@
 import React, { JSXElementConstructor } from 'react';
-import { Graph, Shape } from '@antv/x6';
+import { Graph, Shape, Node } from '@antv/x6';
 import { ICanvas } from './Canvas';
 import { NodeProps, EdgeProps } from '../types';
 import { FlowGraph } from '../models';
@@ -20,31 +20,46 @@ Shape.Edge.config({
   },
 });
 
+export type MakeSvgNode = (
+  x: number,
+  y: number,
+  title: string
+) => Node.Metadata;
+
 export interface AntvCanvasProps<T> {
   canvas: Graph;
   components?: Record<string, JSXElementConstructor<T>>;
+  svgNodes?: Record<string, MakeSvgNode>;
   flowGraph: FlowGraph;
 }
 
 export class AntvCanvas<T> implements ICanvas {
   canvas: Graph;
   components: Record<string, JSXElementConstructor<T>>;
+  svgNodes: Record<string, MakeSvgNode>;
   flowGraph: FlowGraph;
 
   constructor(props: AntvCanvasProps<T>) {
     this.flowGraph = props.flowGraph;
     this.canvas = props.canvas;
     this.components = props.components || {};
+    this.svgNodes = props.svgNodes || {};
   }
 
   protected makeNode = (nodeProps: NodeProps) => {
     const { type, component: componentName, ...node } = nodeProps;
-    const component = this.components[componentName];
-    if (component) {
+    if (this.components[componentName]) {
+      const component = this.components[componentName];
       return {
         ...node,
         shape: 'react-shape',
         component,
+      };
+    }
+    if (this.svgNodes[componentName]) {
+      return {
+        id: node.id,
+        ...this.svgNodes[componentName](node.x, node.y, node.label),
       };
     }
     return {

@@ -127,7 +127,6 @@ export class FlowGraph {
 
   getNextAreaEnd(id: string, deep: number = 0): FlowNode | undefined {
     let nexts = this.nodeMap[id]?.targets;
-    // console.log(deep)
     if (nexts && nexts.length > 0) {
       const nextNode = this.getNode(nexts[0]);
       const isAreaEnd = Object.keys(this.nodeMap)

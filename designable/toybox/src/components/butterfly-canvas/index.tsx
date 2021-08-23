@@ -38,7 +38,6 @@ export const ButterflyCanvas = () => {
         },
       ],
     });
-    console.log('FlowCanvas', FlowCanvas);
     flow.setCanvas(
       new FlowCanvas({
         type: 'butterfly',

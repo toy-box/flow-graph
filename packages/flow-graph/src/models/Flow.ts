@@ -39,7 +39,6 @@ const makeRightCycleVertices = (source: FlowNode, target: FlowNode) => {
 };
 
 const makeLeftCycleVertices = (source: FlowNode, target: FlowNode) => {
-  // console.log(source, target);
   let width =
     target.areaWidth > source.areaWidth ? target.areaWidth : source.areaWidth;
   if (
@@ -133,6 +132,7 @@ export class Flow {
         type: node.type,
         x: node.x,
         y: node.y,
+        label: node.label,
         width: node.width,
         height: node.height,
         component: node.component,

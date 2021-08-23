@@ -4,3 +4,4 @@ export * from './extend-node';
 export * from './shared';
 export * from './hooks';
 export * from './base-node';
+export * from './decision-node';

@@ -4,7 +4,7 @@ import { useFlow } from '../../hooks';
 const STAND_SIZE = 56;
 
 export const Panel = () => {
-  const flow = useFlow();
+  const flow = useFlow() as any;
   const init = useCallback(() => {
     flow.setFlowNode([
       {
@@ -13,6 +13,15 @@ export const Panel = () => {
         width: STAND_SIZE,
         height: STAND_SIZE,
         component: 'ExtendNode',
+        targets: ['002'],
+      },
+      {
+        id: '002',
+        type: 'forward',
+        width: STAND_SIZE,
+        height: STAND_SIZE,
+        label: '决策',
+        component: 'DecisionNode',
       },
     ]);
   }, [flow]);

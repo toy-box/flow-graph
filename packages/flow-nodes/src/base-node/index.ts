@@ -3,9 +3,9 @@ import { Graph, Markup } from '@antv/x6';
 export const makeBaseNode = (
   x: number,
   y: number,
-  fill: string,
-  stroke: string,
-  title: string,
+  title = '',
+  fill = '#ED8A19',
+  stroke = 'white',
   iconMarkup: any,
   iconAttrs?: any
 ) => {
@@ -38,8 +38,8 @@ export const makeBaseNode = (
         fill: 'white',
       },
       body: {
-        fill: '#ED8A19',
-        stroke: 'white',
+        fill,
+        stroke,
         strokeWidth: 4,
         refPoints: '0,10 10,0 20,10 10,20',
       },
@@ -51,9 +51,9 @@ export const makeBaseNode = (
 export const makeAssignNode = (
   x: number,
   y: number,
-  fill: string,
-  stroke: string,
-  title: string
+  title?: string,
+  fill?: string,
+  stroke?: string
 ) => {
   return makeBaseNode(x, y, fill, stroke, title, [
     {
@@ -69,9 +69,9 @@ export const makeAssignNode = (
 export const makeLoopNode = (
   x: number,
   y: number,
-  fill: string,
-  stroke: string,
-  title: string
+  title?: string,
+  fill?: string,
+  stroke?: string
 ) => {
   return makeBaseNode(x, y, fill, stroke, title, [
     {
@@ -87,9 +87,9 @@ export const makeLoopNode = (
 export const makeSortNode = (
   x: number,
   y: number,
-  fill: string,
-  stroke: string,
-  title: string
+  title?: string,
+  fill?: string,
+  stroke?: string
 ) => {
   return makeBaseNode(x, y, fill, stroke, title, [
     {
@@ -105,9 +105,9 @@ export const makeSortNode = (
 export const makeReocrdCreateNode = (
   x: number,
   y: number,
-  fill: string,
-  stroke: string,
-  title: string
+  title?: string,
+  fill?: string,
+  stroke?: string
 ) => {
   const { markup, attrs } = Markup.xml2json(`
     <svg xmlns="http://www.w3.org/2000/svg" viewBox = "0 0 24 24" width = "24" height = "24" >
@@ -121,9 +121,9 @@ export const makeReocrdCreateNode = (
 export const makeReocrdUpdateNode = (
   x: number,
   y: number,
-  fill: string,
-  stroke: string,
-  title: string
+  title?: string,
+  fill?: string,
+  stroke?: string
 ) => {
   const { markup, attrs } = Markup.xml2json(`
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
@@ -137,9 +137,9 @@ export const makeReocrdUpdateNode = (
 export const makeReocrdFindNode = (
   x: number,
   y: number,
-  fill: string,
-  stroke: string,
-  title: string
+  title?: string,
+  fill?: string,
+  stroke?: string
 ) => {
   const { markup, attrs } = Markup.xml2json(`
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
@@ -152,9 +152,9 @@ export const makeReocrdFindNode = (
 export const makeReocrdDeleteNode = (
   x: number,
   y: number,
-  fill: string,
-  stroke: string,
-  title: string
+  title?: string,
+  fill?: string,
+  stroke?: string
 ) => {
   const { markup, attrs } = Markup.xml2json(`
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
