@@ -19,6 +19,7 @@ export interface IFlowNodeProps extends Omit<NodeProps, 'id'> {
   cycleBackTarget?: string;
   cycleEndTarget?: string;
   contenxtMenu?: IContextMenuItem[];
+  onClick?: () => void;
 }
 
 export class FlowNode {
@@ -36,6 +37,7 @@ export class FlowNode {
   cycleBackTarget?: string;
   cycleEndTarget?: string;
   contenxtMenu?: IContextMenuItem[];
+  onClick?: () => void;
 
   constructor(props: IFlowNodeProps, flowGraph: FlowGraph) {
     this.id = props.id || uid();
@@ -50,6 +52,7 @@ export class FlowNode {
     this.cycleEndTarget = props.cycleEndTarget;
     this.forkEndTarget = props.forkEndTarget;
     this.contenxtMenu = props.contenxtMenu;
+    this.onClick = props.onClick;
     this.flowGraph = flowGraph;
   }
 

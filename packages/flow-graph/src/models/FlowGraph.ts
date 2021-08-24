@@ -51,7 +51,6 @@ export class FlowGraph {
   }
 
   layout() {
-    // console.log(this.fork, '13223232');
     const opts = {
       fork: true,
     };

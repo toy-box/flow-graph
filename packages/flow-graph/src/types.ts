@@ -20,6 +20,7 @@ export interface NodeProps {
   component?: string;
   label?: string;
   contextMenu?: IContextMenuItem[];
+  onClick?: () => void;
 }
 
 export interface Point {

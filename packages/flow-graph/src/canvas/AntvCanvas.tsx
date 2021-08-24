@@ -23,7 +23,8 @@ Shape.Edge.config({
 export type MakeSvgNode = (
   x: number,
   y: number,
-  title: string
+  title?: string,
+  onClick?: () => void
 ) => Node.Metadata;
 
 export interface AntvCanvasProps<T> {
@@ -59,7 +60,12 @@ export class AntvCanvas<T> implements ICanvas {
     if (this.svgNodes[componentName]) {
       return {
         id: node.id,
-        ...this.svgNodes[componentName](node.x, node.y, node.label),
+        ...this.svgNodes[componentName](
+          node.x,
+          node.y,
+          node.label,
+          node.onClick
+        ),
       };
     }
     return {

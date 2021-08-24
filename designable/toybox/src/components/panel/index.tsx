@@ -22,6 +22,7 @@ export const Panel = () => {
         height: STAND_SIZE,
         label: '决策',
         component: 'DecisionNode',
+        onClick: () => console.log('决策'),
       },
     ]);
   }, [flow]);

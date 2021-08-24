@@ -4,7 +4,7 @@ export const makeDecisionNode = (
   x: number,
   y: number,
   label: string,
-  onClick = () => undefined
+  onClick: () => void
 ): Node.Metadata => {
   return {
     shape: 'polygon',

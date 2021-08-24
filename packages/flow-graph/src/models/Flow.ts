@@ -136,6 +136,7 @@ export class Flow {
         width: node.width,
         height: node.height,
         component: node.component,
+        onClick: node.onClick,
         contextMenu: node.contenxtMenu,
       });
   };
