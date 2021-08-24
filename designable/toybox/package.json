@@ -1,6 +1,6 @@
 {
   "name": "@toy-box/flow-designable",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "private": true,
   "license": "MIT",
   "main": "lib",
@@ -50,8 +50,8 @@
   "dependencies": {
     "@antv/x6": "^1.25.0",
     "@antv/x6-react-shape": "^1.4.5",
-    "@toy-box/flow-graph": "1.0.13",
-    "@toy-box/flow-nodes": "1.0.13",
+    "@toy-box/flow-graph": "1.0.14",
+    "@toy-box/flow-nodes": "1.0.14",
     "butterfly-dag": "^4.0.34"
   },
   "publishConfig": {
