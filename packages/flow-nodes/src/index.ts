@@ -5,3 +5,4 @@ export * from './shared';
 export * from './hooks';
 export * from './base-node';
 export * from './decision-node';
+export * from './rect-node';

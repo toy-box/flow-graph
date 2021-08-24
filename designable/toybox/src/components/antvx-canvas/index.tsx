@@ -7,7 +7,9 @@ import {
   StartNode,
   ExtendNode,
   EndNode,
-  makeDecisionNode,
+  ActionNode,
+  DecisionNode,
+  RecordCreateNode,
 } from '@toy-box/flow-nodes';
 import { useFlow } from '../../hooks';
 import { ExtendPanel } from '../extend-panel';
@@ -39,9 +41,10 @@ export const AntvxCanvas = () => {
           }),
           ExtendNode: connect(ExtendNode, <ExtendPanel title="extend panel" />),
           EndNode: connect(EndNode),
-        },
-        svgNodes: {
-          DecisionNode: makeDecisionNode,
+          DecisionNode: connect(
+            ActionNode,
+            <ExtendPanel title="extend panel" />
+          ),
         },
       })
     );
