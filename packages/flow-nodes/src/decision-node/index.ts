@@ -34,11 +34,29 @@ export const makeDecisionNode = (
       {
         name: 'button',
         args: {
-          width: 56,
-          height: 56,
-          opacity: 0,
-          cursor: 'pointer',
-          offset: { x: -56, y: -56 },
+          markup: [
+            {
+              tagName: 'polygon',
+              selector: 'button',
+              attrs: {
+                width: 60,
+                height: 60,
+                fill: 'rgba(255,255,255,0)',
+                stroke: 'white',
+                strokeWidth: 2,
+                points: [
+                  [0, 30],
+                  [30, 0],
+                  [60, 30],
+                  [30, 60],
+                ],
+                cursor: 'pointer',
+              },
+            },
+          ],
+          x: '100%',
+          y: '100%',
+          offset: { x: -58, y: -58 },
           onClick,
         },
       },
@@ -51,14 +69,13 @@ export const makeDecisionNode = (
       },
       fork: {
         refX: 15,
-        refY: 40,
+        refY: 41,
         fill: 'white',
         transform: 'scale(1, -1)',
       },
       body: {
         fill: '#ED8A19',
-        stroke: 'white',
-        strokeWidth: 4,
+        stroke: '#ED8A19',
         refPoints: '0,10 10,0 20,10 10,20',
       },
     },

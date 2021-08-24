@@ -30,14 +30,19 @@ export const makeBaseNode = (
     tools: [
       {
         name: 'button',
-        args: {
-          width: 56,
-          height: 56,
-          opacity: 0,
-          cursor: 'pointer',
-          offset: { x: -56, y: -56 },
-          onClick,
+        markup: {
+          tagName: 'rect',
+          selector: 'button',
+          args: {
+            width: 56,
+            height: 56,
+            opacity: 0,
+          },
         },
+        x: '100%',
+        y: '100%',
+        offset: { x: -56, y: -56 },
+        onClick,
       },
     ],
     attrs: {
@@ -54,8 +59,9 @@ export const makeBaseNode = (
       body: {
         fill,
         stroke,
-        strokeWidth: 4,
-        refPoints: '0,10 10,0 20,10 10,20',
+        strokeWidth: 2,
+        rx: 2,
+        ry: 2,
       },
       ...iconAttrs,
     },
