@@ -3,11 +3,11 @@ import { IContextMenuItem } from './canvas';
 export type FlowNodeType =
   | 'begin'
   | 'end'
-  | 'forkBegin'
-  | 'forkEnd'
-  | 'cycleBegin'
-  | 'cycleBack'
-  | 'cycleEnd'
+  | 'decisionBegin'
+  | 'decisionEnd'
+  | 'loopBegin'
+  | 'loopBack'
+  | 'loopEnd'
   | 'forward';
 
 export interface NodeProps {

@@ -15,7 +15,7 @@ export interface IFlowNodeProps extends Omit<NodeProps, 'id'> {
   label?: string;
   targets?: string[];
   component?: string;
-  forkEndTarget?: string;
+  decisionEndTarget?: string;
   cycleBackTarget?: string;
   cycleEndTarget?: string;
   contenxtMenu?: IContextMenuItem[];
@@ -33,7 +33,7 @@ export class FlowNode {
   label?: string;
   targets?: string[];
   component?: string;
-  forkEndTarget?: string;
+  decisionEndTarget?: string;
   cycleBackTarget?: string;
   cycleEndTarget?: string;
   contenxtMenu?: IContextMenuItem[];
@@ -50,7 +50,7 @@ export class FlowNode {
     this.component = props.component;
     this.cycleBackTarget = props.cycleBackTarget;
     this.cycleEndTarget = props.cycleEndTarget;
-    this.forkEndTarget = props.forkEndTarget;
+    this.decisionEndTarget = props.decisionEndTarget;
     this.contenxtMenu = props.contenxtMenu;
     this.onClick = props.onClick;
     this.flowGraph = flowGraph;
@@ -83,15 +83,15 @@ export class FlowNode {
   }
 
   get isAreaNode() {
-    return ['cycleBegin', 'forkBegin'].includes(this.type);
+    return ['loopBegin', 'decisionBegin'].includes(this.type);
   }
 
   get isAreaBegin() {
-    return ['cycleBegin', 'forkBegin'].includes(this.type);
+    return ['loopBegin', 'decisionBegin'].includes(this.type);
   }
 
   get isAreaEnd() {
-    return ['cycleEnd', 'forkEnd'].includes(this.type);
+    return ['cycleEnd', 'decisionEnd'].includes(this.type);
   }
 
   get nextNodes() {
@@ -128,19 +128,19 @@ export class FlowNode {
 
   get innerCycles() {
     const nodeLength = this.innerNodes.filter(
-      (node) => node.type === 'cycleBegin'
+      (node) => node.type === 'loopBegin'
     ).length;
-    return nodeLength + (this.type === 'cycleBegin' ? 1 : 0);
+    return nodeLength + (this.type === 'loopBegin' ? 1 : 0);
   }
 
   get cycleEnd(): FlowNode | undefined {
-    if (this.type === 'cycleBegin') {
+    if (this.type === 'loopBegin') {
       return this.areaEndNode;
     }
     return undefined;
   }
 
-  get cycleBegin(): FlowNode | undefined {
+  get loopBegin(): FlowNode | undefined {
     // if (this.type === 'cycleEnd') {
     //   return Object.keys(this.flowGraph.nodeMap)
     //     .map((key) => this.flowGraph.getNode(key))
@@ -148,17 +148,17 @@ export class FlowNode {
     // }
     // if (this.type === 'cycleBack' && this.targets && this.targets[0]) {
     //   console.log(this.flowGraph.getNode(this.targets[0]));
-    //   return this.flowGraph.getNode(this.targets[0]).cycleBegin;
+    //   return this.flowGraph.getNode(this.targets[0]).loopBegin;
     // }
     return Object.keys(this.flowGraph.nodeMap)
       .map((key) => this.flowGraph.getNode(key))
       .find((node) => node.cycleBackTarget === this.id);
   }
 
-  get forkEnd(): FlowNode | undefined {
-    const forkEnd1 = Object.keys(this.flowGraph.nodeMap)
+  get decisionEnd(): FlowNode | undefined {
+    const decisionEnd1 = Object.keys(this.flowGraph.nodeMap)
       .map((key) => this.flowGraph.getNode(key))
-      .find((node) => node.forkEndTarget === this.targets[0]);
-    return forkEnd1;
+      .find((node) => node.decisionEndTarget === this.targets[0]);
+    return decisionEnd1;
   }
 }

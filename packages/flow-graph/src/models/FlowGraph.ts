@@ -133,14 +133,15 @@ export class FlowGraph {
         .find(
           (node) =>
             // node.cycleBackTarget === nexts[0] ||
-            node.cycleEndTarget === nexts[0] || node.forkEndTarget === nexts[0]
+            node.cycleEndTarget === nexts[0] ||
+            node.decisionEndTarget === nexts[0]
         );
       // const isCycleEnd = Object.keys(this.nodeMap)
       //   .map((key) => this.getNode(key))
       //   .find((node) => node.cycleEndTarget === nexts[0]);
-      // const isForkEnd = Object.keys(this.nodeMap)
+      // const isdecisionEnd = Object.keys(this.nodeMap)
       //   .map((key) => this.getNode(key))
-      //   .find((node) => node.forkEndTarget === nexts[0]);
+      //   .find((node) => node.decisionEndTarget === nexts[0]);
       if (nextNode.isAreaBegin) {
         return this.getNextAreaEnd(nextNode.id, deep + 1);
       }

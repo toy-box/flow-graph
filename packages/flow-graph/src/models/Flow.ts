@@ -76,7 +76,7 @@ export class Flow {
       layout.edges.forEach((edge) => {
         const sourceNode = this.flowGraph.getNode(edge.v);
         const targetNode = this.flowGraph.getNode(edge.w);
-        if (sourceNode.type === 'cycleBegin') {
+        if (sourceNode.type === 'loopBegin') {
           const cycleEndTargetNode = this.flowGraph.getNode(
             sourceNode.cycleEndTarget
           );
@@ -92,24 +92,24 @@ export class Flow {
               vertices: makeLeftCycleVertices(sourceNode, cycleEndTargetNode),
             },
           ]);
-        } else if (sourceNode.cycleBegin) {
-          if (sourceNode.cycleBegin) {
+        } else if (sourceNode.loopBegin) {
+          if (sourceNode.loopBegin) {
             this.addGraphEdge({
               source: edge.v,
-              target: sourceNode.cycleBegin.id,
+              target: sourceNode.loopBegin.id,
               vertices: makeRightCycleVertices(
                 sourceNode,
-                sourceNode.cycleBegin
+                sourceNode.loopBegin
               ),
             });
           }
-        } else if (sourceNode.type === 'forkBegin') {
+        } else if (sourceNode.type === 'decisionBegin') {
           this.addGraphEdge({
             source: edge.v,
             target: edge.w,
             vertices: makeForkVertices(sourceNode, targetNode),
           });
-        } else if (sourceNode.forkEnd) {
+        } else if (sourceNode.decisionEnd) {
           this.addGraphEdge({
             source: edge.v,
             target: edge.w,

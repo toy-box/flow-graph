@@ -38,7 +38,7 @@ export const Panel = () => {
       },
       {
         id: '100',
-        type: 'cycleBegin',
+        type: 'loopBegin',
         cycleBackTarget: '101',
         cycleEndTarget: '102',
         width: STAND_SIZE,
@@ -63,8 +63,8 @@ export const Panel = () => {
       },
       {
         id: '201',
-        type: 'forkBegin',
-        forkEndTarget: '204',
+        type: 'decisionBegin',
+        decisionEndTarget: '204',
         width: STAND_SIZE,
         height: STAND_SIZE,
         targets: ['202', '203'],
@@ -87,8 +87,8 @@ export const Panel = () => {
       },
       {
         id: '211',
-        type: 'forkBegin',
-        forkEndTarget: '214',
+        type: 'decisionBegin',
+        decisionEndTarget: '214',
         width: STAND_SIZE,
         height: STAND_SIZE,
         targets: ['212', '213'],
@@ -111,7 +111,7 @@ export const Panel = () => {
       },
       {
         id: '214',
-        type: 'forkEnd',
+        type: 'decisionEnd',
         width: STAND_SIZE,
         height: STAND_SIZE,
         targets: ['204'],
@@ -119,7 +119,7 @@ export const Panel = () => {
       },
       {
         id: '204',
-        type: 'forkEnd',
+        type: 'decisionEnd',
         width: STAND_SIZE,
         height: STAND_SIZE,
         targets: ['300'],
@@ -127,7 +127,7 @@ export const Panel = () => {
       },
       {
         id: '300',
-        type: 'cycleBegin',
+        type: 'loopBegin',
         cycleBackTarget: '301',
         cycleEndTarget: '101',
         width: STAND_SIZE,
@@ -144,7 +144,7 @@ export const Panel = () => {
       },
       {
         id: '321',
-        type: 'cycleBegin',
+        type: 'loopBegin',
         cycleBackTarget: '322',
         cycleEndTarget: '323',
         width: STAND_SIZE,
@@ -169,7 +169,7 @@ export const Panel = () => {
       },
       {
         id: '312',
-        type: 'cycleBegin',
+        type: 'loopBegin',
         cycleBackTarget: '313',
         cycleEndTarget: '301',
         width: STAND_SIZE,
@@ -186,8 +186,8 @@ export const Panel = () => {
       },
       {
         id: '501',
-        type: 'forkBegin',
-        forkEndTarget: '504',
+        type: 'decisionBegin',
+        decisionEndTarget: '504',
         width: STAND_SIZE,
         height: STAND_SIZE,
         targets: ['502', '503'],
@@ -210,7 +210,7 @@ export const Panel = () => {
       },
       {
         id: '504',
-        type: 'forkEnd',
+        type: 'decisionEnd',
         width: STAND_SIZE,
         height: STAND_SIZE,
         targets: ['332'],
@@ -218,7 +218,7 @@ export const Panel = () => {
       },
       {
         id: '332',
-        type: 'cycleBegin',
+        type: 'loopBegin',
         cycleBackTarget: '333',
         cycleEndTarget: '313',
         width: STAND_SIZE,
@@ -235,7 +235,7 @@ export const Panel = () => {
       },
       {
         id: '342',
-        type: 'cycleBegin',
+        type: 'loopBegin',
         cycleBackTarget: '343',
         cycleEndTarget: '333',
         width: STAND_SIZE,
