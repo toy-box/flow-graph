@@ -39,12 +39,12 @@ export const RectNode: FC<RectNodeProps> = ({
   );
   return (
     <Popover
+      visible={active}
       trigger="click"
       onVisibleChange={(visible) => setActive(visible)}
-      autoAdjustOverflow={false}
       placement="bottom"
       content={content}
-      overlayClassName="no-padding"
+      overlayClassName="no-padding no-arrow"
     >
       <div
         className={classNames('tbox-flow-rect-node', className)}

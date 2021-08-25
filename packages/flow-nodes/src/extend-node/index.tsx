@@ -25,9 +25,8 @@ export const ExtendNode: FC<INodeProps> = ({ content }) => {
       trigger="click"
       onVisibleChange={(visible) => setActive(visible)}
       placement="bottom"
-      autoAdjustOverflow={false}
       content={renderContent()}
-      overlayClassName="no-padding"
+      overlayClassName="no-padding no-arrow"
     >
       <div className={classNames('tbox-flow-extend-node', { active })}>
         <PlusOutlined />
