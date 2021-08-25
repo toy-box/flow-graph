@@ -41,6 +41,7 @@ export const RectNode: FC<RectNodeProps> = ({
     <Popover
       trigger="click"
       onVisibleChange={(visible) => setActive(visible)}
+      autoAdjustOverflow={false}
       placement="bottom"
       content={content}
       overlayClassName="no-padding"

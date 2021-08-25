@@ -25,6 +25,7 @@ export const ExtendNode: FC<INodeProps> = ({ content }) => {
       trigger="click"
       onVisibleChange={(visible) => setActive(visible)}
       placement="bottom"
+      autoAdjustOverflow={false}
       content={renderContent()}
       overlayClassName="no-padding"
     >

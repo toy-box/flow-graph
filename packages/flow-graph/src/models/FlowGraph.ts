@@ -70,7 +70,7 @@ export class FlowGraph {
     this.dg.nodes().forEach((nodeId) => {
       const pos = this.dg.node(nodeId);
       if (this.nodeMap[nodeId].component === 'ExtendNode') {
-        if (this.nodeMap[nodeId].type === 'cycleBack') {
+        if (this.nodeMap[nodeId].type === 'loopBack') {
           this.nodeMap[nodeId].setPostion(
             pos.x + this.nodeMap[nodeId].width / 4,
             pos.y
@@ -132,16 +132,10 @@ export class FlowGraph {
         .map((key) => this.getNode(key))
         .find(
           (node) =>
-            // node.cycleBackTarget === nexts[0] ||
-            node.cycleEndTarget === nexts[0] ||
-            node.decisionEndTarget === nexts[0]
+            nexts &&
+            (node.loopEndTarget === nexts[0] ||
+              node.decisionEndTarget === nexts[0])
         );
-      // const isCycleEnd = Object.keys(this.nodeMap)
-      //   .map((key) => this.getNode(key))
-      //   .find((node) => node.cycleEndTarget === nexts[0]);
-      // const isdecisionEnd = Object.keys(this.nodeMap)
-      //   .map((key) => this.getNode(key))
-      //   .find((node) => node.decisionEndTarget === nexts[0]);
       if (nextNode.isAreaBegin) {
         return this.getNextAreaEnd(nextNode.id, deep + 1);
       }
@@ -170,7 +164,7 @@ export class FlowGraph {
     //   .map((key) => this.getNode(key))
     //   .find(
     //     (node) =>
-    //       node.cycleEndTarget === begin.id
+    //       node.loopEndTarget === begin.id
     //   );
     // if (isAreaEnd) {
     //   return Array.from(new Set(innerNodes));

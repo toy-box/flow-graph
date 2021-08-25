@@ -14,6 +14,7 @@ const makeForkVertices = (source: FlowNode, target: FlowNode) => {
     targetLeng &&
     targetLeng % 2 === 1 &&
     centerIdx &&
+    source.targets &&
     source.targets[centerIdx] === target.id
   ) {
     y = source.centerY + target.height * 1.5;
@@ -42,8 +43,9 @@ const makeLeftCycleVertices = (source: FlowNode, target: FlowNode) => {
   let width =
     target.areaWidth > source.areaWidth ? target.areaWidth : source.areaWidth;
   if (
-    source.cycleBackTarget === source.targets[0] &&
-    target.type === 'cycleEnd'
+    source.targets &&
+    source.loopBackTarget === source.targets[0] &&
+    target.type === 'loopEnd'
   ) {
     width = source.areaWidth;
   }
@@ -76,9 +78,9 @@ export class Flow {
       layout.edges.forEach((edge) => {
         const sourceNode = this.flowGraph.getNode(edge.v);
         const targetNode = this.flowGraph.getNode(edge.w);
-        if (sourceNode.type === 'loopBegin') {
-          const cycleEndTargetNode = this.flowGraph.getNode(
-            sourceNode.cycleEndTarget
+        if (sourceNode.type === 'loopBegin' && sourceNode.loopEndTarget) {
+          const loopEndTargetNode = this.flowGraph.getNode(
+            sourceNode.loopEndTarget
           );
           this.addGraphEdges([
             {
@@ -88,8 +90,8 @@ export class Flow {
             {
               source: edge.v,
               // target: sourceNode.areaEndNode.id,
-              target: sourceNode.cycleEndTarget,
-              vertices: makeLeftCycleVertices(sourceNode, cycleEndTargetNode),
+              target: sourceNode.loopEndTarget,
+              vertices: makeLeftCycleVertices(sourceNode, loopEndTargetNode),
             },
           ]);
         } else if (sourceNode.loopBegin) {

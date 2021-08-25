@@ -49,7 +49,7 @@ export class AntvCanvas<T> implements ICanvas {
 
   protected makeNode = (nodeProps: NodeProps) => {
     const { type, component: componentName, ...node } = nodeProps;
-    if (this.components[componentName]) {
+    if (componentName && this.components[componentName]) {
       const component = this.components[componentName];
       return {
         ...node,
@@ -57,7 +57,7 @@ export class AntvCanvas<T> implements ICanvas {
         component,
       };
     }
-    if (this.svgNodes[componentName]) {
+    if (componentName && this.svgNodes[componentName]) {
       return {
         id: node.id,
         ...this.svgNodes[componentName](
