@@ -29,11 +29,12 @@ export const DecisionNode: FC<DecisionNodeProps> = ({
 
   return (
     <Popover
+      visible={active}
       trigger="click"
       onVisibleChange={(visible) => setActive(visible)}
       placement="bottom"
       content={renderContent()}
-      overlayClassName="no-padding"
+      overlayClassName="no-padding no-arrow"
     >
       <div className={classNames('tbox-flow-decision-node')}>
         <svg width="56px" height="56px" viewBox="0 0 56 56" version="1.1">
