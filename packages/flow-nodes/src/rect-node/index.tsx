@@ -27,6 +27,7 @@ export const RectNode: FC<RectNodeProps> = ({
   icon,
   color,
   content,
+  labelContent,
 }) => {
   const [active, setActive] = useState(false);
   const innerStyle = useMemo(
@@ -49,21 +50,24 @@ export const RectNode: FC<RectNodeProps> = ({
     return content;
   };
   return (
-    <Popover
-      visible={active}
-      trigger="click"
-      onVisibleChange={(visible) => setActive(visible)}
-      placement="bottom"
-      content={renderContent()}
-      overlayClassName="no-padding no-arrow"
-    >
-      <div
-        className={classNames('tbox-flow-rect-node', className)}
-        style={innerStyle}
+    <div>
+      <Popover
+        visible={active}
+        trigger="click"
+        onVisibleChange={(visible) => setActive(visible)}
+        placement="bottom"
+        content={renderContent()}
+        overlayClassName="no-padding no-arrow"
       >
-        {icon}
-      </div>
-    </Popover>
+        <div
+          className={classNames('tbox-flow-rect-node', className)}
+          style={innerStyle as any}
+        >
+          {icon}
+        </div>
+      </Popover>
+      {labelContent}
+    </div>
   );
 };
 

@@ -10,11 +10,20 @@ export interface EndNodeProps extends INodeProps {
   style?: CSSProperties;
 }
 
-export const EndNode: FC<EndNodeProps> = ({ className, style, content }) => {
+export const EndNode: FC<EndNodeProps> = ({
+  className,
+  style,
+  content,
+  labelContent,
+}) => {
   const [active, setActive] = useState(false);
   const render = (
-    <div className={classNames('tbox-flow-end-node', className)} style={style}>
+    <div
+      className={classNames('tbox-flow-end-node', className)}
+      style={style as any}
+    >
       <StopFill />
+      {labelContent}
     </div>
   );
   const renderContent = () => {

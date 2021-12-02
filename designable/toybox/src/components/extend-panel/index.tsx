@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useNode } from '@toy-box/flow-nodes';
 
 export const ExtendPanel = (props) => {
-  const node = useNode();
+  const node: any = useNode();
   const style = {
     width: '100px',
     padding: '8px',

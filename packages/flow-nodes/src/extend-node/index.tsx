@@ -5,7 +5,7 @@ import { Popover } from 'antd';
 import { INodeProps } from '../types';
 import './styles';
 
-export const ExtendNode: FC<INodeProps> = ({ content }) => {
+export const ExtendNode: FC<INodeProps> = ({ content, labelContent }) => {
   const [active, setActive] = useState(false);
   const renderContent = () => {
     if (React.isValidElement(content) && content.type) {
@@ -20,17 +20,20 @@ export const ExtendNode: FC<INodeProps> = ({ content }) => {
   };
 
   return (
-    <Popover
-      visible={active}
-      trigger="click"
-      onVisibleChange={(visible) => setActive(visible)}
-      placement="bottom"
-      content={renderContent()}
-      overlayClassName="no-padding no-arrow"
-    >
-      <div className={classNames('tbox-flow-extend-node', { active })}>
-        <PlusOutlined />
-      </div>
-    </Popover>
+    <div>
+      <Popover
+        visible={active}
+        trigger="click"
+        onVisibleChange={(visible) => setActive(visible)}
+        placement="bottom"
+        content={renderContent()}
+        overlayClassName="no-padding no-arrow"
+      >
+        <div className={classNames('tbox-flow-extend-node', { active })}>
+          <PlusOutlined />
+        </div>
+      </Popover>
+      {labelContent}
+    </div>
   );
 };

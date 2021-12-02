@@ -13,6 +13,7 @@ import {
 } from '@toy-box/flow-nodes';
 import { useFlow } from '../../hooks';
 import { ExtendPanel } from '../extend-panel';
+import { LabelPanel } from '../label-panel';
 
 export const AntvxCanvas = () => {
   const flow = useFlow() as any;
@@ -23,7 +24,7 @@ export const AntvxCanvas = () => {
 
   useEffect(() => {
     const graph = new Graph({
-      container: document.getElementById('flow-canvas'),
+      container: document.getElementById('flow-canvas') || undefined,
       panning: true,
       grid: true,
       background: {
@@ -42,8 +43,9 @@ export const AntvxCanvas = () => {
           ExtendNode: connect(ExtendNode, <ExtendPanel title="extend panel" />),
           EndNode: connect(EndNode),
           DecisionNode: connect(
-            ActionNode,
-            <ExtendPanel title="extend panel" />
+            DecisionNode,
+            <ExtendPanel title="extend panel" />,
+            <LabelPanel />
           ),
         },
       })

@@ -6,12 +6,13 @@ import { INodeProps } from '../types';
 export function connect(
   Target: FC<INodeProps>,
   content?: ReactNode,
+  labelContent?: ReactNode,
   props?: Record<string, any>
 ) {
   return (node: Node) => {
     return (
       <NodeContext.Provider value={{ node }}>
-        <Target {...props} content={content} />
+        <Target {...props} content={content} labelContent={labelContent} />
       </NodeContext.Provider>
     );
   };

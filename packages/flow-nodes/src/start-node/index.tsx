@@ -14,6 +14,7 @@ export const StartNode: FC<StartNodeProps> = ({
   className,
   style,
   content,
+  labelContent,
 }) => {
   const [active, setActive] = useState(false);
 
@@ -30,21 +31,24 @@ export const StartNode: FC<StartNodeProps> = ({
   };
 
   return (
-    <Popover
-      trigger="click"
-      onVisibleChange={(visible) => setActive(visible)}
-      placement="bottom"
-      content={renderContent()}
-      overlayClassName="no-padding"
-    >
-      <div className={classNames('tbox-flow-start-node')}>
-        <div
-          className={classNames('tbox-flow-start-node-instance', className)}
-          style={style}
-        >
-          <PlayFill />
+    <div>
+      <Popover
+        trigger="click"
+        onVisibleChange={(visible) => setActive(visible)}
+        placement="bottom"
+        content={renderContent()}
+        overlayClassName="no-padding"
+      >
+        <div className={classNames('tbox-flow-start-node')}>
+          <div
+            className={classNames('tbox-flow-start-node-instance', className)}
+            style={style as any}
+          >
+            <PlayFill />
+          </div>
         </div>
-      </div>
-    </Popover>
+      </Popover>
+      {labelContent}
+    </div>
   );
 };

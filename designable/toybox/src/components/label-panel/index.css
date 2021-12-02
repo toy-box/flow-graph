@@ -1,0 +1,16 @@
+.tbox-flow-label-node-desc {
+  position: absolute;
+  top: -40px;
+  left: 60px;
+  line-height: 20px;
+}
+
+.tbox-flow-label-node-desc-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 66px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
