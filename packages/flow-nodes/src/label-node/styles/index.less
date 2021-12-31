@@ -1,0 +1,31 @@
+@import '../../theme.less';
+
+@active-color: #2f54eb;
+
+.tbox-flow-label-node {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: calc(@node-width * 1.5);
+  height: calc(@node-height / 2);
+  border-radius: 50px;
+  border: 2px solid #8c8c8c;
+  background-color: white;
+  color: #8c8c8c;
+  font-size: 20px;
+  position: relative;
+  left: -30px;
+  cursor: pointer;
+  > span {
+    transition-duration: 0.15s;
+  }
+  &.active {
+    border-color: @active-color;
+    background-color: @active-color;
+    color: white;
+    > span {
+      transform: rotate(135deg);
+    }
+  }
+}

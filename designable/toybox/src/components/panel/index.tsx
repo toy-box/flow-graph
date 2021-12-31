@@ -67,7 +67,7 @@ export const Panel = () => {
         decisionEndTarget: '204',
         width: STAND_SIZE,
         height: STAND_SIZE,
-        targets: ['202', '203'],
+        targets: ['2002', '2003'],
       },
       {
         id: '202',
@@ -84,6 +84,22 @@ export const Panel = () => {
         height: STAND_SIZE,
         targets: ['211'],
         component: 'ExtendNode',
+      },
+      {
+        id: '2002',
+        type: 'forward',
+        width: STAND_SIZE,
+        height: STAND_SIZE,
+        targets: ['202'],
+        component: 'LabelNode',
+      },
+      {
+        id: '2003',
+        type: 'forward',
+        width: STAND_SIZE,
+        height: STAND_SIZE,
+        targets: ['203'],
+        component: 'LabelNode',
       },
       {
         id: '211',
@@ -145,7 +161,7 @@ export const Panel = () => {
       {
         id: '321',
         type: 'loopBegin',
-        loopBackTarget: '322',
+        loopBackTarget: '3220',
         loopEndTarget: '323',
         width: STAND_SIZE,
         height: STAND_SIZE,
@@ -153,10 +169,26 @@ export const Panel = () => {
       },
       {
         id: '322',
-        type: 'loopBack',
+        type: 'forward',
+        width: STAND_SIZE,
+        height: STAND_SIZE,
+        targets: ['3220'],
+        component: 'LabelNode',
+      },
+      {
+        id: '3223',
+        type: 'forward',
         width: STAND_SIZE,
         height: STAND_SIZE,
         targets: ['323'],
+        component: 'LabelNode',
+      },
+      {
+        id: '3220',
+        type: 'loopBack',
+        width: STAND_SIZE,
+        height: STAND_SIZE,
+        targets: ['3223'],
         component: 'ExtendNode',
       },
       {

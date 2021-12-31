@@ -39,13 +39,18 @@ const makeRightCycleVertices = (source: FlowNode, target: FlowNode) => {
   ];
 };
 
-const makeLeftCycleVertices = (source: FlowNode, target: FlowNode) => {
+const makeLeftCycleVertices = (
+  source: FlowNode,
+  target: FlowNode,
+  targetNode: FlowNode
+) => {
   let width =
     target.areaWidth > source.areaWidth ? target.areaWidth : source.areaWidth;
   if (
-    source.targets &&
-    source.loopBackTarget === source.targets[0] &&
-    target.type === 'loopEnd'
+    (source.targets &&
+      source.loopBackTarget === source.targets[0] &&
+      target.type === 'loopEnd') ||
+    !targetNode
   ) {
     width = source.areaWidth;
   }
@@ -76,12 +81,22 @@ export class Flow {
       const layout = this.flowGraph.layoutData();
       layout.nodes.forEach((node) => this.addGraphNode(node));
       layout.edges.forEach((edge) => {
-        const sourceNode = this.flowGraph.getNode(edge.v);
+        const sourceNode: any = this.flowGraph.getNode(edge.v);
         const targetNode = this.flowGraph.getNode(edge.w);
         if (sourceNode.type === 'loopBegin' && sourceNode.loopEndTarget) {
           const loopEndTargetNode = this.flowGraph.getNode(
             sourceNode.loopEndTarget
           );
+          const loopBackTargetNode: any = this.flowGraph.getNode(
+            sourceNode.loopBackTarget
+          );
+          const targetNode = this.flowGraph.getNode(
+            loopBackTargetNode.targets[0]
+          );
+          const target =
+            targetNode.component === 'LabelNode'
+              ? targetNode
+              : loopEndTargetNode;
           this.addGraphEdges([
             {
               source: edge.v,
@@ -90,8 +105,12 @@ export class Flow {
             {
               source: edge.v,
               // target: sourceNode.areaEndNode.id,
-              target: sourceNode.loopEndTarget,
-              vertices: makeLeftCycleVertices(sourceNode, loopEndTargetNode),
+              target: target.id,
+              vertices: makeLeftCycleVertices(
+                sourceNode,
+                target,
+                sourceNode.loopBegin
+              ),
             },
           ]);
         } else if (sourceNode.loopBegin) {

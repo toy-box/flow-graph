@@ -10,10 +10,12 @@ import {
   ActionNode,
   DecisionNode,
   RecordCreateNode,
+  LabelNode,
 } from '@toy-box/flow-nodes';
 import { useFlow } from '../../hooks';
 import { ExtendPanel } from '../extend-panel';
 import { LabelPanel } from '../label-panel';
+import { LabelNodePanel } from '../label-node-panel';
 
 export const AntvxCanvas = () => {
   const flow = useFlow() as any;
@@ -41,6 +43,7 @@ export const AntvxCanvas = () => {
             return <div>start</div>;
           }),
           ExtendNode: connect(ExtendNode, <ExtendPanel title="extend panel" />),
+          LabelNode: connect(LabelNode, <LabelNodePanel />),
           EndNode: connect(EndNode),
           DecisionNode: connect(
             DecisionNode,

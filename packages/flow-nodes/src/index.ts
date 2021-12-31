@@ -6,3 +6,4 @@ export * from './hooks';
 export * from './base-node';
 export * from './decision-node';
 export * from './rect-node';
+export * from './label-node';

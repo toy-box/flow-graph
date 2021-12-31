@@ -69,7 +69,14 @@ export class FlowGraph {
     dagre.layout(this.dg, opts as any);
     this.dg.nodes().forEach((nodeId) => {
       const pos = this.dg.node(nodeId);
-      if (this.nodeMap[nodeId].component === 'ExtendNode') {
+      if (
+        this.nodeMap[nodeId].component === 'ExtendNode' ||
+        this.nodeMap[nodeId].component === 'LabelNode'
+      ) {
+        const height =
+          this.nodeMap[nodeId].component === 'LabelNode'
+            ? 0
+            : this.nodeMap[nodeId].height / 4;
         if (this.nodeMap[nodeId].type === 'loopBack') {
           this.nodeMap[nodeId].setPostion(
             pos.x + this.nodeMap[nodeId].width / 4,
@@ -78,7 +85,7 @@ export class FlowGraph {
         } else {
           this.nodeMap[nodeId].setPostion(
             pos.x + this.nodeMap[nodeId].width / 4,
-            pos.y + this.nodeMap[nodeId].height / 4
+            pos.y + height
           );
         }
         this.nodeMap[nodeId].setSize(
