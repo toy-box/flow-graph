@@ -323,10 +323,78 @@ export const Panel = () => {
       },
     ]);
   }, []);
+  const simble = useCallback(() => {
+    flow.setFlowNode([
+      {
+        id: '001',
+        type: 'forward',
+        width: STAND_SIZE,
+        height: STAND_SIZE,
+        component: 'ExtendNode',
+        targets: ['201'],
+      },
+      {
+        id: '201',
+        type: 'decisionBegin',
+        decisionEndTarget: '204',
+        width: STAND_SIZE,
+        height: STAND_SIZE,
+        targets: ['2002', '2003'],
+      },
+      {
+        id: '202',
+        type: 'forward',
+        width: STAND_SIZE,
+        height: STAND_SIZE,
+        targets: ['204'],
+        component: 'ExtendNode',
+      },
+      {
+        id: '203',
+        type: 'forward',
+        width: STAND_SIZE,
+        height: STAND_SIZE,
+        targets: ['204'],
+        component: 'ExtendNode',
+      },
+      {
+        id: '2002',
+        type: 'forward',
+        width: STAND_SIZE,
+        height: STAND_SIZE,
+        targets: ['202'],
+        component: 'LabelNode',
+      },
+      {
+        id: '2003',
+        type: 'forward',
+        width: STAND_SIZE,
+        height: STAND_SIZE,
+        targets: ['203'],
+        component: 'LabelNode',
+      },
+      {
+        id: '204',
+        type: 'decisionEnd',
+        width: STAND_SIZE,
+        height: STAND_SIZE,
+        targets: ['300'],
+        component: 'ExtendNode',
+      },
+      {
+        id: '300',
+        type: 'end',
+        width: STAND_SIZE,
+        height: STAND_SIZE,
+        component: 'EndNode',
+      },
+    ]);
+  }, [flow]);
   return (
     <div>
       <button onClick={init}>init</button>
       <button onClick={update}>update</button>
+      <button onClick={simble}>simble</button>
     </div>
   );
 };

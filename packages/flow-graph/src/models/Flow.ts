@@ -31,7 +31,9 @@ const makeJoinVertices = (source: FlowNode, target: FlowNode) => {
 
 const makeRightCycleVertices = (source: FlowNode, target: FlowNode) => {
   const width =
-    target.areaWidth > source.areaWidth ? target.areaWidth : source.areaWidth;
+    (target.areaWidth > source.areaWidth
+      ? target.areaWidth
+      : source.areaWidth) + 30;
   return [
     { x: source.centerX, y: source.centerY + source.height * 1.5 },
     { x: source.centerX + width / 2, y: source.centerY + source.height * 1.5 },
@@ -52,7 +54,7 @@ const makeLeftCycleVertices = (
       target.type === 'loopEnd') ||
     !targetNode
   ) {
-    width = source.areaWidth;
+    width = source.areaWidth + 30;
   }
   return [
     { x: source.centerX - width / 2, y: source.centerY },

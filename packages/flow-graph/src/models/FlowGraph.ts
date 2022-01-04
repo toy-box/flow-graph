@@ -62,7 +62,7 @@ export class FlowGraph {
     });
     Object.keys(this.nodeMap).forEach((id) => {
       this.dg.setNode(id, {
-        width: this.nodeMap[id].areaWidth,
+        width: this.nodeMap[id].areaWidth / 2,
         height: this.nodeMap[id].height,
       });
     });
