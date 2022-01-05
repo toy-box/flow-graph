@@ -34,6 +34,7 @@ export const StartNode: FC<StartNodeProps> = ({
     <div>
       <Popover
         trigger="click"
+        visible={active}
         onVisibleChange={(visible) => setActive(visible)}
         placement="bottom"
         content={renderContent()}
