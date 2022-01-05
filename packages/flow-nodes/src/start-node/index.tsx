@@ -38,7 +38,7 @@ export const StartNode: FC<StartNodeProps> = ({
         onVisibleChange={(visible) => setActive(visible)}
         placement="bottom"
         content={renderContent()}
-        overlayClassName="no-padding"
+        overlayClassName="no-padding no-arrow"
       >
         <div className={classNames('tbox-flow-start-node')}>
           <div
