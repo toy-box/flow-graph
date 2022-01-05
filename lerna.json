@@ -1,6 +1,6 @@
 {
   "packages": ["packages/*"],
-  "version": "1.0.29",
+  "version": "1.0.30",
   "npmClient": "npm",
   "useWorkspaces": true,
   "npmClientArgs": ["--ignore-engines"],
