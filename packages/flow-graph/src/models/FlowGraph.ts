@@ -85,15 +85,23 @@ export class FlowGraph {
         } else {
           this.nodeMap[nodeId].setPostion(
             pos.x + this.nodeMap[nodeId].width / 4,
-            pos.y + height
+            pos.y - height
           );
         }
         this.nodeMap[nodeId].setSize(
           this.nodeMap[nodeId].width / 2,
           this.nodeMap[nodeId].height / 2
         );
+      } else if (this.nodeMap[nodeId].component === 'EndNode') {
+        this.nodeMap[nodeId].setPostion(
+          pos.x,
+          pos.y + this.nodeMap[nodeId].height / 4
+        );
       } else {
-        this.nodeMap[nodeId].setPostion(pos.x, pos.y);
+        this.nodeMap[nodeId].setPostion(
+          pos.x,
+          pos.y - this.nodeMap[nodeId].height / 2
+        );
       }
     });
   }
