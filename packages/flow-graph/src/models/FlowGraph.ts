@@ -73,14 +73,16 @@ export class FlowGraph {
         this.nodeMap[nodeId].component === 'ExtendNode' ||
         this.nodeMap[nodeId].component === 'LabelNode'
       ) {
-        const height =
-          this.nodeMap[nodeId].component === 'LabelNode'
-            ? 0
-            : this.nodeMap[nodeId].height / 4;
+        const height = this.nodeMap[nodeId].height / 4;
         if (this.nodeMap[nodeId].type === 'loopBack') {
           this.nodeMap[nodeId].setPostion(
             pos.x + this.nodeMap[nodeId].width / 4,
             pos.y
+          );
+        } else if (this.nodeMap[nodeId].type === 'loopEnd') {
+          this.nodeMap[nodeId].setPostion(
+            pos.x + this.nodeMap[nodeId].width / 4,
+            pos.y + this.nodeMap[nodeId].height / 1.5
           );
         } else {
           this.nodeMap[nodeId].setPostion(
@@ -98,10 +100,7 @@ export class FlowGraph {
           pos.y + this.nodeMap[nodeId].height / 4
         );
       } else {
-        this.nodeMap[nodeId].setPostion(
-          pos.x,
-          pos.y - this.nodeMap[nodeId].height / 2
-        );
+        this.nodeMap[nodeId].setPostion(pos.x, pos.y);
       }
     });
   }

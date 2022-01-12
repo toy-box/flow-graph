@@ -24,8 +24,8 @@ const makeForkVertices = (source: FlowNode, target: FlowNode) => {
 
 const makeJoinVertices = (source: FlowNode, target: FlowNode) => {
   return [
-    { x: source.centerX, y: target.centerY - target.height * 1.5 },
-    { x: target.centerX, y: target.centerY - target.height * 1.5 },
+    { x: source.centerX, y: target.centerY - target.height },
+    { x: target.centerX, y: target.centerY - target.height },
   ];
 };
 
@@ -44,7 +44,7 @@ const makeRightCycleVertices = (source: FlowNode, target: FlowNode) => {
 const makeLeftCycleVertices = (
   source: FlowNode,
   target: FlowNode,
-  targetNode: FlowNode
+  loopBackTargetNode: FlowNode
 ) => {
   let width =
     target.areaWidth > source.areaWidth ? target.areaWidth : source.areaWidth;
@@ -52,14 +52,18 @@ const makeLeftCycleVertices = (
     (source.targets &&
       source.loopBackTarget === source.targets[0] &&
       target.type === 'loopEnd') ||
-    !targetNode
+    !source.loopBegin
   ) {
     width = source.areaWidth + 30;
   }
+  const height = loopBackTargetNode.centerY;
   return [
     { x: source.centerX - width / 2, y: source.centerY },
-    { x: source.centerX - width / 2, y: target.centerY - source.height },
-    { x: source.centerX, y: target.centerY - source.height },
+    {
+      x: source.centerX - width / 2,
+      y: height + loopBackTargetNode.height * 1.5,
+    },
+    { x: source.centerX, y: height + loopBackTargetNode.height * 1.5 },
   ];
 };
 
@@ -96,7 +100,8 @@ export class Flow {
             loopBackTargetNode.targets[0]
           );
           const target =
-            targetNode.component === 'LabelNode'
+            targetNode.component === 'LabelNode' &&
+            targetNode.type !== 'loopEnd'
               ? targetNode
               : loopEndTargetNode;
           this.addGraphEdges([
@@ -111,7 +116,7 @@ export class Flow {
               vertices: makeLeftCycleVertices(
                 sourceNode,
                 target,
-                sourceNode.loopBegin
+                loopBackTargetNode
               ),
             },
           ]);
