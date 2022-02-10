@@ -11,7 +11,7 @@ const DAGRE_CONFIG = {
   rankdir: 'TB',
   ranker: 'short-tree',
   nodesep: 140,
-  ranksep: 100,
+  ranksep: 140,
 };
 
 export class FlowGraph {
@@ -93,11 +93,6 @@ export class FlowGraph {
         this.nodeMap[nodeId].setSize(
           this.nodeMap[nodeId].width / 2,
           this.nodeMap[nodeId].height / 2
-        );
-      } else if (this.nodeMap[nodeId].component === 'EndNode') {
-        this.nodeMap[nodeId].setPostion(
-          pos.x,
-          pos.y + this.nodeMap[nodeId].height / 4
         );
       } else {
         this.nodeMap[nodeId].setPostion(pos.x, pos.y);

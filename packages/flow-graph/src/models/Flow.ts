@@ -24,8 +24,8 @@ const makeForkVertices = (source: FlowNode, target: FlowNode) => {
 
 const makeJoinVertices = (source: FlowNode, target: FlowNode) => {
   return [
-    { x: source.centerX, y: target.centerY - target.height },
-    { x: target.centerX, y: target.centerY - target.height },
+    { x: source.centerX, y: target.centerY - target.height * 1.5 },
+    { x: target.centerX, y: target.centerY - target.height * 1.5 },
   ];
 };
 
