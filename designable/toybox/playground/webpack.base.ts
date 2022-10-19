@@ -49,23 +49,15 @@ export default {
   },
   module: {
     rules: [
-      // {
-      //   test: /\.tsx?$/,
-      //   exclude: /node_modules/,
-      //   use: {
-      //     loader: 'babel-loader',
-      //     options: {
-      //       presets: [
-      //         ['@babel/preset-env', { targets: "defaults" }]
-      //       ],
-      //       plugins: [
-      //         "@babel/plugin-transform-classes",
-      //         "@babel/plugin-transform-typescript",
-      //         "@babel/plugin-transform-react-jsx"
-      //       ]
-      //     }
-      //   }
-      // },
+      {
+        test: /\.(js)$/,
+        // include: path.resolve(__dirname, 'node_modules/@reactflow'),
+        exclude: /node_modules(?!\/@reactflow)/,
+        use: {
+          loader: 'babel-loader',
+          options: { presets: ['@babel/preset-env'] }, // Presets used for env setup
+        },
+      },
       {
         test: /\.tsx?$/,
         use: [

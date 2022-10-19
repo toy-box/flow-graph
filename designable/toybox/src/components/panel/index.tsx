@@ -1,28 +1,84 @@
 import React, { useCallback } from 'react';
 import { useFlow } from '../../hooks';
 
-const STAND_SIZE = 56;
+const BASE_SIZE = 30;
+const STAND_SIZE = BASE_SIZE * 2;
+const LABEL_SIZE = BASE_SIZE * 3;
 
 export const Panel = () => {
   const flow = useFlow() as any;
   const init = useCallback(() => {
     flow.setFlowNode([
       {
-        id: '001',
-        type: 'forward',
+        id: '000',
+        type: 'begin',
         width: STAND_SIZE,
         height: STAND_SIZE,
-        component: 'ExtendNode',
+        component: 'StartNode',
         targets: ['002'],
       },
       {
         id: '002',
         type: 'forward',
-        width: STAND_SIZE,
-        height: STAND_SIZE,
+        width: STAND_SIZE + LABEL_SIZE,
+        height: STAND_SIZE + STAND_SIZE,
         label: '决策',
         component: 'DecisionNode',
-        onClick: () => console.log('决策'),
+        targets: [
+          { id: '003', label: 'goto 003' },
+          { id: '005', label: 'goto 005' },
+        ],
+      },
+      {
+        id: '003',
+        type: 'forward',
+        width: STAND_SIZE / 2,
+        height: STAND_SIZE / 2,
+        component: 'ExtendNode',
+        targets: ['004'],
+      },
+      {
+        id: '004',
+        type: 'forward',
+        width: STAND_SIZE + LABEL_SIZE,
+        height: STAND_SIZE,
+        label: 'Action1',
+        component: 'ActionNode',
+      },
+      {
+        id: '005',
+        type: 'forward',
+        width: STAND_SIZE / 2,
+        height: STAND_SIZE / 2,
+        component: 'ExtendNode',
+        targets: ['006'],
+      },
+      {
+        id: '006',
+        type: 'loopBegin',
+        width: STAND_SIZE + LABEL_SIZE,
+        height: STAND_SIZE,
+        label: 'LoopNode',
+        loopBackTarget: '007',
+        loopEndTarget: '008',
+        component: 'LoopNode',
+        targets: ['007'],
+      },
+      {
+        id: '007',
+        type: 'loopBack',
+        width: STAND_SIZE / 2,
+        height: STAND_SIZE / 2,
+        component: 'ExtendNode',
+        targets: ['008'],
+      },
+      {
+        id: '008',
+        type: 'loopEnd',
+        width: STAND_SIZE + LABEL_SIZE,
+        height: STAND_SIZE,
+        label: 'Action In Loop',
+        component: 'ActionNode',
       },
     ]);
   }, [flow]);

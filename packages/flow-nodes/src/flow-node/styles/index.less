@@ -1,0 +1,38 @@
+@import '../../theme.less';
+
+@node-prefix-cls: ~'@{prefix}-flow-node';
+@active-color: @primary-color;
+
+.@{node-prefix-cls} {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: @node-width;
+  height: @node-height;
+  padding: @node-padding;
+  border: @border-width-base @border-color-base @border-style-base;
+  border-radius: @node-radius;
+  background-color: white;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.2);
+    border-color: @active-color;
+  }
+
+  > &__label {
+    position: absolute;
+    top: @node-padding;
+    left: @node-height + @node-padding;
+    font-size: 14px;
+    width: @node-width * 2;
+    height: @node-height;
+    > .title {
+      font-weight: bolder;
+    }
+    > .description {
+      font-weight: normal;
+    }
+  }
+}

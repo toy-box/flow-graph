@@ -1,9 +1,15 @@
 import { FlowGraph } from './FlowGraph';
 import { uid } from '../shared';
 import { FlowNodeType, NodeProps } from '../types';
-import { IContextMenuItem } from '../canvas';
 
 const CYCLE_FLOW_WIDTH = 50;
+
+export type TargetType = string | TargetProps;
+
+export interface TargetProps {
+  id: string;
+  label?: string;
+}
 
 export interface IFlowNodeProps extends Omit<NodeProps, 'id'> {
   id?: string;
@@ -13,13 +19,11 @@ export interface IFlowNodeProps extends Omit<NodeProps, 'id'> {
   x: number;
   y: number;
   label?: string;
-  targets?: string[];
+  targets?: TargetType[];
   component?: string;
   decisionEndTarget?: string;
   loopBackTarget?: string;
   loopEndTarget?: string;
-  contenxtMenu?: IContextMenuItem[];
-  onClick?: () => void;
 }
 
 export class FlowNode {
@@ -31,13 +35,11 @@ export class FlowNode {
   x: number;
   y: number;
   label?: string;
-  targets?: string[];
+  targets?: TargetProps[];
   component?: string;
   decisionEndTarget?: string;
   loopBackTarget?: string;
   loopEndTarget?: string;
-  contenxtMenu?: IContextMenuItem[];
-  onClick?: () => void;
 
   constructor(props: IFlowNodeProps, flowGraph: FlowGraph) {
     this.id = props.id || uid();
@@ -46,13 +48,14 @@ export class FlowNode {
     this.height = props.height || 100;
     this.x = props.x || 0;
     this.y = props.y || 0;
-    (this.label = props.label), (this.targets = props.targets);
+    this.label = props.label;
+    this.targets = props.targets?.map((target) =>
+      typeof target === 'string' ? { id: target } : target
+    );
     this.component = props.component;
     this.loopBackTarget = props.loopBackTarget;
     this.loopEndTarget = props.loopEndTarget;
     this.decisionEndTarget = props.decisionEndTarget;
-    this.contenxtMenu = props.contenxtMenu;
-    this.onClick = props.onClick;
     this.flowGraph = flowGraph;
   }
 
@@ -95,7 +98,9 @@ export class FlowNode {
   }
 
   get nextNodes() {
-    return (this.targets || []).map((target) => this.flowGraph.getNode(target));
+    return (this.targets || []).map((target) =>
+      this.flowGraph.getNode(target.id)
+    );
   }
 
   get areaEndNode() {
@@ -140,26 +145,18 @@ export class FlowNode {
     return undefined;
   }
 
-  get loopBegin(): FlowNode | undefined {
-    // if (this.type === 'loopEnd') {
-    //   return Object.keys(this.flowGraph.nodeMap)
-    //     .map((key) => this.flowGraph.getNode(key))
-    //     .find((node) => node.loopEnd === this);
-    // }
-    // if (this.type === 'loopBack' && this.targets && this.targets[0]) {
-    //   console.log(this.flowGraph.getNode(this.targets[0]));
-    //   return this.flowGraph.getNode(this.targets[0]).loopBegin;
-    // }
-    return Object.keys(this.flowGraph.nodeMap)
-      .map((key) => this.flowGraph.getNode(key))
-      .find((node) => node.loopBackTarget === this.id);
+  get loopBegin() {
+    return this.flowGraph.nodes.find(
+      (node) =>
+        node.loopBackTarget === this.id || node.loopEndTarget === this.id
+    );
   }
 
-  get decisionEnd(): FlowNode | undefined {
+  get decisionEnd() {
     const decisionEnd1 = Object.keys(this.flowGraph.nodeMap)
       .map((key) => this.flowGraph.getNode(key))
       .find(
-        (node) => this.targets && node.decisionEndTarget === this.targets[0]
+        (node) => this.targets && node.decisionEndTarget === this.targets[0].id
       );
     return decisionEnd1;
   }

@@ -37,7 +37,8 @@
     "webpack": "^4.41.5",
     "webpack-bundle-analyzer": "^3.9.0",
     "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.10.1"
+    "webpack-dev-server": "^3.10.1",
+    "web-worker": "^1.2.0"
   },
   "peerDependencies": {
     "@types/react": ">=16.8.0 || >=17.0.0",
@@ -52,7 +53,10 @@
     "@antv/x6-react-shape": "^1.4.5",
     "@toy-box/flow-graph": "1.0.34",
     "@toy-box/flow-nodes": "1.0.34",
-    "butterfly-dag": "^4.0.34"
+    "butterfly-dag": "^4.0.34",
+    "reactflow": "^11.1.1",
+    "@formily/reactive": "^2.2.7",
+    "@formily/reactive-react": "^2.2.7"
   },
   "publishConfig": {
     "access": "public"

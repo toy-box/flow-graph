@@ -1,8 +1,6 @@
 @import '../../theme.less';
 
-@active-color: #2f54eb;
-
-.tbox-flow-extend-node {
+.@{prefix}-flow-extend-node {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,11 +14,15 @@
   font-size: 20px;
   cursor: pointer;
   > span {
-    transition-duration: 0.15s;
+    transition-duration: 0.25s;
+  }
+  &:hover {
+    color: white;
+    background-color: @primary-color-hover;
   }
   &.active {
-    border-color: @active-color;
-    background-color: @active-color;
+    border-color: @primary-color;
+    background-color: @primary-color;
     color: white;
     > span {
       transform: rotate(135deg);

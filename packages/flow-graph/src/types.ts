@@ -8,7 +8,8 @@ export type FlowNodeType =
   | 'loopBegin'
   | 'loopBack'
   | 'loopEnd'
-  | 'forward';
+  | 'forward'
+  | 'extend';
 
 export interface NodeProps {
   id: string;
@@ -19,8 +20,6 @@ export interface NodeProps {
   type: FlowNodeType;
   component?: string;
   label?: string;
-  contextMenu?: IContextMenuItem[];
-  onClick?: () => void;
 }
 
 export interface Point {
@@ -31,6 +30,9 @@ export interface Point {
 export interface EdgeProps {
   source: string;
   target: string;
-  vertices?: Point[];
-  contextMenu?: IContextMenuItem[];
+  sourceHandle?: string;
+  targetHandle?: string;
+  type?: string;
+  label?: string;
+  data?: any;
 }
