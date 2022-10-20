@@ -69,7 +69,7 @@ export const FlowCanvas = observer(() => {
         nodeTypes={flow.canvas?.components}
         edgeTypes={flow.canvas?.edgeComponents}
       >
-        <Background />
+        <Background gap={30} />
         <MiniMap />
         <Controls />
       </ReactFlow>

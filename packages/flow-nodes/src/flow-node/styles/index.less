@@ -14,11 +14,12 @@
   border: @border-width-base @border-color-base @border-style-base;
   border-radius: @node-radius;
   background-color: white;
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1);
+  transition: 0.25s;
   cursor: pointer;
-
   &:hover {
-    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.2);
     border-color: @active-color;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
   }
 
   > &__label {

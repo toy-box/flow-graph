@@ -44,8 +44,8 @@ const makeRightCycleVertices = (source: FlowNode, target: FlowNode) => {
 
 const makeLeftCycleVertices = (
   source: FlowNode,
-  target: FlowNode,
-  loopBackTargetNode: FlowNode
+  target: FlowNode
+  // loopBackTargetNode: FlowNode
 ) => {
   let width =
     target.areaWidth > source.areaWidth ? target.areaWidth : source.areaWidth;
@@ -55,17 +55,18 @@ const makeLeftCycleVertices = (
       target.type === 'loopEnd') ||
     !source.loopBegin
   ) {
-    width = source.areaWidth + 30;
+    width = source.areaWidth + 40;
   }
-  const height = loopBackTargetNode.centerY;
-  return [
-    { x: source.centerX - width / 2, y: source.centerY },
-    {
-      x: source.centerX - width / 2,
-      y: height + loopBackTargetNode.height * 1.5,
-    },
-    { x: source.centerX, y: height + loopBackTargetNode.height * 1.5 },
-  ];
+
+  // const height = loopBackTargetNode.centerY;
+  // return [
+  //   { x: source.centerX - width / 2, y: source.centerY },
+  //   {
+  //     x: source.centerX - width / 2,
+  //     y: height + loopBackTargetNode.height * 1.5,
+  //   },
+  //   { x: source.centerX, y: height + loopBackTargetNode.height * 1.5 },
+  // ];
 };
 
 export class Flow {
@@ -102,32 +103,59 @@ export class Flow {
       this.flowGraph.layoutData().then((layout) => {
         layout.nodes.forEach((node) => this.addGraphNode(node));
         layout.edges.forEach((edge) => {
-          const sourceNode = this.flowGraph.getNode(edge.sources[0]);
-          const targetNode = this.flowGraph.getNode(edge.targets[0]);
+          const sourceNode = this.flowGraph.getNode(edge.v);
+          const targetNode = this.flowGraph.getNode(edge.w);
           if (sourceNode.type == 'loopBack' && targetNode.type === 'loopEnd') {
             if (sourceNode.loopBegin) {
               // Loop out edge
               this.addGraphEdge({
                 source: sourceNode.loopBegin.id,
-                target: edge.targets[0],
+                target: edge.w,
                 label: 'Loop out',
                 sourceHandle: 'right',
                 targetHandle: 'top',
+                data: {
+                  sourceXSet: 30,
+                },
               });
               // Loop cycle edge
+              const loopBackTargetNode = this.flowGraph.getNode(
+                sourceNode.loopBegin.loopBackTarget as string
+              );
+              console.log(
+                'loopBackTargetNode',
+                sourceNode,
+                sourceNode.loopBegin
+              );
               this.addGraphEdge({
                 source: sourceNode.id,
                 target: sourceNode.loopBegin.id,
                 label: 'Loop cycle',
                 sourceHandle: 'bottom',
                 targetHandle: 'left',
+                data: {
+                  targetXSet: -30,
+                  // vertices: makeLeftCycleVertices(
+                  //   sourceNode,
+                  //   sourceNode.loopBegin as FlowNode,
+                  //   // loopBackTargetNode
+                  // ),
+                },
               });
             }
+          } else if (sourceNode.component === 'DecisionNode') {
+            this.addGraphEdge({
+              source: edge.v,
+              target: edge.w,
+              label: 'fork',
+              sourceHandle: 'bottom',
+              targetHandle: 'top',
+            });
           } else {
             this.addGraphEdge({
-              source: edge.sources[0],
-              target: edge.targets[0],
-              label: edge.labels?.[0].text,
+              source: edge.v,
+              target: edge.w,
+              // label: edge.labels?.[0].text,
               sourceHandle: 'bottom',
               targetHandle: 'top',
             });

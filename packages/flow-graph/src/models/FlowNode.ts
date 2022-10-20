@@ -11,13 +11,13 @@ export interface TargetProps {
   label?: string;
 }
 
-export interface IFlowNodeProps extends Omit<NodeProps, 'id'> {
+export interface IFlowNodeProps extends Omit<NodeProps, 'id' | 'x' | 'y'> {
   id?: string;
   type: FlowNodeType;
   width: number;
   height: number;
-  x: number;
-  y: number;
+  x?: number;
+  y?: number;
   label?: string;
   targets?: TargetType[];
   component?: string;
@@ -86,15 +86,15 @@ export class FlowNode {
   }
 
   get isAreaNode() {
-    return ['loopBegin', 'decisionBegin'].includes(this.type);
+    return this.type === 'loopBegin' || (this.targets ?? []).length > 0;
   }
 
   get isAreaBegin() {
-    return ['loopBegin', 'decisionBegin'].includes(this.type);
+    return this.isAreaNode;
   }
 
   get isAreaEnd() {
-    return ['loopEnd', 'decisionEnd'].includes(this.type);
+    return ['loopEnd', 'decisionEnd', 'end'].includes(this.type);
   }
 
   get nextNodes() {
@@ -108,6 +108,9 @@ export class FlowNode {
   }
 
   get innerNodes() {
+    // if (this.type === 'loopBegin') {
+
+    // }
     if (this.areaEndNode) {
       return this.flowGraph.getInnerNodes(this, this.areaEndNode);
     }

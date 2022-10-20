@@ -1,13 +1,21 @@
-import ELK, { ElkNode } from 'elkjs';
+import dagre, { GraphLabel } from '@toy-box/dagre';
+// import ELK, { ElkNode } from 'elkjs';
 import { FlowNode, IFlowNodeProps } from './FlowNode';
 import { uid } from '../shared';
 
-const elk = new ELK({});
+// const elk = new ELK({});
 
-const StandardWidth = 30;
-const LableWidth = StandardWidth * 3;
-const LableHeight = StandardWidth * 2;
+const StandardWidth = 20;
+const LableWidth = 120;
 const NodeSpace = StandardWidth;
+const ShadowSize = StandardWidth;
+
+const DAGRE_CONFIG: GraphLabel = {
+  rankdir: 'TB',
+  ranker: 'short-tree',
+  nodesep: 40,
+  ranksep: 40,
+};
 
 export interface IFlowGraphProps {
   id?: string;
@@ -17,56 +25,121 @@ export interface IFlowGraphProps {
 export class FlowGraph {
   id: string;
   nodeMap: Record<string, FlowNode> = {};
-  graph: ElkNode = {
-    id: 'root',
-    layoutOptions: {
-      'elk.algorithm': 'mrtree',
-      'elk.spacing.nodeNode': NodeSpace.toString(),
-    },
-    children: [],
-    edges: [],
-  };
+  dg: dagre.graphlib.Graph;
+  // graph: ElkNode = {
+  //   id: 'root',
+  //   layoutOptions: {
+  //     'elk.algorithm': 'mrtree',
+  //     'elk.spacing.nodeNode': NodeSpace.toString(),
+  //   },
+  //   children: [],
+  //   edges: [],
+  // };
 
   constructor(props: IFlowGraphProps) {
     this.id = props.id || uid();
     (props.nodes || []).forEach((node) => {
       this.addNode(node);
     });
+    // dg
+    this.dg = new dagre.graphlib.Graph();
+    this.dg.setGraph(DAGRE_CONFIG);
+    this.dg.setDefaultEdgeLabel(() => ({}));
   }
 
   get nodes() {
-    return Object.keys(this.nodeMap).map((key) => this.nodeMap[key]);
+    return Object.keys(this.nodeMap)
+      .map((key) => this.nodeMap[key])
+      .filter((node) => node.type !== 'shadow');
   }
 
   setNodes(nodes: IFlowNodeProps[]) {
+    this.dg = new dagre.graphlib.Graph();
+    this.dg.setGraph(DAGRE_CONFIG);
+    this.dg.setDefaultEdgeLabel(() => ({}));
+
     nodes.forEach((node) => {
       this.addNode(node);
     });
   }
 
   addNode(node: IFlowNodeProps) {
-    const flowNode = new FlowNode(node, this);
-    this.nodeMap[flowNode.id] = flowNode;
-
-    this.graph.children?.push({
-      id: flowNode.id,
-      width: flowNode.width,
-      height: flowNode.height,
-      labels: flowNode.label
-        ? [{ text: flowNode.label, width: LableWidth, height: LableHeight }]
-        : undefined,
-      layoutOptions: {
-        'elk.nodeLabels.placement': '[H_RIGHT V_CENTER OUTSIDE]',
-      },
-    });
-    (flowNode.targets || []).forEach((target) => {
-      this.graph.edges?.push({
-        id: uid(),
-        sources: [flowNode.id],
-        targets: [target.id],
-        labels: [{ text: target.label }],
+    const hasShadow =
+      node.type === 'decisionBegin' || node.component === 'DecisionNode';
+    let flowNode: FlowNode;
+    let shadowNode: FlowNode;
+    if (!hasShadow) {
+      flowNode = new FlowNode(node, this);
+      this.nodeMap[flowNode.id] = flowNode;
+      this.dg.setNode(flowNode.id, {
+        width:
+          flowNode.component !== 'ExtendNode'
+            ? flowNode.width + LableWidth
+            : flowNode.width,
+        height: flowNode.height,
       });
-    });
+
+      (flowNode.targets || []).forEach((target) => {
+        this.dg.setEdge(flowNode.id, target.id, { id: uid() });
+      });
+    } else {
+      // has shadow node
+      shadowNode = new FlowNode(
+        {
+          ...node,
+          id: uid(),
+          type: 'shadow',
+          width: ShadowSize,
+          height: ShadowSize,
+        },
+        this
+      );
+      flowNode = new FlowNode({ ...node, targets: [shadowNode.id] }, this);
+      this.nodeMap[flowNode.id] = flowNode;
+      this.nodeMap[shadowNode.id] = shadowNode;
+
+      this.dg.setNode(flowNode.id, {
+        width:
+          flowNode.component !== 'ExtendNode'
+            ? flowNode.width + LableWidth
+            : flowNode.width,
+        height: flowNode.height,
+      });
+
+      this.dg.setNode(shadowNode.id, {
+        width: shadowNode.width,
+        height: shadowNode.height,
+      });
+
+      (flowNode.targets || []).forEach((target) => {
+        this.dg.setEdge(flowNode.id, target.id, { id: uid() });
+      });
+
+      (shadowNode.targets || []).forEach((target) => {
+        this.dg.setEdge(shadowNode.id, target.id, { id: uid() });
+        this.dg.setEdge(flowNode.id, target.id, { id: uid() });
+      });
+    }
+
+    // this.graph.children?.push({
+    //   id: flowNode.id,
+    //   width: flowNode.width,
+    //   height: flowNode.height,
+    //   labels: flowNode.label
+    //     ? [{ text: flowNode.label, width: LableWidth, height: LableHeight }]
+    //     : undefined,
+    //   layoutOptions: {
+    //     'elk.nodeLabels.placement': '[H_RIGHT V_CENTER OUTSIDE]',
+    //   },
+    // });
+    // (flowNode.targets || []).forEach((target) => {
+    //   this.graph.edges?.push({
+    //     id: uid(),
+    //     sources: [flowNode.id],
+    //     targets: [target.id],
+    //     labels: [{ text: target.label }],
+    //   });
+    // });
     // if (flowNode.loopBackTarget) {
     //   this.graph.edges?.push({
     //     id: uid(),
@@ -85,23 +158,22 @@ export class FlowGraph {
     // }
   }
 
-  async elkLayout() {
-    await elk.layout(this.graph).then((graph) => {
-      graph.children?.forEach((child) => {
-        if ((child.labels ?? []).length > 0) {
-          child.x = LableWidth / 2 + (child.x ?? 0);
-        }
-        this.nodeMap[child.id].setPostion(child.x ?? 0, child.y ?? 0);
-      });
-    });
-  }
+  // async elkLayout() {
+  //   await elk.layout(this.graph).then((graph) => {
+  //     graph.children?.forEach((child) => {
+  //       if ((child.labels ?? []).length > 0) {
+  //         child.x = LableWidth / 2 + (child.x ?? 0);
+  //       }
+  //       this.nodeMap[child.id].setPostion(child.x ?? 0, child.y ?? 0);
+  //     });
+  //   });
+  // }
 
   layout() {
     const opts = {
       fork: true,
     };
-    // const opts = null;
-    // dagre.layout(this.dg, opts as any);
+    dagre.layout(this.dg, opts as any);
     // this.dg.nodes().forEach((nodeId) => {
     //   const pos = this.dg.node(nodeId);
     //   this.nodeMap[nodeId].setPostion(pos.x, pos.y);
@@ -113,38 +185,62 @@ export class FlowGraph {
     //   });
     // });
     // dagre.layout(this.dg, opts as any);
-    // this.dg.nodes().forEach((nodeId) => {
-    //   const pos = this.dg.node(nodeId);
-    // if (
-    //   this.nodeMap[nodeId].component === 'ExtendNode' ||
-    //   this.nodeMap[nodeId].component === 'LabelNode'
-    // ) {
-    //   const height = this.nodeMap[nodeId].height / 4;
-    //   if (this.nodeMap[nodeId].type === 'loopBack') {
-    //     this.nodeMap[nodeId].setPostion(
-    //       pos.x + this.nodeMap[nodeId].width / 4,
-    //       pos.y
-    //     );
-    //   } else if (this.nodeMap[nodeId].type === 'loopEnd') {
-    //     this.nodeMap[nodeId].setPostion(
-    //       pos.x + this.nodeMap[nodeId].width / 4,
-    //       pos.y + this.nodeMap[nodeId].height / 1.5
-    //     );
-    //   } else {
-    //     this.nodeMap[nodeId].setPostion(
-    //       pos.x + this.nodeMap[nodeId].width / 4,
-    //       pos.y - height
-    //     );
-    //   }
-    //   this.nodeMap[nodeId].setSize(
-    //     this.nodeMap[nodeId].width / 2,
-    //     this.nodeMap[nodeId].height / 2
-    //   );
-    // } else {
-    // this.nodeMap[nodeId].setPostion(pos.x, pos.y);
-    // }
-    //   this.nodeMap[nodeId].setPostion(pos.x, pos.y);
-    // });
+    this.dg.nodes().forEach((nodeId) => {
+      const pos = this.dg.node(nodeId);
+      // if (
+      //   this.nodeMap[nodeId].component === 'ExtendNode' ||
+      //   this.nodeMap[nodeId].component === 'LabelNode'
+      // ) {
+      //   const height = this.nodeMap[nodeId].height / 4;
+      //   if (this.nodeMap[nodeId].type === 'loopBack') {
+      //     this.nodeMap[nodeId].setPostion(
+      //       pos.x + this.nodeMap[nodeId].width / 4,
+      //       pos.y
+      //     );
+      //   } else if (this.nodeMap[nodeId].type === 'loopEnd') {
+      //     this.nodeMap[nodeId].setPostion(
+      //       pos.x + this.nodeMap[nodeId].width / 4,
+      //       pos.y + this.nodeMap[nodeId].height / 1.5
+      //     );
+      //   } else {
+      //     this.nodeMap[nodeId].setPostion(
+      //       pos.x + this.nodeMap[nodeId].width / 4,
+      //       pos.y - height
+      //     );
+      //   }
+      //   this.nodeMap[nodeId].setSize(
+      //     this.nodeMap[nodeId].width / 2,
+      //     this.nodeMap[nodeId].height / 2
+      //   );
+      // } else {
+      //   this.nodeMap[nodeId].setPostion(pos.x, pos.y);
+      // }
+      if (this.nodeMap[nodeId]) {
+        if (this.nodeMap[nodeId].component === 'ExtendNode') {
+          this.nodeMap[nodeId].setPostion(
+            pos.x + this.nodeMap[nodeId].height / 3,
+            // pos.y
+            // pos.x + this.nodeMap[nodeId].width / 2,
+            pos.y + this.nodeMap[nodeId].height
+          );
+        } else {
+          if (
+            this.nodes.some(
+              (node) =>
+                this.nodeMap[node.id].component === 'ExtendNode' &&
+                node.targets?.some((target) => target.id === nodeId)
+            )
+          ) {
+            this.nodeMap[nodeId].setPostion(
+              pos.x - StandardWidth / 2,
+              pos.y + StandardWidth / 2
+            );
+          } else {
+            this.nodeMap[nodeId].setPostion(pos.x, pos.y);
+          }
+        }
+      }
+    });
   }
 
   getNode(id: string) {
@@ -220,10 +316,12 @@ export class FlowGraph {
   }
 
   async layoutData() {
-    await this.elkLayout();
+    this.layout();
+    // await this.elkLayout();
     return {
-      nodes: Object.keys(this.nodeMap).map((key) => this.nodeMap[key]),
-      edges: this.graph.edges ?? [],
+      nodes: this.nodes,
+      edges: this.dg.edges(),
+      // edges: this.graph.edges ?? [],
     };
   }
 }

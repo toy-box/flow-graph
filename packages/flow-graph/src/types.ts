@@ -9,7 +9,8 @@ export type FlowNodeType =
   | 'loopBack'
   | 'loopEnd'
   | 'forward'
-  | 'extend';
+  | 'extend'
+  | 'shadow';
 
 export interface NodeProps {
   id: string;

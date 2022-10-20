@@ -18,11 +18,19 @@ export interface GetFixStepPathParams {
   centerX?: number;
   centerY?: number;
   offset?: number;
+  sourceXSet?: number;
+  sourceYSet?: number;
+  targetXSet?: number;
+  targetYSet?: number;
   vertices?: XYPosition[];
 }
 
 export interface FixStepEdgeData {
-  vertices: XYPosition[];
+  vertices?: XYPosition[];
+  sourceXSet?: number;
+  sourceYSet?: number;
+  targetXSet?: number;
+  targetYSet?: number;
 }
 
 export interface FixStepEdgeProps<T = FixStepEdgeData> extends EdgeProps<T> {
@@ -83,6 +91,10 @@ function getPoints({
   targetPosition = Position.Top,
   center,
   offset,
+  sourceXSet,
+  sourceYSet,
+  targetXSet,
+  targetYSet,
 }: {
   source: XYPosition;
   sourcePosition: Position;
@@ -90,16 +102,20 @@ function getPoints({
   targetPosition: Position;
   center: Partial<XYPosition>;
   offset: number;
+  sourceXSet: number;
+  sourceYSet: number;
+  targetXSet: number;
+  targetYSet: number;
 }): [XYPosition[], number, number, number, number] {
   const sourceDir = handleDirections[sourcePosition];
   const targetDir = handleDirections[targetPosition];
   const sourceGapped: XYPosition = {
-    x: source.x + sourceDir.x * offset,
-    y: source.y + sourceDir.y * offset * 0.5,
+    x: source.x + sourceDir.x * offset + sourceXSet,
+    y: source.y + sourceDir.y * offset + sourceYSet,
   };
   const targetGapped: XYPosition = {
-    x: target.x + targetDir.x * offset,
-    y: target.y + targetDir.y * offset * 0.5,
+    x: target.x + targetDir.x * offset + targetXSet,
+    y: target.y + targetDir.y * offset + targetYSet,
   };
   const dir = getDirection({
     source: sourceGapped,
@@ -145,7 +161,7 @@ function getPoints({
       points = dirAccessor === 'x' ? horizontalSplit : verticalSplit;
     }
     if (sourceDir[dirAccessor] === currDir) centerX = targetGapped.x;
-    centerY = centerY + offset * 1.5;
+    centerY = centerY + offset * 2.5;
   } else {
     // sourceTarget means we take x from source and y from target, targetSource is the opposite
     const sourceTarget: XYPosition[] = [
@@ -185,8 +201,8 @@ function getPoints({
 
     centerX = points[0].x;
     centerY = points[0].y;
-    if (Math.abs(sourceGapped.y - targetGapped.y) > offset * 2.5) {
-      centerY = Math.min(sourceGapped.y, targetGapped.y) + offset * 2.5;
+    if (Math.abs(sourceGapped.y - targetGapped.y) > offset * 5) {
+      centerY = Math.min(sourceGapped.y, targetGapped.y) + offset * 5;
     } else {
       centerY = points[0].y;
     }
@@ -235,7 +251,11 @@ export function getFixStepPath({
   borderRadius = 10,
   centerX,
   centerY,
-  offset = 20,
+  offset = 10,
+  sourceXSet = 0,
+  sourceYSet = 0,
+  targetXSet = 0,
+  targetYSet = 0,
   vertices,
 }: GetFixStepPathParams): [
   path: string,
@@ -251,6 +271,10 @@ export function getFixStepPath({
     targetPosition,
     center: { x: centerX, y: centerY },
     offset,
+    sourceXSet,
+    sourceYSet,
+    targetXSet,
+    targetYSet,
   });
 
   const path = (vertices ?? points).reduce<string>((res, p, i) => {
@@ -300,6 +324,10 @@ export const FixStepEdge = memo(
       targetPosition,
       borderRadius: pathOptions?.borderRadius,
       offset: pathOptions?.offset,
+      sourceXSet: data?.sourceXSet,
+      sourceYSet: data?.sourceYSet,
+      targetXSet: data?.targetXSet,
+      targetYSet: data?.targetYSet,
       vertices: data?.vertices,
     });
 
