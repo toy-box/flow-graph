@@ -1,32 +1,39 @@
 @import '../../theme.less';
 
-.@{prefix}-flow-extend-node {
+@node-prefix-cls: ~'@{prefix}-flow-extend-node';
+
+.@{node-prefix-cls} {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  width: calc(@node-width / 3);
-  height: calc(@node-height / 3);
-  border-radius: 50%;
-  border: 1.5px solid #8c8c8c;
-  background-color: white;
-  color: #8c8c8c;
-  font-size: 16px;
-  font-weight: bolder;
-  cursor: pointer;
-  > span {
-    transition-duration: 0.25s;
-  }
-  &:hover {
-    color: white;
-    background-color: @primary-color-hover;
+  > button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    width: calc(@node-width / 3);
+    height: calc(@node-height / 3);
+    border-radius: 50%;
+    border: 1px solid @border-color-base;
+    background-color: white;
+    font-size: 16px;
+    font-weight: bolder;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    > span {
+      transition-duration: 0.25s;
+    }
+    &:hover {
+      color: white;
+      background-color: @primary-color-hover;
+    }
   }
   &.active {
-    border-color: @primary-color;
-    background-color: @primary-color;
-    color: white;
-    > span {
-      transform: rotate(135deg);
+    > button {
+      border-color: @primary-color;
+      background-color: @primary-color;
+      color: white;
+      > span {
+        transform: rotate(135deg);
+      }
     }
   }
 }

@@ -6,11 +6,10 @@ import {
   connectReactFlow,
   ExtendNode,
   FlowNode,
-  HyperStepEdge,
   FixStepEdge,
+  ForkEdge,
 } from '@toy-box/flow-nodes';
 import { useFlow } from '../../hooks';
-import { ExtendPanel } from '../extend-panel';
 
 export const FlowCanvas = observer(() => {
   const flow = useFlow() as any;
@@ -24,21 +23,17 @@ export const FlowCanvas = observer(() => {
       new ReactFlowCanvas({
         flowGraph: flow.flowGraph,
         edgeComponents: {
-          hyperEdge: HyperStepEdge,
           fixEdge: FixStepEdge,
+          forkEdge: ForkEdge,
         },
         components: {
           StartNode: connectReactFlow(FlowNode, <h3>Start</h3>, [
             { type: 'source', position: Position.Bottom },
           ]),
-          ExtendNode: connectReactFlow(
-            ExtendNode,
-            <ExtendPanel title="extend panel" />,
-            [
-              { type: 'target', position: Position.Top },
-              { type: 'source', position: Position.Bottom },
-            ]
-          ),
+          ExtendNode: connectReactFlow(ExtendNode, undefined, [
+            { type: 'target', position: Position.Top },
+            { type: 'source', position: Position.Bottom },
+          ]),
           DecisionNode: connectReactFlow(FlowNode, undefined, [
             { type: 'target', position: Position.Top },
             { type: 'source', position: Position.Bottom },
@@ -69,7 +64,7 @@ export const FlowCanvas = observer(() => {
         nodeTypes={flow.canvas?.components}
         edgeTypes={flow.canvas?.edgeComponents}
       >
-        <Background gap={30} />
+        <Background gap={20} />
         <MiniMap />
         <Controls />
       </ReactFlow>

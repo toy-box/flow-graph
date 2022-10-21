@@ -67,6 +67,8 @@ export class ReactFlowCanvas<T> implements ICanvas {
       },
       type: componentName,
       data: undefined,
+      deletable: false,
+      draggable: false,
     };
   };
 
@@ -78,8 +80,9 @@ export class ReactFlowCanvas<T> implements ICanvas {
       sourceHandle: edgeProps.sourceHandle,
       targetHandle: edgeProps.targetHandle,
       label: edgeProps.label,
-      type: edgeProps.label ? 'fixEdge' : 'straight',
+      type: edgeProps.type ?? (edgeProps.label ? 'fixEdge' : 'straight'),
       data: edgeProps.data,
+      deletable: false,
     };
   };
 

@@ -24,6 +24,7 @@ export interface IFlowNodeProps extends Omit<NodeProps, 'id' | 'x' | 'y'> {
   decisionEndTarget?: string;
   loopBackTarget?: string;
   loopEndTarget?: string;
+  shadowNode?: string;
 }
 
 export class FlowNode {
@@ -40,12 +41,13 @@ export class FlowNode {
   decisionEndTarget?: string;
   loopBackTarget?: string;
   loopEndTarget?: string;
+  shadowNode?: string;
 
   constructor(props: IFlowNodeProps, flowGraph: FlowGraph) {
     this.id = props.id || uid();
     this.type = props.type || 'forward';
-    this.width = props.width || 100;
-    this.height = props.height || 100;
+    this.width = props.width;
+    this.height = props.height;
     this.x = props.x || 0;
     this.y = props.y || 0;
     this.label = props.label;
@@ -56,6 +58,7 @@ export class FlowNode {
     this.loopBackTarget = props.loopBackTarget;
     this.loopEndTarget = props.loopEndTarget;
     this.decisionEndTarget = props.decisionEndTarget;
+    this.shadowNode = props.shadowNode;
     this.flowGraph = flowGraph;
   }
 
@@ -94,7 +97,7 @@ export class FlowNode {
   }
 
   get isAreaEnd() {
-    return ['loopEnd', 'decisionEnd', 'end'].includes(this.type);
+    return this.isloopEnd || this.decisionEnd;
   }
 
   get nextNodes() {
@@ -104,13 +107,10 @@ export class FlowNode {
   }
 
   get areaEndNode() {
-    return this.flowGraph.getNextAreaEnd(this.id);
+    return this.decisionEnd || this.loopEnd;
   }
 
   get innerNodes() {
-    // if (this.type === 'loopBegin') {
-
-    // }
     if (this.areaEndNode) {
       return this.flowGraph.getInnerNodes(this, this.areaEndNode);
     }
@@ -142,10 +142,7 @@ export class FlowNode {
   }
 
   get loopEnd(): FlowNode | undefined {
-    if (this.type === 'loopBegin') {
-      return this.areaEndNode;
-    }
-    return undefined;
+    return this.flowGraph.nodes.find((node) => node.id === this.loopEndTarget);
   }
 
   get loopBegin() {
@@ -155,12 +152,17 @@ export class FlowNode {
     );
   }
 
+  get isloopBack() {
+    return this.flowGraph.nodes.find((node) => node.loopBackTarget === this.id);
+  }
+
+  get isloopEnd() {
+    return this.flowGraph.nodes.find((node) => node.loopEndTarget === this.id);
+  }
+
   get decisionEnd() {
-    const decisionEnd1 = Object.keys(this.flowGraph.nodeMap)
-      .map((key) => this.flowGraph.getNode(key))
-      .find(
-        (node) => this.targets && node.decisionEndTarget === this.targets[0].id
-      );
-    return decisionEnd1;
+    return this.flowGraph.nodes.find(
+      (node) => this.targets && node.decisionEndTarget === this.targets[0].id
+    );
   }
 }

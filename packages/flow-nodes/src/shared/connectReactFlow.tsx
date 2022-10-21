@@ -12,7 +12,12 @@ export function connectReactFlow(
     return (
       <React.Fragment>
         {(handles ?? []).map((handleProps, idx) => (
-          <Handle key={idx} {...handleProps} />
+          <Handle
+            key={idx}
+            isConnectable={false}
+            {...handleProps}
+            style={{ opacity: 0 }}
+          />
         ))}
         <Target {...props}>{content}</Target>
       </React.Fragment>

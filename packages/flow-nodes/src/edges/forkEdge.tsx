@@ -7,7 +7,7 @@ import {
   XYPosition,
 } from 'reactflow';
 
-export interface GetFixStepPathParams {
+export interface GetForkPathParams {
   sourceX: number;
   sourceY: number;
   sourcePosition?: Position;
@@ -22,18 +22,18 @@ export interface GetFixStepPathParams {
   sourceYSet?: number;
   targetXSet?: number;
   targetYSet?: number;
-  vertices?: XYPosition[];
+  fork?: boolean;
 }
 
-export interface FixStepEdgeData {
-  vertices?: XYPosition[];
+export interface ForkEdgeData {
   sourceXSet?: number;
   sourceYSet?: number;
   targetXSet?: number;
   targetYSet?: number;
+  fork?: boolean;
 }
 
-export interface FixStepEdgeProps<T = FixStepEdgeData> extends EdgeProps<T> {
+export interface ForkEdgeProps<T = ForkEdgeData> extends EdgeProps<T> {
   pathOptions?: SmoothStepPathOptions;
 }
 
@@ -95,6 +95,7 @@ function getPoints({
   sourceYSet,
   targetXSet,
   targetYSet,
+  fork,
 }: {
   source: XYPosition;
   sourcePosition: Position;
@@ -106,6 +107,7 @@ function getPoints({
   sourceYSet: number;
   targetXSet: number;
   targetYSet: number;
+  fork?: boolean;
 }): [XYPosition[], number, number, number, number] {
   const sourceDir = handleDirections[sourcePosition];
   const targetDir = handleDirections[targetPosition];
@@ -127,6 +129,7 @@ function getPoints({
 
   let points: XYPosition[] = [];
   let centerX: number, centerY: number;
+  // let cornerX: number, cornerY: number;
 
   const [defaultCenterX, defaultCenterY, defaultOffsetX, defaultOffsetY] =
     getEdgeCenter({
@@ -150,10 +153,15 @@ function getPoints({
     //    |
     //  ---
     //  |
-    const horizontalSplit: XYPosition[] = [
-      { x: sourceGapped.x, y: centerY },
-      { x: targetGapped.x, y: centerY },
-    ];
+    const horizontalSplit: XYPosition[] = fork
+      ? [
+          { x: sourceGapped.x, y: sourceGapped.y + offset },
+          { x: targetGapped.x, y: sourceGapped.y + offset },
+        ]
+      : [
+          { x: sourceGapped.x, y: targetGapped.y - offset },
+          { x: targetGapped.x, y: targetGapped.y - offset },
+        ];
 
     if (sourceDir[dirAccessor] === currDir) {
       points = dirAccessor === 'x' ? verticalSplit : horizontalSplit;
@@ -201,8 +209,8 @@ function getPoints({
 
     centerX = points[0].x;
     centerY = points[0].y;
-    if (Math.abs(sourceGapped.y - targetGapped.y) > offset * 2.5) {
-      centerY = Math.min(sourceGapped.y, targetGapped.y) + offset * 2.5;
+    if (Math.abs(sourceGapped.y - targetGapped.y) > offset * 5) {
+      centerY = Math.min(sourceGapped.y, targetGapped.y) + offset * 5;
     } else {
       centerY = points[0].y;
     }
@@ -241,7 +249,7 @@ function getBend(
   return `L ${x},${y + bendSize * yDir}Q ${x},${y} ${x + bendSize * xDir},${y}`;
 }
 
-export function getFixStepPath({
+export function getForkEdgePath({
   sourceX,
   sourceY,
   sourcePosition = Position.Bottom,
@@ -256,8 +264,8 @@ export function getFixStepPath({
   sourceYSet = 0,
   targetXSet = 0,
   targetYSet = 0,
-  vertices,
-}: GetFixStepPathParams): [
+  fork,
+}: GetForkPathParams): [
   path: string,
   labelX: number,
   labelY: number,
@@ -275,9 +283,10 @@ export function getFixStepPath({
     sourceYSet,
     targetXSet,
     targetYSet,
+    fork,
   });
 
-  const path = (vertices ?? points).reduce<string>((res, p, i) => {
+  const path = points.reduce<string>((res, p, i) => {
     let segment = '';
 
     if (i > 0 && i < points.length - 1) {
@@ -294,7 +303,7 @@ export function getFixStepPath({
   return [path, labelX, labelY, offsetX, offsetY];
 }
 
-export const FixStepEdge = memo(
+export const ForkEdge = memo(
   ({
     sourceX,
     sourceY,
@@ -314,8 +323,8 @@ export const FixStepEdge = memo(
     pathOptions,
     interactionWidth,
     data,
-  }: FixStepEdgeProps) => {
-    const [path, labelX, labelY] = getFixStepPath({
+  }: ForkEdgeProps) => {
+    const [path, labelX, labelY] = getForkEdgePath({
       sourceX,
       sourceY,
       sourcePosition,
@@ -328,7 +337,7 @@ export const FixStepEdge = memo(
       sourceYSet: data?.sourceYSet,
       targetXSet: data?.targetXSet,
       targetYSet: data?.targetYSet,
-      vertices: data?.vertices,
+      fork: data?.fork,
     });
 
     return (
@@ -351,4 +360,4 @@ export const FixStepEdge = memo(
   }
 );
 
-FixStepEdge.displayName = 'FixStepEdge';
+ForkEdge.displayName = 'ForkEdge';
