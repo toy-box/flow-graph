@@ -20,7 +20,7 @@ export interface NodeProps {
   height: number;
   type: FlowNodeType;
   component?: string;
-  label?: string;
+  data?: Record<string, any>;
 }
 
 export interface Point {

@@ -10,12 +10,16 @@ export const ExtendNode: FC<INodeProps> = ({ content }) => {
   const handleOpenChange = (state: boolean) => {
     setActive(state);
   };
+  const closeExtend = () => {
+    setActive(false);
+  };
+
   const renderContent = () => {
     if (React.isValidElement(content) && content.type) {
       const { key, props, ...restProps } = content;
       return {
         key,
-        props: { ...props, closeExtend: () => setActive(false) },
+        props: { ...props, closeExtend },
         ...restProps,
       };
     }
@@ -24,6 +28,17 @@ export const ExtendNode: FC<INodeProps> = ({ content }) => {
 
   return (
     <div className={classNames('tbox-flow-extend-node', { active })}>
+      <Popover
+        visible={active}
+        trigger="click"
+        onVisibleChange={(visible) => setActive(visible)}
+        placement="bottom"
+        content={renderContent()}
+      >
+        <div className={classNames('tbox-flow-extend-node', { active })}>
+          <PlusOutlined />
+        </div>
+      </Popover>
       <button onClick={() => handleOpenChange(!active)}>
         <PlusOutlined />
       </button>

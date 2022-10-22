@@ -2,13 +2,20 @@ import React, { FC, ReactNode } from 'react';
 import { Handle, HandleProps } from 'reactflow';
 import { IFlowNodeProps } from '../flow-node';
 
-export function connectReactFlow(
-  Target: FC<IFlowNodeProps>,
-  content?: ReactNode,
-  handles?: HandleProps[],
-  props?: Record<string, any>
-) {
-  return () => {
+export interface IConnectReactFlowProps {
+  component: FC<React.PropsWithChildren<IFlowNodeProps>>;
+  onClick?: (id: string, data: any) => void;
+  content?: ReactNode;
+  handles?: HandleProps[];
+}
+
+export function connectReactFlow({
+  component: TargetComponent,
+  content,
+  handles,
+  onClick,
+}: IConnectReactFlowProps) {
+  return (props: IFlowNodeProps) => {
     return (
       <React.Fragment>
         {(handles ?? []).map((handleProps, idx) => (
@@ -19,7 +26,9 @@ export function connectReactFlow(
             style={{ opacity: 0 }}
           />
         ))}
-        <Target {...props}>{content}</Target>
+        <div onClick={() => onClick && onClick(props.id, props.data)}>
+          <TargetComponent {...props}>{content}</TargetComponent>
+        </div>
       </React.Fragment>
     );
   };

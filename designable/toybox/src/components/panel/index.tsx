@@ -9,12 +9,24 @@ export const Panel = () => {
   const update = useCallback(() => {
     flow.setFlowNode([
       {
-        id: '001',
+        id: '000',
         type: 'begin',
         width: STAND_SIZE,
         height: STAND_SIZE,
-        targets: ['002'],
         component: 'StartNode',
+        targets: ['001'],
+        data: {
+          title: '开始',
+          description: '开始节点',
+        },
+      },
+      {
+        id: '001',
+        type: 'forward',
+        width: STAND_SIZE / 2,
+        height: STAND_SIZE / 2,
+        component: 'ExtendNode',
+        targets: ['002'],
       },
       {
         id: '002',
@@ -27,6 +39,10 @@ export const Panel = () => {
           { id: '002-1', label: 'goto 002-1' },
           { id: '002-2', label: 'goto 002-2' },
         ],
+        data: {
+          title: '分支',
+          description: '分支路线选择',
+        },
       },
       {
         id: '002-1',
@@ -156,6 +172,10 @@ export const Panel = () => {
         height: STAND_SIZE,
         component: 'ActionNode',
         targets: ['003-1-2'],
+        data: {
+          title: '开始',
+          description: '开始节点',
+        },
       },
       {
         id: '003-1-2',
@@ -172,6 +192,10 @@ export const Panel = () => {
         height: STAND_SIZE,
         component: 'ActionNode',
         targets: ['003-2-2-2'],
+        data: {
+          title: '开始',
+          description: '开始节点',
+        },
       },
       {
         id: '003-3-3',

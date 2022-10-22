@@ -25,6 +25,7 @@ export interface IFlowNodeProps extends Omit<NodeProps, 'id' | 'x' | 'y'> {
   loopBackTarget?: string;
   loopEndTarget?: string;
   shadowNode?: string;
+  data?: Record<string, any>;
 }
 
 export class FlowNode {
@@ -42,6 +43,7 @@ export class FlowNode {
   loopBackTarget?: string;
   loopEndTarget?: string;
   shadowNode?: string;
+  data?: Record<string, any>;
 
   constructor(props: IFlowNodeProps, flowGraph: FlowGraph) {
     this.id = props.id || uid();
@@ -60,6 +62,7 @@ export class FlowNode {
     this.decisionEndTarget = props.decisionEndTarget;
     this.shadowNode = props.shadowNode;
     this.flowGraph = flowGraph;
+    this.data = props.data;
   }
 
   setPostion(x: number, y: number) {

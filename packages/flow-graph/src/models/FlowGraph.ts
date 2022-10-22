@@ -31,7 +31,7 @@ export class FlowGraph {
     return {
       rankdir: 'TB',
       ranker: 'short-tree',
-      nodesep: this.standardSize * 6,
+      nodesep: this.standardSize * 8,
       ranksep: this.standardSize * 3,
     };
   }

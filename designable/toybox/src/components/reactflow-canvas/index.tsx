@@ -27,32 +27,54 @@ export const FlowCanvas = observer(() => {
           forkEdge: ForkEdge,
         },
         components: {
-          StartNode: connectReactFlow(FlowNode, <h3>Start</h3>, [
-            { type: 'source', position: Position.Bottom },
-          ]),
-          ExtendNode: connectReactFlow(ExtendNode, undefined, [
-            { type: 'target', position: Position.Top },
-            { type: 'source', position: Position.Bottom },
-          ]),
-          DecisionNode: connectReactFlow(FlowNode, undefined, [
-            { type: 'target', position: Position.Top },
-            { type: 'source', position: Position.Bottom },
-          ]),
-          ActionNode: connectReactFlow(FlowNode, <h3>action</h3>, [
-            { type: 'target', position: Position.Top },
-            { type: 'source', position: Position.Bottom },
-          ]),
-          LoopNode: connectReactFlow(FlowNode, <h3>Loop</h3>, [
-            { type: 'target', position: Position.Top, id: Position.Top },
-            { type: 'source', position: Position.Bottom, id: Position.Bottom },
-            { type: 'target', position: Position.Left, id: Position.Left },
-            { type: 'source', position: Position.Right, id: Position.Right },
-          ]),
+          StartNode: connectReactFlow({
+            component: FlowNode,
+            content: <h3>Start</h3>,
+            handles: [{ type: 'source', position: Position.Bottom }],
+            onClick: (id: string, data: any) => {
+              console.log('node click', id, data.title);
+            },
+          }),
+          ExtendNode: connectReactFlow({
+            component: ExtendNode,
+            handles: [
+              { type: 'target', position: Position.Top },
+              { type: 'source', position: Position.Bottom },
+            ],
+          }),
+          DecisionNode: connectReactFlow({
+            component: FlowNode,
+            handles: [
+              { type: 'target', position: Position.Top },
+              { type: 'source', position: Position.Bottom },
+            ],
+          }),
+          ActionNode: connectReactFlow({
+            component: FlowNode,
+            content: <h3>action</h3>,
+            handles: [
+              { type: 'target', position: Position.Top },
+              { type: 'source', position: Position.Bottom },
+            ],
+          }),
+          LoopNode: connectReactFlow({
+            component: FlowNode,
+            content: <h3>Loop</h3>,
+            handles: [
+              { type: 'target', position: Position.Top, id: Position.Top },
+              {
+                type: 'source',
+                position: Position.Bottom,
+                id: Position.Bottom,
+              },
+              { type: 'target', position: Position.Left, id: Position.Left },
+              { type: 'source', position: Position.Right, id: Position.Right },
+            ],
+          }),
         },
       })
     );
   }, []);
-
   return (
     <div id="flow-canvas" style={style}>
       <ReactFlow

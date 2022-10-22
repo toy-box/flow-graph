@@ -104,10 +104,10 @@ export class Flow {
       type: node.type,
       x: node.x,
       y: node.y,
-      label: node.label,
       width: node.width,
       height: node.height,
       component: node.component,
+      data: node.data,
     });
   };
 

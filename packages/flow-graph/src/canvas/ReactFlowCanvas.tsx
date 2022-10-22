@@ -56,7 +56,7 @@ export class ReactFlowCanvas<T> implements ICanvas {
   }
 
   protected makeNode = (nodeProps: NodeProps): Node => {
-    const { type, component: componentName, ...node } = nodeProps;
+    const { type, component: componentName, data, ...node } = nodeProps;
     return {
       id: node.id,
       width: node.width,
@@ -66,7 +66,7 @@ export class ReactFlowCanvas<T> implements ICanvas {
         y: node.y,
       },
       type: componentName,
-      data: undefined,
+      data,
       deletable: false,
       draggable: false,
     };
