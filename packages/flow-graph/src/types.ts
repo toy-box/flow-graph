@@ -1,4 +1,6 @@
-import { IContextMenuItem } from './canvas';
+import React, { ReactNode } from 'react';
+import { Edge, Node } from 'reactflow';
+import { IFlowNodeProps } from './models';
 
 export type FlowNodeType =
   | 'begin'
@@ -12,7 +14,7 @@ export type FlowNodeType =
   | 'extend'
   | 'shadow';
 
-export interface NodeProps {
+export interface INodeProps {
   id: string;
   x: number;
   y: number;
@@ -36,4 +38,15 @@ export interface EdgeProps {
   type?: string;
   label?: string;
   data?: any;
+}
+
+export interface INodeProps extends Node {
+  content?: ReactNode;
+}
+
+export interface IFlowNodeTemplate {
+  icon: string;
+  title: string;
+  description: string;
+  group: string;
 }

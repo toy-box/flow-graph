@@ -1,0 +1,41 @@
+@import '../../theme.less';
+
+@panel-prefix-cls: ~'@{prefix}-flow-extend-panel';
+
+.@{panel-prefix-cls} {
+  width: 280px;
+  &__node-list {
+    padding-left: 0;
+    max-height: 560px;
+    overflow-y: auto;
+  }
+  &__node-list-item {
+    display: flex;
+    list-style: none;
+    padding: 4px 16px;
+    margin-bottom: 4px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  &__node-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 4px;
+    background-color: chocolate;
+  }
+  &__node-content {
+    flex-grow: 1;
+    margin-left: 16px;
+  }
+  &__node-title {
+    font-size: 14px;
+    font-weight: bolder;
+  }
+  &__node-description {
+    font-size: 13px;
+  }
+}

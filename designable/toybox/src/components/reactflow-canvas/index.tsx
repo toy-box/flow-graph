@@ -1,18 +1,21 @@
 import React, { useEffect } from 'react';
 import ReactFlow, { Background, Controls, MiniMap, Position } from 'reactflow';
 import { observer } from '@formily/reactive-react';
-import { ReactFlowCanvas } from '@toy-box/flow-graph';
 import {
+  ReactFlowCanvas,
   connectReactFlow,
   ExtendNode,
-  FlowNode,
+  StandardNode,
   FixStepEdge,
   ForkEdge,
-} from '@toy-box/flow-nodes';
-import { useFlow } from '../../hooks';
+  ExtendPanel,
+  useFlow,
+  useEvent,
+} from '@toy-box/flow-graph';
 
 export const FlowCanvas = observer(() => {
-  const flow = useFlow() as any;
+  const flow = useFlow();
+  const eventEngine = useEvent();
   const style = {
     width: '1240px',
     height: '960px',
@@ -28,7 +31,7 @@ export const FlowCanvas = observer(() => {
         },
         components: {
           StartNode: connectReactFlow({
-            component: FlowNode,
+            component: StandardNode,
             content: <h3>Start</h3>,
             handles: [{ type: 'source', position: Position.Bottom }],
             onClick: (id: string, data: any) => {
@@ -41,16 +44,17 @@ export const FlowCanvas = observer(() => {
               { type: 'target', position: Position.Top },
               { type: 'source', position: Position.Bottom },
             ],
+            content: <ExtendPanel />,
           }),
           DecisionNode: connectReactFlow({
-            component: FlowNode,
+            component: StandardNode,
             handles: [
               { type: 'target', position: Position.Top },
               { type: 'source', position: Position.Bottom },
             ],
           }),
           ActionNode: connectReactFlow({
-            component: FlowNode,
+            component: StandardNode,
             content: <h3>action</h3>,
             handles: [
               { type: 'target', position: Position.Top },
@@ -58,7 +62,7 @@ export const FlowCanvas = observer(() => {
             ],
           }),
           LoopNode: connectReactFlow({
-            component: FlowNode,
+            component: StandardNode,
             content: <h3>Loop</h3>,
             handles: [
               { type: 'target', position: Position.Top, id: Position.Top },
@@ -75,6 +79,38 @@ export const FlowCanvas = observer(() => {
       })
     );
   }, []);
+
+  const dispatchClickPane = React.useCallback(
+    (data) => {
+      eventEngine.dispatch({
+        type: 'clickPane',
+        data,
+      });
+    },
+    [eventEngine]
+  );
+
+  const dispatchClickNode = React.useCallback(
+    (event, data) => {
+      console.log('dispatchClickNode', data);
+      eventEngine.dispatch({
+        type: 'clickNode',
+        data,
+      });
+    },
+    [eventEngine]
+  );
+
+  const dispatchClickEdge = React.useCallback(
+    (event, data) => {
+      eventEngine.dispatch({
+        type: 'clickEdge',
+        data,
+      });
+    },
+    [eventEngine]
+  );
+
   return (
     <div id="flow-canvas" style={style}>
       <ReactFlow
@@ -85,8 +121,11 @@ export const FlowCanvas = observer(() => {
         onConnect={flow.canvas?.onConnect}
         nodeTypes={flow.canvas?.components}
         edgeTypes={flow.canvas?.edgeComponents}
+        onPaneClick={dispatchClickPane}
+        onNodeClick={dispatchClickNode}
+        onEdgeClick={dispatchClickEdge}
       >
-        <Background gap={20} />
+        {/* <Background gap={20} /> */}
         <MiniMap />
         <Controls />
       </ReactFlow>

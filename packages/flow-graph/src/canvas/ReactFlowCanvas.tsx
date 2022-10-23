@@ -11,7 +11,7 @@ import {
   NodeChange,
 } from 'reactflow';
 import { ICanvas } from './Canvas';
-import { NodeProps, EdgeProps } from '../types';
+import { INodeProps, EdgeProps } from '../types';
 import { FlowGraph } from '../models';
 import { uid } from '../shared';
 
@@ -55,7 +55,7 @@ export class ReactFlowCanvas<T> implements ICanvas {
     });
   }
 
-  protected makeNode = (nodeProps: NodeProps): Node => {
+  protected makeNode = (nodeProps: INodeProps): Node => {
     const { type, component: componentName, data, ...node } = nodeProps;
     return {
       id: node.id,
@@ -86,11 +86,11 @@ export class ReactFlowCanvas<T> implements ICanvas {
     };
   };
 
-  addNode(nodeProps: NodeProps) {
+  addNode(nodeProps: INodeProps) {
     this.nodes = [...this.nodes, this.makeNode(nodeProps)];
   }
 
-  addNodes(nodes: NodeProps[]) {
+  addNodes(nodes: INodeProps[]) {
     this.nodes = [...this.nodes, ...nodes.map((node) => this.makeNode(node))];
   }
 

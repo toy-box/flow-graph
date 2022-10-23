@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
-import { useFlow } from '../../hooks';
+import { useFlow } from '@toy-box/flow-graph';
 
 const BASE_SIZE = 30;
 const STAND_SIZE = BASE_SIZE * 2;
 
 export const Panel = () => {
-  const flow = useFlow() as any;
+  const flow = useFlow();
   const update = useCallback(() => {
     flow.setFlowNode([
       {

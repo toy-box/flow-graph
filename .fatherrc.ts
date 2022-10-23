@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 
-const basicPkgs = ['flow-graph', 'flow-nodes'];
+const basicPkgs = ['flow-graph'];
 const packages = fs
   .readdirSync('./packages')
   .filter((pkg) => !basicPkgs.includes(pkg));

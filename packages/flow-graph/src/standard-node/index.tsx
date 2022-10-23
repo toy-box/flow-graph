@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import './styles';
 
-export interface IFlowNodeProps {
+export interface IStandardNodeProps {
   id: string;
   className?: string;
   style?: React.CSSProperties;
@@ -15,12 +15,9 @@ interface INodeDataProps {
   description?: string;
 }
 
-export const FlowNode: React.FC<React.PropsWithChildren<IFlowNodeProps>> = ({
-  className,
-  style,
-  data = {},
-  children,
-}) => {
+export const StandardNode: React.FC<
+  React.PropsWithChildren<IStandardNodeProps>
+> = ({ className, style, data = {}, children }) => {
   const prefixCls = 'tbox-flow-node';
   const { title, description } = data;
   return (

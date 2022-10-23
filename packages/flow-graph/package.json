@@ -30,7 +30,9 @@
   },
   "dependencies": {
     "@toy-box/dagre": "^0.8.15",
-    "reactflow": "^11.1.1"
+    "@types/lodash.uniq": "^4.5.7",
+    "reactflow": "^11.1.1",
+    "lodash.uniq": "^4.5.0"
   },
   "gitHead": "ac1b612c9a76dee7be64c24b89a9abf3b6b3339b"
 }

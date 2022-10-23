@@ -1,6 +1,6 @@
 import { FlowGraph } from './FlowGraph';
 import { uid } from '../shared';
-import { FlowNodeType, NodeProps } from '../types';
+import { FlowNodeType, INodeProps } from '../types';
 
 const CYCLE_FLOW_WIDTH = 50;
 
@@ -11,7 +11,7 @@ export interface TargetProps {
   label?: string;
 }
 
-export interface IFlowNodeProps extends Omit<NodeProps, 'id' | 'x' | 'y'> {
+export interface IFlowNodeProps extends Omit<INodeProps, 'id' | 'x' | 'y'> {
   id?: string;
   type: FlowNodeType;
   width: number;

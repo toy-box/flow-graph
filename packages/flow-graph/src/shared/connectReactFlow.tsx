@@ -1,9 +1,9 @@
 import React, { FC, ReactNode } from 'react';
 import { Handle, HandleProps } from 'reactflow';
-import { IFlowNodeProps } from '../flow-node';
+import { IStandardNodeProps } from '../standard-node';
 
 export interface IConnectReactFlowProps {
-  component: FC<React.PropsWithChildren<IFlowNodeProps>>;
+  component: FC<React.PropsWithChildren<IStandardNodeProps>>;
   onClick?: (id: string, data: any) => void;
   content?: ReactNode;
   handles?: HandleProps[];
@@ -15,7 +15,7 @@ export function connectReactFlow({
   handles,
   onClick,
 }: IConnectReactFlowProps) {
-  return (props: IFlowNodeProps) => {
+  return (props: IStandardNodeProps) => {
     return (
       <React.Fragment>
         {(handles ?? []).map((handleProps, idx) => (
