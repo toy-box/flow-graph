@@ -199,9 +199,12 @@ export class FlowNode {
   }
 
   get isDecisionEnd() {
-    return this.flowGraph.nodes.some(
-      (node) =>
-        node.type === 'decisionBegin' && node.decisionEndTarget === this.id
+    return (
+      this.type === 'decisionEnd' ||
+      this.flowGraph.nodes.some(
+        (node) =>
+          node.type === 'decisionBegin' && node.decisionEndTarget === this.id
+      )
     );
   }
 

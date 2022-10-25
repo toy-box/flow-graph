@@ -34,7 +34,7 @@ export class FlowGraph {
       rankdir: 'TB',
       ranker: 'short-tree',
       nodesep: this.standardSize * 6,
-      ranksep: this.standardSize * 4,
+      ranksep: this.standardSize * 3,
     };
   }
 
@@ -76,9 +76,9 @@ export class FlowGraph {
   }
 
   addNode(node: IFlowNodeProps) {
-    // const isDecision =
-    //   node.type === 'decisionBegin' || node.type === 'decisionEnd';
-    const isDecision = false;
+    const isDecision =
+      node.type === 'decisionBegin' || node.type === 'decisionEnd';
+    // const isDecision = false;
     let flowNode: FlowNode;
     let shadowNode: FlowNode;
     if (!isDecision) {

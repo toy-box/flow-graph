@@ -12,11 +12,7 @@ const getAreaWidth = (start: FlowNode, end: FlowNode) => {
 export type UpdateNodeProps = Partial<
   Pick<
     IFlowNodeProps,
-    | 'targets'
-    | 'decisionEndTarget'
-    | 'loopBackTarget'
-    | 'loopEndTarget'
-    | 'data'
+    'targets' | 'decisionEndTarget' | 'loopEndTarget' | 'data'
   >
 > & {
   id: string;
