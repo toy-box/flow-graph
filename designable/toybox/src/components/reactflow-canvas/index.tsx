@@ -1,5 +1,10 @@
 import React, { useEffect } from 'react';
-import ReactFlow, { Background, Controls, MiniMap, Position } from 'reactflow';
+import ReactFlow, {
+  Background,
+  Controls,
+  Position,
+  BackgroundVariant,
+} from 'reactflow';
 import { observer } from '@formily/reactive-react';
 import {
   ReactFlowCanvas,
@@ -17,8 +22,8 @@ export const FlowCanvas = observer(() => {
   const flow = useFlow();
   const eventEngine = useEvent();
   const style = {
-    width: '1240px',
-    height: '960px',
+    width: '100%',
+    height: '800px',
   };
 
   useEffect(() => {
@@ -34,6 +39,14 @@ export const FlowCanvas = observer(() => {
             component: StandardNode,
             content: <h3>Start</h3>,
             handles: [{ type: 'source', position: Position.Bottom }],
+            onClick: (id: string, data: any) => {
+              console.log('node click', id, data.title);
+            },
+          }),
+          EndNode: connectReactFlow({
+            component: StandardNode,
+            content: <h3>End</h3>,
+            handles: [{ type: 'target', position: Position.Top }],
             onClick: (id: string, data: any) => {
               console.log('node click', id, data.title);
             },
@@ -92,7 +105,6 @@ export const FlowCanvas = observer(() => {
 
   const dispatchClickNode = React.useCallback(
     (event, data) => {
-      console.log('dispatchClickNode', data);
       eventEngine.dispatch({
         type: 'clickNode',
         data,
@@ -124,9 +136,10 @@ export const FlowCanvas = observer(() => {
         onPaneClick={dispatchClickPane}
         onNodeClick={dispatchClickNode}
         onEdgeClick={dispatchClickEdge}
+        proOptions={{ hideAttribution: true }}
+        zoomOnScroll={false}
       >
-        {/* <Background gap={20} /> */}
-        <MiniMap />
+        <Background gap={30} variant={BackgroundVariant.Cross} />
         <Controls />
       </ReactFlow>
     </div>

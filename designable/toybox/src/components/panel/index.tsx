@@ -6,8 +6,41 @@ const STAND_SIZE = BASE_SIZE * 2;
 
 export const Panel = () => {
   const flow = useFlow();
+  const init = useCallback(() => {
+    flow.setFlowNodes([
+      {
+        id: '000',
+        type: 'begin',
+        width: STAND_SIZE,
+        height: STAND_SIZE,
+        component: 'StartNode',
+        targets: ['001'],
+        data: {
+          title: '开始',
+        },
+      },
+      {
+        id: '001',
+        type: 'forward',
+        width: STAND_SIZE / 2,
+        height: STAND_SIZE / 2,
+        component: 'ExtendNode',
+        targets: ['002'],
+      },
+      {
+        id: '002',
+        type: 'end',
+        width: STAND_SIZE,
+        height: STAND_SIZE,
+        component: 'EndNode',
+        data: {
+          title: '结束',
+        },
+      },
+    ]);
+  }, []);
   const update = useCallback(() => {
-    flow.setFlowNode([
+    flow.setFlowNodes([
       {
         id: '000',
         type: 'begin',
@@ -106,7 +139,7 @@ export const Panel = () => {
       },
       {
         id: '002-3-1',
-        type: 'loopBack',
+        type: 'forward',
         width: STAND_SIZE,
         height: STAND_SIZE,
         component: 'ExtendNode',
@@ -114,7 +147,7 @@ export const Panel = () => {
       },
       {
         id: '002-3-2',
-        type: 'loopEnd',
+        type: 'forward',
         width: STAND_SIZE / 2,
         height: STAND_SIZE / 2,
         component: 'ExtendNode',
@@ -122,7 +155,7 @@ export const Panel = () => {
       },
       {
         id: '002-1-5',
-        type: 'loopEnd',
+        type: 'forward',
         width: STAND_SIZE / 2,
         height: STAND_SIZE / 2,
         component: 'ExtendNode',
@@ -172,10 +205,6 @@ export const Panel = () => {
         height: STAND_SIZE,
         component: 'ActionNode',
         targets: ['003-1-2'],
-        data: {
-          title: '开始',
-          description: '开始节点',
-        },
       },
       {
         id: '003-1-2',
@@ -192,10 +221,6 @@ export const Panel = () => {
         height: STAND_SIZE,
         component: 'ActionNode',
         targets: ['003-2-2-2'],
-        data: {
-          title: '开始',
-          description: '开始节点',
-        },
       },
       {
         id: '003-3-3',
@@ -235,11 +260,24 @@ export const Panel = () => {
         width: STAND_SIZE / 2,
         height: STAND_SIZE / 2,
         component: 'ExtendNode',
+        targets: ['006'],
+      },
+      {
+        id: '006',
+        type: 'forward',
+        width: STAND_SIZE,
+        height: STAND_SIZE,
+        component: 'ActionNode',
+        data: {
+          title: 'New Action',
+          description: 'New Action',
+        },
       },
     ]);
   }, []);
   return (
     <div>
+      <button onClick={init}>init</button>
       <button onClick={update}>update</button>
     </div>
   );

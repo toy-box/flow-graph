@@ -2,8 +2,8 @@ import React, { ReactNode } from 'react';
 import { Tabs } from 'antd';
 import uniq from 'lodash.uniq';
 import cls from 'classnames';
-import { IFlowNodeTemplate } from '../types';
-import { useNodes } from '../hooks';
+import { INodeProps, INodeTemplate } from '../types';
+import { useFlow, useNodes } from '../hooks';
 import flowIcons from '../icons';
 
 import './styles';
@@ -13,6 +13,7 @@ export interface IExtendPanelProps {
   style?: React.CSSProperties;
   icons?: Record<string, ReactNode>;
   closeExtend?: () => void;
+  node: INodeProps;
 }
 
 export const ExtendPanel: React.FC<IExtendPanelProps> = ({
@@ -20,8 +21,10 @@ export const ExtendPanel: React.FC<IExtendPanelProps> = ({
   style,
   icons,
   closeExtend,
+  node,
 }) => {
   const nodes = useNodes();
+  const flow = useFlow();
   const prefixCls = 'tbox-flow-extend-panel';
   const groups = uniq(nodes.map((node) => node.group)).map((name) => ({
     name,
@@ -36,24 +39,26 @@ export const ExtendPanel: React.FC<IExtendPanelProps> = ({
     [icons]
   );
 
-  const handleChoose = () => {
+  const handleChoose = (template: INodeTemplate, at: string) => {
+    const node = flow.flowGraph.getNode(at);
+    flow.batch(template.make(at, node.targets));
     closeExtend && closeExtend();
   };
 
-  const nodeRender = (node: IFlowNodeTemplate, index: number) => {
+  const nodeRender = (template: INodeTemplate, index: number) => {
     return (
       <li
         className={`${prefixCls}__node-list-item`}
-        onClick={handleChoose}
+        onClick={() => handleChoose(template, node.id)}
         key={index}
       >
         <div className={`${prefixCls}__node-icon`}>
-          {mixIcons[node.icon ?? 'flow']}
+          {mixIcons[template.icon ?? 'flow']}
         </div>
         <div className={`${prefixCls}__node-content`}>
-          <div className={`${prefixCls}__node-title`}>{node.title}</div>
+          <div className={`${prefixCls}__node-title`}>{template.title}</div>
           <div className={`${prefixCls}__node-description`}>
-            {node.description}
+            {template.description}
           </div>
         </div>
       </li>

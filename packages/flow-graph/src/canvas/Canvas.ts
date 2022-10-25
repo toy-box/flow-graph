@@ -1,4 +1,4 @@
-import { INodeProps, EdgeProps } from '../types';
+import { INode, IEdge } from '../types';
 
 export interface IContextMenuItem {
   icon?: string;
@@ -7,8 +7,10 @@ export interface IContextMenuItem {
 }
 
 export interface ICanvas {
-  addNode: (node: INodeProps) => void;
-  addNodes: (node: INodeProps[]) => void;
-  addEdge: (edge: EdgeProps) => void;
-  addEdges: (edge: EdgeProps[]) => void;
+  addNode: (node: INode) => void;
+  addNodes: (node: INode[]) => void;
+  setNodes: (node: INode[]) => void;
+  addEdge: (edge: IEdge) => void;
+  addEdges: (edge: IEdge[]) => void;
+  setEdges: (edge: IEdge[]) => void;
 }

@@ -11,7 +11,7 @@ import {
   NodeChange,
 } from 'reactflow';
 import { ICanvas } from './Canvas';
-import { INodeProps, EdgeProps } from '../types';
+import { INode, IEdge } from '../types';
 import { FlowGraph } from '../models';
 import { uid } from '../shared';
 
@@ -55,7 +55,7 @@ export class ReactFlowCanvas<T> implements ICanvas {
     });
   }
 
-  protected makeNode = (nodeProps: INodeProps): Node => {
+  protected makeNode = (nodeProps: INode): Node => {
     const { type, component: componentName, data, ...node } = nodeProps;
     return {
       id: node.id,
@@ -72,7 +72,7 @@ export class ReactFlowCanvas<T> implements ICanvas {
     };
   };
 
-  protected makeEdge = (edgeProps: EdgeProps): Edge => {
+  protected makeEdge = (edgeProps: IEdge): Edge => {
     return {
       id: uid(),
       source: edgeProps.source,
@@ -86,20 +86,28 @@ export class ReactFlowCanvas<T> implements ICanvas {
     };
   };
 
-  addNode(nodeProps: INodeProps) {
+  setNodes(nodes: INode[]) {
+    this.nodes = nodes.map((node) => this.makeNode(node));
+  }
+
+  setEdges(edges: IEdge[]) {
+    this.edges = edges.map((edge) => this.makeEdge(edge));
+  }
+
+  addNode(nodeProps: INode) {
     this.nodes = [...this.nodes, this.makeNode(nodeProps)];
   }
 
-  addNodes(nodes: INodeProps[]) {
+  addNodes(nodes: INode[]) {
     this.nodes = [...this.nodes, ...nodes.map((node) => this.makeNode(node))];
   }
 
-  addEdge(edgeProps: EdgeProps) {
-    this.edges = [...this.edges, this.makeEdge(edgeProps)];
+  addEdge(edge: IEdge) {
+    this.edges = [...this.edges, this.makeEdge(edge)];
   }
 
-  addEdges(edgeProps: EdgeProps[]) {
-    edgeProps.forEach((prop) => this.addEdge(prop));
+  addEdges(edges: IEdge[]) {
+    edges.forEach((edge) => this.addEdge(edge));
   }
 
   onNodesChange(changes: NodeChange[]) {

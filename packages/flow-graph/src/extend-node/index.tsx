@@ -32,7 +32,7 @@ export const ExtendNode: FC<React.PropsWithChildren<INodeProps>> = (props) => {
   };
 
   const renderContent = () => {
-    return <ExtendPanel closeExtend={closeExtend} />;
+    return <ExtendPanel closeExtend={closeExtend} node={props} />;
   };
 
   return (

@@ -1,6 +1,6 @@
-import { useFlowGraph } from './useFlowGraph';
+import { useFlowContext } from './useFlowContext';
 
 export const useEvent = () => {
-  const flowGraph = useFlowGraph();
+  const flowGraph = useFlowContext();
   return flowGraph.eventEngine;
 };

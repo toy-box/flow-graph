@@ -1,4 +1,4 @@
 export * from './useFlow';
-export * from './useFlowGraph';
+export * from './useFlowContext';
 export * from './useNodes';
 export * from './useEvent';

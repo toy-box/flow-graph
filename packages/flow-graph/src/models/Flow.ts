@@ -3,11 +3,33 @@ import { FlowGraph } from './FlowGraph';
 import { ICanvas } from '../canvas';
 import { FlowNode, IFlowNodeProps } from './FlowNode';
 import { uid } from '../shared';
-import { EdgeProps } from '../types';
+import { IEdge } from '../types';
 
 const getAreaWidth = (start: FlowNode, end: FlowNode) => {
   return Math.max(start.areaWidth, end.areaWidth);
 };
+
+export type UpdateNodeProps = Partial<
+  Pick<
+    IFlowNodeProps,
+    | 'targets'
+    | 'decisionEndTarget'
+    | 'loopBackTarget'
+    | 'loopEndTarget'
+    | 'data'
+  >
+> & {
+  id: string;
+};
+export interface IFlowBatch {
+  addNodesAt?: Array<{
+    id: string;
+    node: IFlowNodeProps;
+  }>;
+  addNodes?: IFlowNodeProps[];
+  removeNodes?: string[];
+  updateNodes?: UpdateNodeProps[];
+}
 
 export class Flow {
   id: string;
@@ -26,10 +48,17 @@ export class Flow {
       flowGraph: observable.ref,
       canvas: observable.ref,
       setCanvas: action,
-      setFlowNode: batch,
+      addFlowNodeAt: batch,
+      addFlowNode: action,
+      addFlowNodes: action,
       addGraphNode: action,
+      updateNode: action,
+      removeNode: action,
+      removeNodes: action,
       addGraphEdge: action,
       addGraphEdges: batch,
+      setFlowNodes: batch,
+      layoutFlow: batch,
     });
   }
 
@@ -37,18 +66,18 @@ export class Flow {
     this.canvas = canvas;
   }
 
-  setFlowNode(nodes: IFlowNodeProps[]) {
-    this.flowGraph.setNodes(nodes);
+  layoutFlow() {
     if (this.canvas) {
       const layout = this.flowGraph.layoutData();
-      layout.nodes.forEach((node) => this.addGraphNode(node));
-      layout.edges.forEach((edge) => {
+      this.setGraphNodes(layout.nodes);
+      const edges: IEdge[] = [];
+      layout.edges.map((edge) => {
         const sourceNode = this.flowGraph.getNode(edge.v);
         const targetNode = this.flowGraph.getNode(edge.w);
-        if (sourceNode.isloopBack && targetNode.isloopEnd) {
+        if (sourceNode.isLoopBack && targetNode.isLoopEnd) {
           const loopBegin = sourceNode.loopBegin as FlowNode;
           // Loop cycle edge
-          this.addGraphEdge({
+          edges.push({
             source: sourceNode.id,
             target: loopBegin.id,
             label: 'Loop cycle',
@@ -58,7 +87,7 @@ export class Flow {
               targetXSet: -getAreaWidth(sourceNode, loopBegin) / 2,
             },
           });
-          this.addGraphEdge({
+          edges.push({
             source: loopBegin.id,
             target: targetNode.id,
             label: 'Loop out',
@@ -69,13 +98,15 @@ export class Flow {
             },
           });
         } else if (
-          sourceNode.type === 'decisionBegin' ||
-          targetNode.type === 'decisionEnd'
+          sourceNode.isDecisionBegin ||
+          targetNode.isDecisionEnd
+          // sourceNode.type === 'decisionBegin' ||
+          // targetNode.type === 'decisionEnd'
         ) {
           const target = sourceNode.targets?.find(
             (target) => target.id === targetNode.id
           );
-          this.addGraphEdge({
+          edges.push({
             source: edge.v,
             target: edge.w,
             sourceHandle: 'bottom',
@@ -83,11 +114,11 @@ export class Flow {
             type: 'forkEdge',
             label: target?.label,
             data: {
-              fork: sourceNode.type === 'decisionBegin',
+              fork: sourceNode.isDecisionBegin,
             },
           });
         } else {
-          this.addGraphEdge({
+          edges.push({
             source: edge.v,
             target: edge.w,
             sourceHandle: 'bottom',
@@ -95,27 +126,79 @@ export class Flow {
           });
         }
       });
+      this.setGraphEdges(edges);
     }
   }
 
-  addGraphNode = (node: FlowNode) => {
-    this.canvas?.addNode({
-      id: node.id,
-      type: node.type,
-      x: node.x,
-      y: node.y,
-      width: node.width,
-      height: node.height,
-      component: node.component,
-      data: node.data,
-    });
+  addFlowNodeAt(id: string, node: IFlowNodeProps) {
+    this.flowGraph.addNodeAt(id, node);
+  }
+
+  addFlowNode(node: IFlowNodeProps) {
+    this.flowGraph.addNode(node);
+  }
+
+  addFlowNodes(nodes: IFlowNodeProps[]) {
+    this.flowGraph.addNodes(nodes);
+  }
+
+  updateNode(nodeUpdate: UpdateNodeProps) {
+    this.flowGraph.updateNode(nodeUpdate);
+  }
+
+  removeNode(id: string) {
+    this.flowGraph.removeNode(id);
+  }
+
+  removeNodes(ids: string[]) {
+    this.flowGraph.removeNodes(ids);
+  }
+
+  setFlowNodes(nodes: IFlowNodeProps[]) {
+    this.flowGraph.setNodes(nodes);
+    this.layoutFlow();
+  }
+
+  batch(batchData: IFlowBatch) {
+    if (batchData.addNodesAt) {
+      batchData.addNodesAt.forEach((data) => {
+        this.addFlowNodeAt(data.id, data.node);
+      });
+    }
+    if (batchData.addNodes) {
+      this.addFlowNodes(batchData.addNodes);
+    }
+    if (batchData.removeNodes) {
+      this.removeNodes(batchData.removeNodes);
+    }
+    if (batchData.updateNodes) {
+      batchData.updateNodes.forEach((update) => this.updateNode(update));
+    }
+    this.layoutFlow();
+  }
+
+  /// canve graph
+  setGraphNodes = (nodes: FlowNode[]) => {
+    this.canvas?.setNodes(nodes);
   };
 
-  addGraphEdge = (edge: EdgeProps) => {
+  addGraphNodes = (nodes: FlowNode[]) => {
+    this.canvas?.addNodes(nodes);
+  };
+
+  addGraphNode = (node: FlowNode) => {
+    this.canvas?.addNode(node);
+  };
+
+  setGraphEdges = (edges: IEdge[]) => {
+    this.canvas?.setEdges(edges);
+  };
+
+  addGraphEdge = (edge: IEdge) => {
     this.canvas?.addEdge(edge);
   };
 
-  addGraphEdges = (edges: EdgeProps[]) => {
+  addGraphEdges = (edges: IEdge[]) => {
     this.canvas?.addEdges(edges);
   };
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { FlowGraphContext, Flow, EventEngine } from '@toy-box/flow-graph';
+import { FlowContext, Flow, EventEngine } from '@toy-box/flow-graph';
 import { Panel, FlowCanvas } from '../src';
 import { nodes } from './nodes';
 import './theme.less';
@@ -10,12 +10,10 @@ const eventEngine = new EventEngine();
 const App = () => {
   return (
     <div className="App">
-      <FlowGraphContext.Provider
-        value={{ flow, icons: {}, nodes, eventEngine }}
-      >
+      <FlowContext.Provider value={{ flow, icons: {}, nodes, eventEngine }}>
         <Panel />
         <FlowCanvas />
-      </FlowGraphContext.Provider>
+      </FlowContext.Provider>
     </div>
   );
 };

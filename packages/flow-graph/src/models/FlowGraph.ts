@@ -1,6 +1,8 @@
 import dagre from '@toy-box/dagre';
-import { FlowNode, IFlowNodeProps } from './FlowNode';
+// import dagre from 'dagre';
+import { FlowNode, IFlowNodeProps, TargetProps, TargetType } from './FlowNode';
 import { uid } from '../shared';
+import { UpdateNodeProps } from './Flow';
 
 export interface IFlowGraphProps {
   id?: string;
@@ -31,8 +33,8 @@ export class FlowGraph {
     return {
       rankdir: 'TB',
       ranker: 'short-tree',
-      nodesep: this.standardSize * 8,
-      ranksep: this.standardSize * 3,
+      nodesep: this.standardSize * 6,
+      ranksep: this.standardSize * 4,
     };
   }
 
@@ -62,9 +64,21 @@ export class FlowGraph {
     });
   }
 
+  addNodeAt(at: string, node: IFlowNodeProps) {
+    const atNode = this.nodeMap[at];
+    if (atNode) {
+      // const newExtendNode = this.addNod
+      const newNode = this.addNode({
+        ...node,
+      });
+      this.setTarget(at, [{ id: newNode.id }]);
+    }
+  }
+
   addNode(node: IFlowNodeProps) {
-    const isDecision =
-      node.type === 'decisionBegin' || node.type === 'decisionEnd';
+    // const isDecision =
+    //   node.type === 'decisionBegin' || node.type === 'decisionEnd';
+    const isDecision = false;
     let flowNode: FlowNode;
     let shadowNode: FlowNode;
     if (!isDecision) {
@@ -123,6 +137,62 @@ export class FlowGraph {
         });
       }
     }
+    return flowNode;
+  }
+
+  addNodes(nodes: IFlowNodeProps[]) {
+    nodes.forEach((node) => {
+      this.addNode(node);
+    });
+  }
+
+  updateNode(updateNode: UpdateNodeProps) {
+    const { id, ...others } = updateNode;
+    let node = this.nodeMap[id];
+    if (node) {
+      for (const key in others) {
+        node[key] = others[key];
+      }
+    }
+  }
+
+  setTarget(id: string, targets: TargetProps[] = []) {
+    if (this.nodeMap[id]) {
+      this.nodeMap[id].targets?.forEach((target) => {
+        this.dg.removeEdge(id, target.id);
+      });
+      this.nodeMap[id].targets = targets;
+      targets.forEach((target) => {
+        this.dg.setEdge(id, target.id);
+      });
+    }
+  }
+
+  removeNode(id: string) {
+    const node = this.nodeMap[id];
+    const parents = this.nodes.filter((node) => node.isParentOf(id));
+    if (node.areaOutNode) {
+      const targets = node.areaOutNode.targets;
+      parents.forEach((parent) => {
+        this.setTarget(parent.id, targets);
+      });
+    }
+    // 移除关联节点
+    if (node) {
+      node.bindNodes
+        .map((node) => node.id)
+        .forEach((key) => {
+          this.dg.removeNode(key);
+          this.nodeMap[key].targets?.forEach((target) => {
+            this.dg.removeEdge(key, target.id);
+          });
+          delete this.nodeMap[key];
+        });
+    }
+  }
+
+  removeNodes(ids: string[]) {
+    ids.forEach((id) => this.removeNode(id));
   }
 
   layout() {
@@ -221,7 +291,14 @@ export class FlowGraph {
     const innerNodes: FlowNode[] = [];
     const nexts = node.nextNodes;
     innerNodes.push(...nexts);
-    if (nexts.some((node) => node.id === end.id)) {
+    if (
+      nexts.some((node) => {
+        if (node == null) {
+          console.log('inner', begin, end, nexts);
+        }
+        return node.id === end.id;
+      })
+    ) {
       return Array.from(new Set(innerNodes));
     }
     nexts.forEach((next) => {
@@ -232,6 +309,7 @@ export class FlowGraph {
 
   layoutData() {
     this.layout();
+    // this.layout();
     return {
       nodes: this.nodes.filter((node) => node.type !== 'shadow'),
       edges: this.dg

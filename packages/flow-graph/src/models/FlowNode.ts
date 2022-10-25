@@ -1,6 +1,6 @@
 import { FlowGraph } from './FlowGraph';
 import { uid } from '../shared';
-import { FlowNodeType, INodeProps } from '../types';
+import { FlowNodeType, INode } from '../types';
 
 const CYCLE_FLOW_WIDTH = 50;
 
@@ -11,7 +11,7 @@ export interface TargetProps {
   label?: string;
 }
 
-export interface IFlowNodeProps extends Omit<INodeProps, 'id' | 'x' | 'y'> {
+export interface IFlowNodeProps extends Omit<INode, 'id' | 'x' | 'y'> {
   id?: string;
   type: FlowNodeType;
   width: number;
@@ -22,7 +22,6 @@ export interface IFlowNodeProps extends Omit<INodeProps, 'id' | 'x' | 'y'> {
   targets?: TargetType[];
   component?: string;
   decisionEndTarget?: string;
-  loopBackTarget?: string;
   loopEndTarget?: string;
   shadowNode?: string;
   data?: Record<string, any>;
@@ -40,7 +39,6 @@ export class FlowNode {
   targets?: TargetProps[];
   component?: string;
   decisionEndTarget?: string;
-  loopBackTarget?: string;
   loopEndTarget?: string;
   shadowNode?: string;
   data?: Record<string, any>;
@@ -57,7 +55,7 @@ export class FlowNode {
       typeof target === 'string' ? { id: target } : target
     );
     this.component = props.component;
-    this.loopBackTarget = props.loopBackTarget;
+    // this.loopBackTarget = props.loopBackTarget;
     this.loopEndTarget = props.loopEndTarget;
     this.decisionEndTarget = props.decisionEndTarget;
     this.shadowNode = props.shadowNode;
@@ -73,6 +71,28 @@ export class FlowNode {
   setSize(width: number, height: number) {
     this.width = width;
     this.height = height;
+  }
+
+  isParentOf(id: string) {
+    return this.targets?.some((target) => target.id === id);
+  }
+
+  get loopBackTarget() {
+    return this.loopEnd?.parents[0].id;
+  }
+
+  get loopBack() {
+    return this.flowGraph.nodes.find((node) => node.id === this.loopBackTarget);
+  }
+
+  get areaOutNode(): FlowNode | undefined {
+    return this.isAreaBegin
+      ? this.areaEndNode
+      : this.flowGraph.nodes.find((node) => node.id === this.targets?.[0].id);
+  }
+
+  get parents() {
+    return this.flowGraph.nodes.filter((node) => node.isParentOf(this.id));
   }
 
   get left() {
@@ -92,15 +112,19 @@ export class FlowNode {
   }
 
   get isAreaNode() {
-    return this.type === 'loopBegin' || (this.targets ?? []).length > 0;
+    return this.isLoopBegin || this.isDecisionBegin;
   }
 
   get isAreaBegin() {
     return this.isAreaNode;
   }
 
+  get isDecisionBegin() {
+    return this.type === 'decisionBegin';
+  }
+
   get isAreaEnd() {
-    return this.isloopEnd || this.decisionEnd;
+    return this.isLoopEnd || this.decisionEnd;
   }
 
   get nextNodes() {
@@ -109,15 +133,22 @@ export class FlowNode {
     );
   }
 
-  get areaEndNode() {
+  get areaEndNode(): FlowNode | undefined {
     return this.decisionEnd || this.loopEnd;
   }
 
-  get innerNodes() {
+  get innerNodes(): FlowNode[] {
     if (this.areaEndNode) {
       return this.flowGraph.getInnerNodes(this, this.areaEndNode);
     }
     return [];
+  }
+
+  get bindNodes(): FlowNode[] {
+    if (this.isAreaBegin) {
+      return [this, ...this.innerNodes];
+    }
+    return [this, ...this.children];
   }
 
   get areaWidth(): number {
@@ -155,17 +186,34 @@ export class FlowNode {
     );
   }
 
-  get isloopBack() {
-    return this.flowGraph.nodes.find((node) => node.loopBackTarget === this.id);
+  get isLoopBack() {
+    return this.flowGraph.nodes.some((node) => node.loopBackTarget === this.id);
   }
 
-  get isloopEnd() {
-    return this.flowGraph.nodes.find((node) => node.loopEndTarget === this.id);
+  get isLoopEnd() {
+    return this.flowGraph.nodes.some((node) => node.loopEndTarget === this.id);
   }
 
-  get decisionEnd() {
+  get isLoopBegin() {
+    return this.type === 'loopBegin';
+  }
+
+  get isDecisionEnd() {
+    return this.flowGraph.nodes.some(
+      (node) =>
+        node.type === 'decisionBegin' && node.decisionEndTarget === this.id
+    );
+  }
+
+  get decisionEnd(): FlowNode | undefined {
     return this.flowGraph.nodes.find(
-      (node) => this.targets && node.decisionEndTarget === this.targets[0].id
+      (node) => node.id === this.decisionEndTarget
+    );
+  }
+
+  get children() {
+    return (this.targets ?? []).map((target) =>
+      this.flowGraph.getNode(target.id)
     );
   }
 }

@@ -1,6 +1,6 @@
-import { useFlowGraph } from './useFlowGraph';
+import { useFlowContext } from './useFlowContext';
 
 export const useFlow = () => {
-  const flowGraph = useFlowGraph();
-  return flowGraph.flow;
+  const flowContext = useFlowContext();
+  return flowContext.flow;
 };
