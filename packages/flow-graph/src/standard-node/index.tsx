@@ -1,49 +1,49 @@
-import React from 'react';
-import classNames from 'classnames';
-import { ICustomEvent } from '../shared';
+import React from 'react'
+import classNames from 'classnames'
+import { Popover } from 'antd'
+import { ICustomEvent } from '../shared'
+import { useEvent } from '../hooks'
+import { FlowNode } from '../models'
+import { NodePanel } from '../node-panel'
 
-import './styles';
-import { Popover } from 'antd';
-import { useEvent } from '../hooks';
-import { FlowNode } from '../models';
-import { NodePanel } from '../node-panel';
+import './styles'
 
 export interface IStandardNodeProps {
-  id: string;
-  className?: string;
-  style?: React.CSSProperties;
-  data?: INodeDataProps;
+  id: string
+  className?: string
+  style?: React.CSSProperties
+  data?: INodeDataProps
 }
 
 interface INodeDataProps {
-  title?: string;
-  description?: string;
+  title?: string
+  description?: string
 }
 
 export const StandardNode: React.FC<
   React.PropsWithChildren<IStandardNodeProps>
 > = ({ id, className, style, data = {}, children }) => {
-  const eventEngine = useEvent();
-  const prefixCls = 'tbox-flow-node';
-  const [active, setActive] = React.useState(false);
+  const eventEngine = useEvent()
+  const prefixCls = 'tbox-flow-node'
+  const [active, setActive] = React.useState(false)
   React.useEffect(() => {
     const unsubscribe = eventEngine.subscribe((payload: ICustomEvent) => {
-      if (payload.type === 'clickPane') {
-        setActive(false);
+      if (payload.type === 'clickPane' || payload.type === 'moveStart') {
+        setActive(false)
       } else if (payload.type === 'clickNode') {
         if ((payload as ICustomEvent<FlowNode>).data?.id !== id) {
-          setActive(false);
+          setActive(false)
         }
       }
-    });
-    return unsubscribe();
-  }, []);
+    })
+    return unsubscribe()
+  }, [])
 
   const closeExtend = () => {
-    setActive(false);
-  };
+    setActive(false)
+  }
 
-  const { title, description } = data;
+  const { title, description } = data
   return (
     <Popover
       visible={active}
@@ -61,5 +61,5 @@ export const StandardNode: React.FC<
         {children}
       </div>
     </Popover>
-  );
-};
+  )
+}

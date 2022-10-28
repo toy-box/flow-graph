@@ -1,6 +1,5 @@
-import React, { ReactNode } from 'react';
-import { Edge, Node } from 'reactflow';
-import { IFlowBatch, IFlowNodeProps, TargetType } from './models';
+import { Node } from 'reactflow'
+import { IFlowBatch, TargetType } from './models'
 
 export type FlowNodeType =
   | 'begin'
@@ -12,40 +11,40 @@ export type FlowNodeType =
   | 'loopEnd'
   | 'forward'
   | 'extend'
-  | 'shadow';
+  | 'shadow'
 
 export interface INode {
-  id: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  type: FlowNodeType;
-  component?: string;
-  data?: Record<string, any>;
+  id: string
+  x: number
+  y: number
+  width: number
+  height: number
+  type: FlowNodeType
+  component?: string
+  data?: Record<string, any>
 }
 
 export interface Point {
-  x: number;
-  y: number;
+  x: number
+  y: number
 }
 
 export interface IEdge {
-  source: string;
-  target: string;
-  sourceHandle?: string;
-  targetHandle?: string;
-  type?: string;
-  label?: string;
-  data?: any;
+  source: string
+  target: string
+  sourceHandle?: string
+  targetHandle?: string
+  type?: string
+  label?: string
+  data?: any
 }
 
-export interface INodeProps extends Node {}
+export type INodeProps = Node
 
 export interface INodeTemplate {
-  icon: string;
-  title: string;
-  description: string;
-  group: string;
-  make: (at: string, targets?: TargetType[]) => IFlowBatch;
+  icon: string
+  title: string
+  description: string
+  group: string
+  make: (at: string, targets?: TargetType[]) => IFlowBatch
 }

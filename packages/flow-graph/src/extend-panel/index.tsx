@@ -1,19 +1,19 @@
-import React, { ReactNode } from 'react';
-import { Tabs } from 'antd';
-import uniq from 'lodash.uniq';
-import cls from 'classnames';
-import { INodeProps, INodeTemplate } from '../types';
-import { useFlow, useNodes } from '../hooks';
-import flowIcons from '../icons';
+import React, { ReactNode } from 'react'
+import { Tabs } from 'antd'
+import uniq from 'lodash.uniq'
+import cls from 'classnames'
+import { INodeProps, INodeTemplate } from '../types'
+import { useFlow, useNodes } from '../hooks'
+import flowIcons from '../icons'
 
-import './styles';
+import './styles'
 
 export interface IExtendPanelProps {
-  className?: string;
-  style?: React.CSSProperties;
-  icons?: Record<string, ReactNode>;
-  closeExtend?: () => void;
-  node: INodeProps;
+  className?: string
+  style?: React.CSSProperties
+  icons?: Record<string, ReactNode>
+  closeExtend?: () => void
+  node?: INodeProps
 }
 
 export const ExtendPanel: React.FC<IExtendPanelProps> = ({
@@ -23,13 +23,13 @@ export const ExtendPanel: React.FC<IExtendPanelProps> = ({
   closeExtend,
   node,
 }) => {
-  const nodes = useNodes();
-  const flow = useFlow();
-  const prefixCls = 'tbox-flow-extend-panel';
+  const nodes = useNodes()
+  const flow = useFlow()
+  const prefixCls = 'tbox-flow-extend-panel'
   const groups = uniq(nodes.map((node) => node.group)).map((name) => ({
     name,
     nodes: nodes.filter((node) => node.group === name),
-  }));
+  }))
 
   const mixIcons = React.useMemo(
     () => ({
@@ -37,13 +37,13 @@ export const ExtendPanel: React.FC<IExtendPanelProps> = ({
       ...icons,
     }),
     [icons]
-  );
+  )
 
   const handleChoose = (template: INodeTemplate, at: string) => {
-    const node = flow.flowGraph.getNode(at);
-    flow.batch(template.make(at, node.targets));
-    closeExtend && closeExtend();
-  };
+    const node = flow.flowGraph.getNode(at)
+    flow.batch(template.make(at, node.targets))
+    closeExtend && closeExtend()
+  }
 
   const nodeRender = (template: INodeTemplate, index: number) => {
     return (
@@ -62,8 +62,8 @@ export const ExtendPanel: React.FC<IExtendPanelProps> = ({
           </div>
         </div>
       </li>
-    );
-  };
+    )
+  }
   return (
     <div className={cls(prefixCls, className)} style={style}>
       <h3 style={{ padding: '8px 8px 8px 4px' }}>Choose flow node</h3>
@@ -77,5 +77,5 @@ export const ExtendPanel: React.FC<IExtendPanelProps> = ({
         ))}
       </Tabs>
     </div>
-  );
-};
+  )
+}

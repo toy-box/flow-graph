@@ -1,0 +1,38 @@
+{
+  "name": "@toy-box/autoflow-core",
+  "version": "2.0.0",
+  "license": "MIT",
+  "description": "",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "es"
+  ],
+  "scripts": {
+    "build": "rimraf -rf lib esm dist && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build:cjs": "tsc --project tsconfig.build.json",
+    "build:esm": "tsc --project tsconfig.build.json --module es2015 --outDir esm",
+    "build:umd": "rollup --config"
+  },
+  "author": "wishgood@gmail.com",
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@formily/reactive": "^2.2.9",
+    "@types/react": ">=17.8.0 || >=18.0.0",
+    "@types/react-dom": ">=17.8.0 || >=18.0.0",
+    "antd": "^4.20.0",
+    "react": ">=17.8.0 || >=18.0.0",
+    "react-dom": ">=17.8.0 || >=18.0.0",
+    "react-is": ">=17.8.0 || >=18.0.0"
+  },
+  "dependencies": {
+    "@toy-box/flow-graph": "^2.0.0",
+    "@toy-box/meta-schema": "^3.0.19",
+    "@toy-box/toybox-shared": "^3.0.19",
+    "immutability-helper": "^3.1.1"
+  }
+}

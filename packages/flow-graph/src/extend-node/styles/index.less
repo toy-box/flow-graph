@@ -5,7 +5,7 @@
 @extend-panel-width: 240px;
 @extend-panel-height: 360px;
 
-@extend-node-size: @node-width / 3;
+@extend-node-size: calc(@node-width / 3);
 .@{node-prefix-cls} {
   display: flex;
   position: relative;
@@ -46,8 +46,8 @@
   }
   &__panel {
     position: absolute;
-    top: @extend-node-size / 2;
-    left: (@extend-node-size - @extend-panel-width) / 2;
+    top: calc(@extend-node-size / 2);
+    left: calc((@extend-node-size - @extend-panel-width) / 2);
     width: @extend-panel-width;
     height: @extend-panel-height;
     background-color: @white;

@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react",
+    "paths": {
+      "@toy-box/*": ["./packages/*/src"]
+    }
+  },
+  "exclude": ["./packages/*/esm", "./packages/*/lib"]
+}
