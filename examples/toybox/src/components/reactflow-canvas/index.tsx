@@ -6,17 +6,15 @@ import ReactFlow, {
   BackgroundVariant,
 } from 'reactflow'
 import { observer } from '@formily/reactive-react'
+import { ReactFlowCanvas, FixStepEdge, ForkEdge } from '@toy-box/flow-graph'
 import {
-  ReactFlowCanvas,
   connectReactFlow,
   ExtendNode,
   StandardNode,
-  FixStepEdge,
-  ForkEdge,
   ExtendPanel,
   useFlow,
   useEvent,
-} from '@toy-box/flow-graph'
+} from '@toy-box/flow-node'
 
 export const FlowCanvas = observer(() => {
   const flow = useFlow()

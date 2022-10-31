@@ -1,5 +1,4 @@
 import { Node } from 'reactflow'
-import { IFlowBatch, TargetType } from './models'
 
 export type FlowNodeType =
   | 'begin'
@@ -21,7 +20,7 @@ export interface INode {
   height: number
   type: FlowNodeType
   component?: string
-  data?: Record<string, any>
+  data?: unknown
 }
 
 export interface Point {
@@ -36,15 +35,7 @@ export interface IEdge {
   targetHandle?: string
   type?: string
   label?: string
-  data?: any
+  data?: unknown
 }
 
 export type INodeProps = Node
-
-export interface INodeTemplate {
-  icon: string
-  title: string
-  description: string
-  group: string
-  make: (at: string, targets?: TargetType[]) => IFlowBatch
-}

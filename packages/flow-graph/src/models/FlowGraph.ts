@@ -1,7 +1,6 @@
 import dagre from '@toy-box/dagre'
-// import dagre from 'dagre';
+import { uid } from '@toy-box/toybox-shared'
 import { FlowNode, IFlowNodeProps, TargetProps } from './FlowNode'
-import { uid } from '../shared'
 import { UpdateNodeProps } from './Flow'
 
 export interface IFlowGraphProps {
@@ -75,24 +74,25 @@ export class FlowGraph {
     const isDecision =
       node.type === 'decisionBegin' || node.type === 'decisionEnd'
     // const isDecision = false;
-    let flowNode: FlowNode
-    let shadowNode: FlowNode
+    // let flowNode: FlowNode
+    // let shadowNode: FlowNode
     if (!isDecision) {
-      flowNode = new FlowNode(node, this)
+      const flowNode = new FlowNode(node, this)
       this.nodeMap[flowNode.id] = flowNode
       this.dg.setNode(flowNode.id, {
         width: flowNode.width,
         height: flowNode.height,
       })
-      ;(flowNode.targets || []).forEach((target) => {
+      flowNode.targets?.forEach((target) => {
         this.dg.setEdge(flowNode.id, target.id, {
           id: uid(),
         })
       })
+      return flowNode
     } else {
       // has shadow node
       if (node.type === 'decisionBegin') {
-        shadowNode = new FlowNode(
+        const shadowNode = new FlowNode(
           {
             ...node,
             id: uid(),
@@ -104,7 +104,10 @@ export class FlowGraph {
           },
           this
         )
-        flowNode = new FlowNode({ ...node, shadowNode: shadowNode.id }, this)
+        const flowNode = new FlowNode(
+          { ...node, shadowNode: shadowNode.id },
+          this
+        )
         this.nodeMap[flowNode.id] = flowNode
         this.nodeMap[shadowNode.id] = shadowNode
         this.dg.setNode(flowNode.id, {
@@ -120,19 +123,20 @@ export class FlowGraph {
         ;(flowNode.targets || []).forEach((target) => {
           this.dg.setEdge(shadowNode.id, target.id, { id: uid() })
         })
+        return flowNode
       } else {
-        flowNode = new FlowNode(node, this)
+        const flowNode = new FlowNode(node, this)
         this.nodeMap[flowNode.id] = flowNode
         this.dg.setNode(flowNode.id, {
           width: flowNode.width,
           height: flowNode.height * 2,
         })
-        ;(flowNode.targets || []).forEach((target) => {
+        flowNode.targets?.forEach((target) => {
           this.dg.setEdge(flowNode.id, target.id, { id: uid() })
         })
+        return flowNode
       }
     }
-    return flowNode
   }
 
   addNodes(nodes: IFlowNodeProps[]) {

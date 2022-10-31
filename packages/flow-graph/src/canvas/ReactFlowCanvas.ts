@@ -16,10 +16,10 @@ import {
   EdgeProps,
   NodeProps,
 } from 'reactflow'
+import { uid } from '@toy-box/toybox-shared'
 import { ICanvas } from './Canvas'
 import { INode, IEdge } from '../types'
 import { FlowGraph } from '../models'
-import { uid } from '../shared'
 
 import 'reactflow/dist/style.css'
 

@@ -15,6 +15,7 @@ const presets = () => {
     'react-dom': 'ReactDOM',
     '@toy-box/autoflow-core': 'Toybox.AutoflowCore',
     '@toy-box/flow-graph': 'Toybox.FlowGraph',
+    '@toy-box/flow-node': 'Toybox.FlowNode',
   }
   return [
     typescript({

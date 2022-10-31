@@ -1,5 +1,4 @@
 import { IFieldMeta } from '@toy-box/meta-schema'
-import { MetaFlow } from '../models/MetaFlow'
 
 export type AnyFunction = (...args: any[]) => any
 
@@ -83,6 +82,14 @@ export enum FlowMetaType {
   END = 'end',
 }
 
+export interface IFlowMetaDecisionRule {
+  id: string
+  name: string
+  description?: string
+  criteria: Criteria
+  connector: TargetReference
+}
+
 export interface FlowMetaParam {
   id: string
   name: string
@@ -94,7 +101,7 @@ export interface FlowMetaParam {
   nextValueConnector?: TargetReference
   defaultConnectorName?: string
   assignmentItems?: IAssignmentData[]
-  rules?: FlowMetaParam[]
+  rules?: IFlowMetaDecisionRule[]
   collectionReference?: string
   iterationOrder?: string
   limit?: null | number

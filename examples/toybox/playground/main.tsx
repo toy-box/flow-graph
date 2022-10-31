@@ -1,16 +1,19 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { FlowContext, Flow, EventEngine } from '@toy-box/flow-graph'
+import { FlowContext, EventEngine } from '@toy-box/flow-node'
+import { FlowModeEnum, MetaFlow } from '@toy-box/autoflow-core'
 import { Panel, FlowCanvas } from '../src'
-import { nodes } from './nodes'
+import { templates } from './nodes'
 import './theme.less'
 
-const flow = new Flow()
 const eventEngine = new EventEngine()
+const metaFlow = new MetaFlow(FlowModeEnum.EDIT)
 const App = () => {
   return (
     <div className="App">
-      <FlowContext.Provider value={{ flow, icons: {}, nodes, eventEngine }}>
+      <FlowContext.Provider
+        value={{ metaFlow, templates, icons: {}, eventEngine }}
+      >
         <Panel />
         <FlowCanvas />
       </FlowContext.Provider>

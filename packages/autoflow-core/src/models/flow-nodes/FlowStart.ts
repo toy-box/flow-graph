@@ -1,5 +1,5 @@
-import { define, observable, action } from '@formily/reactive'
-import { FlowNode, IFlowNodeProps } from '@toy-box/flow-graph'
+import { define, observable } from '@formily/reactive'
+import { IFlowNodeProps } from '@toy-box/flow-graph'
 import { uid } from '@toy-box/toybox-shared'
 import {
   IStartFlowMeta,
@@ -29,6 +29,16 @@ export class FlowStart extends FlowMetaNode {
 
   get type() {
     return FlowMetaType.START
+  }
+
+  get nextNodes() {
+    return this.metaFlow.flowMetaNodes.filter(
+      (node) => node.id === this.connector.targetReference
+    )
+  }
+
+  get lowerLeverConnector() {
+    return this.connector
   }
 
   constructor(flowStart: IStartFlowMeta, metaFlow: MetaFlow) {
@@ -111,6 +121,7 @@ export class FlowStart extends FlowMetaNode {
         width: FlowMetaNode.StandardSize,
         height: FlowMetaNode.StandardSize,
         targets: [this.connector.targetReference],
+        component: 'ExtendNode',
       },
     ]
   }

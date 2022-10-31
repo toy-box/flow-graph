@@ -1,5 +1,5 @@
+import { uid } from '@toy-box/toybox-shared'
 import { FlowGraph } from './FlowGraph'
-import { uid } from '../shared'
 import { FlowNodeType, INode } from '../types'
 
 const CYCLE_FLOW_WIDTH = 50
@@ -45,7 +45,7 @@ export class FlowNode {
   data?: unknown
 
   constructor(props: IFlowNodeProps, flowGraph: FlowGraph) {
-    this.id = props.id || uid()
+    this.id = props.id ?? uid()
     this.type = props.type || 'forward'
     this.width = props.width
     this.height = props.height

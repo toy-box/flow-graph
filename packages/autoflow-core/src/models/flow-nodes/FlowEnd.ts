@@ -20,6 +20,14 @@ export class FlowEnd extends FlowMetaNode {
     return FlowMetaType.END
   }
 
+  get nextNodes() {
+    return undefined
+  }
+
+  get lowerLeverConnector() {
+    return undefined
+  }
+
   constructor(flowEnd: IFlowEndProps, metaFlow: MetaFlow) {
     super(metaFlow, flowEnd.id, flowEnd.name)
     this.makeObservable()
@@ -46,7 +54,7 @@ export class FlowEnd extends FlowMetaNode {
       id: this.id,
       label: this.name,
       data: this,
-      type: 'begin',
+      type: 'end',
       width,
       height,
       x,
@@ -68,7 +76,7 @@ export class FlowEnd extends FlowMetaNode {
         id: this.id,
         label: this.name,
         data: this,
-        type: 'begin',
+        type: 'end',
         width,
         height,
         x,

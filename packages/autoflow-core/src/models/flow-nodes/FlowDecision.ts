@@ -2,7 +2,12 @@ import { define, observable, action } from '@formily/reactive'
 import { FlowNode, FlowNodeType, TargetProps } from '@toy-box/flow-graph'
 import { IFlowNodeProps } from '@toy-box/flow-graph/src'
 import { uid } from '@toy-box/toybox-shared'
-import { FlowMetaParam, FlowMetaType, TargetReference } from '../../types'
+import {
+  FlowMetaParam,
+  FlowMetaType,
+  IFlowMetaDecisionRule,
+  TargetReference,
+} from '../../types'
 import { MetaFlow } from '../MetaFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 
@@ -13,7 +18,7 @@ export class FlowDecision extends FlowMetaNode {
   connector?: TargetReference
   defaultConnector?: TargetReference
   defaultConnectorName?: string
-  rules?: FlowMetaParam[]
+  rules?: IFlowMetaDecisionRule[]
 
   static DefaultNodeProps = {
     width: 60,
@@ -23,6 +28,21 @@ export class FlowDecision extends FlowMetaNode {
 
   get type() {
     return FlowMetaType.DECISION
+  }
+
+  get defaultRuleId() {
+    return uid()
+  }
+
+  get commRules() {
+    return [
+      ...this.rules.map((rule) => ({ id: rule.id, connector: rule.connector })),
+      { id: this.defaultRuleId, connector: this.defaultConnector },
+    ]
+  }
+
+  get lowerLeverConnector() {
+    return this.defaultConnector
   }
 
   constructor(flowDecision: FlowMetaParam, metaFlow: MetaFlow) {
@@ -80,6 +100,13 @@ export class FlowDecision extends FlowMetaNode {
       component,
     }
   }
+
+  get nextNodes() {
+    return this.metaFlow.flowMetaNodes.filter((node) =>
+      this.commRules.some((rule) => rule.connector.targetReference === node.id)
+    )
+  }
+
   makeFlowNodeWithExtend(
     {
       width,

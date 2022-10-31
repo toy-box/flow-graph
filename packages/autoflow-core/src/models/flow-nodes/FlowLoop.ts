@@ -1,13 +1,11 @@
 import { define, observable, action } from '@formily/reactive'
-import { TargetProps } from '@toy-box/flow-graph'
-import { FlowNode, IFlowNodeProps } from '@toy-box/flow-graph/src'
+import { FlowNode, TargetProps, IFlowNodeProps } from '@toy-box/flow-graph'
 import { uid } from '@toy-box/toybox-shared'
-import { FlowMetaParam, FlowMetaType, TargetReference } from '../../types'
 import { MetaFlow } from '../MetaFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
+import { FlowMetaParam, FlowMetaType, TargetReference } from '../../types'
 
 export class FlowLoop extends FlowMetaNode {
-  connector?: TargetReference
   defaultConnector?: TargetReference
   nextValueConnector?: TargetReference
   collectionReference?: string
@@ -23,9 +21,30 @@ export class FlowLoop extends FlowMetaNode {
     return FlowMetaType.LOOP
   }
 
+  get nextNodes() {
+    return this.metaFlow.flowMetaNodes.filter(
+      (node) => node.id === this.defaultConnector.targetReference
+    )
+  }
+
+  get loopBackNode() {
+    return this.findLoopBack()
+  }
+
+  get parents() {
+    return this.metaFlow.flowMetaNodes.filter((node) =>
+      node.nextNodes.some(
+        (next) => next.id === this.id && next.id !== this.loopBackNode.id
+      )
+    )
+  }
+
+  get lowerLeverConnector() {
+    return this.nextValueConnector
+  }
+
   constructor(flowLoop: FlowMetaParam, metaFlow: MetaFlow) {
     super(metaFlow, flowLoop.id, flowLoop.name, flowLoop.description)
-    this.connector = flowLoop.connector
     this.defaultConnector = flowLoop.defaultConnector
     this.nextValueConnector = flowLoop.nextValueConnector
     this.collectionReference = flowLoop.collectionReference
@@ -38,7 +57,6 @@ export class FlowLoop extends FlowMetaNode {
     define(this, {
       id: observable.ref,
       name: observable.ref,
-      connector: observable.deep,
       defaultConnector: observable.deep,
       nextValueConnector: observable.deep,
       collectionReference: observable.ref,
@@ -66,7 +84,7 @@ export class FlowLoop extends FlowMetaNode {
       x,
       y,
       targets: [this.nextValueConnector.targetReference],
-      loopEndTarget: this.connector.targetReference,
+      loopEndTarget: this.defaultConnector.targetReference,
       component,
     }
   }
@@ -117,7 +135,7 @@ export class FlowLoop extends FlowMetaNode {
 
   appendAt(at: FlowNode): void {
     if (this.flowNode == null) {
-      this.connector.targetReference = at.targets[0].id
+      this.defaultConnector.targetReference = at.targets[0].id
       const flowNodes = this.makeFlowNodeWithExtend(
         FlowLoop.DefaultNodeProps,
         at.targets
@@ -130,8 +148,7 @@ export class FlowLoop extends FlowMetaNode {
   onEdit = (flowLoop: FlowMetaParam) => {
     this.id = flowLoop.id
     this.name = flowLoop.name
-    this.connector = flowLoop.connector
-    this.defaultConnector = flowLoop.defaultConnector
+    this.defaultConnector = flowLoop.connector
     this.nextValueConnector = flowLoop.nextValueConnector
     this.collectionReference = flowLoop.collectionReference
     this.iterationOrder = flowLoop.iterationOrder

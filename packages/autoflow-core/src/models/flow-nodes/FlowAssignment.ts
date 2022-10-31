@@ -13,7 +13,6 @@ import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 
 export class FlowAssignment extends FlowMetaNode {
   connector?: TargetReference
-  defaultConnector?: TargetReference
   assignmentItems?: IAssignmentData[]
 
   static DefaultNodeProps = {
@@ -26,6 +25,10 @@ export class FlowAssignment extends FlowMetaNode {
     return FlowMetaType.ASSIGNMENT
   }
 
+  get lowerLeverConnector() {
+    return this.connector
+  }
+
   constructor(flowAssignment: FlowMetaParam, metaFlow: MetaFlow) {
     super(
       metaFlow,
@@ -34,7 +37,6 @@ export class FlowAssignment extends FlowMetaNode {
       flowAssignment.description
     )
     this.connector = flowAssignment.connector
-    this.defaultConnector = flowAssignment.defaultConnector
     this.assignmentItems = flowAssignment.assignmentItems
     this.makeObservable()
   }
@@ -48,6 +50,12 @@ export class FlowAssignment extends FlowMetaNode {
       assignmentItems: observable.deep,
       onEdit: action,
     })
+  }
+
+  get nextNodes() {
+    return this.metaFlow.flowMetaNodes.filter(
+      (node) => node.id === this.connector.targetReference
+    )
   }
 
   makeFlowNode(
@@ -128,7 +136,6 @@ export class FlowAssignment extends FlowMetaNode {
     this.name = flowAssignment.name
     this.description = flowAssignment.description
     this.connector = flowAssignment.connector
-    this.defaultConnector = flowAssignment.defaultConnector
     this.assignmentItems = flowAssignment.assignmentItems
   }
 }

@@ -1,8 +1,8 @@
 import { action, batch, define, observable } from '@formily/reactive'
+import { uid } from '@toy-box/toybox-shared'
 import { FlowGraph } from './FlowGraph'
 import { ReactFlowCanvas } from '../canvas'
 import { FlowNode, IFlowNodeProps } from './FlowNode'
-import { uid } from '../shared'
 import { IEdge } from '../types'
 
 const getAreaWidth = (start: FlowNode, end: FlowNode) => {
