@@ -57,7 +57,6 @@ export class Flow {
       layoutFlow: batch,
     })
   }
-
   setCanvas(canvas: ReactFlowCanvas) {
     this.canvas = canvas
   }
@@ -70,7 +69,6 @@ export class Flow {
     if (this.canvas) {
       const layout = this.flowGraph.layoutData()
       this.setGraphNodes(layout.nodes)
-      console.log('layout', layout)
       const edges: IEdge[] = []
       layout.edges.map((edge) => {
         const sourceNode = this.flowGraph.getNode(edge.v)
@@ -98,14 +96,9 @@ export class Flow {
               sourceXSet: getAreaWidth(loopBegin, targetNode) / 2,
             },
           })
-        } else if (
-          sourceNode.isDecisionBegin ||
-          targetNode.isDecisionEnd
-          // sourceNode.type === 'decisionBegin' ||
-          // targetNode.type === 'decisionEnd'
-        ) {
+        } else if (sourceNode.isDecisionBegin || targetNode.isDecisionEnd) {
           const target = sourceNode.targets?.find(
-            (target) => target.id === targetNode.id
+            (tg) => tg.id === targetNode.id
           )
           edges.push({
             source: edge.v,

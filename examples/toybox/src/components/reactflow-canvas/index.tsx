@@ -37,17 +37,11 @@ export const FlowCanvas = observer(() => {
             component: StandardNode,
             content: <h3>Start</h3>,
             handles: [{ type: 'source', position: Position.Bottom }],
-            onClick: (id: string, data: any) => {
-              console.log('node click', id, data.title)
-            },
           }),
           EndNode: connectReactFlow({
             component: StandardNode,
             content: <h3>End</h3>,
             handles: [{ type: 'target', position: Position.Top }],
-            onClick: (id: string, data: any) => {
-              console.log('node click', id, data.title)
-            },
           }),
           ExtendNode: connectReactFlow({
             component: ExtendNode,
@@ -59,6 +53,7 @@ export const FlowCanvas = observer(() => {
           }),
           DecisionNode: connectReactFlow({
             component: StandardNode,
+            content: <h3>Decision</h3>,
             handles: [
               { type: 'target', position: Position.Top },
               { type: 'source', position: Position.Bottom },

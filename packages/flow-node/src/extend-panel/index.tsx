@@ -26,7 +26,6 @@ export const ExtendPanel: React.FC<IExtendPanelProps> = ({
   node,
 }) => {
   const nodes = useTemplates()
-  const flow = useFlow()
   const prefixCls = 'tbox-flow-extend-panel'
   const groups = uniq(nodes.map((node) => node.group)).map((name) => ({
     name,
@@ -42,13 +41,11 @@ export const ExtendPanel: React.FC<IExtendPanelProps> = ({
   )
 
   const handleChoose = (nodeTemplate: INodeTemplate<NodeMake>, at: string) => {
-    const node = flow.flowGraph.getNode(at)
-    // flow.batch(template.make(at, node.targets))
     nodeTemplate.make(at)
     closeExtend && closeExtend()
   }
 
-  const nodeRender = (template: INodeTemplate<any>, index: number) => {
+  const nodeRender = (template: INodeTemplate<NodeMake>, index: number) => {
     return (
       <li
         className={`${prefixCls}__node-list-item`}

@@ -73,9 +73,6 @@ export class FlowGraph {
   addNode(node: IFlowNodeProps) {
     const isDecision =
       node.type === 'decisionBegin' || node.type === 'decisionEnd'
-    // const isDecision = false;
-    // let flowNode: FlowNode
-    // let shadowNode: FlowNode
     if (!isDecision) {
       const flowNode = new FlowNode(node, this)
       this.nodeMap[flowNode.id] = flowNode

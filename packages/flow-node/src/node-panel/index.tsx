@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button } from 'antd'
 import cls from 'classnames'
-import { useFlow } from '../hooks'
+import { useFlow, useMetaFlow } from '../hooks'
 import './styles'
 
 export interface INodePanelProps {
@@ -18,10 +18,10 @@ export const NodePanel: React.FC<INodePanelProps> = ({
   nodeId,
 }) => {
   const prefixCls = 'tbox-flow-node-panel'
-  const flow = useFlow()
+  const metaFlow = useMetaFlow()
   const handleRemove = React.useCallback(() => {
-    flow.removeNode(nodeId)
-    flow.layoutFlow()
+    metaFlow.removeNodeWithBind(nodeId)
+    metaFlow.flow.layoutFlow()
     closeExtend && closeExtend()
   }, [])
   return (

@@ -1,4 +1,3 @@
-import { define, observable, action } from '@formily/reactive'
 import { FlowNode, FlowNodeType, TargetProps } from '@toy-box/flow-graph'
 import { IFlowNodeProps } from '@toy-box/flow-graph/src'
 import { uid } from '@toy-box/toybox-shared'
@@ -53,23 +52,9 @@ export class FlowDecision extends FlowMetaNode {
       flowDecision.description
     )
     this.connector = flowDecision.connector
-    this.defaultConnector = flowDecision.defaultConnector
+    this.defaultConnector = flowDecision.defaultConnector ?? {}
     this.defaultConnectorName = flowDecision.defaultConnectorName
     this.rules = flowDecision.rules
-    this.makeObservable()
-  }
-
-  protected makeObservable() {
-    define(this, {
-      id: observable.ref,
-      name: observable.ref,
-      description: observable.ref,
-      connector: observable.deep,
-      defaultConnector: observable.deep,
-      defaultConnectorName: observable.deep,
-      rules: observable.deep,
-      onEdit: action,
-    })
   }
 
   makeFlowNode(
@@ -124,7 +109,8 @@ export class FlowDecision extends FlowMetaNode {
         id: this.id,
         label: this.name,
         data: this,
-        type: 'begin',
+        type: 'decisionBegin',
+        decisionEndTarget: decisionEndId,
         width,
         height,
         x,
@@ -135,7 +121,7 @@ export class FlowDecision extends FlowMetaNode {
             label: rule.name,
           })),
           {
-            id: 'defaultRuleId',
+            id: defaultRuleId,
             label: 'default',
           },
         ],
@@ -144,21 +130,18 @@ export class FlowDecision extends FlowMetaNode {
       ...this.rules.map((rule) => ({
         id: rule.id,
         type: 'extend' as FlowNodeType,
-        width: FlowMetaNode.StandardSize,
-        height: FlowMetaNode.StandardSize,
-        targets: [rule.connector.targetReference],
+        targets: [rule.connector.targetReference ?? decisionEndId],
+        ...FlowMetaNode.ExtendNodeProps,
       })),
       {
         id: defaultRuleId,
         type: 'extend',
-        targets,
-        width: FlowMetaNode.StandardSize,
-        height: FlowMetaNode.StandardSize,
-        component: 'ExtendNode',
+        targets: [this.defaultConnector.targetReference ?? decisionEndId],
+        ...FlowMetaNode.ExtendNodeProps,
       },
       {
         id: decisionEndId,
-        type: 'extend',
+        type: 'decisionEnd',
         targets,
         ...FlowMetaNode.ExtendNodeProps,
       },
@@ -167,23 +150,16 @@ export class FlowDecision extends FlowMetaNode {
 
   appendAt(at: FlowNode) {
     if (this.flowNode == null) {
-      this.connector.targetReference = at.targets[0].id
       const flowNodes = this.makeFlowNodeWithExtend(
         FlowDecision.DefaultNodeProps,
-        at.targets
+        at.isLoopBack ? [{ id: at.loopBegin.id }] : at.targets
       )
       this.metaFlow.flow.addFlowNodeAt(at.id, flowNodes[0])
-      this.metaFlow.flow.addFlowNodes(flowNodes.splice(0, 1))
+      flowNodes.forEach((node, idx) => {
+        if (idx > 0) {
+          this.metaFlow.flow.addFlowNode(node)
+        }
+      })
     }
-  }
-
-  onEdit = (flowDecision: FlowMetaParam) => {
-    this.id = flowDecision.id
-    this.name = flowDecision.name
-    this.description = flowDecision.description
-    this.connector = flowDecision.connector
-    this.defaultConnector = flowDecision.defaultConnector
-    this.defaultConnectorName = flowDecision.defaultConnectorName
-    this.rules = flowDecision.rules
   }
 }

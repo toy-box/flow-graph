@@ -16,11 +16,8 @@ export const nodeTemplatesProvider = (
           id: uid(),
           name: 'Assignment',
           type: FlowMetaType.ASSIGNMENT,
-          connector: {
-            targetReference: 'end',
-          },
+          connector: {},
         })
-        console.log('metaFlow', metaFlow)
         metaFlow.flow.layoutFlow()
       },
     },
@@ -34,9 +31,33 @@ export const nodeTemplatesProvider = (
           id: uid(),
           name: 'Loop',
           type: FlowMetaType.LOOP,
-          defaultConnector: {
-            targetReference: 'end',
-          },
+          defaultConnector: {},
+        })
+        metaFlow.flow.layoutFlow()
+      },
+    },
+    {
+      icon: 'flow',
+      title: 'Decision',
+      description: 'Decision node',
+      group: 'flow',
+      make: (at: string) => {
+        metaFlow.appendNode(at, {
+          id: uid(),
+          name: 'Decision',
+          type: FlowMetaType.DECISION,
+          defaultConnector: {},
+          rules: [
+            {
+              id: uid(),
+              name: 'rule-1',
+              connector: {},
+              criteria: {
+                conditions: [],
+                logic: '$and',
+              },
+            },
+          ],
         })
         metaFlow.flow.layoutFlow()
       },

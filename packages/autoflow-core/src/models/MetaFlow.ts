@@ -37,7 +37,7 @@ export class MetaFlow {
   flowMeta: IFlowMeta
   metaFlowDatas: FlowMetaParam[] = []
   flow: Flow
-  flowMetaNodes: FlowMetaNode[]
+  flowMetaNodeMap: Record<string, FlowMetaNode> = {}
 
   // flowConstants: IFieldMeta[] = []
   // flowFormulas: IFieldMeta[] = []
@@ -45,6 +45,12 @@ export class MetaFlow {
   // flowVariables: IFieldMeta[] = []
   mode: FlowModeType = FlowModeEnum.EDIT
   flowType: FlowType
+
+  get flowMetaNodes() {
+    return Object.keys(this.flowMetaNodeMap).map(
+      (key) => this.flowMetaNodeMap[key]
+    )
+  }
 
   constructor(
     // flowMeta: IFlowMeta,
@@ -86,20 +92,32 @@ export class MetaFlow {
   }
 
   parseFlow(nodes: IFlowMetaNodes) {
-    const flowMetaNodes: FlowMetaParam[] = []
+    const flowMetaPrarms: FlowMetaParam[] = []
     for (const key in nodes) {
       if (isArr(nodes[key])) {
-        flowMetaNodes.push(...nodes[key].map())
+        flowMetaPrarms.push(...nodes[key].map())
       } else {
-        flowMetaNodes.push(nodes[key])
+        flowMetaPrarms.push(nodes[key])
       }
     }
-    return flowMetaNodes
+    return flowMetaPrarms
+  }
+
+  removeNodeWithBind(id: string) {
+    const flowNode = this.flow.getFlowNode(id)
+    console.log('flowNode.bindNodes', flowNode)
+    flowNode.bindNodes.forEach((node) => {
+      if (node.type !== 'extend') {
+        delete this.flowMetaNodeMap[node.id]
+      }
+    })
+    this.flow.removeNode(id)
   }
 
   appendNode(at: string, flowData: FlowMetaParam) {
     const flowNode = this.makeFlowNode(flowData)
     const parent = this.flowNodes.find((node) => node.id === at)
+    this.flowMetaNodeMap[flowNode.id] = flowNode
     flowNode.appendAt(parent)
   }
 
@@ -110,6 +128,7 @@ export class MetaFlow {
     if (parent == null) {
       const start = flowDatas.find((data) => data.type === FlowMetaType.START)
       const startNode = this.makeFlowNode(start)
+      this.flowMetaNodeMap[startNode.id] = startNode
       startNode.appendAt(undefined)
       this.mountNodes(
         flowDatas.filter((data) => data.id !== start.id),
@@ -131,6 +150,7 @@ export class MetaFlow {
           const nextAtNode = this.flowNodes.find(
             (node) => (node.id = this.flowNodeMap[parent.id].targets[0].id)
           )
+          this.flowMetaNodeMap[nextValueNode.id] = nextValueNode
           nextValueNode.appendAt(nextAtNode)
           this.mountNodes(
             flowDatas.filter((data) => data.id !== nextValueRef),
@@ -145,6 +165,7 @@ export class MetaFlow {
           const atNode = this.flowNodes.find(
             (node) => (node.id = this.flowNodeMap[parent.id].loopEndTarget)
           )
+          this.flowMetaNodeMap[currentNode.id] = currentNode
           currentNode.appendAt(atNode)
           this.mountNodes(
             flowDatas.filter((data) => data.id !== targetRef),
@@ -163,6 +184,7 @@ export class MetaFlow {
               const atNode = this.flowNodes.find(
                 (node) => (node.id = this.flowNodeMap[rule.id].targets[0].id)
               )
+              this.flowMetaNodeMap[currentNode.id] = currentNode
               currentNode.appendAt(atNode)
               this.mountNodes(
                 flowDatas.filter(
@@ -185,6 +207,7 @@ export class MetaFlow {
           const atNode = this.flowNodes.find(
             (node) => node.id === this.flowNodeMap[parent.id].targets[0].id
           )
+          this.flowMetaNodeMap[currentNode.id] = currentNode
           currentNode.appendAt(atNode)
           this.mountNodes(
             flowDatas.filter((data) => data.id !== targetRef),
