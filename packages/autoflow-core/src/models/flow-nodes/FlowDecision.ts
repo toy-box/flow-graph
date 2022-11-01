@@ -160,9 +160,7 @@ export class FlowDecision extends FlowMetaNode {
         id: decisionEndId,
         type: 'extend',
         targets,
-        width: FlowMetaNode.StandardSize,
-        height: FlowMetaNode.StandardSize,
-        component: 'ExtendNode',
+        ...FlowMetaNode.ExtendNodeProps,
       },
     ]
   }

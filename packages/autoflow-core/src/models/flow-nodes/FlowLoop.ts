@@ -78,7 +78,7 @@ export class FlowLoop extends FlowMetaNode {
       id: this.id,
       label: this.name,
       data: this,
-      type: 'begin',
+      type: 'loopBegin',
       width,
       height,
       x,
@@ -106,7 +106,7 @@ export class FlowLoop extends FlowMetaNode {
         id: this.id,
         label: this.name,
         data: this,
-        type: 'begin',
+        type: 'loopBegin',
         width,
         height,
         x,
@@ -119,29 +119,32 @@ export class FlowLoop extends FlowMetaNode {
       {
         id: extendId,
         type: 'extend',
-        width: FlowMetaNode.StandardSize,
-        height: FlowMetaNode.StandardSize,
         targets: [loopEndId],
+        ...FlowMetaNode.ExtendNodeProps,
       },
       {
         id: loopEndId,
         type: 'extend',
-        width: FlowMetaNode.StandardSize,
-        height: FlowMetaNode.StandardSize,
         targets: targets,
+        ...FlowMetaNode.ExtendNodeProps,
       },
     ]
   }
 
   appendAt(at: FlowNode): void {
     if (this.flowNode == null) {
+      console.log('at', at.targets[0].id, at.targets)
       this.defaultConnector.targetReference = at.targets[0].id
       const flowNodes = this.makeFlowNodeWithExtend(
         FlowLoop.DefaultNodeProps,
         at.targets
       )
+      console.log('before append loop', this.metaFlow.flow.flowGraph.nodes)
       this.metaFlow.flow.addFlowNodeAt(at.id, flowNodes[0])
       this.metaFlow.flow.addFlowNode(flowNodes[1])
+      this.metaFlow.flow.addFlowNode(flowNodes[2])
+
+      console.log('append loop', this.metaFlow.flow.flowGraph.nodes)
     }
   }
 

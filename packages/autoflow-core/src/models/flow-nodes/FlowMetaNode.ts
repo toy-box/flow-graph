@@ -18,6 +18,12 @@ export abstract class FlowMetaNode {
 
   static StandardSize = 30
 
+  static ExtendNodeProps: IMakeFlowNodeProps = {
+    width: FlowMetaNode.StandardSize,
+    height: FlowMetaNode.StandardSize,
+    component: 'ExtendNode',
+  }
+
   constructor(
     metaFlow: MetaFlow,
     id: string,

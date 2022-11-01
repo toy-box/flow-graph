@@ -1,12 +1,10 @@
-import { INodeTemplate } from '@toy-box/flow-node'
+import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { FlowMetaType, MetaFlow } from '@toy-box/autoflow-core'
 import { uid } from '@toy-box/toybox-shared'
 
-export type MakeType = (at: string) => void
-
 export const nodeTemplatesProvider = (
   metaFlow: MetaFlow
-): INodeTemplate<MakeType>[] => {
+): INodeTemplate<NodeMake>[] => {
   return [
     {
       icon: 'flow',
@@ -22,6 +20,8 @@ export const nodeTemplatesProvider = (
             targetReference: 'end',
           },
         })
+        console.log('metaFlow', metaFlow)
+        metaFlow.flow.layoutFlow()
       },
     },
     {
@@ -38,45 +38,7 @@ export const nodeTemplatesProvider = (
             targetReference: 'end',
           },
         })
-        // const loopBackTarget = uid()
-        // const loopEndTarget = uid()
-        // return {
-        //   addNodesAt: [
-        //     {
-        //       id: at,
-        //       node: {
-        //         type: 'loopBegin',
-        //         width: 60,
-        //         height: 60,
-        //         component: 'LoopNode',
-        //         loopBackTarget,
-        //         loopEndTarget,
-        //         data: {
-        //           title: 'Loop Node',
-        //         },
-        //         targets: [loopBackTarget],
-        //       },
-        //     },
-        //   ],
-        //   addNodes: [
-        //     {
-        //       id: loopBackTarget,
-        //       type: 'forward',
-        //       width: 30,
-        //       height: 30,
-        //       component: 'ExtendNode',
-        //       targets: [loopEndTarget],
-        //     },
-        //     {
-        //       id: loopEndTarget,
-        //       type: 'forward',
-        //       width: 30,
-        //       height: 30,
-        //       component: 'ExtendNode',
-        //       targets,
-        //     },
-        //   ],
-        // }
+        metaFlow.flow.layoutFlow()
       },
     },
     // {

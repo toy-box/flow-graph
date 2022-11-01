@@ -118,10 +118,8 @@ export class FlowStart extends FlowMetaNode {
       {
         id: extendId,
         type: 'extend',
-        width: FlowMetaNode.StandardSize,
-        height: FlowMetaNode.StandardSize,
         targets: [this.connector.targetReference],
-        component: 'ExtendNode',
+        ...FlowMetaNode.ExtendNodeProps,
       },
     ]
   }

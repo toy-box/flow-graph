@@ -64,6 +64,14 @@ export const FlowCanvas = observer(() => {
               { type: 'source', position: Position.Bottom },
             ],
           }),
+          AssignmentNode: connectReactFlow({
+            component: StandardNode,
+            content: <h3>assign</h3>,
+            handles: [
+              { type: 'target', position: Position.Top },
+              { type: 'source', position: Position.Bottom },
+            ],
+          }),
           ActionNode: connectReactFlow({
             component: StandardNode,
             content: <h3>action</h3>,

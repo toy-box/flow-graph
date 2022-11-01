@@ -109,12 +109,10 @@ export class FlowAssignment extends FlowMetaNode {
         id: extendId,
         data: this,
         type: 'extend',
-        width,
-        height,
         x,
         y,
         targets,
-        component: 'ExtendNode',
+        ...FlowMetaNode.ExtendNodeProps,
       },
     ]
   }

@@ -70,6 +70,7 @@ export class Flow {
     if (this.canvas) {
       const layout = this.flowGraph.layoutData()
       this.setGraphNodes(layout.nodes)
+      console.log('layout', layout)
       const edges: IEdge[] = []
       layout.edges.map((edge) => {
         const sourceNode = this.flowGraph.getNode(edge.v)

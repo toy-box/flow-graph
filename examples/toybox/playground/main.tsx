@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { FlowContext, EventEngine } from '@toy-box/flow-node'
 import { FlowModeEnum, MetaFlow } from '@toy-box/autoflow-core'
 import { Panel, FlowCanvas } from '../src'
-import { templates } from './nodes'
+import { nodeTemplatesProvider } from './nodes'
 import './theme.less'
 
 const eventEngine = new EventEngine()
@@ -12,7 +12,12 @@ const App = () => {
   return (
     <div className="App">
       <FlowContext.Provider
-        value={{ metaFlow, templates, icons: {}, eventEngine }}
+        value={{
+          metaFlow,
+          templates: nodeTemplatesProvider(metaFlow),
+          icons: {},
+          eventEngine,
+        }}
       >
         <Panel />
         <FlowCanvas />

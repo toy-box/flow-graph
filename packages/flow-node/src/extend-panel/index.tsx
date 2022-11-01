@@ -8,6 +8,7 @@ import { useFlow, useTemplates } from '../hooks'
 import flowIcons from '../icons'
 
 import './styles'
+import { NodeMake } from '../shared'
 
 export interface IExtendPanelProps {
   className?: string
@@ -40,10 +41,10 @@ export const ExtendPanel: React.FC<IExtendPanelProps> = ({
     [icons]
   )
 
-  const handleChoose = (nodeTemp: INodeTemplate<any>, at: string) => {
+  const handleChoose = (nodeTemplate: INodeTemplate<NodeMake>, at: string) => {
     const node = flow.flowGraph.getNode(at)
     // flow.batch(template.make(at, node.targets))
-
+    nodeTemplate.make(at)
     closeExtend && closeExtend()
   }
 

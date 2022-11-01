@@ -45,21 +45,23 @@ export const StandardNode: React.FC<
 
   const { title, description } = data
   return (
-    <Popover
-      visible={active}
-      trigger="click"
-      onVisibleChange={(visible) => setActive(visible)}
-      placement="bottom"
-      content={<NodePanel closeExtend={closeExtend} nodeId={id} />}
-      overlayClassName="no-padding"
-    >
-      <div className={classNames(prefixCls, className)} style={style}>
-        <div className={`${prefixCls}__label`}>
-          <div className="title">{title ?? id}</div>
-          <div className="description">{description}</div>
+    <React.Fragment>
+      <Popover
+        visible={active}
+        trigger="click"
+        onVisibleChange={(visible) => setActive(visible)}
+        placement="bottom"
+        content={<NodePanel closeExtend={closeExtend} nodeId={id} />}
+        overlayClassName="no-padding"
+      >
+        <div className={classNames(prefixCls, className)} style={style}>
+          {children}
         </div>
-        {children}
+      </Popover>
+      <div className={`${prefixCls}__label`}>
+        <div className="title">{title}</div>
+        <div className="description">{description}</div>
       </div>
-    </Popover>
+    </React.Fragment>
   )
 }
