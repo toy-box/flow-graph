@@ -32,7 +32,7 @@ export class FlowGraph {
   makeObservable() {
     define(this, {
       id: observable.ref,
-      nodeMap: observable.deep,
+      nodeMap: observable.shallow,
       standardSize: observable.ref,
       nodes: observable.computed,
       setNodes: batch,

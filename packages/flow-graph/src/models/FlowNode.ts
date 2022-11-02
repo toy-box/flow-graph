@@ -88,7 +88,7 @@ export class FlowNode {
   }
 
   get loopBackTarget() {
-    return this.loopEnd?.parents[0].id
+    return this.loopEnd?.parents[0]?.id
   }
 
   get loopBack() {
@@ -137,6 +137,7 @@ export class FlowNode {
     return this.isLoopEnd || this.decisionEnd
   }
 
+  // exclude cycle path node
   get nextNodes() {
     return (this.targets || []).map((target) =>
       this.flowGraph.getNode(target.id)
@@ -196,7 +197,9 @@ export class FlowNode {
     )
   }
 
+  // isLoopBack => loopBackTarget => loopEnd => parents
   get isLoopBack() {
+    // console.log('isLoopBack', this.id)
     return this.flowGraph.nodes.some((node) => node.loopBackTarget === this.id)
   }
 

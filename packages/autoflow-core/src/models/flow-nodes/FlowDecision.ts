@@ -167,7 +167,7 @@ export class FlowDecision extends FlowMetaNode {
     if (this.flowNode == null) {
       const flowNodes = this.makeFlowNodeWithExtend(
         FlowDecision.DefaultNodeProps,
-        at.isLoopBack ? [{ id: at.loopBegin.id }] : at.targets
+        at.targets
       )
       this.metaFlow.flow.addFlowNodeAt(at.id, flowNodes[0])
       flowNodes.forEach((node, idx) => {
