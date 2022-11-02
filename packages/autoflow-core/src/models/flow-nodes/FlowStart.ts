@@ -1,4 +1,4 @@
-import { define, observable } from '@formily/reactive'
+import { action, batch, define, observable } from '@formily/reactive'
 import { IFlowNodeProps } from '@toy-box/flow-graph'
 import { uid } from '@toy-box/toybox-shared'
 import {
@@ -43,8 +43,6 @@ export class FlowStart extends FlowMetaNode {
 
   constructor(flowStart: IStartFlowMeta, metaFlow: MetaFlow) {
     super(metaFlow, flowStart.id, flowStart.name)
-    this.id = flowStart.id
-    this.name = flowStart.name
     this.connector = flowStart.connector
     this.criteria = flowStart.criteria
     this.flowType = flowStart.flowType
@@ -66,6 +64,8 @@ export class FlowStart extends FlowMetaNode {
       recordTriggerType: observable.ref,
       schedule: observable.deep,
       triggerType: observable.ref,
+      update: action,
+      appendAt: batch,
     })
   }
 
@@ -131,7 +131,15 @@ export class FlowStart extends FlowMetaNode {
     }
   }
 
-  mountAt(): void {
-    this.appendAt()
+  update(data: Omit<IStartFlowMeta, 'id'>) {
+    this.name = data.name
+    this.description = data.description
+    this.connector = data.connector
+    this.criteria = data.criteria
+    this.flowType = data.flowType
+    this.objectId = data.objectId
+    this.recordTriggerType = data.recordTriggerType
+    this.schedule = data.schedule
+    this.triggerType = data.triggerType
   }
 }

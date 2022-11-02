@@ -21,7 +21,7 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@formily/reactive": "^2.2.7",
+    "@formily/reactive": "^2.2.10",
     "@types/react": ">=17.8.0 || >=18.0.0",
     "@types/react-dom": ">=17.8.0 || >=18.0.0",
     "react": ">=17.8.0 || >=18.0.0",

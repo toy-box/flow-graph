@@ -69,4 +69,6 @@ export abstract class FlowMetaNode {
   abstract makeFlowNode(props?: IMakeFlowNodeProps): IFlowNodeProps
 
   abstract appendAt(at: FlowNode): void
+
+  abstract update(payload: any): void
 }

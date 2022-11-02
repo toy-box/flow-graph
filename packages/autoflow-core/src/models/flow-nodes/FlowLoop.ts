@@ -3,7 +3,12 @@ import { FlowNode, TargetProps, IFlowNodeProps } from '@toy-box/flow-graph'
 import { uid } from '@toy-box/toybox-shared'
 import { MetaFlow } from '../MetaFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
-import { FlowMetaParam, FlowMetaType, TargetReference } from '../../types'
+import {
+  FlowMetaParam,
+  FlowMetaType,
+  FlowMetaUpdate,
+  TargetReference,
+} from '../../types'
 
 export class FlowLoop extends FlowMetaNode {
   defaultConnector?: TargetReference
@@ -61,7 +66,7 @@ export class FlowLoop extends FlowMetaNode {
       nextValueConnector: observable.deep,
       collectionReference: observable.ref,
       iterationOrder: observable.ref,
-      onEdit: action,
+      update: action,
     })
   }
 
@@ -148,11 +153,8 @@ export class FlowLoop extends FlowMetaNode {
     }
   }
 
-  onEdit = (flowLoop: FlowMetaParam) => {
-    this.id = flowLoop.id
+  update = (flowLoop: FlowMetaUpdate) => {
     this.name = flowLoop.name
-    this.defaultConnector = flowLoop.connector
-    this.nextValueConnector = flowLoop.nextValueConnector
     this.collectionReference = flowLoop.collectionReference
     this.iterationOrder = flowLoop.iterationOrder
     this.description = flowLoop.description

@@ -1,4 +1,5 @@
 import dagre from '@toy-box/dagre'
+import { action, batch, define, observable } from '@formily/reactive'
 import { uid } from '@toy-box/toybox-shared'
 import { FlowNode, IFlowNodeProps, TargetProps } from './FlowNode'
 import { UpdateNodeProps } from './Flow'
@@ -22,8 +23,25 @@ export class FlowGraph {
     this.dg = new dagre.graphlib.Graph()
     this.dg.setGraph(this.config)
     this.dg.setDefaultEdgeLabel(() => ({}))
-    ;(props.nodes || []).forEach((node) => {
+    props.nodes?.forEach((node) => {
       this.addNode(node)
+    })
+    this.makeObservable()
+  }
+
+  makeObservable() {
+    define(this, {
+      id: observable.ref,
+      nodeMap: observable.deep,
+      standardSize: observable.ref,
+      nodes: observable.computed,
+      setNodes: batch,
+      addNodeAt: batch,
+      addNode: action,
+      updateNode: batch,
+      removeNode: batch,
+      removeNodes: batch,
+      layout: batch,
     })
   }
 

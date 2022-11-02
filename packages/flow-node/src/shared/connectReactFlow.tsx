@@ -1,21 +1,25 @@
+import { FlowMetaNode } from '@toy-box/autoflow-core'
 import React, { FC, ReactNode } from 'react'
 import { Handle, HandleProps } from 'reactflow'
+import { useMetaFlow } from '../hooks'
 import { IStandardNodeProps } from '../standard-node'
+import { FlowMetaNodeContext } from './context'
 
 export interface IConnectReactFlowProps {
   component: FC<IStandardNodeProps>
-  onClick?: (id: string, data: any) => void
   content?: ReactNode
   handles?: HandleProps[]
+  onEdit?: (node: FlowMetaNode) => void
 }
 
 export function connectReactFlow({
   component: TargetComponent,
   content,
   handles,
-  onClick,
+  onEdit,
 }: IConnectReactFlowProps) {
   const FlowNodeWrapper = (props: IStandardNodeProps) => {
+    const metaFlow = useMetaFlow()
     return (
       <React.Fragment>
         {handles?.map((handleProps, idx) => (
@@ -26,9 +30,11 @@ export function connectReactFlow({
             style={{ opacity: 0 }}
           />
         ))}
-        <div onClick={() => onClick && onClick(props.id, props.data)}>
+        <FlowMetaNodeContext.Provider
+          value={{ flowMetaNode: metaFlow.flowMetaNodeMap[props.id], onEdit }}
+        >
           <TargetComponent {...props}>{content}</TargetComponent>
-        </div>
+        </FlowMetaNodeContext.Provider>
       </React.Fragment>
     )
   }

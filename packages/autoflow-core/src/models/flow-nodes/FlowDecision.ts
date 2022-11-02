@@ -1,9 +1,11 @@
+import { define, observable, action } from '@formily/reactive'
 import { FlowNode, FlowNodeType, TargetProps } from '@toy-box/flow-graph'
 import { IFlowNodeProps } from '@toy-box/flow-graph/src'
 import { uid } from '@toy-box/toybox-shared'
 import {
   FlowMetaParam,
   FlowMetaType,
+  FlowMetaUpdate,
   IFlowMetaDecisionRule,
   TargetReference,
 } from '../../types'
@@ -55,6 +57,19 @@ export class FlowDecision extends FlowMetaNode {
     this.defaultConnector = flowDecision.defaultConnector ?? {}
     this.defaultConnectorName = flowDecision.defaultConnectorName
     this.rules = flowDecision.rules
+    this.makeObservable()
+  }
+
+  protected makeObservable() {
+    define(this, {
+      id: observable.ref,
+      name: observable.ref,
+      description: observable.ref,
+      defaultConnector: observable.shallow,
+      defaultConnectorName: observable.ref,
+      rules: observable.deep,
+      update: action,
+    })
   }
 
   makeFlowNode(
@@ -161,5 +176,12 @@ export class FlowDecision extends FlowMetaNode {
         }
       })
     }
+  }
+
+  update(payload: FlowMetaUpdate) {
+    this.name = payload.name
+    this.description = payload.description
+    this.defaultConnectorName = payload.defaultConnectorName
+    this.rules = payload.rules
   }
 }

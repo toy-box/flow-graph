@@ -37,7 +37,7 @@ export class FlowEnd extends FlowMetaNode {
     define(this, {
       id: observable.ref,
       name: observable.ref,
-      onEdit: action,
+      update: action,
     })
   }
 
@@ -93,8 +93,7 @@ export class FlowEnd extends FlowMetaNode {
     }
   }
 
-  onEdit = (flowEnd: IFlowEndProps) => {
-    this.id = flowEnd.id
+  update = (flowEnd: IFlowEndProps) => {
     this.name = flowEnd.name
   }
 }

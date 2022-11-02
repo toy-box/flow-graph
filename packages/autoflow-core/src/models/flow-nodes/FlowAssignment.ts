@@ -4,6 +4,7 @@ import { IFlowNodeProps } from '@toy-box/flow-graph/src'
 import { uid } from '@toy-box/toybox-shared'
 import {
   FlowMetaParam,
+  FlowMetaUpdate,
   TargetReference,
   IAssignmentData,
   FlowMetaType,
@@ -48,7 +49,7 @@ export class FlowAssignment extends FlowMetaNode {
       description: observable.ref,
       connector: observable.deep,
       assignmentItems: observable.deep,
-      onEdit: action,
+      update: action,
     })
   }
 
@@ -133,11 +134,10 @@ export class FlowAssignment extends FlowMetaNode {
     }
   }
 
-  onEdit = (flowAssignment: FlowMetaParam) => {
-    this.id = flowAssignment.id
-    this.name = flowAssignment.name
-    this.description = flowAssignment.description
-    this.connector = flowAssignment.connector
-    this.assignmentItems = flowAssignment.assignmentItems
+  update = (payload: FlowMetaUpdate) => {
+    console.log('update assign', payload)
+    this.name = payload.name
+    this.description = payload.description
+    this.assignmentItems = payload.assignmentItems
   }
 }

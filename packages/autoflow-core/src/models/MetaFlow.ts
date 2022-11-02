@@ -1,4 +1,5 @@
 import { isArr, uid } from '@toy-box/toybox-shared'
+import { define, observable, action, batch } from '@formily/reactive'
 import { Flow } from '@toy-box/flow-graph'
 import {
   FlowMetaType,
@@ -6,6 +7,8 @@ import {
   FlowType,
   IFlowMeta,
   IFlowMetaNodes,
+  FlowMetaUpdate,
+  StartFlowMetaUpdate,
 } from '../types'
 import {
   FlowStart,
@@ -52,18 +55,26 @@ export class MetaFlow {
     )
   }
 
-  constructor(
-    // flowMeta: IFlowMeta,
-    // flowType: FlowType,
-    mode: FlowModeType,
-    flow?: Flow
-  ) {
+  constructor(mode: FlowModeType, flow?: Flow) {
     this.mode = mode || this.mode
     this.flow = flow ?? new Flow()
-    // this.makeObservable()
-    // this.onInit()
+    this.makeObservable()
   }
 
+  protected makeObservable() {
+    define(this, {
+      flowMetaNodeMap: observable.deep,
+      flowMetaNodes: observable.computed,
+      flow: observable.ref,
+      mode: observable.ref,
+      flowType: observable.ref,
+      setMetaFlow: batch,
+      removeNodeWithBind: batch,
+      updateNode: batch,
+      appendNode: batch,
+      mountNodes: batch,
+    })
+  }
   get flowGraph() {
     return this.flow.flowGraph
   }
@@ -105,13 +116,19 @@ export class MetaFlow {
 
   removeNodeWithBind(id: string) {
     const flowNode = this.flow.getFlowNode(id)
-    console.log('flowNode.bindNodes', flowNode)
     flowNode.bindNodes.forEach((node) => {
       if (node.type !== 'extend') {
         delete this.flowMetaNodeMap[node.id]
       }
     })
     this.flow.removeNode(id)
+  }
+
+  updateNode(id: string, payload: FlowMetaUpdate | StartFlowMetaUpdate) {
+    const node = this.flowMetaNodeMap[id]
+    if (node) {
+      node.update(payload)
+    }
   }
 
   appendNode(at: string, flowData: FlowMetaParam) {

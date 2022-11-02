@@ -90,6 +90,15 @@ export interface IFlowMetaDecisionRule {
   connector: TargetReference
 }
 
+export type FlowMetaUpdate = Omit<
+  FlowMetaParam,
+  | 'id'
+  | 'type'
+  | 'connector'
+  | 'defaultConnector'
+  | 'faultConnector'
+  | 'nextValueConnector'
+>
 export interface FlowMetaParam {
   id: string
   name: string
@@ -119,6 +128,8 @@ export interface FlowMetaParam {
   getFirstRecordOnly?: boolean
   waitEvents?: IwaitEvent[]
 }
+
+export type StartFlowMetaUpdate = Omit<IStartFlowMeta, 'id' | 'connector'>
 
 export interface IStartFlowMeta {
   id: string

@@ -21,7 +21,7 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@formily/reactive": "^2.2.9",
+    "@formily/reactive": "^2.2.10",
     "@types/react": ">=17.8.0 || >=18.0.0",
     "@types/react-dom": ">=17.8.0 || >=18.0.0",
     "antd": "^4.20.0",
@@ -31,8 +31,8 @@
   },
   "dependencies": {
     "@toy-box/flow-graph": "^2.0.0",
-    "@toy-box/meta-schema": "^3.0.19",
-    "@toy-box/toybox-shared": "^3.0.19",
+    "@toy-box/meta-schema": "^3.0.20",
+    "@toy-box/toybox-shared": "^3.0.20",
     "immutability-helper": "^3.1.1"
   }
 }

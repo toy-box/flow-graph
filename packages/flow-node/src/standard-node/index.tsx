@@ -1,9 +1,10 @@
 import React from 'react'
 import classNames from 'classnames'
 import { Popover } from 'antd'
+import { observer } from '@formily/reactive-react'
 import { FlowNode } from '@toy-box/flow-graph'
 import { ICustomEvent } from '../shared'
-import { useEvent } from '../hooks'
+import { useEvent, useFlowMetaNodeContext } from '../hooks'
 import { NodePanel } from '../node-panel'
 
 import './styles'
@@ -12,19 +13,14 @@ export interface IStandardNodeProps {
   id: string
   className?: string
   style?: React.CSSProperties
-  data?: INodeDataProps
-}
-
-interface INodeDataProps {
-  title?: string
-  description?: string
 }
 
 export const StandardNode: React.FC<
   React.PropsWithChildren<IStandardNodeProps>
-> = ({ id, className, style, data = {}, children }) => {
-  const eventEngine = useEvent()
+> = observer(({ id, className, style, children }) => {
   const prefixCls = 'tbox-flow-node'
+  const eventEngine = useEvent()
+  const { flowMetaNode } = useFlowMetaNodeContext()
   const [active, setActive] = React.useState(false)
   React.useEffect(() => {
     const unsubscribe = eventEngine.subscribe((payload: ICustomEvent) => {
@@ -43,7 +39,6 @@ export const StandardNode: React.FC<
     setActive(false)
   }
 
-  const { title, description } = data
   return (
     <React.Fragment>
       <Popover
@@ -59,9 +54,9 @@ export const StandardNode: React.FC<
         </div>
       </Popover>
       <div className={`${prefixCls}__label`}>
-        <div className="title">{title}</div>
-        <div className="description">{description}</div>
+        <div className="title">{flowMetaNode.name}</div>
+        <div className="description">{flowMetaNode.description}</div>
       </div>
     </React.Fragment>
   )
-}
+})

@@ -15,6 +15,7 @@ import {
   useFlow,
   useEvent,
 } from '@toy-box/flow-node'
+import { assignOnEdit } from '../../flow-nodes'
 
 export const FlowCanvas = observer(() => {
   const flow = useFlow()
@@ -66,6 +67,7 @@ export const FlowCanvas = observer(() => {
               { type: 'target', position: Position.Top },
               { type: 'source', position: Position.Bottom },
             ],
+            onEdit: assignOnEdit,
           }),
           ActionNode: connectReactFlow({
             component: StandardNode,
