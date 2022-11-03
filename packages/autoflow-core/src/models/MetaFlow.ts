@@ -91,6 +91,10 @@ export class MetaFlow {
     return this.mode === FlowModeEnum.EDIT
   }
 
+  get jsonization() {
+    return ''
+  }
+
   setMetaFlow(flowMeta: IFlowMeta, flowType: FlowType) {
     this.flowMeta = flowMeta
     this.flowType = flowType

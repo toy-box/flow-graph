@@ -14,11 +14,15 @@ export const Panel = () => {
     metaFlow.setMetaFlow(flowMeta, 'AUTO_START_UP')
     metaFlow.flow.layoutFlow()
   }, [metaFlow])
+  const handleExport = useCallback(() => {
+    console.log('metaFlow', metaFlow)
+  }, [metaFlow])
   return (
     <div>
       <button onClick={init}>init</button>
       <button onClick={update}>update</button>
       <button onClick={handleMetaFlow}>metaflow</button>
+      <button onClick={handleExport}>export</button>
     </div>
   )
 }

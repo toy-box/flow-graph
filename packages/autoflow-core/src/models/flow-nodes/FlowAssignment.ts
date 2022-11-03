@@ -50,6 +50,7 @@ export class FlowAssignment extends FlowMetaNode {
       connector: observable.deep,
       assignmentItems: observable.deep,
       update: action,
+      jsonization: action,
     })
   }
 
@@ -139,5 +140,14 @@ export class FlowAssignment extends FlowMetaNode {
     this.name = payload.name
     this.description = payload.description
     this.assignmentItems = payload.assignmentItems
+    console.log('this.jsonization', this.jsonization(payload))
+    this.jsonization(payload)
+  }
+
+  jsonization = (payload: FlowMetaUpdate) => {
+    console.log('update jsonization', payload)
+    return {
+      payload,
+    }
   }
 }
