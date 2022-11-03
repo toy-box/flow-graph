@@ -52,7 +52,7 @@ export default {
       {
         test: /\.(js)$/,
         // include: path.resolve(__dirname, 'node_modules/@reactflow'),
-        exclude: /node_modules(?!\/@reactflow)/,
+        // exclude: /node_modules(?!\/@reactflow)/,
         use: {
           loader: 'babel-loader',
           options: { presets: ['@babel/preset-env'] }, // Presets used for env setup
