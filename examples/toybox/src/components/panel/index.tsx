@@ -16,6 +16,7 @@ export const Panel = () => {
   }, [metaFlow])
   const handleExport = useCallback(() => {
     console.log('metaFlow', metaFlow)
+    console.log('metaFlowdata数据json化', metaFlow.jsonizationList)
   }, [metaFlow])
   return (
     <div>

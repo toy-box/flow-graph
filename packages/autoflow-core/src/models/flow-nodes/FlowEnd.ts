@@ -1,6 +1,6 @@
 import { define, observable, action } from '@formily/reactive'
 import { FlowNode, IFlowNodeProps } from '@toy-box/flow-graph/src'
-import { FlowMetaType } from '../../types'
+import { FlowMetaType, FlowMetaParam } from '../../types'
 import { MetaFlow } from '../MetaFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 
@@ -95,5 +95,14 @@ export class FlowEnd extends FlowMetaNode {
 
   update = (flowEnd: IFlowEndProps) => {
     this.name = flowEnd.name
+  }
+
+  jsonization = (): FlowMetaParam => {
+    return {
+      id: this.id,
+      name: this.name,
+      description: this.description,
+      type: this.type,
+    }
   }
 }

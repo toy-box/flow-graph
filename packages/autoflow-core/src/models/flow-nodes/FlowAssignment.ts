@@ -50,7 +50,6 @@ export class FlowAssignment extends FlowMetaNode {
       connector: observable.deep,
       assignmentItems: observable.deep,
       update: action,
-      jsonization: action,
     })
   }
 
@@ -133,21 +132,26 @@ export class FlowAssignment extends FlowMetaNode {
       this.metaFlow.flow.addFlowNodeAt(at.id, flowNodes[0])
       this.metaFlow.flow.addFlowNode(flowNodes[1])
     }
+    this.jsonization()
   }
 
   update = (payload: FlowMetaUpdate) => {
-    console.log('update assign', payload)
+    console.log('update assign', this)
     this.name = payload.name
     this.description = payload.description
     this.assignmentItems = payload.assignmentItems
-    console.log('this.jsonization', this.jsonization(payload))
-    this.jsonization(payload)
+    console.log('assign jsonization', this.jsonization())
+    this.jsonization()
   }
 
-  jsonization = (payload: FlowMetaUpdate) => {
-    console.log('update jsonization', payload)
+  jsonization = (): FlowMetaParam => {
     return {
-      payload,
+      id: this.id,
+      name: this.name,
+      description: this.description,
+      type: this.type,
+      connector: this.connector,
+      assignmentItems: this.assignmentItems,
     }
   }
 }

@@ -8,6 +8,7 @@ import {
   FlowType,
   ISchedule,
   FlowMetaType,
+  FlowMetaParam,
 } from '../../types'
 import { MetaFlow } from '../MetaFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
@@ -141,5 +142,16 @@ export class FlowStart extends FlowMetaNode {
     this.recordTriggerType = data.recordTriggerType
     this.schedule = data.schedule
     this.triggerType = data.triggerType
+  }
+
+  jsonization = (): FlowMetaParam => {
+    return {
+      id: this.id,
+      name: this.name,
+      description: this.description,
+      type: this.type,
+      connector: this.connector,
+      criteria: this.criteria,
+    }
   }
 }

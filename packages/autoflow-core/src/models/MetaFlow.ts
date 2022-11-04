@@ -91,8 +91,12 @@ export class MetaFlow {
     return this.mode === FlowModeEnum.EDIT
   }
 
-  get jsonization() {
-    return ''
+  get jsonizationList() {
+    return [
+      ...this.flowMetaNodes.map((node) => {
+        return node.jsonization()
+      }),
+    ]
   }
 
   setMetaFlow(flowMeta: IFlowMeta, flowType: FlowType) {

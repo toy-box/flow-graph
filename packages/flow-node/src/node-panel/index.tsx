@@ -33,7 +33,7 @@ export const NodePanel: React.FC<INodePanelProps> = ({
     closeExtend && closeExtend()
   }, [])
   const handleExport = React.useCallback(() => {
-    console.log('flowMetaNode', flowMetaNode)
+    console.log('flowMetaNode', flowMetaNode.jsonization())
   }, [])
   return (
     <div className={cls(prefixCls, className)} style={style}>

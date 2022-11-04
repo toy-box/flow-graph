@@ -184,4 +184,15 @@ export class FlowDecision extends FlowMetaNode {
     this.defaultConnectorName = payload.defaultConnectorName
     this.rules = payload.rules
   }
+
+  jsonization = (): FlowMetaParam => {
+    return {
+      id: this.id,
+      name: this.name,
+      description: this.description,
+      type: this.type,
+      connector: this.connector,
+      rules: this.rules,
+    }
+  }
 }

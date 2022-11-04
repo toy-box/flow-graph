@@ -159,4 +159,16 @@ export class FlowLoop extends FlowMetaNode {
     this.iterationOrder = flowLoop.iterationOrder
     this.description = flowLoop.description
   }
+
+  jsonization = (): FlowMetaParam => {
+    return {
+      id: this.id,
+      name: this.name,
+      description: this.description,
+      type: this.type,
+      nextValueConnector: this.nextValueConnector,
+      collectionReference: this.collectionReference,
+      iterationOrder: this.iterationOrder,
+    }
+  }
 }
