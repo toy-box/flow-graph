@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import ReactFlow, {
   Background,
   Controls,
@@ -18,7 +18,9 @@ import {
 import { assignOnEdit } from '../../flow-nodes'
 
 export const FlowCanvas = observer(() => {
+  const ref: any = useRef()
   const flow = useFlow()
+  flow.flowGraph.centerX = ref?.current?.offsetWidth / 2
   const eventEngine = useEvent()
   const style = {
     width: '100%',
@@ -137,7 +139,7 @@ export const FlowCanvas = observer(() => {
   )
 
   return (
-    <div id="flow-canvas" style={style}>
+    <div id="flow-canvas" style={style} ref={ref}>
       <ReactFlow
         nodes={flow.canvas?.nodes}
         edges={flow.canvas?.edges}

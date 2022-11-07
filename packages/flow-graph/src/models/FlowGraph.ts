@@ -8,6 +8,7 @@ export interface IFlowGraphProps {
   id?: string
   nodes?: IFlowNodeProps[]
   standardSize?: number
+  centerX?: number
 }
 
 export class FlowGraph {
@@ -15,6 +16,7 @@ export class FlowGraph {
   nodeMap: Record<string, FlowNode> = {}
   dg: dagre.graphlib.Graph
   standardSize: number
+  centerX: number
 
   constructor(props: IFlowGraphProps) {
     this.id = props.id || uid()
@@ -34,6 +36,7 @@ export class FlowGraph {
       id: observable.ref,
       nodeMap: observable.shallow,
       standardSize: observable.ref,
+      centerX: observable.ref,
       nodes: observable.computed,
       setNodes: batch,
       addNodeAt: batch,
@@ -222,7 +225,7 @@ export class FlowGraph {
       if (this.nodeMap[nodeId]) {
         if (this.nodeMap[nodeId].component === 'ExtendNode') {
           this.nodeMap[nodeId].setPostion(
-            pos.x + this.standardSize,
+            pos.x + this.centerX,
             pos.y + this.standardSize
           )
         } else {
@@ -233,9 +236,15 @@ export class FlowGraph {
                 node.targets?.some((target) => target.id === nodeId)
             )
           ) {
-            this.nodeMap[nodeId].setPostion(pos.x, pos.y)
+            this.nodeMap[nodeId].setPostion(
+              pos.x + this.centerX - this.standardSize,
+              pos.y
+            )
           } else {
-            this.nodeMap[nodeId].setPostion(pos.x, pos.y)
+            this.nodeMap[nodeId].setPostion(
+              pos.x + this.centerX - this.standardSize,
+              pos.y
+            )
           }
         }
       }
