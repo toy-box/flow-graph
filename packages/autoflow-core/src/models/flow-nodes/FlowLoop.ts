@@ -160,7 +160,7 @@ export class FlowLoop extends FlowMetaNode {
     this.description = flowLoop.description
   }
 
-  jsonization = (): FlowMetaParam => {
+  toJson = (): FlowMetaParam => {
     return {
       id: this.id,
       name: this.name,

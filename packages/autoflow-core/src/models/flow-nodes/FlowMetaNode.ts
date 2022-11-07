@@ -72,5 +72,5 @@ export abstract class FlowMetaNode {
 
   abstract update(payload: any): void
 
-  abstract jsonization()
+  abstract toJson()
 }

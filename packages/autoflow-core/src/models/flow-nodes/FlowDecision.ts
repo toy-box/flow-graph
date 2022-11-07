@@ -185,7 +185,7 @@ export class FlowDecision extends FlowMetaNode {
     this.rules = payload.rules
   }
 
-  jsonization = (): FlowMetaParam => {
+  toJson = (): FlowMetaParam => {
     return {
       id: this.id,
       name: this.name,

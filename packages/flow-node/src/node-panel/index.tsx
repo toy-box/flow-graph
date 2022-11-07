@@ -32,9 +32,11 @@ export const NodePanel: React.FC<INodePanelProps> = ({
     onEdit && onEdit(flowMetaNode)
     closeExtend && closeExtend()
   }, [])
-  const handleExport = React.useCallback(() => {
-    console.log('flowMetaNode', flowMetaNode.jsonization())
-  }, [])
+
+  // todo:剪切功能
+  // const handleExport = React.useCallback(() => {
+  //   console.log('flowMetaNode', flowMetaNode.toJson())
+  // }, [])
   return (
     <div className={cls(prefixCls, className)} style={style}>
       <Button type="text" size="small" onClick={handleEdit} block>
@@ -43,9 +45,9 @@ export const NodePanel: React.FC<INodePanelProps> = ({
       <Button type="text" size="small" onClick={handleRemove} danger block>
         Delete
       </Button>
-      <Button type="text" size="small" onClick={handleExport} block>
+      {/* <Button type="text" size="small" onClick={handleExport} block>
         Export
-      </Button>
+      </Button> */}
     </div>
   )
 }

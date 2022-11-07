@@ -144,7 +144,7 @@ export class FlowStart extends FlowMetaNode {
     this.triggerType = data.triggerType
   }
 
-  jsonization = (): FlowMetaParam => {
+  toJson = (): FlowMetaParam => {
     return {
       id: this.id,
       name: this.name,

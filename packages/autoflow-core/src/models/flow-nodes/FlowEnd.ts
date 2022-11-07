@@ -97,7 +97,7 @@ export class FlowEnd extends FlowMetaNode {
     this.name = flowEnd.name
   }
 
-  jsonization = (): FlowMetaParam => {
+  toJson = (): FlowMetaParam => {
     return {
       id: this.id,
       name: this.name,

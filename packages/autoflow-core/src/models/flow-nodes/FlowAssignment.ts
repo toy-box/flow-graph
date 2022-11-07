@@ -132,7 +132,7 @@ export class FlowAssignment extends FlowMetaNode {
       this.metaFlow.flow.addFlowNodeAt(at.id, flowNodes[0])
       this.metaFlow.flow.addFlowNode(flowNodes[1])
     }
-    this.jsonization()
+    this.toJson()
   }
 
   update = (payload: FlowMetaUpdate) => {
@@ -140,11 +140,11 @@ export class FlowAssignment extends FlowMetaNode {
     this.name = payload.name
     this.description = payload.description
     this.assignmentItems = payload.assignmentItems
-    console.log('assign jsonization', this.jsonization())
-    this.jsonization()
+    console.log('assign toJson', this.toJson())
+    this.toJson()
   }
 
-  jsonization = (): FlowMetaParam => {
+  toJson = (): FlowMetaParam => {
     return {
       id: this.id,
       name: this.name,
