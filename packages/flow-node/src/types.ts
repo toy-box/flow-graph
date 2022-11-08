@@ -5,3 +5,14 @@ export interface INodeTemplate<T> {
   group: string
   make: T
 }
+
+export interface INodeEdit {
+  title: string
+  description: string
+}
+
+export declare enum FlowNodeType {
+  ASSIGNMENT = 'Assignment',
+  DECISION = 'Decision',
+  LOOP = 'Loop',
+}

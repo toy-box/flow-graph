@@ -4,7 +4,7 @@ import uniq from 'lodash.uniq'
 import cls from 'classnames'
 import { INodeProps } from '@toy-box/flow-graph'
 import { INodeTemplate } from '../types'
-import { useFlow, useTemplates } from '../hooks'
+import { useFlow, useTemplates, useFlowMetaNodeContext } from '../hooks'
 import flowIcons from '../icons'
 
 import './styles'
@@ -31,6 +31,7 @@ export const ExtendPanel: React.FC<IExtendPanelProps> = ({
     name,
     nodes: nodes.filter((node) => node.group === name),
   }))
+  const { onEdit } = useFlowMetaNodeContext()
 
   const mixIcons = React.useMemo(
     () => ({
@@ -41,7 +42,7 @@ export const ExtendPanel: React.FC<IExtendPanelProps> = ({
   )
 
   const handleChoose = (nodeTemplate: INodeTemplate<NodeMake>, at: string) => {
-    nodeTemplate.make(at)
+    onEdit && onEdit(nodeTemplate, at)
     closeExtend && closeExtend()
   }
 

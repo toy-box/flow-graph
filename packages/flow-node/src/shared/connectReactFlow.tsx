@@ -4,12 +4,14 @@ import { Handle, HandleProps } from 'reactflow'
 import { useMetaFlow } from '../hooks'
 import { IStandardNodeProps } from '../standard-node'
 import { FlowMetaNodeContext } from './context'
+import { INodeTemplate } from '../types'
+import { NodeMake } from '../shared'
 
 export interface IConnectReactFlowProps {
   component: FC<IStandardNodeProps>
   content?: ReactNode
   handles?: HandleProps[]
-  onEdit?: (node: FlowMetaNode) => void
+  onEdit?: (node: FlowMetaNode | INodeTemplate<NodeMake>, at?: string) => void
 }
 
 export function connectReactFlow({

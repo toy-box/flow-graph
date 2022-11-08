@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react'
 import { MetaFlow, FlowMetaNode } from '@toy-box/autoflow-core'
 import { EventEngine } from './event'
-import { INodeTemplate } from '../types'
+import { INodeTemplate, INodeEdit } from '../types'
 
-export type NodeMake = (at: string) => void
+export type NodeMake = (at: string, editInfo?: INodeEdit) => void
 
 export interface IFlowContextProps<T> {
   metaFlow: MetaFlow
@@ -18,7 +18,7 @@ export const FlowContext = React.createContext<
 
 export interface IFlowMetaNodeContextProps {
   flowMetaNode: FlowMetaNode
-  onEdit: (node: FlowMetaNode) => void
+  onEdit: (node: FlowMetaNode | INodeTemplate<NodeMake>, at?: string) => void
 }
 export const FlowMetaNodeContext =
   React.createContext<IFlowMetaNodeContextProps>(undefined)

@@ -1,4 +1,4 @@
-import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
+import { INodeTemplate, NodeMake, INodeEdit } from '@toy-box/flow-node'
 import { FlowMetaType, MetaFlow } from '@toy-box/autoflow-core'
 import { uid } from '@toy-box/toybox-shared'
 
@@ -11,12 +11,13 @@ export const nodeTemplatesProvider = (
       title: 'Assignment',
       description: 'Assignment node',
       group: 'flow',
-      make: (at: string) => {
+      make: (at: string, editInfo: INodeEdit) => {
         metaFlow.appendNode(at, {
           id: uid(),
           name: 'Assignment',
           type: FlowMetaType.ASSIGNMENT,
           connector: {},
+          ...editInfo,
         })
         metaFlow.flow.layoutFlow()
       },
@@ -26,12 +27,13 @@ export const nodeTemplatesProvider = (
       title: 'Loop',
       description: 'Loop node',
       group: 'flow',
-      make: (at: string) => {
+      make: (at: string, editInfo: INodeEdit) => {
         metaFlow.appendNode(at, {
           id: uid(),
           name: 'Loop',
           type: FlowMetaType.LOOP,
           defaultConnector: {},
+          ...editInfo,
         })
         metaFlow.flow.layoutFlow()
       },
@@ -41,7 +43,7 @@ export const nodeTemplatesProvider = (
       title: 'Decision',
       description: 'Decision node',
       group: 'flow',
-      make: (at: string) => {
+      make: (at: string, editInfo: INodeEdit) => {
         metaFlow.appendNode(at, {
           id: uid(),
           name: 'Decision',
@@ -58,6 +60,7 @@ export const nodeTemplatesProvider = (
               },
             },
           ],
+          ...editInfo,
         })
         metaFlow.flow.layoutFlow()
       },

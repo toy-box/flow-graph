@@ -15,7 +15,12 @@ import {
   useFlow,
   useEvent,
 } from '@toy-box/flow-node'
-import { assignOnEdit } from '../../flow-nodes'
+import {
+  assignOnEdit,
+  decideOnEdit,
+  loopOnEdit,
+  onPanelEdit,
+} from '../../flow-nodes'
 
 export const FlowCanvas = observer(() => {
   const ref: any = useRef()
@@ -53,6 +58,7 @@ export const FlowCanvas = observer(() => {
               { type: 'source', position: Position.Bottom },
             ],
             content: <ExtendPanel />,
+            onEdit: onPanelEdit,
           }),
           DecisionNode: connectReactFlow({
             component: StandardNode,
@@ -61,6 +67,7 @@ export const FlowCanvas = observer(() => {
               { type: 'target', position: Position.Top },
               { type: 'source', position: Position.Bottom },
             ],
+            onEdit: decideOnEdit,
           }),
           AssignmentNode: connectReactFlow({
             component: StandardNode,
@@ -92,6 +99,7 @@ export const FlowCanvas = observer(() => {
               { type: 'target', position: Position.Left, id: Position.Left },
               { type: 'source', position: Position.Right, id: Position.Right },
             ],
+            onEdit: loopOnEdit,
           }),
         },
       })
