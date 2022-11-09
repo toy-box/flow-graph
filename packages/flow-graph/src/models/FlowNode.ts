@@ -164,12 +164,8 @@ export class FlowNode {
 
   get areaWidth(): number {
     if (this.innerNodes.length > 0) {
-      const leftNode = this.innerNodes.reduce((prev, current) =>
-        prev.left > current.left ? current : prev
-      )
-      const rightNode = this.innerNodes.reduce((prev, current) =>
-        prev.right < current.right ? current : prev
-      )
+      const leftNode = this.innerNodes.reduce((prev, current) => prev)
+      const rightNode = this.innerNodes.reduce((prev, current) => prev)
       return (
         rightNode.right -
         leftNode.left +

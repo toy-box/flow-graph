@@ -20,8 +20,7 @@ export class FlowGraph {
 
   constructor(props: IFlowGraphProps) {
     this.id = props.id || uid()
-    this.standardSize = props.standardSize ?? 20
-    // dg
+    this.standardSize = props.standardSize ?? 0
     this.dg = new dagre.graphlib.Graph()
     this.dg.setGraph(this.config)
     this.dg.setDefaultEdgeLabel(() => ({}))
@@ -98,7 +97,7 @@ export class FlowGraph {
       const flowNode = new FlowNode(node, this)
       this.nodeMap[flowNode.id] = flowNode
       this.dg.setNode(flowNode.id, {
-        width: flowNode.width,
+        width: 0,
         height: flowNode.height,
       })
       flowNode.targets?.forEach((target) => {
@@ -134,7 +133,7 @@ export class FlowGraph {
         })
 
         this.dg.setNode(shadowNode.id, {
-          width: shadowNode.width,
+          width: flowNode.width,
           height: shadowNode.height,
         })
         this.dg.setEdge(flowNode.id, shadowNode.id, { id: uid() })
@@ -220,12 +219,13 @@ export class FlowGraph {
         })
       })
     dagre.layout(this.dg)
+    const posXMid = this.dg.node('start').x
     this.dg.nodes().forEach((nodeId) => {
       const pos = this.dg.node(nodeId)
       if (this.nodeMap[nodeId]) {
         if (this.nodeMap[nodeId].component === 'ExtendNode') {
           this.nodeMap[nodeId].setPostion(
-            pos.x + this.centerX,
+            pos.x - this.standardSize / 2 - posXMid + this.centerX,
             pos.y + this.standardSize
           )
         } else {
@@ -237,12 +237,12 @@ export class FlowGraph {
             )
           ) {
             this.nodeMap[nodeId].setPostion(
-              pos.x + this.centerX - this.standardSize,
+              pos.x - this.nodeSize / 2 - posXMid + this.centerX,
               pos.y
             )
           } else {
             this.nodeMap[nodeId].setPostion(
-              pos.x + this.centerX - this.standardSize,
+              pos.x - this.nodeSize / 2 - posXMid + this.centerX,
               pos.y
             )
           }
