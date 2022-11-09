@@ -133,7 +133,7 @@ export class FlowGraph {
         })
 
         this.dg.setNode(shadowNode.id, {
-          width: shadowNode.width,
+          width: flowNode.width,
           height: shadowNode.height,
         })
         this.dg.setEdge(flowNode.id, shadowNode.id, { id: uid() })
