@@ -1,0 +1,41 @@
+.flow-graph-left-panel {
+  position: absolute;
+  top: 28px;
+  bottom: 0;
+  left: 0;
+  box-sizing: content-box;
+  padding: 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  // background: @white;
+  user-select: none;
+  background: white;
+  z-index: 100;
+  width: 100px;
+  border-right: 1px solid grey;
+}
+
+// @component-item-active-background-color: @primary-color;
+// @component-item-active-text-color: @white;
+// @component-item-text-color: fade(@black, 65%);
+
+.component-item-wrap {
+  width: 80px;
+  height: 80px;
+  padding: 10px;
+  // color: @component-item-text-color;
+  text-align: center;
+  border-radius: 2px;
+  &:hover,
+  &.sortable-chosen {
+    // color: white;
+    // background-color: blue;
+  }
+  .component-item__title {
+    overflow: hidden;
+  }
+}
+.component-item__icon-img {
+  width: 24px;
+  height: 24px;
+}

@@ -18,11 +18,17 @@ export const Panel = () => {
     console.log('metaFlow', metaFlow)
     console.log('metaFlowdata数据json化', metaFlow.toJsonList)
   }, [metaFlow])
+  const handleFreeLayout = useCallback(() => {
+    metaFlow.setMetaFlow(flowMeta, 'FREE_START_UP')
+    console.log('metaFlow.flowType', metaFlow.flowType)
+    metaFlow.flow.layoutFlow()
+  }, [metaFlow])
   return (
     <div>
       <button onClick={init}>init</button>
       <button onClick={update}>update</button>
       <button onClick={handleMetaFlow}>metaflow</button>
+      <button onClick={handleFreeLayout}>freeLayout</button>
       <button onClick={handleExport}>export</button>
     </div>
   )

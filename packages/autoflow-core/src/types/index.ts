@@ -239,6 +239,7 @@ export type FlowType =
   | 'PLATFORM_EVENT'
   | 'RECORD_TRIGGER'
   | 'SCREEN'
+  | 'FREE_START_UP'
 
 export interface ISchedule {
   frequency: string
