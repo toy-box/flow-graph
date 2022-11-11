@@ -58,6 +58,7 @@
     "@toy-box/autoflow-core": "2.0.0",
     "@toy-box/flow-node": "2.0.0",
     "@toy-box/toybox-lib": "^0.2.34",
+    "react-sortablejs": "^6.0.0",
     "reactflow": "^11.1.1"
   },
   "publishConfig": {

@@ -7,6 +7,7 @@ import ReactFlow, {
 } from 'reactflow'
 import { observer } from '@formily/reactive-react'
 import { ReactFlowCanvas, FixStepEdge, ForkEdge } from '@toy-box/flow-graph'
+import { useMetaFlow } from '@toy-box/flow-node'
 import {
   connectReactFlow,
   ExtendNode,
@@ -25,12 +26,18 @@ import {
 export const FlowCanvas = observer(() => {
   const ref: any = useRef()
   const flow = useFlow()
-  flow.flowGraph.centerX = ref?.current?.offsetWidth / 2
+  // flow.flowGraph.centerX = ref?.current?.offsetWidth / 2
   const eventEngine = useEvent()
+  const metaflow = useMetaFlow()
   const style = {
     width: '100%',
     height: '800px',
+    marginLeft: metaflow.flowType === 'FREE_START_UP' ? '120px' : 0,
   }
+
+  useEffect(() => {
+    flow.flowGraph.centerX = ref?.current?.offsetWidth / 2
+  }, [metaflow.flowType])
 
   useEffect(() => {
     flow.setCanvas(
