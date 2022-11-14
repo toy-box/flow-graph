@@ -100,6 +100,7 @@ export class MetaFlow {
   setMetaFlow(flowMeta: IFlowMeta, flowType: FlowType) {
     this.flowMeta = flowMeta
     this.flowType = flowType
+    this.flow.flowType = flowType
     this.onInit()
   }
 

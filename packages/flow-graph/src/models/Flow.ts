@@ -30,14 +30,13 @@ export interface IFlowBatch {
 export class Flow {
   id: string
   flowGraph: FlowGraph
-  centerX?: number
   canvas?: ReactFlowCanvas
+  flowType?: string
 
   constructor() {
     this.id = uid()
     this.flowGraph = new FlowGraph({
       standardSize: 20,
-      centerX: this.centerX ?? 0,
     })
     this.makeObservable()
   }
@@ -47,7 +46,7 @@ export class Flow {
       id: observable.ref,
       flowGraph: observable.ref,
       canvas: observable.ref,
-      centerX: observable.ref,
+      flowType: observable.ref,
       setCanvas: action,
       addFlowNodeAt: batch,
       addFlowNode: action,
@@ -178,7 +177,7 @@ export class Flow {
 
   /// canve graph
   setGraphNodes = (nodes: FlowNode[]) => {
-    this.canvas?.setNodes(nodes)
+    this.canvas?.setNodes(nodes, this.flowType)
   }
 
   addGraphNodes = (nodes: FlowNode[]) => {

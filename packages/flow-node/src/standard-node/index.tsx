@@ -21,6 +21,7 @@ export const StandardNode: React.FC<
   const prefixCls = 'tbox-flow-node'
   const eventEngine = useEvent()
   const { flowMetaNode } = useFlowMetaNodeContext()
+  console.log('flowMetaNode', flowMetaNode)
   const [active, setActive] = React.useState(false)
   React.useEffect(() => {
     const unsubscribe = eventEngine.subscribe((payload: ICustomEvent) => {

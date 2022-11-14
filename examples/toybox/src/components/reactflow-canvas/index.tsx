@@ -22,6 +22,7 @@ import {
   loopOnEdit,
   onPanelEdit,
 } from '../../flow-nodes'
+import { uid } from '@toy-box/toybox-shared'
 
 export const FlowCanvas = observer(() => {
   const ref: any = useRef()
@@ -46,16 +47,24 @@ export const FlowCanvas = observer(() => {
       console.log('e---ondrop', e, clientX, clientY)
       const newNode = {
         item: {
-          id: '000',
-          data: 'begin',
+          id: uid(),
+          data: {
+            name: 'Assign',
+            description: 'Assign',
+          },
           position: {
             x: clientX - 120,
             y: clientY - 28,
           },
+          width: 60,
+          height: 60,
+          draggable: true,
+          // type:'AssignmentNode'
         },
         type: 'add',
       }
       flow.canvas.onNodesChange([newNode])
+      // flow.addGraphNode(newAssignNode)
     }
   }
   useEffect(() => {

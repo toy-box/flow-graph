@@ -65,7 +65,7 @@ export class ReactFlowCanvas implements ICanvas {
     })
   }
 
-  protected makeNode = (nodeProps: INode): Node => {
+  protected makeNode = (nodeProps: INode, flowType?: string): Node => {
     const { component: componentName, data, ...node } = nodeProps
     return {
       id: node.id,
@@ -77,8 +77,8 @@ export class ReactFlowCanvas implements ICanvas {
       },
       type: componentName,
       data,
-      deletable: false,
-      draggable: false,
+      deletable: flowType === 'FREE_START_UP',
+      draggable: flowType === 'FREE_START_UP',
     }
   }
 
@@ -96,20 +96,23 @@ export class ReactFlowCanvas implements ICanvas {
     }
   }
 
-  setNodes(nodes: INode[]) {
-    this.nodes = nodes.map((node) => this.makeNode(node))
+  setNodes(nodes: INode[], flowType?: string) {
+    this.nodes = nodes.map((node) => this.makeNode(node, flowType))
   }
 
   setEdges(edges: IEdge[]) {
     this.edges = edges.map((edge) => this.makeEdge(edge))
   }
 
-  addNode(nodeProps: INode) {
-    this.nodes = [...this.nodes, this.makeNode(nodeProps)]
+  addNode(nodeProps: INode, flowType?: string) {
+    this.nodes = [...this.nodes, this.makeNode(nodeProps, flowType)]
   }
 
-  addNodes(nodes: INode[]) {
-    this.nodes = [...this.nodes, ...nodes.map((node) => this.makeNode(node))]
+  addNodes(nodes: INode[], flowType?: string) {
+    this.nodes = [
+      ...this.nodes,
+      ...nodes.map((node) => this.makeNode(node, flowType)),
+    ]
   }
 
   addEdge(edge: IEdge) {
