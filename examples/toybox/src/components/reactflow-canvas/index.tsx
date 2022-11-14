@@ -34,7 +34,30 @@ export const FlowCanvas = observer(() => {
     height: '800px',
     marginLeft: metaflow.flowType === 'FREE_START_UP' ? '120px' : 0,
   }
-
+  const graphEle = document.querySelector('#flow-canvas')
+  window.onload = function () {
+    graphEle.ondragover = (e) => {
+      e.dataTransfer.dropEffect = 'link'
+      e.preventDefault()
+    }
+    graphEle.ondrop = (e) => {
+      e.stopPropagation()
+      const { clientX, clientY } = e
+      console.log('e---ondrop', e, clientX, clientY)
+      const newNode = {
+        item: {
+          id: '000',
+          data: 'begin',
+          position: {
+            x: clientX - 120,
+            y: clientY - 28,
+          },
+        },
+        type: 'add',
+      }
+      flow.canvas.onNodesChange([newNode])
+    }
+  }
   useEffect(() => {
     flow.flowGraph.centerX = ref?.current?.offsetWidth / 2
   }, [metaflow.flowType])
