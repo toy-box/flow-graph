@@ -14,6 +14,7 @@ import {
   StandardNode,
   ExtendPanel,
   useFlow,
+  useTemplates,
   useEvent,
 } from '@toy-box/flow-node'
 import {
@@ -35,7 +36,7 @@ export const FlowCanvas = observer(() => {
     height: '800px',
     marginLeft: metaflow.flowType === 'FREE_START_UP' ? '120px' : 0,
   }
-  const graphEle = document.querySelector('#flow-canvas')
+  const graphEle: any = document.querySelector('#flow-canvas')
   window.onload = function () {
     graphEle.ondragover = (e) => {
       e.dataTransfer.dropEffect = 'link'
@@ -45,6 +46,8 @@ export const FlowCanvas = observer(() => {
       e.stopPropagation()
       const { clientX, clientY } = e
       console.log('e---ondrop', e, clientX, clientY)
+      const nodeType = e.dataTransfer.getData('text/plain')
+      // const nodes = useTemplates()
       const newNode = {
         item: {
           id: uid(),
@@ -59,7 +62,7 @@ export const FlowCanvas = observer(() => {
           width: 60,
           height: 60,
           draggable: true,
-          // type:'AssignmentNode'
+          // type:'AssignmentNode' ?? nodeType
         },
         type: 'add',
       }

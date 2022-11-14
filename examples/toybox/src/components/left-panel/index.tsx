@@ -11,6 +11,10 @@ export const LeftPanel = observer(() => {
   const style = {
     width: 100,
   }
+  const dragStart = (key, e) => {
+    e.dataTransfer.setData('text/plain', key)
+  }
+
   if (metaFlow.flowType === 'FREE_START_UP') {
     return (
       <div className="flow-graph-left-panel" style={style}>
@@ -22,6 +26,7 @@ export const LeftPanel = observer(() => {
               `tobx-layout-edit__item-wrapper`,
               `component-item-wrap`
             )}
+            onDragStart={(e) => dragStart(item.key, e)}
           >
             {item.content}
           </div>
