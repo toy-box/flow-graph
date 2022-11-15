@@ -72,6 +72,7 @@ export class MetaFlow {
       removeNodeWithBind: batch,
       updateNode: batch,
       appendNode: batch,
+      addNode: batch,
       mountNodes: batch,
     })
   }
@@ -143,6 +144,12 @@ export class MetaFlow {
     const parent = this.flowNodes.find((node) => node.id === at)
     this.flowMetaNodeMap[flowNode.id] = flowNode
     flowNode.appendAt(parent)
+  }
+
+  addNode(flowData: FlowMetaParam) {
+    const flowNode = this.makeFlowNode(flowData)
+    this.flowMetaNodeMap[flowNode.id] = flowNode
+    this.flow.addGraphNode({ ...flowData, data: flowNode })
   }
 
   mountNodes(flowDatas: FlowMetaParam[], parent?: FlowMetaNode) {
@@ -243,6 +250,7 @@ export class MetaFlow {
   }
 
   makeFlowNode(node: FlowMetaParam): FlowMetaNode {
+    console.log('makeFlowNode', node)
     switch (node.type) {
       case FlowMetaType.START:
         return new FlowStart(

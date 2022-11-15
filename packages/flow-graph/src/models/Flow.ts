@@ -181,11 +181,11 @@ export class Flow {
   }
 
   addGraphNodes = (nodes: FlowNode[]) => {
-    this.canvas?.addNodes(nodes)
+    this.canvas?.addNodes(nodes, this.flowType)
   }
 
   addGraphNode = (node: FlowNode) => {
-    this.canvas?.addNode(node)
+    this.canvas?.addNode(node, this.flowType)
   }
 
   setGraphEdges = (edges: IEdge[]) => {

@@ -4,6 +4,7 @@ import { createSchemaField } from '@formily/react'
 import { FlowMetaNode } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake, FlowNodeType } from '@toy-box/flow-node'
 
+export * from './addNode'
 const SchemaField = createSchemaField({
   components: {
     FormItem,
@@ -140,7 +141,11 @@ export const loopOnEdit = (node: FlowMetaNode) => {
     .open()
 }
 
-export const onPanelEdit = (node: INodeTemplate<NodeMake>, at: string) => {
+export const onPanelEdit = (
+  node: INodeTemplate<NodeMake>,
+  at: string,
+  additionInfo?: any
+) => {
   const dialog = FormDialog(`${node.title} Node Properites`, () => {
     const chooseRender = () => {
       switch (node.title) {
@@ -169,7 +174,7 @@ export const onPanelEdit = (node: INodeTemplate<NodeMake>, at: string) => {
     })
     .forConfirm((payload, next) => {
       setTimeout(() => {
-        node.make(at, payload.values)
+        node.make(at, { ...payload.values, ...additionInfo })
         // node.update(payload.values)
         next(payload)
       }, 500)

@@ -22,13 +22,13 @@ import {
   decideOnEdit,
   loopOnEdit,
   onPanelEdit,
+  addFreeLayoutNode,
 } from '../../flow-nodes'
-import { uid } from '@toy-box/toybox-shared'
 
 export const FlowCanvas = observer(() => {
   const ref: any = useRef()
+  const nodes = useTemplates()
   const flow = useFlow()
-  // flow.flowGraph.centerX = ref?.current?.offsetWidth / 2
   const eventEngine = useEvent()
   const metaflow = useMetaFlow()
   const style = {
@@ -47,27 +47,7 @@ export const FlowCanvas = observer(() => {
       const { clientX, clientY } = e
       console.log('e---ondrop', e, clientX, clientY)
       const nodeType = e.dataTransfer.getData('text/plain')
-      // const nodes = useTemplates()
-      const newNode = {
-        item: {
-          id: uid(),
-          data: {
-            name: 'Assign',
-            description: 'Assign',
-          },
-          position: {
-            x: clientX - 120,
-            y: clientY - 28,
-          },
-          width: 60,
-          height: 60,
-          draggable: true,
-          // type:'AssignmentNode' ?? nodeType
-        },
-        type: 'add',
-      }
-      flow.canvas.onNodesChange([newNode])
-      // flow.addGraphNode(newAssignNode)
+      addFreeLayoutNode(clientX, clientY, nodeType, nodes)
     }
   }
   useEffect(() => {
