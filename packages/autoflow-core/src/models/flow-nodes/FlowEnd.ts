@@ -1,6 +1,7 @@
 import { define, observable, action } from '@formily/reactive'
 import { FlowNode, IFlowNodeProps } from '@toy-box/flow-graph/src'
 import { FlowMetaType, FlowMetaParam } from '../../types'
+import { FreeFlow } from '../FreeFlow'
 import { MetaFlow } from '../MetaFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 
@@ -28,7 +29,7 @@ export class FlowEnd extends FlowMetaNode {
     return undefined
   }
 
-  constructor(flowEnd: IFlowEndProps, metaFlow: MetaFlow) {
+  constructor(flowEnd: IFlowEndProps, metaFlow: MetaFlow | FreeFlow) {
     super(metaFlow, flowEnd.id, flowEnd.name)
     this.makeObservable()
   }

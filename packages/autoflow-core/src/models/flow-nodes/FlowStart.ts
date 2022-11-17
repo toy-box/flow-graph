@@ -11,6 +11,7 @@ import {
   FlowMetaParam,
 } from '../../types'
 import { MetaFlow } from '../MetaFlow'
+import { FreeFlow } from '../FreeFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 
 export class FlowStart extends FlowMetaNode {
@@ -42,7 +43,7 @@ export class FlowStart extends FlowMetaNode {
     return this.connector
   }
 
-  constructor(flowStart: IStartFlowMeta, metaFlow: MetaFlow) {
+  constructor(flowStart: IStartFlowMeta, metaFlow: MetaFlow | FreeFlow) {
     super(metaFlow, flowStart.id, flowStart.name)
     this.connector = flowStart.connector
     this.criteria = flowStart.criteria

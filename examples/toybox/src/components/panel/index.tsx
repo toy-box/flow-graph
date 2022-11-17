@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react'
-import { useMetaFlow } from '@toy-box/flow-node'
+import { useMetaFlow, useFreeFlow } from '@toy-box/flow-node'
 import { flowData1, flowData2, flowMeta } from '../../data/flowData'
 
 export const Panel = () => {
   const metaFlow = useMetaFlow()
+  const freeFlow = useFreeFlow()
   const init = useCallback(() => {
     metaFlow.flow.setFlowNodes(flowData1)
   }, [])
@@ -19,10 +20,11 @@ export const Panel = () => {
     console.log('metaFlowdata数据json化', metaFlow.toJsonList)
   }, [metaFlow])
   const handleFreeLayout = useCallback(() => {
-    metaFlow.setMetaFlow(flowMeta, 'FREE_START_UP')
+    // metaFlow.setMetaFlow(flowMeta, 'FREE_START_UP')
+    // metaFlow.flow.setGraphNodes([])
+    freeFlow.setMetaFlow(flowMeta, 'FREE_START_UP')
     console.log('metaFlow.flowType', metaFlow.flowType)
-    metaFlow.flow.setGraphNodes(metaFlow.flow.flowGraph.nodes, 'draggable')
-    metaFlow.flow.layoutFlow()
+    freeFlow.flow.layoutFlow()
   }, [metaFlow])
   return (
     <div>

@@ -7,13 +7,15 @@ import ReactFlow, {
 } from 'reactflow'
 import { observer } from '@formily/reactive-react'
 import { ReactFlowCanvas, FixStepEdge, ForkEdge } from '@toy-box/flow-graph'
-import { useMetaFlow } from '@toy-box/flow-node'
+import { useMetaFlow, useFreeFlow } from '@toy-box/flow-node'
 import {
   connectReactFlow,
+  connectFreeFlow,
   ExtendNode,
   StandardNode,
   ExtendPanel,
   useFlow,
+  useGraphFlow,
   useTemplates,
   useEvent,
 } from '@toy-box/flow-node'
@@ -29,8 +31,11 @@ export const FlowCanvas = observer(() => {
   const ref: any = useRef()
   const nodes = useTemplates()
   const flow = useFlow()
+  const graphFlow = useGraphFlow()
   const eventEngine = useEvent()
   const metaflow = useMetaFlow()
+  const freeFlow = useFreeFlow()
+  console.log('freeFlow', freeFlow, metaflow)
   const style = {
     width: '100%',
     height: '800px',
@@ -52,80 +57,150 @@ export const FlowCanvas = observer(() => {
   }
   useEffect(() => {
     flow.flowGraph.centerX = ref?.current?.offsetWidth / 2
+    graphFlow.flowGraph.centerX = ref?.current?.offsetWidth / 2
   }, [metaflow.flowType])
-
+  const reactFlowCanvas = new ReactFlowCanvas({
+    flowGraph: flow.flowGraph,
+    edgeComponents: {
+      fixEdge: FixStepEdge,
+      forkEdge: ForkEdge,
+    },
+    components: {
+      StartNode: connectReactFlow({
+        component: StandardNode,
+        content: <h3>Start</h3>,
+        handles: [{ type: 'source', position: Position.Bottom }],
+      }),
+      EndNode: connectReactFlow({
+        component: StandardNode,
+        content: <h3>End</h3>,
+        handles: [{ type: 'target', position: Position.Top }],
+      }),
+      ExtendNode: connectReactFlow({
+        component: ExtendNode,
+        handles: [
+          { type: 'target', position: Position.Top },
+          { type: 'source', position: Position.Bottom },
+        ],
+        content: <ExtendPanel />,
+        onEdit: onPanelEdit,
+      }),
+      DecisionNode: connectReactFlow({
+        component: StandardNode,
+        content: <h3>Decision</h3>,
+        handles: [
+          { type: 'target', position: Position.Top },
+          { type: 'source', position: Position.Bottom },
+        ],
+        onEdit: decideOnEdit,
+      }),
+      AssignmentNode: connectReactFlow({
+        component: StandardNode,
+        content: <h3>assign</h3>,
+        handles: [
+          { type: 'target', position: Position.Top },
+          { type: 'source', position: Position.Bottom },
+        ],
+        onEdit: assignOnEdit,
+      }),
+      ActionNode: connectReactFlow({
+        component: StandardNode,
+        content: <h3>action</h3>,
+        handles: [
+          { type: 'target', position: Position.Top },
+          { type: 'source', position: Position.Bottom },
+        ],
+      }),
+      LoopNode: connectReactFlow({
+        component: StandardNode,
+        content: <h3>Loop</h3>,
+        handles: [
+          { type: 'target', position: Position.Top, id: Position.Top },
+          {
+            type: 'source',
+            position: Position.Bottom,
+            id: Position.Bottom,
+          },
+          { type: 'target', position: Position.Left, id: Position.Left },
+          { type: 'source', position: Position.Right, id: Position.Right },
+        ],
+        onEdit: loopOnEdit,
+      }),
+    },
+  })
+  const freeFlowCanvas = new ReactFlowCanvas({
+    flowGraph: flow.flowGraph,
+    edgeComponents: {
+      fixEdge: FixStepEdge,
+      forkEdge: ForkEdge,
+    },
+    components: {
+      StartNode: connectFreeFlow({
+        component: StandardNode,
+        content: <h3>Start</h3>,
+        handles: [{ type: 'source', position: Position.Bottom }],
+      }),
+      EndNode: connectFreeFlow({
+        component: StandardNode,
+        content: <h3>End</h3>,
+        handles: [{ type: 'target', position: Position.Top }],
+      }),
+      ExtendNode: connectFreeFlow({
+        component: ExtendNode,
+        handles: [
+          { type: 'target', position: Position.Top },
+          { type: 'source', position: Position.Bottom },
+        ],
+        content: <ExtendPanel />,
+        onEdit: onPanelEdit,
+      }),
+      DecisionNode: connectFreeFlow({
+        component: StandardNode,
+        content: <h3>Decision</h3>,
+        handles: [
+          { type: 'target', position: Position.Top },
+          { type: 'source', position: Position.Bottom },
+        ],
+        onEdit: decideOnEdit,
+      }),
+      AssignmentNode: connectFreeFlow({
+        component: StandardNode,
+        content: <h3>assign</h3>,
+        handles: [
+          { type: 'target', position: Position.Top },
+          { type: 'source', position: Position.Bottom },
+        ],
+        onEdit: assignOnEdit,
+      }),
+      ActionNode: connectFreeFlow({
+        component: StandardNode,
+        content: <h3>action</h3>,
+        handles: [
+          { type: 'target', position: Position.Top },
+          { type: 'source', position: Position.Bottom },
+        ],
+      }),
+      LoopNode: connectFreeFlow({
+        component: StandardNode,
+        content: <h3>Loop</h3>,
+        handles: [
+          { type: 'target', position: Position.Top, id: Position.Top },
+          {
+            type: 'source',
+            position: Position.Bottom,
+            id: Position.Bottom,
+          },
+          { type: 'target', position: Position.Left, id: Position.Left },
+          { type: 'source', position: Position.Right, id: Position.Right },
+        ],
+        onEdit: loopOnEdit,
+      }),
+    },
+  })
   useEffect(() => {
-    flow.setCanvas(
-      new ReactFlowCanvas({
-        flowGraph: flow.flowGraph,
-        edgeComponents: {
-          fixEdge: FixStepEdge,
-          forkEdge: ForkEdge,
-        },
-        components: {
-          StartNode: connectReactFlow({
-            component: StandardNode,
-            content: <h3>Start</h3>,
-            handles: [{ type: 'source', position: Position.Bottom }],
-          }),
-          EndNode: connectReactFlow({
-            component: StandardNode,
-            content: <h3>End</h3>,
-            handles: [{ type: 'target', position: Position.Top }],
-          }),
-          ExtendNode: connectReactFlow({
-            component: ExtendNode,
-            handles: [
-              { type: 'target', position: Position.Top },
-              { type: 'source', position: Position.Bottom },
-            ],
-            content: <ExtendPanel />,
-            onEdit: onPanelEdit,
-          }),
-          DecisionNode: connectReactFlow({
-            component: StandardNode,
-            content: <h3>Decision</h3>,
-            handles: [
-              { type: 'target', position: Position.Top },
-              { type: 'source', position: Position.Bottom },
-            ],
-            onEdit: decideOnEdit,
-          }),
-          AssignmentNode: connectReactFlow({
-            component: StandardNode,
-            content: <h3>assign</h3>,
-            handles: [
-              { type: 'target', position: Position.Top },
-              { type: 'source', position: Position.Bottom },
-            ],
-            onEdit: assignOnEdit,
-          }),
-          ActionNode: connectReactFlow({
-            component: StandardNode,
-            content: <h3>action</h3>,
-            handles: [
-              { type: 'target', position: Position.Top },
-              { type: 'source', position: Position.Bottom },
-            ],
-          }),
-          LoopNode: connectReactFlow({
-            component: StandardNode,
-            content: <h3>Loop</h3>,
-            handles: [
-              { type: 'target', position: Position.Top, id: Position.Top },
-              {
-                type: 'source',
-                position: Position.Bottom,
-                id: Position.Bottom,
-              },
-              { type: 'target', position: Position.Left, id: Position.Left },
-              { type: 'source', position: Position.Right, id: Position.Right },
-            ],
-            onEdit: loopOnEdit,
-          }),
-        },
-      })
-    )
+    flow.setCanvas(reactFlowCanvas)
+    // console.log('flowFree', flowFree)
+    graphFlow.setCanvas(freeFlowCanvas)
   }, [])
 
   const dispatchClickPane = React.useCallback(
@@ -170,9 +245,20 @@ export const FlowCanvas = observer(() => {
 
   return (
     <div id="flow-canvas" style={style} ref={ref}>
+      {/* {metaflow.flowType === 'AUTO_START_UP'&&()} */}
       <ReactFlow
-        nodes={flow.canvas?.nodes}
-        edges={flow.canvas?.edges}
+        nodes={
+          metaflow.flowType === 'AUTO_START_UP'
+            ? flow.canvas?.nodes
+            : graphFlow.canvas?.nodes
+        }
+        edges={
+          metaflow.flowType === 'AUTO_START_UP'
+            ? flow.canvas?.edges
+            : graphFlow.canvas?.edges
+        }
+        // nodes={flow.canvas?.nodes}
+        // edges={flow.canvas?.edges}
         onNodesChange={flow.canvas?.onNodesChange}
         onEdgesChange={flow.canvas?.onEdgesChange}
         onConnect={flow.canvas?.onConnect}

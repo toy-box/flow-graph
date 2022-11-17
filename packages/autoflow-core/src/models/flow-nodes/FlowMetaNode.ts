@@ -1,7 +1,7 @@
 import { FlowNode, IFlowNodeProps } from '@toy-box/flow-graph'
 import { FlowMetaType, TargetReference } from '../../types'
 import { MetaFlow } from '../MetaFlow'
-
+import { FreeFlow } from '../FreeFlow'
 export interface IMakeFlowNodeProps {
   width: number
   height: number
@@ -15,6 +15,7 @@ export abstract class FlowMetaNode {
   name: string
   description?: string
   metaFlow: MetaFlow
+  freeFlow: FreeFlow
 
   static StandardSize = 30
 
@@ -26,11 +27,13 @@ export abstract class FlowMetaNode {
 
   constructor(
     metaFlow: MetaFlow,
+    freeFlow: FreeFlow,
     id: string,
     name: string,
     description?: string
   ) {
     this.metaFlow = metaFlow
+    this.freeFlow = freeFlow
     this.id = id
     this.name = name
     this.description = description

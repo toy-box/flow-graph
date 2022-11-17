@@ -98,6 +98,7 @@ export class ReactFlowCanvas implements ICanvas {
 
   setNodes(nodes: INode[], flowType?: string) {
     this.nodes = nodes.map((node) => this.makeNode(node, flowType))
+    console.log('this.nodes->setNodes', this.nodes)
   }
 
   setEdges(edges: IEdge[]) {

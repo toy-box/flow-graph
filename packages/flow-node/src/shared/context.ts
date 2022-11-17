@@ -1,11 +1,12 @@
 import React, { ReactNode } from 'react'
-import { MetaFlow, FlowMetaNode } from '@toy-box/autoflow-core'
+import { MetaFlow, FreeFlow, FlowMetaNode } from '@toy-box/autoflow-core'
 import { EventEngine } from './event'
 import { INodeTemplate, INodeEdit } from '../types'
 
 export type NodeMake = (at: string, editInfo?: INodeEdit) => void
 
 export interface IFlowContextProps<T> {
+  freeFlow: FreeFlow
   metaFlow: MetaFlow
   templates: INodeTemplate<T>[]
   icons: Record<string, ReactNode>

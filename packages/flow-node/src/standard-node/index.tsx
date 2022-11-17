@@ -4,7 +4,7 @@ import { Popover } from 'antd'
 import { observer } from '@formily/reactive-react'
 import { FlowNode } from '@toy-box/flow-graph'
 import { ICustomEvent } from '../shared'
-import { useEvent, useFlowMetaNodeContext } from '../hooks'
+import { useEvent, useFlowMetaNodeContext, useFreeFlow } from '../hooks'
 import { NodePanel } from '../node-panel'
 
 import './styles'
@@ -21,6 +21,8 @@ export const StandardNode: React.FC<
   const prefixCls = 'tbox-flow-node'
   const eventEngine = useEvent()
   const { flowMetaNode } = useFlowMetaNodeContext()
+  const freeFlow = useFreeFlow()
+  console.log('flowMetaNode', flowMetaNode, freeFlow)
   const [active, setActive] = React.useState(false)
   React.useEffect(() => {
     const unsubscribe = eventEngine.subscribe((payload: ICustomEvent) => {
