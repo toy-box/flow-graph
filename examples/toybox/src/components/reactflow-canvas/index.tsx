@@ -15,7 +15,7 @@ import {
   StandardNode,
   ExtendPanel,
   useFlow,
-  useGraphFlow,
+  useDragFlow,
   useTemplates,
   useEvent,
 } from '@toy-box/flow-node'
@@ -31,7 +31,7 @@ export const FlowCanvas = observer(() => {
   const ref: any = useRef()
   const nodes = useTemplates()
   const flow = useFlow()
-  const graphFlow = useGraphFlow()
+  const dragFlow = useDragFlow()
   const eventEngine = useEvent()
   const metaflow = useMetaFlow()
   const freeFlow = useFreeFlow()
@@ -57,8 +57,8 @@ export const FlowCanvas = observer(() => {
   }
   useEffect(() => {
     flow.flowGraph.centerX = ref?.current?.offsetWidth / 2
-    graphFlow.flowGraph.centerX = ref?.current?.offsetWidth / 2
-  }, [metaflow.flowType])
+    dragFlow.flowGraph.centerX = ref?.current?.offsetWidth / 2
+  }, [metaflow.flowType, freeFlow.flowType])
   const reactFlowCanvas = new ReactFlowCanvas({
     flowGraph: flow.flowGraph,
     edgeComponents: {
@@ -129,7 +129,7 @@ export const FlowCanvas = observer(() => {
     },
   })
   const freeFlowCanvas = new ReactFlowCanvas({
-    flowGraph: flow.flowGraph,
+    flowGraph: dragFlow.flowGraph,
     edgeComponents: {
       fixEdge: FixStepEdge,
       forkEdge: ForkEdge,
@@ -200,7 +200,7 @@ export const FlowCanvas = observer(() => {
   useEffect(() => {
     flow.setCanvas(reactFlowCanvas)
     // console.log('flowFree', flowFree)
-    graphFlow.setCanvas(freeFlowCanvas)
+    dragFlow.setCanvas(freeFlowCanvas)
   }, [])
 
   const dispatchClickPane = React.useCallback(
@@ -250,20 +250,40 @@ export const FlowCanvas = observer(() => {
         nodes={
           metaflow.flowType === 'AUTO_START_UP'
             ? flow.canvas?.nodes
-            : graphFlow.canvas?.nodes
+            : dragFlow.canvas?.nodes
         }
         edges={
           metaflow.flowType === 'AUTO_START_UP'
             ? flow.canvas?.edges
-            : graphFlow.canvas?.edges
+            : dragFlow.canvas?.edges
         }
         // nodes={flow.canvas?.nodes}
         // edges={flow.canvas?.edges}
-        onNodesChange={flow.canvas?.onNodesChange}
-        onEdgesChange={flow.canvas?.onEdgesChange}
-        onConnect={flow.canvas?.onConnect}
-        nodeTypes={flow.canvas?.components}
-        edgeTypes={flow.canvas?.edgeComponents}
+        onNodesChange={
+          metaflow.flowType === 'AUTO_START_UP'
+            ? flow.canvas?.onNodesChange
+            : dragFlow.canvas?.onNodesChange
+        }
+        onEdgesChange={
+          metaflow.flowType === 'AUTO_START_UP'
+            ? flow.canvas?.onEdgesChange
+            : dragFlow.canvas?.onEdgesChange
+        }
+        onConnect={
+          metaflow.flowType === 'AUTO_START_UP'
+            ? flow.canvas?.onConnect
+            : dragFlow.canvas?.onConnect
+        }
+        nodeTypes={
+          metaflow.flowType === 'AUTO_START_UP'
+            ? flow.canvas?.components
+            : dragFlow.canvas?.components
+        }
+        edgeTypes={
+          metaflow.flowType === 'AUTO_START_UP'
+            ? flow.canvas?.edgeComponents
+            : dragFlow.canvas?.edgeComponents
+        }
         onPaneClick={dispatchClickPane}
         onNodeClick={dispatchClickNode}
         onEdgeClick={dispatchClickEdge}

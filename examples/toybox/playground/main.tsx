@@ -16,7 +16,7 @@ const App = () => {
         value={{
           metaFlow,
           freeFlow,
-          templates: nodeTemplatesProvider(metaFlow),
+          templates: nodeTemplatesProvider(metaFlow, freeFlow),
           icons: {},
           eventEngine,
         }}

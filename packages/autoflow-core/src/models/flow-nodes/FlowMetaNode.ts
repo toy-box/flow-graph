@@ -16,6 +16,7 @@ export abstract class FlowMetaNode {
   description?: string
   metaFlow: MetaFlow
   freeFlow: FreeFlow
+  flowType: string
 
   static StandardSize = 30
 
@@ -26,27 +27,41 @@ export abstract class FlowMetaNode {
   }
 
   constructor(
-    metaFlow: MetaFlow,
-    freeFlow: FreeFlow,
+    flow: MetaFlow | FreeFlow,
     id: string,
     name: string,
     description?: string
   ) {
-    this.metaFlow = metaFlow
-    this.freeFlow = freeFlow
+    if (flow.flowType === 'AUTO_START_UP') {
+      this.metaFlow = flow
+    } else {
+      this.freeFlow = flow
+    }
+    debugger
+    this.flowType = flow.flowType
     this.id = id
     this.name = name
     this.description = description
   }
 
   get flowNode() {
-    return this.metaFlow.flow.getFlowNode(this.id)
+    if (this.flowType === 'AUTO_START_UP') {
+      return this.metaFlow.flow.getFlowNode(this.id)
+    } else {
+      return this.freeFlow.flow.getFlowNode(this.id)
+    }
   }
 
   get parents() {
-    return this.metaFlow.flowMetaNodes.filter((node) =>
-      node.nextNodes.some((next) => next.id === this.id)
-    )
+    if (this.flowType === 'AUTO_START_UP') {
+      return this.metaFlow.flowMetaNodes.filter((node) =>
+        node.nextNodes.some((next) => next.id === this.id)
+      )
+    } else {
+      return this.freeFlow.flowMetaNodes.filter((node) =>
+        node.nextNodes.some((next) => next.id === this.id)
+      )
+    }
   }
 
   findLoopBack(id: string = this.id) {

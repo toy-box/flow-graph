@@ -1,5 +1,5 @@
 export * from './useFlow'
-export * from './useGraphFlow'
+export * from './useDragFlow'
 export * from './useFlowContext'
 export * from './useTemplates'
 export * from './useEvent'

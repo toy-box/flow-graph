@@ -1,16 +1,16 @@
 import { INodeTemplate, NodeMake, INodeEdit } from '@toy-box/flow-node'
-import { FlowMetaType, MetaFlow } from '@toy-box/autoflow-core'
+import { FlowMetaType, MetaFlow, FreeFLow } from '@toy-box/autoflow-core'
 import { uid } from '@toy-box/toybox-shared'
-
 export const nodeTemplatesProvider = (
-  metaFlow: MetaFlow
+  metaFlow: MetaFlow,
+  freeFlow: FreeFLow
 ): INodeTemplate<NodeMake>[] => {
   const appendOrAddNode = (at, flowData) => {
-    if (at) {
+    if (at === 'freeLayout') {
+      freeFlow.addNode(flowData)
+    } else {
       metaFlow.appendNode(at, flowData)
       metaFlow.flow.layoutFlow()
-    } else {
-      metaFlow.addNode(flowData)
     }
   }
   return [
@@ -19,7 +19,7 @@ export const nodeTemplatesProvider = (
       title: 'Assignment',
       description: 'Assignment node',
       group: 'flow',
-      make: (at: string, editInfo: INodeEdit) => {
+      make: (at: string, editInfo: INodeEdit, flowType?: FlowType) => {
         const flowData = {
           id: uid(),
           name: 'Assignment',
@@ -27,7 +27,7 @@ export const nodeTemplatesProvider = (
           connector: {},
           ...editInfo,
         }
-        appendOrAddNode(at, flowData)
+        appendOrAddNode(at, flowData, flowType)
       },
     },
     {

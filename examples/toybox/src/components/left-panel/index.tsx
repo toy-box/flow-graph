@@ -1,5 +1,5 @@
 import React from 'react'
-import { useMetaFlow } from '@toy-box/flow-node'
+import { useMetaFlow, useFreeFlow } from '@toy-box/flow-node'
 import { itemMap } from '../../data/itemMap'
 import { observer } from '@formily/reactive-react'
 import classNames from 'classnames'
@@ -8,6 +8,7 @@ import './componentItem.less'
 
 export const LeftPanel = observer(() => {
   const metaFlow = useMetaFlow()
+  const freeFlow = useFreeFlow()
   const style = {
     width: 100,
   }
@@ -15,7 +16,10 @@ export const LeftPanel = observer(() => {
     e.dataTransfer.setData('text/plain', key)
   }
 
-  if (metaFlow.flowType === 'FREE_START_UP') {
+  if (
+    metaFlow.flowType === 'FREE_START_UP' ||
+    freeFlow.flowType === 'FREE_START_UP'
+  ) {
     return (
       <div className="flow-graph-left-panel" style={style}>
         {itemMap.map((item) => (

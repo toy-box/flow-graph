@@ -9,12 +9,17 @@ export const addFreeLayoutNode = (
 ) => {
   const nodeTemplate = nodes.find((template) => template.title === nodeType)
   onPanelEdit &&
-    onPanelEdit(nodeTemplate, undefined, {
-      id: uid(),
-      x: x - 120,
-      y: y - 28,
-      width: 60,
-      height: 60,
-      component: `${nodeType}Node`,
-    })
+    onPanelEdit(
+      nodeTemplate,
+      'freeLayout',
+      {
+        id: uid(),
+        x: x - 120,
+        y: y - 28,
+        width: 60,
+        height: 60,
+        component: `${nodeType}Node`,
+      },
+      'FREE_START_UP'
+    )
 }

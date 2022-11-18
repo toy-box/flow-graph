@@ -13,6 +13,7 @@ export const Panel = () => {
   }, [])
   const handleMetaFlow = useCallback(() => {
     metaFlow.setMetaFlow(flowMeta, 'AUTO_START_UP')
+    freeFlow.setMetaFlow(flowMeta, 'AUTO_START_UP')
     metaFlow.flow.layoutFlow()
   }, [metaFlow])
   const handleExport = useCallback(() => {
@@ -20,7 +21,7 @@ export const Panel = () => {
     console.log('metaFlowdata数据json化', metaFlow.toJsonList)
   }, [metaFlow])
   const handleFreeLayout = useCallback(() => {
-    // metaFlow.setMetaFlow(flowMeta, 'FREE_START_UP')
+    metaFlow.setMetaFlow(flowMeta, 'FREE_START_UP')
     // metaFlow.flow.setGraphNodes([])
     freeFlow.setMetaFlow(flowMeta, 'FREE_START_UP')
     console.log('metaFlow.flowType', metaFlow.flowType)

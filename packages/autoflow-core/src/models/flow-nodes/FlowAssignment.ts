@@ -119,6 +119,7 @@ export class FlowAssignment extends FlowMetaNode {
   }
 
   appendAt(at: FlowNode) {
+    console.log('this.metaFlow', this.metaFlow)
     if (this.flowNode == null) {
       if (at.isLoopBack) {
         this.connector.targetReference = at.loopBegin.id

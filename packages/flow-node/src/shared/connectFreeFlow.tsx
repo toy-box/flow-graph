@@ -22,7 +22,6 @@ export function connectFreeFlow({
 }: IConnectReactFlowProps) {
   const FlowNodeWrapper = (props: IStandardNodeProps) => {
     const freeFlow = useFreeFlow()
-    debugger
     console.log('connect ', freeFlow.flowMetaNodeMap)
     return (
       <React.Fragment>

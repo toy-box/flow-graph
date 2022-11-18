@@ -1,6 +1,6 @@
 import { isArr, uid } from '@toy-box/toybox-shared'
 import { define, observable, action, batch } from '@formily/reactive'
-import { Flow, FlowFree } from '@toy-box/flow-graph'
+import { Flow, FlowFree, DragFlow } from '@toy-box/flow-graph'
 import {
   FlowMetaType,
   FlowMetaParam,
@@ -39,7 +39,7 @@ export class FreeFlow {
   disposers: (() => void)[] = []
   flowMeta: IFlowMeta
   metaFlowDatas: FlowMetaParam[] = []
-  flow: Flow
+  flow: DragFlow
   flowMetaNodeMap: Record<string, FlowMetaNode> = {}
 
   // flowConstants: IFieldMeta[] = []
@@ -151,6 +151,7 @@ export class FreeFlow {
   addNode(flowData: FlowMetaParam) {
     const flowNode = this.makeFlowNode(flowData)
     this.flowMetaNodeMap[flowNode.id] = flowNode
+    console.log('node data', { ...flowData, data: flowNode })
     this.flow.addGraphNode({ ...flowData, data: flowNode })
   }
 
