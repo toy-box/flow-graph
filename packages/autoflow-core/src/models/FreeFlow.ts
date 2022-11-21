@@ -71,6 +71,7 @@ export class FreeFlow {
       mode: observable.ref,
       flowType: observable.ref,
       setMetaFlow: batch,
+      getFlowMetaNodeMap: batch,
       removeNodeWithBind: batch,
       updateNode: batch,
       appendNode: batch,
@@ -101,6 +102,7 @@ export class FreeFlow {
   }
 
   setMetaFlow(flowMeta: IFlowMeta, flowType: FlowType) {
+    console.log('setMetaFlow', flowMeta)
     this.flowMeta = flowMeta
     this.flowType = flowType
     this.flow.flowType = flowType
@@ -110,6 +112,10 @@ export class FreeFlow {
   onInit() {
     this.metaFlowDatas = this.parseFlow(this.flowMeta.nodes)
     this.mountNodes(this.metaFlowDatas)
+  }
+
+  getFlowMetaNodeMap(nodeMap: Record<string, FlowMetaNode> = {}) {
+    this.flowMetaNodeMap = nodeMap
   }
 
   parseFlow(nodes: IFlowMetaNodes) {
@@ -170,8 +176,8 @@ export class FreeFlow {
       )
     } else {
       switch (parent.type) {
-        case FlowMetaType.END:
-          return
+        // case FlowMetaType.END:
+        //   return
         case FlowMetaType.LOOP: {
           // next
           const nextValueRef = (parent as FlowLoop).nextValueConnector
@@ -235,7 +241,11 @@ export class FreeFlow {
         }
         default:
           const targetRef = parent.lowerLeverConnector?.targetReference
-          const currentData = flowDatas.find((data) => data.id === targetRef)
+          // todo: template idea
+          const currentData =
+            flowDatas.length === 1
+              ? flowDatas[0]
+              : flowDatas.find((data) => data.id === targetRef)
           const currentNode = this.makeFlowNode(currentData)
           // edit mode
           const atNode = this.flowNodes.find(

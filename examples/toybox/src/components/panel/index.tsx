@@ -12,18 +12,28 @@ export const Panel = () => {
     metaFlow.flow.setFlowNodes(flowData2)
   }, [])
   const handleMetaFlow = useCallback(() => {
-    metaFlow.setMetaFlow(flowMeta, 'AUTO_START_UP')
-    freeFlow.setMetaFlow(flowMeta, 'AUTO_START_UP')
+    metaFlow.setMetaFlow(freeFlow.flowMeta ?? flowMeta, 'AUTO_START_UP')
+    freeFlow.setMetaFlow({}, 'AUTO_START_UP')
     metaFlow.flow.layoutFlow()
   }, [metaFlow])
   const handleExport = useCallback(() => {
     console.log('metaFlow', metaFlow)
-    console.log('metaFlowdata数据json化', metaFlow.toJsonList)
+    console.log(
+      'metaFlowdata数据json化',
+      metaFlow.toJsonList,
+      freeFlow.toJsonList
+    )
   }, [metaFlow])
   const handleFreeLayout = useCallback(() => {
-    metaFlow.setMetaFlow(flowMeta, 'FREE_START_UP')
     // metaFlow.flow.setGraphNodes([])
-    freeFlow.setMetaFlow(flowMeta, 'FREE_START_UP')
+    console.log('metaFlow.flowMeta', metaFlow.flowMeta, metaFlow.toJsonList)
+    freeFlow.setMetaFlow(
+      metaFlow.toJsonList.length
+        ? { resources: {}, nodes: metaFlow.toJsonList }
+        : flowMeta,
+      'FREE_START_UP'
+    )
+    metaFlow.setMetaFlow({}, 'FREE_START_UP')
     console.log('metaFlow.flowType', metaFlow.flowType)
     freeFlow.flow.layoutFlow()
   }, [metaFlow])

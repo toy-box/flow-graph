@@ -55,6 +55,7 @@ export class FlowLoop extends FlowMetaNode {
     this.collectionReference = flowLoop.collectionReference
     this.iterationOrder = flowLoop.iterationOrder
     this.description = flowLoop.description
+    this.metaFlow = metaFlow
     this.makeObservable()
   }
 

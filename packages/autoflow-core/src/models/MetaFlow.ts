@@ -69,6 +69,7 @@ export class MetaFlow {
       mode: observable.ref,
       flowType: observable.ref,
       setMetaFlow: batch,
+      getFlowMetaNodeMap: batch,
       removeNodeWithBind: batch,
       updateNode: batch,
       appendNode: batch,
@@ -108,6 +109,10 @@ export class MetaFlow {
   onInit() {
     this.metaFlowDatas = this.parseFlow(this.flowMeta.nodes)
     this.mountNodes(this.metaFlowDatas)
+  }
+
+  getFlowMetaNodeMap(nodeMap: Record<string, FlowMetaNode> = {}) {
+    this.flowMetaNodeMap = nodeMap
   }
 
   parseFlow(nodes: IFlowMetaNodes) {

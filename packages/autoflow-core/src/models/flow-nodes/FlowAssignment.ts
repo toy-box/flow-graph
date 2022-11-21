@@ -37,6 +37,7 @@ export class FlowAssignment extends FlowMetaNode {
       flowAssignment.name,
       flowAssignment.description
     )
+    this.metaFlow = metaFlow
     this.connector = flowAssignment.connector
     this.assignmentItems = flowAssignment.assignmentItems
     this.makeObservable()
@@ -119,7 +120,7 @@ export class FlowAssignment extends FlowMetaNode {
   }
 
   appendAt(at: FlowNode) {
-    console.log('this.metaFlow', this.metaFlow)
+    console.log('this.metaFlow flowAssignMent', this.metaFlow, at)
     if (this.flowNode == null) {
       if (at.isLoopBack) {
         this.connector.targetReference = at.loopBegin.id

@@ -57,6 +57,7 @@ export class FlowDecision extends FlowMetaNode {
     this.defaultConnector = flowDecision.defaultConnector ?? {}
     this.defaultConnectorName = flowDecision.defaultConnectorName
     this.rules = flowDecision.rules
+    this.metaFlow = metaFlow
     this.makeObservable()
   }
 

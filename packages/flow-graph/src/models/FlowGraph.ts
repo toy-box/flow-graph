@@ -220,7 +220,7 @@ export class FlowGraph {
         })
       })
     dagre.layout(this.dg)
-    const posXMid = this.dg.node('start').x
+    const posXMid = this.dg.node('start') ? this.dg.node('start').x : 0
     this.dg.nodes().forEach((nodeId) => {
       const pos = this.dg.node(nodeId)
       if (this.nodeMap[nodeId]) {

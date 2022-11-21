@@ -52,6 +52,7 @@ export class FlowStart extends FlowMetaNode {
     this.recordTriggerType = flowStart.recordTriggerType
     this.schedule = flowStart.schedule
     this.triggerType = flowStart.triggerType
+    this.metaFlow = metaFlow
     this.makeObservable()
   }
 

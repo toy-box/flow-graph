@@ -37,7 +37,6 @@ export abstract class FlowMetaNode {
     } else {
       this.freeFlow = flow
     }
-    debugger
     this.flowType = flow.flowType
     this.id = id
     this.name = name
