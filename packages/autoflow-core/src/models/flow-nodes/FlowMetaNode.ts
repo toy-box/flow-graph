@@ -87,6 +87,8 @@ export abstract class FlowMetaNode {
 
   abstract appendAt(at: FlowNode): void
 
+  abstract append(at: FlowNode): void
+
   abstract update(payload: any): void
 
   abstract toJson()

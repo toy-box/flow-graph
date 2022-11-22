@@ -289,3 +289,17 @@ export const flowMeta: IFlowMeta = {
     },
   },
 }
+
+export const freeMeta: IFlowMeta = {
+  resources: {},
+  nodes: {
+    start: {
+      id: 'start',
+      name: 'Start',
+      type: FlowMetaType.START,
+      connector: {
+        targetReference: 'end',
+      },
+    },
+  },
+}

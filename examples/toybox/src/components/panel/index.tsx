@@ -30,7 +30,7 @@ export const Panel = () => {
     freeFlow.setMetaFlow(
       metaFlow.toJsonList.length
         ? { resources: {}, nodes: metaFlow.toJsonList }
-        : flowMeta,
+        : {},
       'FREE_START_UP'
     )
     metaFlow.setMetaFlow({}, 'FREE_START_UP')

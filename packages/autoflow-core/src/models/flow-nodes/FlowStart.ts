@@ -134,6 +134,13 @@ export class FlowStart extends FlowMetaNode {
     }
   }
 
+  append(): void {
+    if (this.flowNode == null) {
+      const flowNode = this.makeFlowNode(FlowStart.DefaultNodeProps)
+      this.metaFlow.flow.addFlowNodes([flowNode])
+    }
+  }
+
   update(data: Omit<IStartFlowMeta, 'id'>) {
     this.name = data.name
     this.description = data.description

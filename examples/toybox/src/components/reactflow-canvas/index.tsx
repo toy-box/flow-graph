@@ -6,7 +6,13 @@ import ReactFlow, {
   BackgroundVariant,
 } from 'reactflow'
 import { observer } from '@formily/reactive-react'
-import { ReactFlowCanvas, FixStepEdge, ForkEdge } from '@toy-box/flow-graph'
+import {
+  ReactFlowCanvas,
+  FixStepEdge,
+  ForkEdge,
+  FreeEdge,
+  freeEdgeOptions,
+} from '@toy-box/flow-graph'
 import { useMetaFlow, useFreeFlow } from '@toy-box/flow-node'
 import {
   connectReactFlow,
@@ -133,6 +139,7 @@ export const FlowCanvas = observer(() => {
     edgeComponents: {
       fixEdge: FixStepEdge,
       forkEdge: ForkEdge,
+      freeEdge: FreeEdge,
     },
     components: {
       StartNode: connectFreeFlow({
@@ -245,55 +252,47 @@ export const FlowCanvas = observer(() => {
 
   return (
     <div id="flow-canvas" style={style} ref={ref}>
-      {/* {metaflow.flowType === 'AUTO_START_UP'&&()} */}
-      <ReactFlow
-        nodes={
-          metaflow.flowType === 'AUTO_START_UP'
-            ? flow.canvas?.nodes
-            : dragFlow.canvas?.nodes
-        }
-        edges={
-          metaflow.flowType === 'AUTO_START_UP'
-            ? flow.canvas?.edges
-            : dragFlow.canvas?.edges
-        }
-        // nodes={flow.canvas?.nodes}
-        // edges={flow.canvas?.edges}
-        onNodesChange={
-          metaflow.flowType === 'AUTO_START_UP'
-            ? flow.canvas?.onNodesChange
-            : dragFlow.canvas?.onNodesChange
-        }
-        onEdgesChange={
-          metaflow.flowType === 'AUTO_START_UP'
-            ? flow.canvas?.onEdgesChange
-            : dragFlow.canvas?.onEdgesChange
-        }
-        onConnect={
-          metaflow.flowType === 'AUTO_START_UP'
-            ? flow.canvas?.onConnect
-            : dragFlow.canvas?.onConnect
-        }
-        nodeTypes={
-          metaflow.flowType === 'AUTO_START_UP'
-            ? flow.canvas?.components
-            : dragFlow.canvas?.components
-        }
-        edgeTypes={
-          metaflow.flowType === 'AUTO_START_UP'
-            ? flow.canvas?.edgeComponents
-            : dragFlow.canvas?.edgeComponents
-        }
-        onPaneClick={dispatchClickPane}
-        onNodeClick={dispatchClickNode}
-        onEdgeClick={dispatchClickEdge}
-        onMoveStart={dispatchMoveStart}
-        proOptions={{ hideAttribution: true }}
-        zoomOnScroll={false}
-      >
-        <Background gap={30} variant={BackgroundVariant.Cross} />
-        <Controls />
-      </ReactFlow>
+      {(metaflow.flowType === 'AUTO_START_UP' || !metaflow.flowType) && (
+        <ReactFlow
+          nodes={flow.canvas?.nodes}
+          edges={flow.canvas?.edges}
+          onNodesChange={flow.canvas?.onNodesChange}
+          onEdgesChange={flow.canvas?.onEdgesChange}
+          onConnect={flow.canvas?.onConnect}
+          nodeTypes={flow.canvas?.components}
+          edgeTypes={flow.canvas?.edgeComponents}
+          onPaneClick={dispatchClickPane}
+          onNodeClick={dispatchClickNode}
+          onEdgeClick={dispatchClickEdge}
+          onMoveStart={dispatchMoveStart}
+          proOptions={{ hideAttribution: true }}
+          zoomOnScroll={false}
+        >
+          <Background gap={30} variant={BackgroundVariant.Cross} />
+          <Controls />
+        </ReactFlow>
+      )}
+      {metaflow.flowType === 'FREE_START_UP' && (
+        <ReactFlow
+          nodes={dragFlow.canvas?.nodes}
+          edges={dragFlow.canvas?.edges}
+          defaultEdgeOptions={freeEdgeOptions}
+          onNodesChange={dragFlow.canvas?.onNodesChange}
+          onEdgesChange={dragFlow.canvas?.onEdgesChange}
+          onConnect={dragFlow.canvas?.onConnect}
+          nodeTypes={dragFlow.canvas?.components}
+          edgeTypes={dragFlow.canvas?.edgeComponents}
+          onPaneClick={dispatchClickPane}
+          onNodeClick={dispatchClickNode}
+          onEdgeClick={dispatchClickEdge}
+          onMoveStart={dispatchMoveStart}
+          proOptions={{ hideAttribution: true }}
+          zoomOnScroll={false}
+        >
+          <Background gap={30} variant={BackgroundVariant.Cross} />
+          <Controls />
+        </ReactFlow>
+      )}
     </div>
   )
 })
