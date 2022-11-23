@@ -4,6 +4,7 @@ import ReactFlow, {
   Controls,
   Position,
   BackgroundVariant,
+  ConnectionLineType,
 } from 'reactflow'
 import { observer } from '@formily/reactive-react'
 import {
@@ -12,6 +13,7 @@ import {
   ForkEdge,
   FreeEdge,
   freeEdgeOptions,
+  connectionLineStyle,
 } from '@toy-box/flow-graph'
 import { useMetaFlow, useFreeFlow } from '@toy-box/flow-node'
 import {
@@ -277,6 +279,8 @@ export const FlowCanvas = observer(() => {
           nodes={dragFlow.canvas?.nodes}
           edges={dragFlow.canvas?.edges}
           defaultEdgeOptions={freeEdgeOptions}
+          connectionLineStyle={connectionLineStyle}
+          connectionLineType={ConnectionLineType.SmoothStep}
           onNodesChange={dragFlow.canvas?.onNodesChange}
           onEdgesChange={dragFlow.canvas?.onEdgesChange}
           onConnect={dragFlow.canvas?.onConnect}

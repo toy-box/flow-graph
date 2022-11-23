@@ -33,25 +33,25 @@ function getNodeIntersection(intersectionNode, targetNode) {
 // returns the position (top,right,bottom or right) passed node compared to the intersection point
 function getEdgePosition(node, intersectionPoint) {
   const n = { ...node.positionAbsolute, ...node }
+  const w = Math.round(n.width)
+  const h = Math.round(n.height)
   const nx = Math.round(n.x)
   const ny = Math.round(n.y)
   const px = Math.round(intersectionPoint.x)
   const py = Math.round(intersectionPoint.y)
-
   if (px <= nx + 1) {
-    return Position.Left
+    return { pos: Position.Left, x: nx, y: ny + h / 2 }
   }
   if (px >= nx + n.width - 1) {
-    return Position.Right
+    return { pos: Position.Right, x: nx + w, y: ny + h / 2 }
   }
   if (py <= ny + 1) {
-    return Position.Top
+    return { pos: Position.Top, x: nx + w / 2, y: ny }
   }
   if (py >= n.y + n.height - 1) {
-    return Position.Bottom
+    return { pos: Position.Bottom, x: nx + w / 2, y: ny + h }
   }
-
-  return Position.Top
+  return { pos: Position.Top, x: nx + w / 2, y: ny }
 }
 
 // returns the parameters (sx, sy, tx, ty, sourcePos, targetPos) you need to create an edge
@@ -59,16 +59,22 @@ export function getEdgeParams(source, target) {
   const sourceIntersectionPoint = getNodeIntersection(source, target)
   const targetIntersectionPoint = getNodeIntersection(target, source)
 
-  const sourcePos = getEdgePosition(source, sourceIntersectionPoint)
-  const targetPos = getEdgePosition(target, targetIntersectionPoint)
+  const sourceParams: { pos; x; y } = getEdgePosition(
+    source,
+    sourceIntersectionPoint
+  )
+  const targetPos: { pos; x; y } = getEdgePosition(
+    target,
+    targetIntersectionPoint
+  )
 
   return {
-    sx: sourceIntersectionPoint.x,
-    sy: sourceIntersectionPoint.y,
-    tx: targetIntersectionPoint.x,
-    ty: targetIntersectionPoint.y,
-    sourcePos,
-    targetPos,
+    sx: sourceParams.x,
+    sy: sourceParams.y,
+    tx: targetPos.x,
+    ty: targetPos.y,
+    sourcePos: sourceParams.pos,
+    targetPos: targetPos.pos,
   }
 }
 

@@ -17,6 +17,11 @@ export const freeEdgeOptions = {
   },
 }
 
+export const connectionLineStyle = {
+  strokeWidth: 3,
+  stroke: 'black',
+}
+
 export const FreeEdge = ({ id, source, target, markerEnd, style }: any) => {
   const sourceNode = useStore(
     useCallback((store) => store.nodeInternals.get(source), [source])
@@ -29,13 +34,18 @@ export const FreeEdge = ({ id, source, target, markerEnd, style }: any) => {
     return null
   }
 
-  const { sx, sy, tx, ty } = getEdgeParams(sourceNode, targetNode)
+  const { sx, sy, tx, ty, sourcePos, targetPos } = getEdgeParams(
+    sourceNode,
+    targetNode
+  )
 
-  const [edgePath] = getStraightPath({
+  const [edgePath] = getSmoothStepPath({
     sourceX: sx,
     sourceY: sy,
     targetX: tx,
     targetY: ty,
+    sourcePosition: sourcePos,
+    targetPosition: targetPos,
   })
 
   return (
