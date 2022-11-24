@@ -6,6 +6,7 @@ import {
   FlowMetaParam,
   FlowMetaUpdate,
   TargetReference,
+  ConnectorProps,
   IAssignmentData,
   FlowMetaType,
 } from '../../types'
@@ -38,7 +39,10 @@ export class FlowAssignment extends FlowMetaNode {
       flowAssignment.description
     )
     this.metaFlow = metaFlow
-    this.connector = flowAssignment.connector
+    this.connector = flowAssignment.connector ?? {
+      targetReference: [],
+      sourceReference: [],
+    }
     this.assignmentItems = flowAssignment.assignmentItems
     this.makeObservable()
   }

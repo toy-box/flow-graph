@@ -15,11 +15,14 @@ import {
   NodeChange,
   EdgeProps,
   NodeProps,
+  HandleType,
+  OnConnectStartParams,
 } from 'reactflow'
 import { uid } from '@toy-box/toybox-shared'
 import { ICanvas } from './Canvas'
 import { INode, IEdge } from '../types'
 import { FlowGraph } from '../models'
+import { FormDialog, FormItem, FormLayout, Input } from '@formily/antd'
 
 import 'reactflow/dist/style.css'
 
@@ -61,6 +64,7 @@ export class ReactFlowCanvas implements ICanvas {
       addEdges: batch,
       onNodesChange: action,
       onEdgesChange: action,
+      onEdgeUpdateEnd: action,
       onConnect: action,
     })
   }
@@ -129,10 +133,66 @@ export class ReactFlowCanvas implements ICanvas {
   }
 
   onEdgesChange(changes: EdgeChange[]) {
+    console.log('miwoyo onEdgesChange', changes)
     this.edges = applyEdgeChanges(changes, this.edges)
   }
 
+  onEdgeUpdateEnd(event: MouseEvent, edge: Edge, handleType: HandleType) {
+    console.log('miwoyo onEdgeUpdateEnd', event, edge, handleType)
+    // this.edges = applyEdgeChanges(changes, this.edges)
+  }
+
+  // decisonConnectDialog() {
+  //   FormDialog('选择决策连接器的结果', () => {
+  //   }).forOpen((payload, next) => {
+  //     setTimeout(() => {
+  //       next({
+  //         initialValues: {
+  //           name: node.name,
+  //           description: node.description,
+  //         },
+  //       })
+  //     }, 500)
+  //   })
+  //   .forConfirm((payload, next) => {
+  //     setTimeout(() => {
+  //       node.update(payload.values)
+  //       next(payload)
+  //     }, 500)
+  //   })
+  //   .forCancel((payload, next) => {
+  //     setTimeout(() => {
+  //       next(payload)
+  //     }, 500)
+  //   })
+  //   .open()
+  // }
+
   onConnect(connection: Connection) {
+    const sourceNodeType = this.nodes.filter(
+      (node) => node.id === connection.source
+    ).type
+    switch (sourceNodeType) {
+      case 'DecisionNode':
+        this.decisonConnectDialog()
+    }
     this.edges = flowAddEdge(connection, this.edges)
+    this.nodes.map((node: Node) => {
+      if (node.id === connection.source) {
+        if (node.nextNodes) {
+          node.nextNodes.push(connection.target)
+        } else {
+          node.nextNodes = [connection.target]
+        }
+      }
+      if (node.id === connection.target) {
+        if (node.parents) {
+          node.parents.push(connection.source)
+        } else {
+          node.parents = [connection.source]
+        }
+      }
+    })
+    console.log('miwoyo onConnect', connection, this.nodes, this.edges)
   }
 }

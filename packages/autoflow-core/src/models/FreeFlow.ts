@@ -154,6 +154,7 @@ export class FreeFlow {
     flowNode.appendAt(parent)
   }
 
+  // special for drag items in free-layout
   addNode(flowData: FlowMetaParam) {
     const flowNode = this.makeFlowNode(flowData)
     this.flowMetaNodeMap[flowNode.id] = flowNode

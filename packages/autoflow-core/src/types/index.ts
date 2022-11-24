@@ -181,6 +181,11 @@ export interface TargetReference {
   targetReference?: string | null
 }
 
+export interface ConnectorProps {
+  targetReference?: string[]
+  sourceReference?: string[]
+}
+
 export interface Criteria {
   conditions: ICriteriaCondition[]
   logic: string

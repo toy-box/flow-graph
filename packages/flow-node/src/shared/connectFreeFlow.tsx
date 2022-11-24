@@ -29,6 +29,26 @@ export function connectFreeFlow({
     console.log('connectionNodeId', connectionNodeId, props)
     const freeFlow = useFreeFlow()
     console.log('connect ', freeFlow.flowMetaNodeMap)
+    console.log(
+      'miwoyo handles props nods',
+      handles,
+      props,
+      freeFlow.flow.canvas.nodes
+    )
+    const nextNodes = freeFlow.flow.canvas.nodes.find(
+      (node) => node.id === props.id
+    ).nextNodes
+
+    const isTargetHandle = () => {
+      switch (props.type) {
+        case 'AssignmentNode':
+          return nextNodes ? !nextNodes.length : true
+        default:
+          return true
+      }
+    }
+    console.log('isTargetHandle', isTargetHandle(), nextNodes)
+
     return (
       <React.Fragment>
         {handles?.map((handleProps, idx) => (
@@ -42,7 +62,7 @@ export function connectFreeFlow({
                 style={{ zIndex: isTarget ? 3 : -1 }}
               />
             )}
-            {handleProps.type === 'source' && (
+            {handleProps.type === 'source' && isTargetHandle() && (
               <Handle
                 className="targetHandle"
                 key={idx}

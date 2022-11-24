@@ -69,6 +69,10 @@ export function getEdgeParams(source, target) {
   )
 
   return {
+    // sx: sourceIntersectionPoint.x,
+    // sy: sourceIntersectionPoint.y,
+    // tx: targetIntersectionPoint.x,
+    // ty: targetIntersectionPoint.y,
     sx: sourceParams.x,
     sy: sourceParams.y,
     tx: targetPos.x,
