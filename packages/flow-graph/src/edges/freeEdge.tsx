@@ -3,6 +3,7 @@ import {
   useStore,
   getStraightPath,
   getSmoothStepPath,
+  BaseEdge,
 } from 'reactflow'
 import React, { useCallback } from 'react'
 import { getEdgeParams } from './util'
@@ -15,6 +16,8 @@ export const freeEdgeOptions = {
     type: MarkerType.ArrowClosed,
     color: 'black',
   },
+  labelBgBorderRadius: 4,
+  labelBgStyle: { fill: '#FFCC00', color: '#fff', fillOpacity: 1 },
 }
 
 export const connectionLineStyle = {
@@ -28,6 +31,12 @@ export const FreeEdge = ({
   target,
   markerEnd,
   style,
+  label,
+  labelStyle = { fontWeight: 'bolder' },
+  labelShowBg,
+  labelBgStyle,
+  labelBgPadding,
+  labelBgBorderRadius = 4,
   data,
 }: any) => {
   const sourceNode = useStore(
@@ -57,35 +66,36 @@ export const FreeEdge = ({
 
   return (
     <>
-      <path
+      <BaseEdge
+        path={edgePath}
+        labelX={labelX}
+        labelY={labelY}
+        label={label}
+        labelStyle={labelStyle}
+        labelShowBg={labelShowBg}
+        labelBgStyle={labelBgStyle}
+        labelBgPadding={labelBgPadding}
+        labelBgBorderRadius={labelBgBorderRadius}
+        style={style}
+        markerEnd={markerEnd}
+      />
+      {/* <path
         id={id}
         className="react-flow__edge-path"
         d={edgePath}
         markerEnd={markerEnd}
         style={style}
-      />
+      /> */}
       {/* <text>
         <textPath
           href={`#${id}`}
           startOffset="50%"
           textAnchor="middle"
         >
-          <div
-          style={{
-            position: "absolute",
-            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-            background: "#ffcc00",
-            padding: 10,
-            borderRadius: 5,
-            fontSize: 12,
-            fontWeight: 700
-          }}
-          className="nodrag nopan"
-        >
           {data.text}
-        </div>
         </textPath>
       </text> */}
+      {/* <div>{data.text}</div> */}
       {/* <text>
       <div
           style={{

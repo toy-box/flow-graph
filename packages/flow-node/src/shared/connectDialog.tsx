@@ -61,6 +61,7 @@ export const decisonConnectDialog = (
         console.log('payload', payload.values.decisionResult, canvas.edges)
         const newEdge = {
           ...connection,
+          data: { text: payload.values.decisionResult },
           label: 'label with styled bg',
           labelBgPadding: [8, 4],
           labelBgBorderRadius: 4,
@@ -68,9 +69,12 @@ export const decisonConnectDialog = (
         }
         // canvas.addEdge({...connection, label: payload.values.decisionResult})
         canvas.edges = addEdge(newEdge, canvas.edges)
-        console.log('canvas.edges', canvas.edges)
+        console.log('cavas', canvas.edges)
         next(payload)
       }, 500)
+
+      // canvas.edges = addEdge(newEdge, canvas.edges)
+      // console.log('canvas.edges', canvas.edges)
     })
     .forCancel((payload, next) => {
       setTimeout(() => {
