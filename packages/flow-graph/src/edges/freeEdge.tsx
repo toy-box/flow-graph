@@ -22,7 +22,14 @@ export const connectionLineStyle = {
   stroke: 'black',
 }
 
-export const FreeEdge = ({ id, source, target, markerEnd, style }: any) => {
+export const FreeEdge = ({
+  id,
+  source,
+  target,
+  markerEnd,
+  style,
+  data,
+}: any) => {
   const sourceNode = useStore(
     useCallback((store) => store.nodeInternals.get(source), [source])
   )
@@ -39,7 +46,7 @@ export const FreeEdge = ({ id, source, target, markerEnd, style }: any) => {
     targetNode
   )
 
-  const [edgePath] = getSmoothStepPath({
+  const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX: sx,
     sourceY: sy,
     targetX: tx,
@@ -49,12 +56,52 @@ export const FreeEdge = ({ id, source, target, markerEnd, style }: any) => {
   })
 
   return (
-    <path
-      id={id}
-      className="react-flow__edge-path"
-      d={edgePath}
-      markerEnd={markerEnd}
-      style={style}
-    />
+    <>
+      <path
+        id={id}
+        className="react-flow__edge-path"
+        d={edgePath}
+        markerEnd={markerEnd}
+        style={style}
+      />
+      {/* <text>
+        <textPath
+          href={`#${id}`}
+          startOffset="50%"
+          textAnchor="middle"
+        >
+          <div
+          style={{
+            position: "absolute",
+            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+            background: "#ffcc00",
+            padding: 10,
+            borderRadius: 5,
+            fontSize: 12,
+            fontWeight: 700
+          }}
+          className="nodrag nopan"
+        >
+          {data.text}
+        </div>
+        </textPath>
+      </text> */}
+      {/* <text>
+      <div
+          style={{
+            position: "absolute",
+            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+            background: "#ffcc00",
+            padding: 10,
+            borderRadius: 5,
+            fontSize: 12,
+            fontWeight: 700
+          }}
+          className="nodrag nopan"
+        >
+          {data.text}
+        </div>
+      </text> */}
+    </>
   )
 }

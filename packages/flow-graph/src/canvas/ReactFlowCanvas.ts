@@ -22,7 +22,7 @@ import { uid } from '@toy-box/toybox-shared'
 import { ICanvas } from './Canvas'
 import { INode, IEdge } from '../types'
 import { FlowGraph } from '../models'
-import { FormDialog, FormItem, FormLayout, Input } from '@formily/antd'
+import { decisonConnectDialog } from '@toy-box/flow-node'
 
 import 'reactflow/dist/style.css'
 
@@ -122,6 +122,7 @@ export class ReactFlowCanvas implements ICanvas {
 
   addEdge(edge: IEdge) {
     this.edges = [...this.edges, this.makeEdge(edge)]
+    console.log('miwoyo this.edges', this.edges)
   }
 
   addEdges(edges: IEdge[]) {
@@ -142,41 +143,19 @@ export class ReactFlowCanvas implements ICanvas {
     // this.edges = applyEdgeChanges(changes, this.edges)
   }
 
-  // decisonConnectDialog() {
-  //   FormDialog('选择决策连接器的结果', () => {
-  //   }).forOpen((payload, next) => {
-  //     setTimeout(() => {
-  //       next({
-  //         initialValues: {
-  //           name: node.name,
-  //           description: node.description,
-  //         },
-  //       })
-  //     }, 500)
-  //   })
-  //   .forConfirm((payload, next) => {
-  //     setTimeout(() => {
-  //       node.update(payload.values)
-  //       next(payload)
-  //     }, 500)
-  //   })
-  //   .forCancel((payload, next) => {
-  //     setTimeout(() => {
-  //       next(payload)
-  //     }, 500)
-  //   })
-  //   .open()
-  // }
-
   onConnect(connection: Connection) {
-    const sourceNodeType = this.nodes.filter(
+    const sourceNodeType = this.nodes.find(
       (node) => node.id === connection.source
     ).type
+    const targetNode = this.nodes.find((node) => node.id === connection.target)
+      .data.name
     switch (sourceNodeType) {
       case 'DecisionNode':
-        this.decisonConnectDialog()
+        decisonConnectDialog(targetNode, connection, this)
+        break
+      default:
+        this.edges = flowAddEdge(connection, this.edges)
     }
-    this.edges = flowAddEdge(connection, this.edges)
     this.nodes.map((node: Node) => {
       if (node.id === connection.source) {
         if (node.nextNodes) {

@@ -1,5 +1,6 @@
 export * from './context'
 export * from './connectReactFlow'
 export * from './connectFreeFlow'
+export * from './connectDialog'
 export * from './subscribable'
 export * from './event'
