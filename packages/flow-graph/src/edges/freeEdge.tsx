@@ -16,6 +16,7 @@ export const freeEdgeOptions = {
     type: MarkerType.ArrowClosed,
     color: 'black',
   },
+  labelBgPadding: [8, 4],
   labelBgBorderRadius: 4,
   labelBgStyle: { fill: '#FFCC00', color: '#fff', fillOpacity: 1 },
 }

@@ -58,14 +58,10 @@ export const decisonConnectDialog = (
     })
     .forConfirm((payload, next) => {
       setTimeout(() => {
-        console.log('payload', payload.values.decisionResult, canvas.edges)
         const newEdge = {
           ...connection,
           data: { text: payload.values.decisionResult },
-          label: 'label with styled bg',
-          labelBgPadding: [8, 4],
-          labelBgBorderRadius: 4,
-          labelBgStyle: { fill: '#FFCC00', color: '#fff', fillOpacity: 0.7 },
+          label: payload.values.decisionResult,
         }
         // canvas.addEdge({...connection, label: payload.values.decisionResult})
         canvas.edges = addEdge(newEdge, canvas.edges)

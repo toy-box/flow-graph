@@ -81,6 +81,7 @@ export class ReactFlowCanvas implements ICanvas {
       },
       type: componentName,
       data,
+      array: node.array,
       deletable: flowType === 'FREE_START_UP',
       draggable: flowType === 'FREE_START_UP',
     }

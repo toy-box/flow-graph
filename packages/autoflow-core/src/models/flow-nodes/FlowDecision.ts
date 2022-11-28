@@ -20,6 +20,7 @@ export class FlowDecision extends FlowMetaNode {
   defaultConnector?: TargetReference
   defaultConnectorName?: string
   rules?: IFlowMetaDecisionRule[]
+  array?: any[]
 
   static DefaultNodeProps = {
     width: 60,
@@ -58,6 +59,7 @@ export class FlowDecision extends FlowMetaNode {
     this.defaultConnectorName = flowDecision.defaultConnectorName
     this.rules = flowDecision.rules
     this.metaFlow = metaFlow
+    this.array = flowDecision.array
     this.makeObservable()
   }
 
@@ -69,6 +71,7 @@ export class FlowDecision extends FlowMetaNode {
       defaultConnector: observable.shallow,
       defaultConnectorName: observable.ref,
       rules: observable.deep,
+      array: observable.deep,
       update: action,
     })
   }
