@@ -35,14 +35,17 @@ export function connectFreeFlow({
       props,
       freeFlow.flow.canvas.nodes
     )
-    const nextNodes = freeFlow.flow.canvas.nodes.find(
-      (node) => node.id === props.id
-    ).nextNodes
+    const {
+      nextNodes,
+      data: { rules },
+    } = freeFlow.flow.canvas.nodes.find((node) => node.id === props.id)
 
     const isTargetHandle = () => {
       switch (props.type) {
         case 'AssignmentNode':
           return nextNodes ? !nextNodes.length : true
+        case 'DecisionNode':
+          return nextNodes ? nextNodes.length < rules.length : true
         default:
           return true
       }

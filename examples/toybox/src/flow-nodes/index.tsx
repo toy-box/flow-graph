@@ -48,7 +48,7 @@ const assignNodeSchema = {
 const decidePanelSchema = {
   type: 'object',
   properties: {
-    array: {
+    rules: {
       type: 'array',
       title: '结果顺序',
       'x-decorator': 'FormItem',
@@ -63,7 +63,7 @@ const decidePanelSchema = {
       items: {
         type: 'object',
         properties: {
-          outcome: {
+          name: {
             type: 'string',
             'x-decorator': 'FormItem',
             'x-decorator-props': {
@@ -73,7 +73,7 @@ const decidePanelSchema = {
             required: true,
             'x-component': 'Input',
           },
-          outcomeName: {
+          outcomeApi: {
             type: 'string',
             'x-decorator': 'FormItem',
             'x-decorator-props': {
@@ -83,22 +83,22 @@ const decidePanelSchema = {
             required: true,
             'x-component': 'Input',
           },
-          conditionType: {
+          logic: {
             type: 'string',
             title: 'Condition Requirements to Execute Outcome',
             required: true,
             enum: [
               {
                 label: 'All Conditions Are Met (AND)',
-                value: 'and',
+                value: '$and',
               },
               {
                 label: 'Any Condition Is Met (OR)',
-                value: 'or',
+                value: '$or',
               },
               {
                 label: 'Custom Condition Logic Is Met',
-                value: 'custom',
+                value: '$custom',
               },
             ],
             'x-decorator': 'FormItem',
@@ -108,7 +108,7 @@ const decidePanelSchema = {
             'x-component-props': {},
             'x-component': 'Select',
           },
-          conditionList: {
+          conditions: {
             type: 'array',
             required: true,
             title: '',
@@ -158,18 +158,6 @@ const decidePanelSchema = {
                     },
                   },
                 },
-                remove: {
-                  type: 'void',
-                  'x-decorator': 'FormItem',
-                  'x-component': 'ArrayItems.Remove',
-                },
-              },
-            },
-            properties: {
-              addition: {
-                type: 'void',
-                title: 'Add Condition',
-                'x-component': 'ArrayItems.Addition',
               },
             },
           },
@@ -267,10 +255,22 @@ export const decideOnEdit = (
           initialValues: {
             name: node.name ?? node.title,
             description: node.description,
-            array: node.array ?? [
+            rules: node.rules ?? [
               {
-                conditionType: 'and',
-                conditionList: [{ conditionList: {} }],
+                logic: '$and',
+                conditions: [{}],
+              },
+              {
+                logic: '$and',
+                conditions: [
+                  {
+                    resource: 'default',
+                    operator: 'default',
+                    value: 'default',
+                  },
+                ],
+                name: 'default',
+                outcomeApi: 'default',
               },
             ],
           },

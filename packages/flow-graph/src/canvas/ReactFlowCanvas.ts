@@ -81,7 +81,6 @@ export class ReactFlowCanvas implements ICanvas {
       },
       type: componentName,
       data,
-      array: node.array,
       deletable: flowType === 'FREE_START_UP',
       draggable: flowType === 'FREE_START_UP',
     }
@@ -145,14 +144,35 @@ export class ReactFlowCanvas implements ICanvas {
   }
 
   onConnect(connection: Connection) {
-    const sourceNodeType = this.nodes.find(
+    const { type: sourceType } = this.nodes.find(
       (node) => node.id === connection.source
-    ).type
+    )
     const targetNode = this.nodes.find((node) => node.id === connection.target)
       .data.name
-    switch (sourceNodeType) {
+    switch (sourceType) {
       case 'DecisionNode':
-        decisonConnectDialog(targetNode, connection, this)
+        const { rules } = this.nodes.find(
+          (node) => node.id === connection.source
+        ).data
+        const loadData = rules
+          .map(({ name, outcomeApi }) => {
+            if (this.edges.findIndex(({ label }) => label === name) === -1) {
+              return {
+                label: name,
+                value: name,
+              }
+            }
+          })
+          .filter(Boolean)
+        if (loadData.length > 1) {
+          decisonConnectDialog(targetNode, connection, this, loadData)
+        } else if (loadData.length === 1) {
+          const newEdge = {
+            ...connection,
+            label: loadData[0].label,
+          }
+          this.edges = flowAddEdge(newEdge, this.edges)
+        }
         break
       default:
         this.edges = flowAddEdge(connection, this.edges)
