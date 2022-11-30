@@ -64,7 +64,6 @@ export class ReactFlowCanvas implements ICanvas {
       addEdges: batch,
       onNodesChange: action,
       onEdgesChange: action,
-      onEdgeUpdateEnd: action,
       onConnect: action,
     })
   }
@@ -130,20 +129,40 @@ export class ReactFlowCanvas implements ICanvas {
   }
 
   onNodesChange(changes: NodeChange[]) {
+    console.log('onNodesChange---', changes)
     this.nodes = applyNodeChanges(changes, this.nodes)
   }
 
   onEdgesChange(changes: EdgeChange[]) {
-    console.log('miwoyo onEdgesChange', changes)
+    console.log('miwoyo onEdgesChange', changes, this.edges)
     this.edges = applyEdgeChanges(changes, this.edges)
-  }
-
-  onEdgeUpdateEnd(event: MouseEvent, edge: Edge, handleType: HandleType) {
-    console.log('miwoyo onEdgeUpdateEnd', event, edge, handleType)
-    // this.edges = applyEdgeChanges(changes, this.edges)
+    changes.map(({ type, id }) => {
+      if (type === 'remove') {
+        const [name, target, source] = id.split('-')
+        const preTargetNode = this.nodes.find((node) => node.id === target)
+        const targetNode = {
+          ...preTargetNode,
+          nextNodes: preTargetNode.nextNodes.filter((id) => id !== source),
+        }
+        const preSourceNode = this.nodes.find((node) => node.id === source)
+        const sourceNode = {
+          ...preSourceNode,
+          nextNodes: preSourceNode.parents.filter((id) => id !== target),
+        }
+        this.nodes = [
+          ...this.nodes.filter(
+            (node) => node.id !== target && node.id !== source
+          ),
+          targetNode,
+          sourceNode,
+        ]
+        this.onNodesChange([{ id: target, type: 'select', selected: true }])
+      }
+    })
   }
 
   onConnect(connection: Connection) {
+    console.log('miwoyo onConnect', connection)
     const { type: sourceType } = this.nodes.find(
       (node) => node.id === connection.source
     )
@@ -174,6 +193,8 @@ export class ReactFlowCanvas implements ICanvas {
           this.edges = flowAddEdge(newEdge, this.edges)
         }
         break
+      // case 'LoopNode':
+      //   break;
       default:
         this.edges = flowAddEdge(connection, this.edges)
     }

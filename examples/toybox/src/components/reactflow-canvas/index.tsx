@@ -193,14 +193,8 @@ export const FlowCanvas = observer(() => {
         component: StandardNode,
         content: <h3>Loop</h3>,
         handles: [
-          { type: 'target', position: Position.Top, id: Position.Top },
-          {
-            type: 'source',
-            position: Position.Bottom,
-            id: Position.Bottom,
-          },
-          { type: 'target', position: Position.Left, id: Position.Left },
-          { type: 'source', position: Position.Right, id: Position.Right },
+          { type: 'target', position: Position.Top },
+          { type: 'source', position: Position.Bottom },
         ],
         onEdit: loopOnEdit,
       }),
@@ -251,7 +245,12 @@ export const FlowCanvas = observer(() => {
     },
     [eventEngine]
   )
-
+  const onEdgesDelete = (e) => {
+    console.log('onEdgesDelete e', e)
+  }
+  const onConnectEnd = (e) => {
+    console.log('onConnectEnd e', e)
+  }
   return (
     <div id="flow-canvas" style={style} ref={ref}>
       {(metaflow.flowType === 'AUTO_START_UP' || !metaflow.flowType) && (
@@ -281,8 +280,10 @@ export const FlowCanvas = observer(() => {
           defaultEdgeOptions={freeEdgeOptions}
           connectionLineStyle={connectionLineStyle}
           connectionLineType={ConnectionLineType.SmoothStep}
+          onConnectEnd={onConnectEnd}
           onNodesChange={dragFlow.canvas?.onNodesChange}
           onEdgesChange={dragFlow.canvas?.onEdgesChange}
+          onEdgesDelete={onEdgesDelete}
           onConnect={dragFlow.canvas?.onConnect}
           nodeTypes={dragFlow.canvas?.components}
           edgeTypes={dragFlow.canvas?.edgeComponents}

@@ -46,6 +46,8 @@ export function connectFreeFlow({
           return nextNodes ? !nextNodes.length : true
         case 'DecisionNode':
           return nextNodes ? nextNodes.length < rules.length : true
+        case 'LoopNode':
+          return nextNodes ? nextNodes.length < 2 : true
         default:
           return true
       }

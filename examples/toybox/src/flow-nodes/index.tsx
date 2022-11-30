@@ -159,9 +159,48 @@ const decidePanelSchema = {
                   },
                 },
               },
+              remove: {
+                type: 'void',
+                'x-decorator': 'FormItem',
+                'x-component': 'ArrayItems.Remove',
+              },
+            },
+            properties: {
+              addition: {
+                type: 'void',
+                title: 'Add Contact',
+                'x-component': 'ArrayItems.Addition',
+              },
             },
           },
         },
+      },
+    },
+  },
+}
+
+const loopPanelSchema = {
+  type: 'object',
+  properties: {
+    titleVariable: {
+      type: 'void',
+      'x-decorator': 'FormItem',
+      'x-component': () => {
+        return <div>Select Collection Variable</div>
+      },
+    },
+    variable: {
+      type: 'string',
+      title: 'Collection Variable',
+      required: true,
+      'x-decorator': 'FormItem',
+      'x-component': 'Input',
+    },
+    titleDirection: {
+      type: 'void',
+      'x-decorator': 'FormItem',
+      'x-component': () => {
+        return <div>Specify Direction for Iterating Over Collection</div>
       },
     },
   },
@@ -200,10 +239,12 @@ const decideRender = (node: FlowMetaNode | INodeTemplate<NodeMake>) => {
 }
 
 const loopRender = (node: FlowMetaNode | INodeTemplate<NodeMake>) => {
-  return FormDialog({ title: `Loop Node Properites` }, () => {
+  return FormDialog({ title: `Loop Node Properites`, width: '90vw' }, () => {
     return (
       <FormLayout labelCol={6} wrapperCol={10}>
         <SchemaField schema={assignNodeSchema} />
+        {/* <div style={{ fontSize: '1rem' }}>Select Collection Variable</div> */}
+        <SchemaField schema={loopPanelSchema} />
       </FormLayout>
     )
   })
