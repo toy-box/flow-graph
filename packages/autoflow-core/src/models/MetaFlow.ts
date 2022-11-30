@@ -1,4 +1,4 @@
-import { isArr, uid } from '@toy-box/toybox-shared'
+import { clone, isArr, uid } from '@toy-box/toybox-shared'
 import { define, observable, action, batch } from '@formily/reactive'
 import { Flow } from '@toy-box/flow-graph'
 import {
@@ -112,7 +112,7 @@ export class MetaFlow {
     const flowMetaPrarms: FlowMetaParam[] = []
     for (const key in nodes) {
       if (isArr(nodes[key])) {
-        flowMetaPrarms.push(...nodes[key].map())
+        flowMetaPrarms.push(...nodes[key])
       } else {
         flowMetaPrarms.push(nodes[key])
       }
@@ -140,6 +140,34 @@ export class MetaFlow {
   appendNode(at: string, flowData: FlowMetaParam) {
     const flowNode = this.makeFlowNode(flowData)
     const parent = this.flowNodes.find((node) => node.id === at)
+    const parentParent = this.flowNodes.find((node) => {
+      return node?.targets?.find((target) => target.id === at)
+    })
+    const node = this.flowMetaNodeMap[parentParent.id]
+    console.log(parentParent, '11232323')
+    switch (parentParent.type) {
+      case 'forward':
+      case 'begin':
+        if (node) {
+          const payload = clone(node)
+          payload.connector.targetReference = flowNode.id
+          node.update(payload)
+        }
+        break
+      case 'decisionBegin':
+        if (node) {
+          const payload = clone(node)
+          const idx = payload?.rules?.findIndex((pay) => pay.id === at)
+          if (idx > -1) {
+            payload.rules[idx].connector.targetReference = flowNode.id
+          }
+          node.update(payload)
+        }
+        break
+
+      default:
+        break
+    }
     this.flowMetaNodeMap[flowNode.id] = flowNode
     flowNode.appendAt(parent)
   }
@@ -168,13 +196,14 @@ export class MetaFlow {
           const nextValueData = flowDatas.find(
             (data) => data.id === nextValueRef
           )
+          debugger
           const nextValueNode = this.makeFlowNode(nextValueData)
           // edit mode
           const nextAtNode = this.flowNodes.find(
             (node) => (node.id = this.flowNodeMap[parent.id].targets[0].id)
           )
           this.flowMetaNodeMap[nextValueNode.id] = nextValueNode
-          nextValueNode.appendAt(nextAtNode)
+          nextValueNode.appendAt(nextAtNode, nextValueData)
           this.mountNodes(
             flowDatas.filter((data) => data.id !== nextValueRef),
             nextValueNode
@@ -189,7 +218,7 @@ export class MetaFlow {
             (node) => (node.id = this.flowNodeMap[parent.id].loopEndTarget)
           )
           this.flowMetaNodeMap[currentNode.id] = currentNode
-          currentNode.appendAt(atNode)
+          currentNode.appendAt(atNode, currentData)
           this.mountNodes(
             flowDatas.filter((data) => data.id !== targetRef),
             currentNode
@@ -202,6 +231,7 @@ export class MetaFlow {
               const currentData = flowDatas.find(
                 (data) => data.id === rule.connector.targetReference
               )
+              if (!currentData) return
               const currentNode = this.makeFlowNode(currentData)
               // edit mode
               const atNode = this.flowNodes.find(
@@ -219,19 +249,56 @@ export class MetaFlow {
                 currentNode
               )
             })
+            const defaultTargetRef = parent.lowerLeverConnector?.targetReference
+            const targetRef = parent.connector?.targetReference
+            if (defaultTargetRef) {
+              const currentData = flowDatas.find(
+                (data) => data.id === defaultTargetRef
+              )
+              if (!currentData) return
+              const currentNode = this.makeFlowNode(currentData)
+              // edit mode
+              const atNode = this.flowNodes.find(
+                (node) => node.id === this.flowNodeMap[parent.id].targets[0].id
+              )
+              this.flowMetaNodeMap[currentNode.id] = currentNode
+              currentNode.appendAt(atNode, currentData)
+              this.mountNodes(
+                flowDatas.filter((data) => data.id !== defaultTargetRef),
+                currentNode
+              )
+            }
+            if (targetRef) {
+              const currentData = flowDatas.find(
+                (data) => data.id === targetRef
+              )
+              if (!currentData) return
+              const currentNode = this.makeFlowNode(currentData)
+              // edit mode
+              const atNode = this.flowNodes.find(
+                (node) => node.id === this.flowNodeMap[parent.id].targets[0].id
+              )
+              this.flowMetaNodeMap[currentNode.id] = currentNode
+              currentNode.appendAt(atNode, currentData)
+              this.mountNodes(
+                flowDatas.filter((data) => data.id !== targetRef),
+                currentNode
+              )
+            }
           }
           return
         }
         default:
           const targetRef = parent.lowerLeverConnector?.targetReference
           const currentData = flowDatas.find((data) => data.id === targetRef)
+          if (!currentData) return
           const currentNode = this.makeFlowNode(currentData)
           // edit mode
           const atNode = this.flowNodes.find(
             (node) => node.id === this.flowNodeMap[parent.id].targets[0].id
           )
           this.flowMetaNodeMap[currentNode.id] = currentNode
-          currentNode.appendAt(atNode)
+          currentNode.appendAt(atNode, currentData)
           this.mountNodes(
             flowDatas.filter((data) => data.id !== targetRef),
             currentNode

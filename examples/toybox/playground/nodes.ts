@@ -49,6 +49,7 @@ export const nodeTemplatesProvider = (
           name: 'Decision',
           type: FlowMetaType.DECISION,
           defaultConnector: {},
+          connector: {},
           rules: [
             {
               id: uid(),

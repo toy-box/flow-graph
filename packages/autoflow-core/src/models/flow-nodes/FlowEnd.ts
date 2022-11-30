@@ -89,7 +89,8 @@ export class FlowEnd extends FlowMetaNode {
   appendAt(at: FlowNode): void {
     if (this.flowNode == null) {
       const flowNodes = this.makeFlowNodeWithExtend(FlowEnd.DefaultNodeProps)
-      this.metaFlow.flow.addFlowNodeAt(at.id, flowNodes[0])
+      this.metaFlow.flow.addFlowNodes(flowNodes)
+      // this.metaFlow.flow.addFlowNodeAt(at.id, flowNodes[0])
     }
   }
 

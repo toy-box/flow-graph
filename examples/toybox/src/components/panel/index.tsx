@@ -20,8 +20,8 @@ export const Panel = () => {
   }, [metaFlow])
   return (
     <div>
-      <button onClick={init}>init</button>
-      <button onClick={update}>update</button>
+      {/* <button onClick={init}>init</button>
+      <button onClick={update}>update</button> */}
       <button onClick={handleMetaFlow}>metaflow</button>
       <button onClick={handleExport}>export</button>
     </div>

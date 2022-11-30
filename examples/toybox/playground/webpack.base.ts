@@ -42,11 +42,11 @@ export default {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: getWorkspaceAlias(),
   },
-  externals: {
-    react: 'React',
-    'react-dom': 'ReactDOM',
-    antd: 'antd',
-  },
+  // externals: {
+  //   react: 'React',
+  //   'react-dom': 'ReactDOM',
+  //   antd: 'antd',
+  // },
   module: {
     rules: [
       {

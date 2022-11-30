@@ -1,5 +1,5 @@
 import { FlowNode, IFlowNodeProps } from '@toy-box/flow-graph'
-import { FlowMetaType, TargetReference } from '../../types'
+import { FlowMetaParam, FlowMetaType, TargetReference } from '../../types'
 import { MetaFlow } from '../MetaFlow'
 
 export interface IMakeFlowNodeProps {
@@ -68,7 +68,7 @@ export abstract class FlowMetaNode {
 
   abstract makeFlowNode(props?: IMakeFlowNodeProps): IFlowNodeProps
 
-  abstract appendAt(at: FlowNode): void
+  abstract appendAt(at: FlowNode, currentData?: FlowMetaParam): void
 
   abstract update(payload: any): void
 

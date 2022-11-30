@@ -279,9 +279,57 @@ export const flowMeta: IFlowMeta = {
       name: 'Start',
       type: FlowMetaType.START,
       connector: {
-        targetReference: 'end',
+        targetReference: 'loop1233232',
       },
     },
+    loops: [
+      {
+        id: 'loop1233232',
+        name: 'Loop',
+        type: FlowMetaType.LOOP,
+        nextValueConnector: {
+          targetReference: 'assignments232222',
+        },
+        defaultConnector: {
+          targetReference: 'decisionNode1',
+        },
+      },
+    ],
+    assignments: [
+      {
+        id: 'assignments232222',
+        description: '',
+        name: 'Assignment',
+        type: FlowMetaType.ASSIGNMENT,
+        connector: {
+          targetReference: 'loop1233232',
+        },
+      },
+    ],
+    decisions: [
+      {
+        id: 'decisionNode1',
+        description: '',
+        rules: [
+          {
+            id: 'aaasdd111',
+            name: 'rule-1',
+            connector: {},
+            criteria: {
+              conditions: [],
+              logic: '$and',
+            },
+          },
+        ],
+        name: 'DecisionNode1',
+        defaultConnector: {},
+        defaultConnectorName: '',
+        type: FlowMetaType.DECISION,
+        connector: {
+          targetReference: 'end',
+        },
+      },
+    ],
     end: {
       id: 'end',
       name: 'End',

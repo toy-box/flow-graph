@@ -102,7 +102,8 @@ export class FlowLoop extends FlowMetaNode {
       y,
       component,
     }: IMakeFlowNodeProps = FlowLoop.DefaultNodeProps,
-    targets: TargetProps[]
+    targets: TargetProps[],
+    currentData?: FlowMetaParam
   ): IFlowNodeProps[] {
     const extendId = uid()
     const loopEndId = uid()
@@ -116,7 +117,7 @@ export class FlowLoop extends FlowMetaNode {
         height,
         x,
         y,
-        targets: [extendId],
+        targets: [currentData.nextValueConnector.targetReference || extendId],
         loopBackTarget: extendId,
         loopEndTarget: loopEndId,
         component,
@@ -136,16 +137,19 @@ export class FlowLoop extends FlowMetaNode {
     ]
   }
 
-  appendAt(at: FlowNode): void {
+  appendAt(at: FlowNode, currentData?: FlowMetaParam): void {
     if (this.flowNode == null) {
-      if (at.isLoopBack) {
-        this.defaultConnector.targetReference = at.loopBegin.id
-      } else {
-        this.defaultConnector.targetReference = at.targets[0].id
+      if (!currentData) {
+        if (at.isLoopBack) {
+          this.defaultConnector.targetReference = at.loopBegin.id
+        } else {
+          this.defaultConnector.targetReference = at.targets[0].id
+        }
       }
       const flowNodes = this.makeFlowNodeWithExtend(
         FlowLoop.DefaultNodeProps,
-        at.targets
+        at.targets,
+        currentData
       )
       this.metaFlow.flow.addFlowNodeAt(at.id, flowNodes[0])
       this.metaFlow.flow.addFlowNode(flowNodes[1])

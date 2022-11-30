@@ -65,6 +65,7 @@ export class FlowDecision extends FlowMetaNode {
       id: observable.ref,
       name: observable.ref,
       description: observable.ref,
+      connector: observable.deep,
       defaultConnector: observable.shallow,
       defaultConnectorName: observable.ref,
       rules: observable.deep,
@@ -163,11 +164,20 @@ export class FlowDecision extends FlowMetaNode {
     ]
   }
 
-  appendAt(at: FlowNode) {
+  appendAt(at: FlowNode, currentData?: FlowMetaParam) {
     if (this.flowNode == null) {
+      if (!currentData) {
+        if (at.isLoopBack) {
+          this.connector.targetReference = at.loopBegin.id
+        } else {
+          this.connector.targetReference = at.targets[0].id
+        }
+      }
       const flowNodes = this.makeFlowNodeWithExtend(
         FlowDecision.DefaultNodeProps,
-        at.targets
+        currentData
+          ? [{ id: currentData.connector.targetReference }]
+          : at.targets
       )
       this.metaFlow.flow.addFlowNodeAt(at.id, flowNodes[0])
       flowNodes.forEach((node, idx) => {

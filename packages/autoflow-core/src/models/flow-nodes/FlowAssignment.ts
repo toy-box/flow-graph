@@ -118,13 +118,16 @@ export class FlowAssignment extends FlowMetaNode {
     ]
   }
 
-  appendAt(at: FlowNode) {
+  appendAt(at: FlowNode, currentData?: FlowMetaParam) {
     if (this.flowNode == null) {
-      if (at.isLoopBack) {
-        this.connector.targetReference = at.loopBegin.id
-      } else {
-        this.connector.targetReference = at.targets[0].id
+      if (!currentData) {
+        if (at.isLoopBack) {
+          this.connector.targetReference = at.loopBegin.id
+        } else {
+          this.connector.targetReference = at.targets[0].id
+        }
       }
+      debugger
       const flowNodes = this.makeFlowNodeWithExtend(
         FlowAssignment.DefaultNodeProps,
         at.targets
