@@ -8,12 +8,11 @@ import {
   ArrayItems,
   Select,
   FormGrid,
-  Form,
+  Radio,
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
-import { createForm } from '@formily/core'
 import { FlowMetaNode } from '@toy-box/autoflow-core'
-import { INodeTemplate, NodeMake, FlowNodeType } from '@toy-box/flow-node'
+import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 
 export * from './addNode'
 const SchemaField = createSchemaField({
@@ -24,6 +23,7 @@ const SchemaField = createSchemaField({
     FormGrid,
     Input,
     Select,
+    Radio,
   },
 })
 
@@ -182,30 +182,78 @@ const decidePanelSchema = {
 const loopPanelSchema = {
   type: 'object',
   properties: {
-    titleVariable: {
-      type: 'void',
-      'x-decorator': 'FormItem',
-      'x-component': () => {
-        return <div>Select Collection Variable</div>
-      },
-    },
-    variable: {
+    name: {
       type: 'string',
-      title: 'Collection Variable',
+      title: '名称',
       required: true,
       'x-decorator': 'FormItem',
       'x-component': 'Input',
     },
-    titleDirection: {
-      type: 'void',
+    description: {
+      type: 'string',
+      title: '简述',
       'x-decorator': 'FormItem',
-      'x-component': () => {
-        return <div>Specify Direction for Iterating Over Collection</div>
+      'x-component': 'Input',
+    },
+    rules: {
+      type: 'object',
+      properties: {
+        titleCollection: {
+          type: 'void',
+          'x-decorator': 'FormItem',
+          'x-component': () => {
+            return <div>Select Collection Variable</div>
+          },
+        },
+        collectionVariable: {
+          type: 'string',
+          title: 'Collection Variable',
+          required: true,
+          'x-decorator': 'FormItem',
+          'x-component': 'Input',
+        },
+        titleDirection: {
+          type: 'void',
+          'x-decorator': 'FormItem',
+          'x-component': () => {
+            return <div>Specify Direction for Iterating Over Collection</div>
+          },
+        },
+        direction: {
+          type: 'number',
+          title: 'Direction',
+          enum: [
+            {
+              label: 'First item to last item',
+              value: 1,
+            },
+            {
+              label: 'Last item to first item',
+              value: 2,
+            },
+          ],
+          'x-decorator': 'FormItem',
+          'x-component': 'Radio.Group',
+        },
+        titleLoop: {
+          type: 'void',
+          'x-decorator': 'FormItem',
+          'x-component': () => {
+            return <div>Select Loop Variable</div>
+          },
+        },
+        loopVariable: {
+          type: 'string',
+          title: 'Loop Variable',
+          required: true,
+          'x-decorator': 'FormItem',
+          'x-component': 'Input',
+        },
       },
     },
   },
 }
-const assignRender = (node: FlowMetaNode | INodeTemplate<NodeMake>) => {
+const assignRender = () => {
   return FormDialog({ title: `AssignMent Node Properites` }, () => {
     return (
       <FormLayout labelCol={6} wrapperCol={10}>
@@ -215,7 +263,7 @@ const assignRender = (node: FlowMetaNode | INodeTemplate<NodeMake>) => {
   })
 }
 
-const decideRender = (node: FlowMetaNode | INodeTemplate<NodeMake>) => {
+const decideRender = () => {
   return FormDialog(
     { title: `Decision Node Properites`, width: '90vw' },
     () => {
@@ -238,24 +286,18 @@ const decideRender = (node: FlowMetaNode | INodeTemplate<NodeMake>) => {
   )
 }
 
-const loopRender = (node: FlowMetaNode | INodeTemplate<NodeMake>) => {
+const loopRender = () => {
   return FormDialog({ title: `Loop Node Properites`, width: '90vw' }, () => {
     return (
       <FormLayout labelCol={6} wrapperCol={10}>
-        <SchemaField schema={assignNodeSchema} />
-        {/* <div style={{ fontSize: '1rem' }}>Select Collection Variable</div> */}
         <SchemaField schema={loopPanelSchema} />
       </FormLayout>
     )
   })
 }
 
-export const assignOnEdit = (
-  node: FlowMetaNode | INodeTemplate<NodeMake>,
-  at?: string,
-  additionInfo?: any
-) => {
-  const dialog = assignRender(node)
+export const assignOnEdit = (node: any, at?: string, additionInfo?: any) => {
+  const dialog = assignRender()
   dialog
     .forOpen((payload, next) => {
       setTimeout(() => {
@@ -283,12 +325,8 @@ export const assignOnEdit = (
     .open()
 }
 
-export const decideOnEdit = (
-  node: FlowMetaNode | INodeTemplate<NodeMake>,
-  at?: string,
-  additionInfo?: any
-) => {
-  const dialog = decideRender(node)
+export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
+  const dialog = decideRender()
   dialog
     .forOpen((payload, next) => {
       setTimeout(() => {
@@ -320,7 +358,6 @@ export const decideOnEdit = (
     })
     .forConfirm((payload, next) => {
       setTimeout(() => {
-        console.log('payload.values - node', payload.values, node)
         at
           ? node.make(at, { ...payload.values, ...additionInfo })
           : node.update(payload.values)
@@ -335,12 +372,8 @@ export const decideOnEdit = (
     .open()
 }
 
-export const loopOnEdit = (
-  node: FlowMetaNode | INodeTemplate<NodeMake>,
-  at?: string,
-  additionInfo?: any
-) => {
-  const dialog = loopRender(node)
+export const loopOnEdit = (node: any, at?: string, additionInfo?: any) => {
+  const dialog = loopRender()
   dialog
     .forOpen((payload, next) => {
       setTimeout(() => {
@@ -353,6 +386,7 @@ export const loopOnEdit = (
       }, 500)
     })
     .forConfirm((payload, next) => {
+      console.log('payload.values - node', payload.values, node)
       setTimeout(() => {
         at
           ? node.make(at, { ...payload.values, ...additionInfo })

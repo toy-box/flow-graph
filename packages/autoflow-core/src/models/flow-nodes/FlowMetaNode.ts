@@ -17,7 +17,6 @@ export abstract class FlowMetaNode {
   metaFlow: MetaFlow
   freeFlow: FreeFlow
   flowType: string
-
   static StandardSize = 30
 
   static ExtendNodeProps: IMakeFlowNodeProps = {

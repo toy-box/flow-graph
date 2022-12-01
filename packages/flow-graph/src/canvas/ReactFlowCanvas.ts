@@ -22,7 +22,7 @@ import { uid } from '@toy-box/toybox-shared'
 import { ICanvas } from './Canvas'
 import { INode, IEdge } from '../types'
 import { FlowGraph } from '../models'
-import { decisonConnectDialog } from '@toy-box/flow-node'
+import { decisonConnectDialog, loopConnectDialog } from '@toy-box/flow-node'
 
 import 'reactflow/dist/style.css'
 
@@ -144,17 +144,14 @@ export class ReactFlowCanvas implements ICanvas {
           ...preTargetNode,
           nextNodes: preTargetNode.nextNodes.filter((id) => id !== source),
         }
-        const preSourceNode = this.nodes.find((node) => node.id === source)
-        const sourceNode = {
-          ...preSourceNode,
-          nextNodes: preSourceNode.parents.filter((id) => id !== target),
-        }
+        // const preSourceNode = this.nodes.find((node) => node.id === source)
+        // const sourceNode = {
+        //   ...preSourceNode,
+        //   parents: preSourceNode.parents.filter((id) => id !== target),
+        // }
         this.nodes = [
-          ...this.nodes.filter(
-            (node) => node.id !== target && node.id !== source
-          ),
+          ...this.nodes.filter((node) => node.id !== target),
           targetNode,
-          sourceNode,
         ]
         this.onNodesChange([{ id: target, type: 'select', selected: true }])
       }
@@ -175,7 +172,13 @@ export class ReactFlowCanvas implements ICanvas {
         ).data
         const loadData = rules
           .map(({ name, outcomeApi }) => {
-            if (this.edges.findIndex(({ label }) => label === name) === -1) {
+            console.log('label,name', this.edges, name)
+            if (
+              this.edges.findIndex(
+                ({ id, label }) =>
+                  id.split('-')[1] === connection.source && label === name
+              ) === -1
+            ) {
               return {
                 label: name,
                 value: name,
@@ -193,8 +196,32 @@ export class ReactFlowCanvas implements ICanvas {
           this.edges = flowAddEdge(newEdge, this.edges)
         }
         break
-      // case 'LoopNode':
-      //   break;
+      case 'LoopNode':
+        console.log('connection, this.edges', connection, this.edges)
+        const loopConnectorOpt: string | React.ReactNode[] = [
+          'For Each Item',
+          'After Last Item',
+        ]
+        const labelIndex = this.edges.findIndex(
+          ({ id, label }) =>
+            id.split('-')[1] === connection.source &&
+            loopConnectorOpt.includes(label)
+        )
+        const isDialog = labelIndex === -1
+        if (isDialog) {
+          loopConnectDialog(targetNode, connection, this)
+        } else {
+          const loopConnectUsed = this.edges[labelIndex].label
+          const newEdge = {
+            ...connection,
+            label:
+              loopConnectUsed === 'For Each Item'
+                ? 'After Last Item'
+                : loopConnectUsed,
+          }
+          this.edges = flowAddEdge(newEdge, this.edges)
+        }
+        break
       default:
         this.edges = flowAddEdge(connection, this.edges)
     }
@@ -206,13 +233,13 @@ export class ReactFlowCanvas implements ICanvas {
           node.nextNodes = [connection.target]
         }
       }
-      if (node.id === connection.target) {
-        if (node.parents) {
-          node.parents.push(connection.source)
-        } else {
-          node.parents = [connection.source]
-        }
-      }
+      // if (node.id === connection.target) {
+      //   if (node.parents) {
+      //     node.parents.push(connection.source)
+      //   } else {
+      //     node.parents = [connection.source]
+      //   }
+      // }
     })
     console.log('miwoyo onConnect', connection, this.nodes, this.edges)
   }

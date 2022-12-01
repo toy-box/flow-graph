@@ -38,7 +38,7 @@ export class FlowAssignment extends FlowMetaNode {
       flowAssignment.name,
       flowAssignment.description
     )
-    this.metaFlow = metaFlow
+    // this.metaFlow = metaFlow
     this.connector = flowAssignment.connector ?? {
       targetReference: [],
       sourceReference: [],

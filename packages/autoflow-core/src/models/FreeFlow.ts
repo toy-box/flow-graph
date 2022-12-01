@@ -102,7 +102,6 @@ export class FreeFlow {
   }
 
   setMetaFlow(flowMeta: IFlowMeta, flowType: FlowType) {
-    console.log('setMetaFlow', flowMeta)
     this.flowMeta = flowMeta
     this.flowType = flowType
     this.flow.flowType = flowType

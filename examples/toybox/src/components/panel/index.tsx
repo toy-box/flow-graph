@@ -18,11 +18,7 @@ export const Panel = () => {
   }, [metaFlow])
   const handleExport = useCallback(() => {
     console.log('metaFlow', metaFlow)
-    console.log(
-      'metaFlowdata数据json化',
-      metaFlow.toJsonList,
-      freeFlow.toJsonList
-    )
+    console.log('metaFlowdata数据json化', freeFlow, freeFlow.toJsonList)
   }, [metaFlow])
   const handleFreeLayout = useCallback(() => {
     // metaFlow.flow.setGraphNodes([])

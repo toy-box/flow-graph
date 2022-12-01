@@ -105,9 +105,9 @@ export interface FlowMetaParam {
   description?: string
   type: FlowMetaType
   connector?: TargetReference
-  defaultConnector?: TargetReference
-  faultConnector?: TargetReference
-  nextValueConnector?: TargetReference
+  defaultConnector?: TargetReference // 决策默认分支，循环跳出循环分支
+  faultConnector?: TargetReference // 异常分支
+  nextValueConnector?: TargetReference // 循环内循环分支
   defaultConnectorName?: string
   assignmentItems?: IAssignmentData[]
   rules?: IFlowMetaDecisionRule[]
@@ -245,6 +245,8 @@ export type FlowType =
   | 'RECORD_TRIGGER'
   | 'SCREEN'
   | 'FREE_START_UP'
+
+export type LayoutType = 'AUTO_START_UP' | 'FREE_START_UP'
 
 export interface ISchedule {
   frequency: string
