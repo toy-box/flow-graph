@@ -23,6 +23,12 @@ import { ICanvas } from './Canvas'
 import { INode, IEdge } from '../types'
 import { FlowGraph } from '../models'
 import { decisonConnectDialog, loopConnectDialog } from '@toy-box/flow-node'
+import {
+  FlowMetaNode,
+  FlowMetaType,
+  FlowMetaParam,
+  FlowLoop,
+} from '@toy-box/autoflow-core'
 
 import 'reactflow/dist/style.css'
 
@@ -158,20 +164,18 @@ export class ReactFlowCanvas implements ICanvas {
     })
   }
 
-  onConnect(connection: Connection) {
+  onConnect(connection: Connection, sourceFlowmetaNode: any) {
     console.log('miwoyo onConnect', connection)
-    const { type: sourceType } = this.nodes.find(
-      (node) => node.id === connection.source
-    )
+    const sourceNode = this.nodes.find((node) => node.id === connection.source)
     const targetNode = this.nodes.find((node) => node.id === connection.target)
       .data.name
-    switch (sourceType) {
-      case 'DecisionNode':
+    switch (sourceFlowmetaNode.type) {
+      case FlowMetaType.DECISION:
         const { rules } = this.nodes.find(
           (node) => node.id === connection.source
         ).data
         const loadData = rules
-          .map(({ name, outcomeApi }) => {
+          .map(({ name, id }) => {
             console.log('label,name', this.edges, name)
             if (
               this.edges.findIndex(
@@ -186,8 +190,22 @@ export class ReactFlowCanvas implements ICanvas {
             }
           })
           .filter(Boolean)
+        const isDefaultConnecter =
+          sourceFlowmetaNode.defaultConnector.targetReference === ''
+        if (isDefaultConnecter) {
+          loadData.push({
+            label: 'default',
+            value: 'default',
+          })
+        }
         if (loadData.length > 1) {
-          decisonConnectDialog(targetNode, connection, this, loadData)
+          decisonConnectDialog(
+            targetNode,
+            connection,
+            this,
+            loadData,
+            sourceFlowmetaNode
+          )
         } else if (loadData.length === 1) {
           const newEdge = {
             ...connection,
@@ -196,33 +214,34 @@ export class ReactFlowCanvas implements ICanvas {
           this.edges = flowAddEdge(newEdge, this.edges)
         }
         break
-      case 'LoopNode':
-        console.log('connection, this.edges', connection, this.edges)
-        const loopConnectorOpt: string | React.ReactNode[] = [
-          'For Each Item',
-          'After Last Item',
-        ]
-        const labelIndex = this.edges.findIndex(
-          ({ id, label }) =>
-            id.split('-')[1] === connection.source &&
-            loopConnectorOpt.includes(label)
-        )
-        const isDialog = labelIndex === -1
+      case FlowMetaType.LOOP:
+        const isDialog =
+          sourceFlowmetaNode.defaultConnector.targetReference === '' &&
+          sourceFlowmetaNode.nextValueConnector.targetReference === ''
         if (isDialog) {
-          loopConnectDialog(targetNode, connection, this)
+          loopConnectDialog(targetNode, connection, this, sourceFlowmetaNode)
         } else {
-          const loopConnectUsed = this.edges[labelIndex].label
+          const isDefaultConnecter =
+            sourceFlowmetaNode.defaultConnector.targetReference === ''
           const newEdge = {
             ...connection,
-            label:
-              loopConnectUsed === 'For Each Item'
-                ? 'After Last Item'
-                : loopConnectUsed,
+            label: isDefaultConnecter ? 'For Each Item' : 'After Last Item',
           }
+          isDefaultConnecter
+            ? sourceFlowmetaNode.updateConnector(
+                connection.target,
+                'defaultConnector'
+              )
+            : sourceFlowmetaNode.updateConnector(
+                connection.target,
+                'nextValueConnector'
+              )
           this.edges = flowAddEdge(newEdge, this.edges)
         }
         break
       default:
+        console.log('sourceNode', sourceNode)
+        sourceFlowmetaNode.updateConnector(connection.target)
         this.edges = flowAddEdge(connection, this.edges)
     }
     this.nodes.map((node: Node) => {

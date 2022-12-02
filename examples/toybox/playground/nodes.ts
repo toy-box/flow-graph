@@ -40,7 +40,7 @@ export const nodeTemplatesProvider = (
           id: uid(),
           name: 'Loop',
           type: FlowMetaType.LOOP,
-          defaultConnector: {},
+          defaultConnector: { targetReference: '' },
           ...editInfo,
         }
         appendOrAddNode(at, flowData)
@@ -56,7 +56,7 @@ export const nodeTemplatesProvider = (
           id: uid(),
           name: 'Decision',
           type: FlowMetaType.DECISION,
-          defaultConnector: {},
+          defaultConnector: { targetReference: '' },
           rules: [
             {
               id: uid(),

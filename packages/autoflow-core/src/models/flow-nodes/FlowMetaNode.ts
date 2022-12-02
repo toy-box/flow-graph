@@ -90,5 +90,7 @@ export abstract class FlowMetaNode {
 
   abstract update(payload: any): void
 
+  abstract updateConnector(targetId: string, options?: string | number): void
+
   abstract toJson()
 }

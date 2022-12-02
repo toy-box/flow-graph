@@ -77,6 +77,8 @@ export class FreeFlow {
       appendNode: batch,
       addNode: batch,
       mountNodes: batch,
+      addEdge: action,
+      updateEdges: action,
     })
   }
   get flowGraph() {
@@ -156,6 +158,7 @@ export class FreeFlow {
   // special for drag items in free-layout
   addNode(flowData: FlowMetaParam) {
     const flowNode = this.makeFlowNode(flowData)
+    console.log('flowData', flowNode)
     this.flowMetaNodeMap[flowNode.id] = flowNode
     console.log('node data', { ...flowData, data: flowNode })
     this.flow.addGraphNode({ ...flowData, data: flowNode })
@@ -286,5 +289,14 @@ export class FreeFlow {
       default:
         return
     }
+  }
+
+  addEdge(connection) {
+    const sourceNode = this.flowMetaNodeMap[connection.source]
+    this.flow.canvas.onConnect(connection, sourceNode)
+  }
+
+  updateEdges(changes) {
+    this.flow.canvas.onEdgesChange(changes)
   }
 }

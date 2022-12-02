@@ -45,6 +45,80 @@ const assignNodeSchema = {
     },
   },
 }
+
+const assignPanelSchema = {
+  type: 'object',
+  properties: {
+    name: {
+      type: 'string',
+      title: '名称',
+      required: true,
+      'x-decorator': 'FormItem',
+      'x-component': 'Input',
+    },
+    description: {
+      type: 'string',
+      title: '简述',
+      'x-decorator': 'FormItem',
+      'x-component': 'Input',
+    },
+    assignmentItems: {
+      type: 'object',
+      properties: {
+        titleVariable: {
+          type: 'void',
+          'x-decorator': 'FormItem',
+          'x-component': () => {
+            return <div style={{ fontSize: '1rem' }}>Set Variable Values</div>
+          },
+        },
+        textVariable: {
+          type: 'void',
+          'x-decorator': 'FormItem',
+          'x-component': () => {
+            return (
+              <div>
+                Each variable is modified by the operator and value combination.
+              </div>
+            )
+          },
+        },
+        operation: {
+          type: 'string',
+          title: 'Variable',
+          required: true,
+          'x-decorator': 'FormItem',
+          'x-component': 'Input',
+        },
+        type: {
+          type: 'string',
+          title: 'Operator',
+          required: true,
+          enum: [
+            {
+              label: 'Equals',
+              value: 'Equals',
+            },
+            {
+              label: 'Add',
+              value: 'Add',
+            },
+          ],
+          'x-decorator': 'FormItem',
+          'x-component': 'Select',
+        },
+        value: {
+          type: 'string',
+          title: 'Value',
+          required: true,
+          'x-decorator': 'FormItem',
+          'x-component': 'Input',
+        },
+      },
+    },
+  },
+}
+
 const decidePanelSchema = {
   type: 'object',
   properties: {
@@ -73,7 +147,7 @@ const decidePanelSchema = {
             required: true,
             'x-component': 'Input',
           },
-          outcomeApi: {
+          id: {
             type: 'string',
             'x-decorator': 'FormItem',
             'x-decorator-props': {
@@ -83,93 +157,98 @@ const decidePanelSchema = {
             required: true,
             'x-component': 'Input',
           },
-          logic: {
-            type: 'string',
-            title: 'Condition Requirements to Execute Outcome',
-            required: true,
-            enum: [
-              {
-                label: 'All Conditions Are Met (AND)',
-                value: '$and',
-              },
-              {
-                label: 'Any Condition Is Met (OR)',
-                value: '$or',
-              },
-              {
-                label: 'Custom Condition Logic Is Met',
-                value: '$custom',
-              },
-            ],
-            'x-decorator': 'FormItem',
-            'x-decorator-props': {
-              layout: 'virtical',
-            },
-            'x-component-props': {},
-            'x-component': 'Select',
-          },
-          conditions: {
-            type: 'array',
-            required: true,
-            title: '',
-            'x-decorator': 'FormItem',
-            'x-component': 'ArrayItems',
-            items: {
-              type: 'object',
-              'x-component': 'ArrayItems.Item',
-              properties: {
-                conditionObj: {
-                  type: 'void',
-                  'x-decorator': 'FormItem',
-                  'x-decorator-props': {
-                    layout: 'virtical',
+          criteria: {
+            type: 'object',
+            properties: {
+              logic: {
+                type: 'string',
+                title: 'Condition Requirements to Execute Outcome',
+                required: true,
+                enum: [
+                  {
+                    label: 'All Conditions Are Met (AND)',
+                    value: '$and',
                   },
-                  'x-component': 'FormGrid',
+                  {
+                    label: 'Any Condition Is Met (OR)',
+                    value: '$or',
+                  },
+                  {
+                    label: 'Custom Condition Logic Is Met',
+                    value: '$custom',
+                  },
+                ],
+                'x-decorator': 'FormItem',
+                'x-decorator-props': {
+                  layout: 'virtical',
+                },
+                'x-component-props': {},
+                'x-component': 'Select',
+              },
+              conditions: {
+                type: 'array',
+                required: true,
+                title: '',
+                'x-decorator': 'FormItem',
+                'x-component': 'ArrayItems',
+                items: {
+                  type: 'object',
+                  'x-component': 'ArrayItems.Item',
                   properties: {
-                    resource: {
-                      type: 'string',
-                      title: 'resource',
-                      required: true,
+                    conditionObj: {
+                      type: 'void',
                       'x-decorator': 'FormItem',
-                      'x-component': 'Input',
-                      'x-component-props': {
-                        placeholder: 'Search Resources',
+                      'x-decorator-props': {
+                        layout: 'virtical',
+                      },
+                      'x-component': 'FormGrid',
+                      properties: {
+                        operation: {
+                          type: 'string',
+                          title: 'resource',
+                          required: true,
+                          'x-decorator': 'FormItem',
+                          'x-component': 'Input',
+                          'x-component-props': {
+                            placeholder: 'Search Resources',
+                          },
+                        },
+                        type: {
+                          type: 'string',
+                          title: 'operator',
+                          required: true,
+                          'x-decorator': 'FormItem',
+                          'x-component': 'Input',
+                          'x-component-props': {
+                            placeholder: 'operator',
+                          },
+                        },
+                        value: {
+                          type: 'string',
+                          title: 'value',
+                          required: true,
+                          'x-decorator': 'FormItem',
+                          'x-component': 'Input',
+                          'x-component-props': {
+                            placeholder: 'Enter value or search resources...',
+                          },
+                        },
                       },
                     },
-                    operator: {
-                      type: 'string',
-                      title: 'operator',
-                      required: true,
-                      'x-decorator': 'FormItem',
-                      'x-component': 'Input',
-                      'x-component-props': {
-                        placeholder: 'operator',
-                      },
-                    },
-                    value: {
-                      type: 'string',
-                      title: 'value',
-                      required: true,
-                      'x-decorator': 'FormItem',
-                      'x-component': 'Input',
-                      'x-component-props': {
-                        placeholder: 'Enter value or search resources...',
-                      },
-                    },
+                  },
+                  remove: {
+                    type: 'void',
+                    'x-decorator': 'FormItem',
+                    'x-component': 'ArrayItems.Remove',
                   },
                 },
-              },
-              remove: {
-                type: 'void',
-                'x-decorator': 'FormItem',
-                'x-component': 'ArrayItems.Remove',
-              },
-            },
-            properties: {
-              addition: {
-                type: 'void',
-                title: 'Add Contact',
-                'x-component': 'ArrayItems.Addition',
+                properties: {
+                  addition: {
+                    type: 'void',
+                    title: 'Add Contact',
+                    'x-component': 'ArrayItems.Addition',
+                  },
+                },
               },
             },
           },
@@ -195,61 +274,56 @@ const loopPanelSchema = {
       'x-decorator': 'FormItem',
       'x-component': 'Input',
     },
-    rules: {
-      type: 'object',
-      properties: {
-        titleCollection: {
-          type: 'void',
-          'x-decorator': 'FormItem',
-          'x-component': () => {
-            return <div>Select Collection Variable</div>
-          },
-        },
-        collectionVariable: {
-          type: 'string',
-          title: 'Collection Variable',
-          required: true,
-          'x-decorator': 'FormItem',
-          'x-component': 'Input',
-        },
-        titleDirection: {
-          type: 'void',
-          'x-decorator': 'FormItem',
-          'x-component': () => {
-            return <div>Specify Direction for Iterating Over Collection</div>
-          },
-        },
-        direction: {
-          type: 'number',
-          title: 'Direction',
-          enum: [
-            {
-              label: 'First item to last item',
-              value: 1,
-            },
-            {
-              label: 'Last item to first item',
-              value: 2,
-            },
-          ],
-          'x-decorator': 'FormItem',
-          'x-component': 'Radio.Group',
-        },
-        titleLoop: {
-          type: 'void',
-          'x-decorator': 'FormItem',
-          'x-component': () => {
-            return <div>Select Loop Variable</div>
-          },
-        },
-        loopVariable: {
-          type: 'string',
-          title: 'Loop Variable',
-          required: true,
-          'x-decorator': 'FormItem',
-          'x-component': 'Input',
-        },
+    titleCollection: {
+      type: 'void',
+      'x-decorator': 'FormItem',
+      'x-component': () => {
+        return <div>Select Collection Variable</div>
       },
+    },
+    collectionReference: {
+      type: 'string',
+      title: 'Collection Variable',
+      required: true,
+      'x-decorator': 'FormItem',
+      'x-component': 'Input',
+    },
+    titleDirection: {
+      type: 'void',
+      'x-decorator': 'FormItem',
+      'x-component': () => {
+        return <div>Specify Direction for Iterating Over Collection</div>
+      },
+    },
+    iterationOrder: {
+      type: 'number',
+      title: 'Direction',
+      enum: [
+        {
+          label: 'First item to last item',
+          value: 1,
+        },
+        {
+          label: 'Last item to first item',
+          value: 2,
+        },
+      ],
+      'x-decorator': 'FormItem',
+      'x-component': 'Radio.Group',
+    },
+    titleLoop: {
+      type: 'void',
+      'x-decorator': 'FormItem',
+      'x-component': () => {
+        return <div>Select Loop Variable</div>
+      },
+    },
+    loopVariable: {
+      type: 'string',
+      title: 'Loop Variable',
+      required: true,
+      'x-decorator': 'FormItem',
+      'x-component': 'Input',
     },
   },
 }
@@ -257,7 +331,7 @@ const assignRender = () => {
   return FormDialog({ title: `AssignMent Node Properites` }, () => {
     return (
       <FormLayout labelCol={6} wrapperCol={10}>
-        <SchemaField schema={assignNodeSchema} />
+        <SchemaField schema={assignPanelSchema} />
       </FormLayout>
     )
   })
@@ -305,6 +379,7 @@ export const assignOnEdit = (node: any, at?: string, additionInfo?: any) => {
           initialValues: {
             name: node.name ?? node.title,
             description: node.description,
+            assignmentItems: node.assignmentItems,
           },
         })
       }, 500)
@@ -336,21 +411,25 @@ export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
             description: node.description,
             rules: node.rules ?? [
               {
-                logic: '$and',
-                conditions: [{}],
+                criteria: {
+                  logic: '$and',
+                  conditions: [{}],
+                },
               },
-              {
-                logic: '$and',
-                conditions: [
-                  {
-                    resource: 'default',
-                    operator: 'default',
-                    value: 'default',
-                  },
-                ],
-                name: 'default',
-                outcomeApi: 'default',
-              },
+              // {
+              //   criteria: {
+              //     logic: '$and',
+              //     conditions: [
+              //       {
+              //         operation: 'default',
+              //         type: 'equals',
+              //         value: 'default',
+              //       },
+              //     ]
+              //   },
+              //   name: 'default',
+              //   id: 'default',
+              // },
             ],
           },
         })
@@ -381,6 +460,8 @@ export const loopOnEdit = (node: any, at?: string, additionInfo?: any) => {
           initialValues: {
             name: node.name ?? node.title,
             description: node.description,
+            collectionReference: node.collectionReference,
+            iterationOrder: node.iterationOrder,
           },
         })
       }, 500)

@@ -40,8 +40,7 @@ export class FlowAssignment extends FlowMetaNode {
     )
     // this.metaFlow = metaFlow
     this.connector = flowAssignment.connector ?? {
-      targetReference: [],
-      sourceReference: [],
+      targetReference: '',
     }
     this.assignmentItems = flowAssignment.assignmentItems
     this.makeObservable()
@@ -147,6 +146,11 @@ export class FlowAssignment extends FlowMetaNode {
     this.description = payload.description
     this.assignmentItems = payload.assignmentItems
     console.log('assign toJson', this.toJson())
+    this.toJson()
+  }
+
+  updateConnector = (targetId: string) => {
+    this.connector = { targetReference: targetId }
     this.toJson()
   }
 

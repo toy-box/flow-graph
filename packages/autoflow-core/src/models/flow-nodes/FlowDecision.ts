@@ -186,6 +186,22 @@ export class FlowDecision extends FlowMetaNode {
     this.rules = payload.rules
   }
 
+  updateConnector(
+    targetId: string,
+    options: number | 'defaultConnector'
+  ): void {
+    // this[options] = { targetReference: targetId }
+    if (options === 'defaultConnector') {
+      this.defaultConnector = { targetReference: targetId }
+    } else {
+      this.rules[options] = {
+        ...this.rules[options],
+        connector: { targetReference: targetId },
+      }
+    }
+    this.toJson()
+  }
+
   toJson = (): FlowMetaParam => {
     return {
       id: this.id,

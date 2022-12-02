@@ -50,8 +50,12 @@ export class FlowLoop extends FlowMetaNode {
 
   constructor(flowLoop: FlowMetaParam, metaFlow: MetaFlow) {
     super(metaFlow, flowLoop.id, flowLoop.name, flowLoop.description)
-    this.defaultConnector = flowLoop.defaultConnector
-    this.nextValueConnector = flowLoop.nextValueConnector
+    this.defaultConnector = flowLoop.defaultConnector ?? {
+      targetReference: '',
+    }
+    this.nextValueConnector = flowLoop.nextValueConnector ?? {
+      targetReference: '',
+    }
     this.collectionReference = flowLoop.collectionReference
     this.iterationOrder = flowLoop.iterationOrder
     this.description = flowLoop.description
@@ -159,6 +163,15 @@ export class FlowLoop extends FlowMetaNode {
     this.collectionReference = flowLoop.collectionReference
     this.iterationOrder = flowLoop.iterationOrder
     this.description = flowLoop.description
+    this.toJson()
+  }
+
+  updateConnector(
+    targetId: string,
+    options: 'nextValueConnector' | 'defaultConnector'
+  ): void {
+    this[options] = { targetReference: targetId }
+    this.toJson()
   }
 
   toJson = (): FlowMetaParam => {
@@ -168,6 +181,7 @@ export class FlowLoop extends FlowMetaNode {
       description: this.description,
       type: this.type,
       nextValueConnector: this.nextValueConnector,
+      defaultConnector: this.defaultConnector,
       collectionReference: this.collectionReference,
       iterationOrder: this.iterationOrder,
     }
