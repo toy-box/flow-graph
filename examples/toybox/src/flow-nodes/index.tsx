@@ -194,6 +194,11 @@ const decidePanelSchema = {
                 items: {
                   type: 'object',
                   'x-component': 'ArrayItems.Item',
+                  remove: {
+                    type: 'void',
+                    'x-decorator': 'FormItem',
+                    'x-component': 'ArrayItems.Remove',
+                  },
                   properties: {
                     conditionObj: {
                       type: 'void',
@@ -235,11 +240,6 @@ const decidePanelSchema = {
                         },
                       },
                     },
-                  },
-                  remove: {
-                    type: 'void',
-                    'x-decorator': 'FormItem',
-                    'x-component': 'ArrayItems.Remove',
                   },
                 },
                 properties: {

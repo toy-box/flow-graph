@@ -83,9 +83,21 @@ export const decisonConnectDialog = (
           label: payload.values.decisionResult,
         }
         canvas.edges = addEdge(newEdge, canvas.edges)
-        // payload.values.decisionResult === 'For Each Item'
-        //   ? sourceFlowmetaNode.updateConnector(connection.target, 'defaultConnector')
-        //   : sourceFlowmetaNode.updateConnector(connection.target, 'nextValueConnector')
+        if (payload.values.decisionResult === 'default') {
+          sourceFlowmetaNode.updateConnector(
+            connection.target,
+            'defaultConnector'
+          )
+        } else {
+          const Index = sourceFlowmetaNode.rules.findIndex(
+            ({ name }) => name === payload.values.decisionResult
+          )
+          sourceFlowmetaNode.updateConnector(connection.target, Index)
+        }
+        sourceFlowmetaNode.updateConnector(
+          connection.target,
+          'nextValueConnector'
+        )
         console.log('cavas', canvas.edges)
         next(payload)
       }, 500)

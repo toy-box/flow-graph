@@ -54,7 +54,9 @@ export class FlowDecision extends FlowMetaNode {
       flowDecision.description
     )
     this.connector = flowDecision.connector
-    this.defaultConnector = flowDecision.defaultConnector ?? {}
+    this.defaultConnector = flowDecision.defaultConnector ?? {
+      targetReference: '',
+    }
     this.defaultConnectorName = flowDecision.defaultConnectorName
     this.rules = flowDecision.rules
     this.metaFlow = metaFlow
@@ -191,6 +193,7 @@ export class FlowDecision extends FlowMetaNode {
     options: number | 'defaultConnector'
   ): void {
     // this[options] = { targetReference: targetId }
+    debugger
     if (options === 'defaultConnector') {
       this.defaultConnector = { targetReference: targetId }
     } else {
