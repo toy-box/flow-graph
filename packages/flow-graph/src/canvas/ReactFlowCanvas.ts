@@ -31,6 +31,7 @@ import {
 } from '@toy-box/autoflow-core'
 
 import 'reactflow/dist/style.css'
+import './canvas.less'
 
 declare type ElementType<T> =
   | JSXElementConstructor<T>
