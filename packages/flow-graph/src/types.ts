@@ -36,6 +36,9 @@ export interface IEdge {
   type?: string
   label?: string
   data?: unknown
+  // id?: string
+  // zIndex?: number
+  // selected?: boolean
 }
 
 export enum LayoutModeEnum {

@@ -5,6 +5,7 @@ import ReactFlow, {
   Position,
   BackgroundVariant,
   ConnectionLineType,
+  Edge,
 } from 'reactflow'
 import { observer } from '@formily/reactive-react'
 import {
@@ -230,6 +231,22 @@ export const FlowCanvas = observer(() => {
 
   const dispatchClickEdge = React.useCallback(
     (event, data) => {
+      console.log('dispatchClickEdge edge', data, dragFlow.canvas.edges)
+      const new_edges: any[] =
+        dragFlow &&
+        dragFlow.canvas.edges.map((edge: Edge) => {
+          console.log('dispatchClickEdge edge', edge.id, data.id)
+          if (edge.id === data.id) {
+            edge.zIndex = 10
+            edge.selected = true
+          } else {
+            edge.zIndex = 1
+          }
+
+          return edge
+        })
+
+      dragFlow && dragFlow.canvas.setEdges(new_edges)
       eventEngine.dispatch({
         type: 'clickEdge',
         data,

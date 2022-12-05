@@ -31,6 +31,7 @@ import {
 } from '@toy-box/autoflow-core'
 
 import 'reactflow/dist/style.css'
+import './canvas.less'
 
 declare type ElementType<T> =
   | JSXElementConstructor<T>
@@ -143,16 +144,16 @@ export class ReactFlowCanvas implements ICanvas {
     this.nodes = applyNodeChanges(changes, this.nodes)
   }
 
-  onEdgesChange(changes: EdgeChange[]) {
+  onEdgesChange(changes: EdgeChange[], flowMetaNodeMap: any) {
     console.log('miwoyo onEdgesChange', changes, this.edges)
     this.edges = applyEdgeChanges(changes, this.edges)
     changes.map(({ type, id }) => {
       if (type === 'remove') {
-        const [name, target, source] = id.split('-')
-        const preTargetNode = this.nodes.find((node) => node.id === target)
-        const targetNode = {
-          ...preTargetNode,
-          nextNodes: preTargetNode.nextNodes.filter((id) => id !== source),
+        const [name, source, target] = id.split('-')
+        const preSourceNode = this.nodes.find((node) => node.id === source)
+        const sourceNode = {
+          ...preSourceNode,
+          nextNodes: preSourceNode.nextNodes.filter((id) => id !== target),
         }
         // const preSourceNode = this.nodes.find((node) => node.id === source)
         // const sourceNode = {
@@ -160,10 +161,11 @@ export class ReactFlowCanvas implements ICanvas {
         //   parents: preSourceNode.parents.filter((id) => id !== target),
         // }
         this.nodes = [
-          ...this.nodes.filter((node) => node.id !== target),
-          targetNode,
+          ...this.nodes.filter((node) => node.id !== source),
+          sourceNode,
         ]
-        this.onNodesChange([{ id: target, type: 'select', selected: true }])
+        flowMetaNodeMap[source].deleteConnector(target)
+        this.onNodesChange([{ id: source, type: 'select', selected: true }])
       }
     })
   }

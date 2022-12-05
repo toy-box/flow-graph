@@ -159,6 +159,11 @@ export class FlowAssignment extends FlowMetaNode {
     this.toJson()
   }
 
+  deleteConnector() {
+    this.connector = { targetReference: '' }
+    this.toJson()
+  }
+
   toJson = (): FlowMetaParam => {
     return {
       id: this.id,

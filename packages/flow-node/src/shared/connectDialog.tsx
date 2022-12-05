@@ -94,11 +94,6 @@ export const decisonConnectDialog = (
           )
           sourceFlowmetaNode.updateConnector(connection.target, Index)
         }
-        sourceFlowmetaNode.updateConnector(
-          connection.target,
-          'nextValueConnector'
-        )
-        console.log('cavas', canvas.edges)
         next(payload)
       }, 500)
 

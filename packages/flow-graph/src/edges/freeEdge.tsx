@@ -9,12 +9,11 @@ import React, { useCallback } from 'react'
 import { getEdgeParams } from './util'
 
 export const freeEdgeOptions = {
-  style: { strokeWidth: 3, stroke: 'black' },
+  style: { strokeWidth: 2, stroke: 'rgb(145, 146, 151)' },
   type: 'freeEdge',
   // type: 'fixEdge',
   markerEnd: {
     type: MarkerType.ArrowClosed,
-    color: 'black',
   },
   labelBgPadding: [8, 4],
   labelBgBorderRadius: 4,
