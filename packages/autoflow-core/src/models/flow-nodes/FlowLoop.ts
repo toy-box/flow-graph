@@ -174,6 +174,15 @@ export class FlowLoop extends FlowMetaNode {
     this.toJson()
   }
 
+  deleteConnector(target) {
+    if (this.defaultConnector.targetReference === target) {
+      this.defaultConnector = { targetReference: '' }
+    } else {
+      this.nextValueConnector = { targetReference: '' }
+    }
+    this.toJson()
+  }
+
   toJson = (): FlowMetaParam => {
     return {
       id: this.id,

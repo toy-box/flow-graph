@@ -193,7 +193,6 @@ export class FlowDecision extends FlowMetaNode {
     options: number | 'defaultConnector'
   ): void {
     // this[options] = { targetReference: targetId }
-    debugger
     if (options === 'defaultConnector') {
       this.defaultConnector = { targetReference: targetId }
     } else {
@@ -205,13 +204,31 @@ export class FlowDecision extends FlowMetaNode {
     this.toJson()
   }
 
+  deleteConnector(target) {
+    if (this.defaultConnector.targetReference === target) {
+      this.defaultConnector = { targetReference: '' }
+    } else {
+      // debugger
+      console.log('deleteConnector', this.rules)
+      this.rules.map((rule, index) => {
+        if (rule.connector.targetReference === target) {
+          this.rules[index] = {
+            ...this.rules[index],
+            connector: { targetReference: '' },
+          }
+        }
+      })
+    }
+    this.toJson()
+  }
+
   toJson = (): FlowMetaParam => {
     return {
       id: this.id,
       name: this.name,
       description: this.description,
       type: this.type,
-      connector: this.connector,
+      defaultConnector: this.defaultConnector,
       rules: this.rules,
     }
   }

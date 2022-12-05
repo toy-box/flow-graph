@@ -297,6 +297,6 @@ export class FreeFlow {
   }
 
   updateEdges(changes) {
-    this.flow.canvas.onEdgesChange(changes)
+    this.flow.canvas.onEdgesChange(changes, this.flowMetaNodeMap)
   }
 }
