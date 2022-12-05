@@ -10,6 +10,7 @@ import {
   IAssignmentData,
   FlowMetaType,
 } from '../../types'
+import { FreeFlow } from '../FreeFlow'
 import { MetaFlow } from '../MetaFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 
@@ -31,14 +32,13 @@ export class FlowAssignment extends FlowMetaNode {
     return this.connector
   }
 
-  constructor(flowAssignment: FlowMetaParam, metaFlow: MetaFlow) {
+  constructor(flowAssignment: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
     super(
       metaFlow,
       flowAssignment.id,
       flowAssignment.name,
       flowAssignment.description
     )
-    // this.metaFlow = metaFlow
     this.connector = flowAssignment.connector ?? {
       targetReference: '',
     }
@@ -138,6 +138,11 @@ export class FlowAssignment extends FlowMetaNode {
       this.metaFlow.flow.addFlowNode(flowNodes[1])
     }
     this.toJson()
+  }
+
+  appendFreeAt() {
+    const flowNode = this.makeFlowNode(FlowAssignment.DefaultNodeProps)
+    this.freeFlow.flow.addFlowNode(flowNode)
   }
 
   update = (payload: FlowMetaUpdate) => {

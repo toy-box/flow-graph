@@ -38,4 +38,9 @@ export interface IEdge {
   data?: unknown
 }
 
+export enum LayoutModeEnum {
+  AUTO_LAYOUT = 'auto_layout',
+  FREE_LAYOUT = 'free_layout',
+}
+
 export type INodeProps = Node

@@ -9,6 +9,7 @@ import {
   IFlowMetaDecisionRule,
   TargetReference,
 } from '../../types'
+import { FreeFlow } from '../FreeFlow'
 import { MetaFlow } from '../MetaFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 
@@ -46,7 +47,7 @@ export class FlowDecision extends FlowMetaNode {
     return this.defaultConnector
   }
 
-  constructor(flowDecision: FlowMetaParam, metaFlow: MetaFlow) {
+  constructor(flowDecision: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
     super(
       metaFlow,
       flowDecision.id,
@@ -59,7 +60,6 @@ export class FlowDecision extends FlowMetaNode {
     }
     this.defaultConnectorName = flowDecision.defaultConnectorName
     this.rules = flowDecision.rules
-    this.metaFlow = metaFlow
     this.makeObservable()
   }
 

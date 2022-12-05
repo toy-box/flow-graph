@@ -31,7 +31,6 @@ export class FlowEnd extends FlowMetaNode {
 
   constructor(flowEnd: IFlowEndProps, metaFlow: MetaFlow | FreeFlow) {
     super(metaFlow, flowEnd.id, flowEnd.name)
-    this.metaFlow = metaFlow
     this.makeObservable()
   }
 

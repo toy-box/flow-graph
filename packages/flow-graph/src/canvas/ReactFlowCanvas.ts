@@ -20,7 +20,7 @@ import {
 } from 'reactflow'
 import { uid } from '@toy-box/toybox-shared'
 import { ICanvas } from './Canvas'
-import { INode, IEdge } from '../types'
+import { INode, IEdge, LayoutModeEnum } from '../types'
 import { FlowGraph } from '../models'
 import { decisonConnectDialog, loopConnectDialog } from '@toy-box/flow-node'
 import {
@@ -39,6 +39,7 @@ declare type ElementType<T> =
 export interface ReactFlowCanvasProps {
   components?: Record<string, ElementType<NodeProps>>
   edgeComponents?: Record<string, ElementType<EdgeProps>>
+  layoutMode?: LayoutModeEnum
   flowGraph: FlowGraph
 }
 
@@ -48,6 +49,7 @@ export class ReactFlowCanvas implements ICanvas {
   flowGraph: FlowGraph
   nodes: Node[]
   edges: Edge[]
+  layoutMode?: LayoutModeEnum
 
   constructor(props: ReactFlowCanvasProps) {
     this.flowGraph = props.flowGraph
@@ -55,6 +57,7 @@ export class ReactFlowCanvas implements ICanvas {
     this.edgeComponents = props.edgeComponents ?? {}
     this.nodes = []
     this.edges = []
+    this.layoutMode = props.layoutMode || LayoutModeEnum.FREE_LAYOUT
     this.makeObservable()
   }
 
@@ -74,7 +77,11 @@ export class ReactFlowCanvas implements ICanvas {
     })
   }
 
-  protected makeNode = (nodeProps: INode, flowType?: string): Node => {
+  get isFreeMode() {
+    return this.layoutMode === LayoutModeEnum.FREE_LAYOUT
+  }
+
+  protected makeNode = (nodeProps: INode): Node => {
     const { component: componentName, data, ...node } = nodeProps
     return {
       id: node.id,
@@ -86,8 +93,8 @@ export class ReactFlowCanvas implements ICanvas {
       },
       type: componentName,
       data,
-      deletable: flowType === 'FREE_START_UP',
-      draggable: flowType === 'FREE_START_UP',
+      deletable: this.isFreeMode,
+      draggable: this.isFreeMode,
     }
   }
 
@@ -105,8 +112,8 @@ export class ReactFlowCanvas implements ICanvas {
     }
   }
 
-  setNodes(nodes: INode[], flowType?: string) {
-    this.nodes = nodes.map((node) => this.makeNode(node, flowType))
+  setNodes(nodes: INode[]) {
+    this.nodes = nodes.map((node) => this.makeNode(node))
     console.log('this.nodes->setNodes', this.nodes)
   }
 
@@ -114,15 +121,12 @@ export class ReactFlowCanvas implements ICanvas {
     this.edges = edges.map((edge) => this.makeEdge(edge))
   }
 
-  addNode(nodeProps: INode, flowType?: string) {
-    this.nodes = [...this.nodes, this.makeNode(nodeProps, flowType)]
+  addNode(nodeProps: INode) {
+    this.nodes = [...this.nodes, this.makeNode(nodeProps)]
   }
 
-  addNodes(nodes: INode[], flowType?: string) {
-    this.nodes = [
-      ...this.nodes,
-      ...nodes.map((node) => this.makeNode(node, flowType)),
-    ]
+  addNodes(nodes: INode[]) {
+    this.nodes = [...this.nodes, ...nodes.map((node) => this.makeNode(node))]
   }
 
   addEdge(edge: IEdge) {

@@ -1,4 +1,4 @@
-import { FlowNode, IFlowNodeProps } from '@toy-box/flow-graph'
+import { FlowNode, IFlowNodeProps, LayoutModeEnum } from '@toy-box/flow-graph'
 import { FlowMetaType, TargetReference } from '../../types'
 import { MetaFlow } from '../MetaFlow'
 import { FreeFlow } from '../FreeFlow'
@@ -32,9 +32,9 @@ export abstract class FlowMetaNode {
     description?: string
   ) {
     if (flow.flowType === 'AUTO_START_UP') {
-      this.metaFlow = flow
+      this.metaFlow = flow as MetaFlow
     } else {
-      this.freeFlow = flow
+      this.freeFlow = flow as FreeFlow
     }
     this.flowType = flow.flowType
     this.id = id
@@ -43,7 +43,7 @@ export abstract class FlowMetaNode {
   }
 
   get flowNode() {
-    if (this.flowType === 'AUTO_START_UP') {
+    if (this.freeFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT) {
       return this.metaFlow.flow.getFlowNode(this.id)
     } else {
       return this.freeFlow.flow.getFlowNode(this.id)
@@ -51,7 +51,7 @@ export abstract class FlowMetaNode {
   }
 
   get parents() {
-    if (this.flowType === 'AUTO_START_UP') {
+    if (this.freeFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT) {
       return this.metaFlow.flowMetaNodes.filter((node) =>
         node.nextNodes.some((next) => next.id === this.id)
       )
@@ -86,11 +86,11 @@ export abstract class FlowMetaNode {
 
   abstract appendAt(at: FlowNode): void
 
-  abstract append(at: FlowNode): void
+  // abstract append(at: FlowNode): void
 
   abstract update(payload: any): void
 
-  abstract updateConnector(targetId: string, options?: string | number): void
+  // abstract updateConnector(targetId: string, options?: string | number): void
 
   abstract toJson()
 }

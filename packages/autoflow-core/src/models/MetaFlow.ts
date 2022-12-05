@@ -102,7 +102,6 @@ export class MetaFlow {
   setMetaFlow(flowMeta: IFlowMeta, flowType: FlowType) {
     this.flowMeta = flowMeta
     this.flowType = flowType
-    this.flow.flowType = flowType
     this.onInit()
   }
 
@@ -154,7 +153,7 @@ export class MetaFlow {
   addNode(flowData: FlowMetaParam) {
     const flowNode = this.makeFlowNode(flowData)
     this.flowMetaNodeMap[flowNode.id] = flowNode
-    this.flow.addGraphNode({ ...flowData, data: flowNode })
+    // this.flow.addGraphNode({ ...flowData, data: flowNode })
   }
 
   mountNodes(flowDatas: FlowMetaParam[], parent?: FlowMetaNode) {

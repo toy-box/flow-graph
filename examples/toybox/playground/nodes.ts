@@ -7,6 +7,7 @@ export const nodeTemplatesProvider = (
 ): INodeTemplate<NodeMake>[] => {
   const appendOrAddNode = (at, flowData) => {
     if (at === 'freeLayout') {
+      // freeFlow.appendNode(at, flowData)
       freeFlow.addNode(flowData)
     } else {
       metaFlow.appendNode(at, flowData)

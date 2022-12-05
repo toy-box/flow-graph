@@ -3,7 +3,7 @@ import { uid } from '@toy-box/toybox-shared'
 import { FlowGraph } from './FlowGraph'
 import { ReactFlowCanvas } from '../canvas'
 import { FlowNode, IFlowNodeProps } from './FlowNode'
-import { IEdge } from '../types'
+import { IEdge, LayoutModeEnum } from '../types'
 
 const getAreaWidth = (start: FlowNode, end: FlowNode) => {
   return Math.max(start.areaWidth, end.areaWidth)
@@ -31,13 +31,14 @@ export class Flow {
   id: string
   flowGraph: FlowGraph
   canvas?: ReactFlowCanvas
-  flowType?: string
+  layoutMode?: LayoutModeEnum
 
-  constructor() {
+  constructor(layoutMode?: LayoutModeEnum) {
     this.id = uid()
     this.flowGraph = new FlowGraph({
       standardSize: 20,
     })
+    this.layoutMode = layoutMode || LayoutModeEnum.FREE_LAYOUT
     this.makeObservable()
   }
 
@@ -46,7 +47,7 @@ export class Flow {
       id: observable.ref,
       flowGraph: observable.ref,
       canvas: observable.ref,
-      flowType: observable.ref,
+      layoutMode: observable.ref,
       setCanvas: batch,
       addFlowNodeAt: batch,
       addFlowNode: action,
@@ -180,15 +181,15 @@ export class Flow {
   /// canve graph
   setGraphNodes = (nodes: FlowNode[]) => {
     console.log('set nodes', nodes)
-    this.canvas?.setNodes(nodes, this.flowType)
+    this.canvas?.setNodes(nodes)
   }
 
   addGraphNodes = (nodes: FlowNode[]) => {
-    this.canvas?.addNodes(nodes, this.flowType)
+    this.canvas?.addNodes(nodes)
   }
 
   addGraphNode = (node: FlowNode) => {
-    this.canvas?.addNode(node, this.flowType)
+    this.canvas?.addNode(node)
   }
 
   setGraphEdges = (edges: IEdge[]) => {

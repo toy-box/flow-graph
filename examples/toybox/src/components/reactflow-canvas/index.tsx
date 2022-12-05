@@ -14,6 +14,7 @@ import {
   FreeEdge,
   freeEdgeOptions,
   connectionLineStyle,
+  LayoutModeEnum,
 } from '@toy-box/flow-graph'
 import { useMetaFlow, useFreeFlow } from '@toy-box/flow-node'
 import {
@@ -138,6 +139,7 @@ export const FlowCanvas = observer(() => {
   })
   const freeFlowCanvas = new ReactFlowCanvas({
     flowGraph: dragFlow.flowGraph,
+    layoutMode: LayoutModeEnum.FREE_LAYOUT,
     edgeComponents: {
       fixEdge: FixStepEdge,
       forkEdge: ForkEdge,

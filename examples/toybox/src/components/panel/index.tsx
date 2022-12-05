@@ -31,7 +31,8 @@ export const Panel = () => {
     )
     metaFlow.setMetaFlow({}, 'FREE_START_UP')
     console.log('metaFlow.flowType', metaFlow.flowType)
-    freeFlow.flow.layoutFlow()
+    // freeFlow.
+    // freeFlow..layoutFlow()
   }, [metaFlow])
   return (
     <div>

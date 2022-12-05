@@ -9,6 +9,7 @@ import {
   FlowMetaUpdate,
   TargetReference,
 } from '../../types'
+import { FreeFlow } from '../FreeFlow'
 
 export class FlowLoop extends FlowMetaNode {
   defaultConnector?: TargetReference
@@ -48,7 +49,7 @@ export class FlowLoop extends FlowMetaNode {
     return this.nextValueConnector
   }
 
-  constructor(flowLoop: FlowMetaParam, metaFlow: MetaFlow) {
+  constructor(flowLoop: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
     super(metaFlow, flowLoop.id, flowLoop.name, flowLoop.description)
     this.defaultConnector = flowLoop.defaultConnector ?? {
       targetReference: '',
@@ -59,7 +60,6 @@ export class FlowLoop extends FlowMetaNode {
     this.collectionReference = flowLoop.collectionReference
     this.iterationOrder = flowLoop.iterationOrder
     this.description = flowLoop.description
-    this.metaFlow = metaFlow
     this.makeObservable()
   }
 

@@ -1,6 +1,6 @@
 import { isArr, uid } from '@toy-box/toybox-shared'
 import { define, observable, action, batch } from '@formily/reactive'
-import { Flow, FlowFree, DragFlow } from '@toy-box/flow-graph'
+import { Flow, LayoutModeEnum } from '@toy-box/flow-graph'
 import {
   FlowMetaType,
   FlowMetaParam,
@@ -39,7 +39,7 @@ export class FreeFlow {
   disposers: (() => void)[] = []
   flowMeta: IFlowMeta
   metaFlowDatas: FlowMetaParam[] = []
-  flow: DragFlow
+  flow: Flow
   flowMetaNodeMap: Record<string, FlowMetaNode> = {}
 
   // flowConstants: IFieldMeta[] = []
@@ -48,7 +48,8 @@ export class FreeFlow {
   // flowVariables: IFieldMeta[] = []
   mode: FlowModeType = FlowModeEnum.EDIT
   flowType: FlowType
-  flowFree: FlowFree
+  layoutMode?: LayoutModeEnum
+  // flowFree: FlowFree
 
   get flowMetaNodes() {
     return Object.keys(this.flowMetaNodeMap).map(
@@ -56,9 +57,10 @@ export class FreeFlow {
     )
   }
 
-  constructor(mode: FlowModeType, flow?: Flow) {
+  constructor(mode: FlowModeType, flow?: Flow, layoutMode?: LayoutModeEnum) {
+    this.layoutMode = layoutMode || LayoutModeEnum.FREE_LAYOUT
     this.mode = mode || this.mode
-    this.flow = flow ?? new Flow()
+    this.flow = flow ?? new Flow(this.layoutMode)
     this.makeObservable()
   }
 
@@ -67,16 +69,16 @@ export class FreeFlow {
       flowMetaNodeMap: observable.deep,
       flowMetaNodes: observable.computed,
       flow: observable.ref,
-      flowFree: observable.ref,
+      // flowFree: observable.ref,
       mode: observable.ref,
       flowType: observable.ref,
       setMetaFlow: batch,
       getFlowMetaNodeMap: batch,
-      removeNodeWithBind: batch,
+      // removeNodeWithBind: batch,
       updateNode: batch,
       appendNode: batch,
-      addNode: batch,
-      mountNodes: batch,
+      // addNode: batch,
+      // mountNodes: batch,
       addEdge: action,
       updateEdges: action,
     })
@@ -86,11 +88,11 @@ export class FreeFlow {
   }
 
   get flowNodes() {
-    return this.flow.flowGraph.nodes
+    return this.flowGraph.nodes
   }
 
   get flowNodeMap() {
-    return this.flow.flowGraph.nodeMap
+    return this.flowGraph.nodeMap
   }
 
   get editable() {
@@ -106,13 +108,12 @@ export class FreeFlow {
   setMetaFlow(flowMeta: IFlowMeta, flowType: FlowType) {
     this.flowMeta = flowMeta
     this.flowType = flowType
-    this.flow.flowType = flowType
     this.onInit()
   }
 
   onInit() {
     this.metaFlowDatas = this.parseFlow(this.flowMeta.nodes)
-    this.mountNodes(this.metaFlowDatas)
+    // this.mountNodes(this.metaFlowDatas)
   }
 
   getFlowMetaNodeMap(nodeMap: Record<string, FlowMetaNode> = {}) {
@@ -123,7 +124,7 @@ export class FreeFlow {
     const flowMetaPrarms: FlowMetaParam[] = []
     for (const key in nodes) {
       if (isArr(nodes[key])) {
-        flowMetaPrarms.push(...nodes[key].map())
+        flowMetaPrarms.push(...nodes[key])
       } else {
         flowMetaPrarms.push(nodes[key])
       }
@@ -131,15 +132,15 @@ export class FreeFlow {
     return flowMetaPrarms
   }
 
-  removeNodeWithBind(id: string) {
-    const flowNode = this.flow.getFlowNode(id)
-    flowNode.bindNodes.forEach((node) => {
-      if (node.type !== 'extend') {
-        delete this.flowMetaNodeMap[node.id]
-      }
-    })
-    this.flow.removeNode(id)
-  }
+  // removeNodeWithBind(id: string) {
+  //   const flowNode = this.flowFree.getFlowNode(id)
+  //   flowNode.bindNodes.forEach((node) => {
+  //     if (node.type !== 'extend') {
+  //       delete this.flowMetaNodeMap[node.id]
+  //     }
+  //   })
+  //   this.flowFree.removeNode(id)
+  // }
 
   updateNode(id: string, payload: FlowMetaUpdate | StartFlowMetaUpdate) {
     const node = this.flowMetaNodeMap[id]
@@ -158,112 +159,110 @@ export class FreeFlow {
   // special for drag items in free-layout
   addNode(flowData: FlowMetaParam) {
     const flowNode = this.makeFlowNode(flowData)
-    console.log('flowData', flowNode)
     this.flowMetaNodeMap[flowNode.id] = flowNode
-    console.log('node data', { ...flowData, data: flowNode })
     this.flow.addGraphNode({ ...flowData, data: flowNode })
   }
 
-  mountNodes(flowDatas: FlowMetaParam[], parent?: FlowMetaNode) {
-    if (flowDatas.length === 0) {
-      return
-    }
-    if (parent == null) {
-      const start = flowDatas.find((data) => data.type === FlowMetaType.START)
-      const startNode = this.makeFlowNode(start)
-      this.flowMetaNodeMap[startNode.id] = startNode
-      startNode.appendAt(undefined)
-      this.mountNodes(
-        flowDatas.filter((data) => data.id !== start.id),
-        startNode
-      )
-    } else {
-      switch (parent.type) {
-        // case FlowMetaType.END:
-        //   return
-        case FlowMetaType.LOOP: {
-          // next
-          const nextValueRef = (parent as FlowLoop).nextValueConnector
-            ?.targetReference
-          const nextValueData = flowDatas.find(
-            (data) => data.id === nextValueRef
-          )
-          const nextValueNode = this.makeFlowNode(nextValueData)
-          // edit mode
-          const nextAtNode = this.flowNodes.find(
-            (node) => (node.id = this.flowNodeMap[parent.id].targets[0].id)
-          )
-          this.flowMetaNodeMap[nextValueNode.id] = nextValueNode
-          nextValueNode.appendAt(nextAtNode)
-          this.mountNodes(
-            flowDatas.filter((data) => data.id !== nextValueRef),
-            nextValueNode
-          )
-          // defaultConnector
-          const targetRef = (parent as FlowLoop).defaultConnector
-            ?.targetReference
-          const currentData = flowDatas.find((data) => data.id === targetRef)
-          const currentNode = this.makeFlowNode(currentData)
-          // edit mode
-          const atNode = this.flowNodes.find(
-            (node) => (node.id = this.flowNodeMap[parent.id].loopEndTarget)
-          )
-          this.flowMetaNodeMap[currentNode.id] = currentNode
-          currentNode.appendAt(atNode)
-          this.mountNodes(
-            flowDatas.filter((data) => data.id !== targetRef),
-            currentNode
-          )
-          return
-        }
-        case FlowMetaType.DECISION: {
-          if (parent instanceof FlowDecision) {
-            parent.commRules.forEach((rule) => {
-              const currentData = flowDatas.find(
-                (data) => data.id === rule.connector.targetReference
-              )
-              const currentNode = this.makeFlowNode(currentData)
-              // edit mode
-              const atNode = this.flowNodes.find(
-                (node) => (node.id = this.flowNodeMap[rule.id].targets[0].id)
-              )
-              this.flowMetaNodeMap[currentNode.id] = currentNode
-              currentNode.appendAt(atNode)
-              this.mountNodes(
-                flowDatas.filter(
-                  (data) =>
-                    !parent.commRules.some(
-                      (rule) => rule.connector?.targetReference === data.id
-                    ) && parent.defaultConnector.targetReference !== data.id
-                ),
-                currentNode
-              )
-            })
-          }
-          return
-        }
-        default:
-          const targetRef = parent.lowerLeverConnector?.targetReference
-          // todo: template idea
-          const currentData =
-            flowDatas.length === 1
-              ? flowDatas[0]
-              : flowDatas.find((data) => data.id === targetRef)
-          const currentNode = this.makeFlowNode(currentData)
-          // edit mode
-          const atNode = this.flowNodes.find(
-            (node) => node.id === this.flowNodeMap[parent.id].targets[0].id
-          )
-          this.flowMetaNodeMap[currentNode.id] = currentNode
-          currentNode.appendAt(atNode)
-          this.mountNodes(
-            flowDatas.filter((data) => data.id !== targetRef),
-            currentNode
-          )
-          return
-      }
-    }
-  }
+  // mountNodes(flowDatas: FlowMetaParam[], parent?: FlowMetaNode) {
+  //   if (flowDatas.length === 0) {
+  //     return
+  //   }
+  //   if (parent == null) {
+  //     const start = flowDatas.find((data) => data.type === FlowMetaType.START)
+  //     const startNode = this.makeFlowNode(start)
+  //     this.flowMetaNodeMap[startNode.id] = startNode
+  //     startNode.app(undefined)
+  //     this.mountNodes(
+  //       flowDatas.filter((data) => data.id !== start.id),
+  //       startNode
+  //     )
+  //   } else {
+  //     switch (parent.type) {
+  //       // case FlowMetaType.END:
+  //       //   return
+  //       case FlowMetaType.LOOP: {
+  //         // next
+  //         const nextValueRef = (parent as FlowLoop).nextValueConnector
+  //           ?.targetReference
+  //         const nextValueData = flowDatas.find(
+  //           (data) => data.id === nextValueRef
+  //         )
+  //         const nextValueNode = this.makeFlowNode(nextValueData)
+  //         // edit mode
+  //         const nextAtNode = this.flowNodes.find(
+  //           (node) => (node.id = this.flowNodeMap[parent.id].targets[0].id)
+  //         )
+  //         this.flowMetaNodeMap[nextValueNode.id] = nextValueNode
+  //         nextValueNode.appendAt(nextAtNode)
+  //         this.mountNodes(
+  //           flowDatas.filter((data) => data.id !== nextValueRef),
+  //           nextValueNode
+  //         )
+  //         // defaultConnector
+  //         const targetRef = (parent as FlowLoop).defaultConnector
+  //           ?.targetReference
+  //         const currentData = flowDatas.find((data) => data.id === targetRef)
+  //         const currentNode = this.makeFlowNode(currentData)
+  //         // edit mode
+  //         const atNode = this.flowNodes.find(
+  //           (node) => (node.id = this.flowNodeMap[parent.id].loopEndTarget)
+  //         )
+  //         this.flowMetaNodeMap[currentNode.id] = currentNode
+  //         currentNode.appendAt(atNode)
+  //         this.mountNodes(
+  //           flowDatas.filter((data) => data.id !== targetRef),
+  //           currentNode
+  //         )
+  //         return
+  //       }
+  //       case FlowMetaType.DECISION: {
+  //         if (parent instanceof FlowDecision) {
+  //           parent.commRules.forEach((rule) => {
+  //             const currentData = flowDatas.find(
+  //               (data) => data.id === rule.connector.targetReference
+  //             )
+  //             const currentNode = this.makeFlowNode(currentData)
+  //             // edit mode
+  //             const atNode = this.flowNodes.find(
+  //               (node) => (node.id = this.flowNodeMap[rule.id].targets[0].id)
+  //             )
+  //             this.flowMetaNodeMap[currentNode.id] = currentNode
+  //             currentNode.appendAt(atNode)
+  //             this.mountNodes(
+  //               flowDatas.filter(
+  //                 (data) =>
+  //                   !parent.commRules.some(
+  //                     (rule) => rule.connector?.targetReference === data.id
+  //                   ) && parent.defaultConnector.targetReference !== data.id
+  //               ),
+  //               currentNode
+  //             )
+  //           })
+  //         }
+  //         return
+  //       }
+  //       default:
+  //         const targetRef = parent.lowerLeverConnector?.targetReference
+  //         // todo: template idea
+  //         const currentData =
+  //           flowDatas.length === 1
+  //             ? flowDatas[0]
+  //             : flowDatas.find((data) => data.id === targetRef)
+  //         const currentNode = this.makeFlowNode(currentData)
+  //         // edit mode
+  //         const atNode = this.flowNodes.find(
+  //           (node) => node.id === this.flowNodeMap[parent.id].targets[0].id
+  //         )
+  //         this.flowMetaNodeMap[currentNode.id] = currentNode
+  //         currentNode.appendAt(atNode)
+  //         this.mountNodes(
+  //           flowDatas.filter((data) => data.id !== targetRef),
+  //           currentNode
+  //         )
+  //         return
+  //     }
+  //   }
+  // }
 
   makeFlowNode(node: FlowMetaParam): FlowMetaNode {
     console.log('makeFlowNode', node)
