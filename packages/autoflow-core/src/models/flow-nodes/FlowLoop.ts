@@ -92,9 +92,10 @@ export class FlowLoop extends FlowMetaNode {
   ): IFlowNodeProps {
     const targets = []
     const nextConId = this?.nextValueConnector.targetReference
-    if (nextConId) targets.push({ id: nextConId })
+    if (nextConId) targets.push({ id: nextConId, label: 'For Each Item' })
     const defaultConId = this.defaultConnector.targetReference
-    if (defaultConId) targets.push({ id: defaultConId })
+    if (defaultConId)
+      targets.push({ id: defaultConId, label: 'After Last Item' })
     return {
       id: this.id,
       label: this.name,

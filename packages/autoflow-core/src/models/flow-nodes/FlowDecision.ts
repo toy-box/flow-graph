@@ -95,7 +95,8 @@ export class FlowDecision extends FlowMetaNode {
         })
     })
     const defaultConId = this.defaultConnector.targetReference
-    if (defaultConId) targets.push({ id: defaultConId })
+    if (defaultConId)
+      targets.push({ id: defaultConId, label: this.defaultConnectorName })
     return {
       id: this.id,
       label: this.name,

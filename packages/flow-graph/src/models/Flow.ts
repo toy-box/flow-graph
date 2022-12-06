@@ -1,11 +1,10 @@
 import { action, batch, define, observable } from '@formily/reactive'
 import { uid } from '@toy-box/toybox-shared'
 import { FlowGraph } from './FlowGraph'
-import { ReactFlowCanvas } from '../canvas'
+import { IConnectionWithLabel, ReactFlowCanvas } from '../canvas'
 import { FlowNode, IFlowNodeProps } from './FlowNode'
 import { IEdge, LayoutModeEnum } from '../types'
 import { freeEdgeOptions } from '../edges'
-import { Connection } from 'reactflow'
 
 const getAreaWidth = (start: FlowNode, end: FlowNode) => {
   return Math.max(start.areaWidth, end.areaWidth)
@@ -165,15 +164,17 @@ export class Flow {
   addFlowFreeNode(node: IFlowNodeProps) {
     const freeNode = this.flowGraph.addFreeNode(node)
     this.canvas?.addNode(freeNode)
+    debugger
     if (this.layoutMode === LayoutModeEnum.FREE_LAYOUT) {
       if (node?.targets?.length === 0 || !node?.targets) return
       node.targets.forEach((target) => {
-        const connection: Connection = {
+        const connection: IConnectionWithLabel = {
           ...freeEdgeOptions,
           source: node.id,
           target: typeof target === 'string' ? target : target.id,
           sourceHandle: null,
           targetHandle: null,
+          label: typeof target !== 'string' ? target.label : '',
         }
         // this.canvas.onConnect(connection, node)
         this.canvas.addEdge(connection)

@@ -309,6 +309,7 @@ export const freeMeta: IFlowMeta = {
         name: 'Decision',
         type: FlowMetaType.DECISION,
         defaultConnector: { targetReference: 'assignment1' },
+        defaultConnectorName: 'default',
         x: 300,
         y: 150,
         rules: [
@@ -330,6 +331,7 @@ export const freeMeta: IFlowMeta = {
         name: 'Decision',
         type: FlowMetaType.DECISION,
         defaultConnector: { targetReference: 'assignment12' },
+        defaultConnectorName: 'default',
         x: 500,
         y: 250,
         rules: [

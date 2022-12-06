@@ -44,6 +44,10 @@ export interface ReactFlowCanvasProps {
   flowGraph: FlowGraph
 }
 
+export interface IConnectionWithLabel extends Connection {
+  label?: string
+}
+
 export class ReactFlowCanvas implements ICanvas {
   components: Record<string, ElementType<NodeProps>>
   edgeComponents?: Record<string, ElementType<EdgeProps>>
