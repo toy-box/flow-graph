@@ -9,6 +9,7 @@ import {
   ISchedule,
   FlowMetaType,
   FlowMetaParam,
+  FlowMetaParamWithSize,
 } from '../../types'
 import { MetaFlow } from '../MetaFlow'
 import { FreeFlow } from '../FreeFlow'
@@ -80,6 +81,9 @@ export class FlowStart extends FlowMetaNode {
       component,
     }: IMakeFlowNodeProps = FlowStart.DefaultNodeProps
   ): IFlowNodeProps {
+    const conId = this?.connector?.targetReference
+    const targets = []
+    if (conId) targets.push(conId)
     return {
       id: this.id,
       label: this.name,
@@ -89,7 +93,7 @@ export class FlowStart extends FlowMetaNode {
       height,
       x,
       y,
-      targets: [this.connector.targetReference],
+      targets: targets,
       component,
     }
   }
@@ -131,6 +135,18 @@ export class FlowStart extends FlowMetaNode {
       const flowNodes = this.makeFlowNodeWithExtend(FlowStart.DefaultNodeProps)
       this.metaFlow.flow.addFlowNodes(flowNodes)
     }
+  }
+
+  appendFreeAt(flowData: FlowMetaParamWithSize) {
+    const nodeProps = {
+      x: flowData.x,
+      y: flowData.y,
+      width: flowData.width || FlowStart.DefaultNodeProps.width,
+      height: flowData.height || FlowStart.DefaultNodeProps.height,
+      component: FlowStart.DefaultNodeProps.component,
+    }
+    const flowNode = this.makeFlowNode(nodeProps)
+    this.freeFlow.flow.addFlowFreeNode(flowNode)
   }
 
   append(): void {

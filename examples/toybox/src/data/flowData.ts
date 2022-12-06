@@ -297,9 +297,75 @@ export const freeMeta: IFlowMeta = {
       id: 'start',
       name: 'Start',
       type: FlowMetaType.START,
+      x: 300,
+      y: 30,
       connector: {
-        targetReference: 'end',
+        targetReference: '1123ssddd',
       },
     },
+    decisions: [
+      {
+        id: '1123ssddd',
+        name: 'Decision',
+        type: FlowMetaType.DECISION,
+        defaultConnector: { targetReference: 'assignment1' },
+        defaultConnectorName: 'default',
+        x: 300,
+        y: 150,
+        rules: [
+          {
+            id: 'rule1233',
+            name: 'rule-1',
+            connector: {
+              // targetReference: 'assignment12'
+            },
+            criteria: {
+              conditions: [],
+              logic: '$and',
+            },
+          },
+        ],
+      },
+      {
+        id: 'decision1122',
+        name: 'Decision',
+        type: FlowMetaType.DECISION,
+        defaultConnector: { targetReference: 'assignment12' },
+        defaultConnectorName: 'default',
+        x: 500,
+        y: 250,
+        rules: [
+          {
+            id: 'rule12331123',
+            name: 'rule-2',
+            connector: {
+              // targetReference: 'assignment12'
+            },
+            criteria: {
+              conditions: [],
+              logic: '$and',
+            },
+          },
+        ],
+      },
+    ],
+    assignments: [
+      {
+        id: 'assignment1',
+        name: 'Assignment',
+        type: FlowMetaType.ASSIGNMENT,
+        connector: {},
+        x: 100,
+        y: 180,
+      },
+      {
+        id: 'assignment12',
+        name: 'Assignment1',
+        type: FlowMetaType.ASSIGNMENT,
+        connector: {},
+        x: 300,
+        y: 500,
+      },
+    ],
   },
 }

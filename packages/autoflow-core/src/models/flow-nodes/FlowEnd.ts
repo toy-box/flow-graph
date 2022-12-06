@@ -1,6 +1,6 @@
 import { define, observable, action } from '@formily/reactive'
 import { FlowNode, IFlowNodeProps } from '@toy-box/flow-graph/src'
-import { FlowMetaType, FlowMetaParam } from '../../types'
+import { FlowMetaType, FlowMetaParam, FlowMetaParamWithSize } from '../../types'
 import { FreeFlow } from '../FreeFlow'
 import { MetaFlow } from '../MetaFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
@@ -92,6 +92,18 @@ export class FlowEnd extends FlowMetaNode {
       const flowNodes = this.makeFlowNodeWithExtend(FlowEnd.DefaultNodeProps)
       this.metaFlow.flow.addFlowNodeAt(at.id, flowNodes[0])
     }
+  }
+
+  appendFreeAt(flowData: FlowMetaParamWithSize) {
+    const nodeProps = {
+      x: flowData.x,
+      y: flowData.y,
+      width: flowData.width || FlowEnd.DefaultNodeProps.width,
+      height: flowData.height || FlowEnd.DefaultNodeProps.height,
+      component: FlowEnd.DefaultNodeProps.component,
+    }
+    const flowNode = this.makeFlowNode(nodeProps)
+    this.freeFlow.flow.addFlowFreeNode(flowNode)
   }
 
   update = (flowEnd: IFlowEndProps) => {

@@ -6,9 +6,9 @@ import {
   FlowMetaParam,
   FlowMetaUpdate,
   TargetReference,
-  ConnectorProps,
   IAssignmentData,
   FlowMetaType,
+  FlowMetaParamWithSize,
 } from '../../types'
 import { FreeFlow } from '../FreeFlow'
 import { MetaFlow } from '../MetaFlow'
@@ -72,6 +72,9 @@ export class FlowAssignment extends FlowMetaNode {
       component,
     }: IMakeFlowNodeProps = FlowAssignment.DefaultNodeProps
   ): IFlowNodeProps {
+    const conId = this?.connector?.targetReference
+    const targets = []
+    if (conId) targets.push(conId)
     return {
       id: this.id,
       label: this.name,
@@ -81,7 +84,7 @@ export class FlowAssignment extends FlowMetaNode {
       height,
       x,
       y,
-      targets: [this.connector.targetReference],
+      targets: targets,
       component,
     }
   }
@@ -140,9 +143,16 @@ export class FlowAssignment extends FlowMetaNode {
     this.toJson()
   }
 
-  appendFreeAt() {
-    const flowNode = this.makeFlowNode(FlowAssignment.DefaultNodeProps)
-    this.freeFlow.flow.addFlowNode(flowNode)
+  appendFreeAt(flowData: FlowMetaParamWithSize) {
+    const nodeProps = {
+      x: flowData.x,
+      y: flowData.y,
+      width: flowData.width || FlowAssignment.DefaultNodeProps.width,
+      height: flowData.height || FlowAssignment.DefaultNodeProps.height,
+      component: FlowAssignment.DefaultNodeProps.component,
+    }
+    const flowNode = this.makeFlowNode(nodeProps)
+    this.freeFlow.flow.addFlowFreeNode(flowNode)
   }
 
   update = (payload: FlowMetaUpdate) => {

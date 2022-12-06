@@ -4,6 +4,7 @@ import { IFlowNodeProps } from '@toy-box/flow-graph/src'
 import { uid } from '@toy-box/toybox-shared'
 import {
   FlowMetaParam,
+  FlowMetaParamWithSize,
   FlowMetaType,
   FlowMetaUpdate,
   IFlowMetaDecisionRule,
@@ -84,6 +85,18 @@ export class FlowDecision extends FlowMetaNode {
       component,
     }: IMakeFlowNodeProps = FlowDecision.DefaultNodeProps
   ): IFlowNodeProps {
+    const targets = []
+    this.rules.forEach((rule) => {
+      const conId = rule?.connector?.targetReference
+      if (conId)
+        targets.push({
+          id: conId,
+          label: rule.name,
+        })
+    })
+    const defaultConId = this.defaultConnector.targetReference
+    if (defaultConId)
+      targets.push({ id: defaultConId, label: this.defaultConnectorName })
     return {
       id: this.id,
       label: this.name,
@@ -93,13 +106,7 @@ export class FlowDecision extends FlowMetaNode {
       height,
       x,
       y,
-      targets: [
-        ...this.rules.map((rule) => ({
-          id: rule.connector.targetReference,
-          label: rule.name,
-        })),
-        { id: this.defaultConnector.targetReference },
-      ],
+      targets: targets,
       component,
     }
   }
@@ -179,6 +186,18 @@ export class FlowDecision extends FlowMetaNode {
         }
       })
     }
+  }
+
+  appendFreeAt(flowData: FlowMetaParamWithSize) {
+    const nodeProps = {
+      x: flowData.x,
+      y: flowData.y,
+      width: flowData.width || FlowDecision.DefaultNodeProps.width,
+      height: flowData.height || FlowDecision.DefaultNodeProps.height,
+      component: FlowDecision.DefaultNodeProps.component,
+    }
+    const flowNode = this.makeFlowNode(nodeProps)
+    this.freeFlow.flow.addFlowFreeNode(flowNode)
   }
 
   update(payload: FlowMetaUpdate) {

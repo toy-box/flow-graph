@@ -127,6 +127,13 @@ export interface FlowMetaParam {
   sortField?: string
   getFirstRecordOnly?: boolean
   waitEvents?: IwaitEvent[]
+  x?: number
+  y?: number
+}
+
+export interface FlowMetaParamWithSize extends FlowMetaParam {
+  width?: number
+  height?: number
 }
 
 export type StartFlowMetaUpdate = Omit<IStartFlowMeta, 'id' | 'connector'>

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { useMetaFlow, useFreeFlow } from '@toy-box/flow-node'
-import { flowData1, flowData2, flowMeta } from '../../data/flowData'
+import { flowData1, flowData2, flowMeta, freeMeta } from '../../data/flowData'
 
 export const Panel = () => {
   const metaFlow = useMetaFlow()
@@ -23,12 +23,7 @@ export const Panel = () => {
   const handleFreeLayout = useCallback(() => {
     // metaFlow.flow.setGraphNodes([])
     console.log('metaFlow.flowMeta', metaFlow.flowMeta, metaFlow.toJsonList)
-    freeFlow.setMetaFlow(
-      metaFlow.toJsonList.length
-        ? { resources: {}, nodes: metaFlow.toJsonList }
-        : {},
-      'FREE_START_UP'
-    )
+    freeFlow.setMetaFlow(freeFlow.flowMeta ?? freeMeta, 'FREE_START_UP')
     metaFlow.setMetaFlow({}, 'FREE_START_UP')
     console.log('metaFlow.flowType', metaFlow.flowType)
     // freeFlow.
