@@ -235,10 +235,10 @@ export const FlowCanvas = observer(() => {
       const new_edges: any[] =
         dragFlow &&
         dragFlow.canvas.edges.map((edge: Edge) => {
-          console.log('dispatchClickEdge edge', edge.id, data.id)
+          console.log('dispatchClickEdge edge', edge)
           if (edge.id === data.id) {
-            edge.zIndex = 10
-            edge.selected = true
+            edge.zIndex = 2
+            // edge.selected = true
           } else {
             edge.zIndex = 1
           }
@@ -246,7 +246,7 @@ export const FlowCanvas = observer(() => {
           return edge
         })
 
-      dragFlow && dragFlow.canvas.setEdges(new_edges)
+      dragFlow.canvas.edges = new_edges
       eventEngine.dispatch({
         type: 'clickEdge',
         data,
