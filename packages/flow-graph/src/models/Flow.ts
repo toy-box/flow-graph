@@ -164,7 +164,6 @@ export class Flow {
   addFlowFreeNode(node: IFlowNodeProps) {
     const freeNode = this.flowGraph.addFreeNode(node)
     this.canvas?.addNode(freeNode)
-    debugger
     if (this.layoutMode === LayoutModeEnum.FREE_LAYOUT) {
       if (node?.targets?.length === 0 || !node?.targets) return
       node.targets.forEach((target) => {
