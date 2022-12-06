@@ -109,7 +109,8 @@ export class ReactFlowCanvas implements ICanvas {
       label: edgeProps.label,
       type: edgeProps.type ?? (edgeProps.label ? 'fixEdge' : 'straight'),
       data: edgeProps.data,
-      deletable: false,
+      // deletable: false,
+      deletable: this.isFreeMode,
     }
   }
 
@@ -146,19 +147,23 @@ export class ReactFlowCanvas implements ICanvas {
 
   onEdgesChange(changes: EdgeChange[], flowMetaNodeMap?: any) {
     console.log('miwoyo onEdgesChange', changes, this.edges)
+    debugger
     this.edges = applyEdgeChanges(changes, this.edges)
     changes.map((change) => {
       if (change.type === 'remove') {
         const [, source, target] = change.id.split('-')
-        const preSourceNode = this.nodes.find((node) => node.id === source)
-        const sourceNode = {
-          ...preSourceNode,
-          nextNodes: preSourceNode.nextNodes.filter((id) => id !== target),
-        }
-        this.nodes = [
-          ...this.nodes.filter((node) => node.id !== source),
-          sourceNode,
-        ]
+        // const preSourceNode = this.nodes.find((node) => node.id === source)
+        // const sourceNode = {
+        //   ...preSourceNode,
+        //   nextNodes: preSourceNode.nextNodes.filter((id) => id !== target),
+        // }
+        // this.nodes = [
+        //   ...this.nodes.filter((node) => node.id !== source),
+        //   sourceNode,
+        // ]
+        this.edges.find((edge) => edge.id === change.id)
+        // todo 1.生成的数据id格式不是 reactflow-source-node，这块根据id调整
+        //      2.两个节点多线判断
         flowMetaNodeMap[source].deleteConnector(target)
         this.onNodesChange([{ id: source, type: 'select', selected: true }])
       }
@@ -167,8 +172,9 @@ export class ReactFlowCanvas implements ICanvas {
 
   onConnect(connection: Connection, sourceFlowmetaNode?: any) {
     console.log('miwoyo onConnect', connection)
-    const newEdgeId =
-      'reactflow__edge' + uid() + `-${connection.source}-${connection.target}`
+    const casualEdge = { id: uid(), ...connection }
+    // const newEdgeId =
+    //   'reactflow__edge' + uid() + `-${connection.source}-${connection.target}`
     const sourceNode = this.nodes.find((node) => node.id === connection.source)
     const targetNode = this.nodes.find((node) => node.id === connection.target)
       .data.name
@@ -212,6 +218,7 @@ export class ReactFlowCanvas implements ICanvas {
         } else if (loadData.length === 1) {
           const newEdge = {
             ...connection,
+            id: uid(),
             label: loadData[0].label,
           }
           this.edges = flowAddEdge(newEdge, this.edges)
@@ -228,7 +235,7 @@ export class ReactFlowCanvas implements ICanvas {
             sourceFlowmetaNode.defaultConnector.targetReference === ''
           const newEdge = {
             ...connection,
-            id: newEdgeId,
+            id: uid(),
             label: isDefaultConnecter ? 'For Each Item' : 'After Last Item',
           }
           isDefaultConnecter
@@ -247,8 +254,14 @@ export class ReactFlowCanvas implements ICanvas {
       case FlowMetaType.ASSIGNMENT:
         console.log('sourceNode', sourceNode)
         sourceFlowmetaNode.updateConnector(connection.target)
-        this.edges = flowAddEdge(connection, this.edges)
+        this.edges = flowAddEdge(casualEdge, this.edges)
+        break
+      case FlowMetaType.START:
+        sourceFlowmetaNode.updateConnector(connection.target)
+        this.edges = flowAddEdge(casualEdge, this.edges)
+        break
       default:
+        this.edges = flowAddEdge(casualEdge, this.edges)
         return
     }
     this.nodes.map((node) => {

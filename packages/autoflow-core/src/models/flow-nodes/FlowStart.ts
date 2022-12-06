@@ -168,6 +168,16 @@ export class FlowStart extends FlowMetaNode {
     this.triggerType = data.triggerType
   }
 
+  updateConnector = (targetId: string) => {
+    this.connector = { targetReference: targetId }
+    this.toJson()
+  }
+
+  deleteConnector() {
+    this.connector = { targetReference: '' }
+    this.toJson()
+  }
+
   toJson = (): FlowMetaParam => {
     return {
       id: this.id,
