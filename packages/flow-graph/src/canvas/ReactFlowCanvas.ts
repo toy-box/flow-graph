@@ -15,20 +15,13 @@ import {
   NodeChange,
   EdgeProps,
   NodeProps,
-  HandleType,
-  OnConnectStartParams,
 } from 'reactflow'
 import { uid } from '@toy-box/toybox-shared'
 import { ICanvas } from './Canvas'
 import { INode, IEdge, LayoutModeEnum } from '../types'
 import { FlowGraph } from '../models'
 import { decisonConnectDialog, loopConnectDialog } from '@toy-box/flow-node'
-import {
-  FlowMetaNode,
-  FlowMetaType,
-  FlowMetaParam,
-  FlowLoop,
-} from '@toy-box/autoflow-core'
+import { FlowMetaType } from '@toy-box/autoflow-core'
 
 import 'reactflow/dist/style.css'
 import './canvas.less'
@@ -43,12 +36,15 @@ export interface ReactFlowCanvasProps {
   layoutMode?: LayoutModeEnum
   flowGraph: FlowGraph
 }
+declare type templateSource = {
+  nextNodes?: string[]
+}
 
 export class ReactFlowCanvas implements ICanvas {
   components: Record<string, ElementType<NodeProps>>
   edgeComponents?: Record<string, ElementType<EdgeProps>>
   flowGraph: FlowGraph
-  nodes: Node[]
+  nodes: (Node & templateSource)[]
   edges: Edge[]
   layoutMode?: LayoutModeEnum
 
@@ -144,22 +140,17 @@ export class ReactFlowCanvas implements ICanvas {
     this.nodes = applyNodeChanges(changes, this.nodes)
   }
 
-  onEdgesChange(changes: EdgeChange[], flowMetaNodeMap: any) {
+  onEdgesChange(changes: EdgeChange[], flowMetaNodeMap?: any) {
     console.log('miwoyo onEdgesChange', changes, this.edges)
     this.edges = applyEdgeChanges(changes, this.edges)
-    changes.map(({ type, id }) => {
-      if (type === 'remove') {
-        const [name, source, target] = id.split('-')
+    changes.map((change) => {
+      if (change.type === 'remove') {
+        const [, source, target] = change.id.split('-')
         const preSourceNode = this.nodes.find((node) => node.id === source)
         const sourceNode = {
           ...preSourceNode,
           nextNodes: preSourceNode.nextNodes.filter((id) => id !== target),
         }
-        // const preSourceNode = this.nodes.find((node) => node.id === source)
-        // const sourceNode = {
-        //   ...preSourceNode,
-        //   parents: preSourceNode.parents.filter((id) => id !== target),
-        // }
         this.nodes = [
           ...this.nodes.filter((node) => node.id !== source),
           sourceNode,
@@ -170,7 +161,7 @@ export class ReactFlowCanvas implements ICanvas {
     })
   }
 
-  onConnect(connection: Connection, sourceFlowmetaNode: any) {
+  onConnect(connection: Connection, sourceFlowmetaNode?: any) {
     console.log('miwoyo onConnect', connection)
     const sourceNode = this.nodes.find((node) => node.id === connection.source)
     const targetNode = this.nodes.find((node) => node.id === connection.target)
@@ -181,7 +172,7 @@ export class ReactFlowCanvas implements ICanvas {
           (node) => node.id === connection.source
         ).data
         const loadData = rules
-          .map(({ name, id }) => {
+          .map(({ name }) => {
             console.log('label,name', this.edges, name)
             if (
               this.edges.findIndex(
@@ -250,7 +241,7 @@ export class ReactFlowCanvas implements ICanvas {
         sourceFlowmetaNode.updateConnector(connection.target)
         this.edges = flowAddEdge(connection, this.edges)
     }
-    this.nodes.map((node: Node) => {
+    this.nodes.map((node) => {
       if (node.id === connection.source) {
         if (node.nextNodes) {
           node.nextNodes.push(connection.target)

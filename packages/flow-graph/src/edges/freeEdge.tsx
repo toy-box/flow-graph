@@ -1,14 +1,14 @@
 import {
   MarkerType,
   useStore,
-  getStraightPath,
   getSmoothStepPath,
   BaseEdge,
+  DefaultEdgeOptions,
 } from 'reactflow'
 import React, { useCallback } from 'react'
 import { getEdgeParams } from './util'
 
-export const freeEdgeOptions = {
+export const freeEdgeOptions: DefaultEdgeOptions = {
   style: { strokeWidth: 2, stroke: 'rgb(145, 146, 151)' },
   type: 'freeEdge',
   // type: 'fixEdge',
