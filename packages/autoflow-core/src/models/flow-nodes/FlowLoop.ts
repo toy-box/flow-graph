@@ -1,10 +1,16 @@
 import { define, observable, action } from '@formily/reactive'
-import { FlowNode, TargetProps, IFlowNodeProps } from '@toy-box/flow-graph'
+import {
+  FlowNode,
+  TargetProps,
+  IFlowNodeProps,
+  LayoutModeEnum,
+} from '@toy-box/flow-graph'
 import { uid } from '@toy-box/toybox-shared'
 import { MetaFlow } from '../MetaFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 import {
   FlowMetaParam,
+  FlowMetaParamWithSize,
   FlowMetaType,
   FlowMetaUpdate,
   TargetReference,
@@ -84,6 +90,11 @@ export class FlowLoop extends FlowMetaNode {
       component,
     }: IMakeFlowNodeProps = FlowLoop.DefaultNodeProps
   ): IFlowNodeProps {
+    const targets = []
+    const nextConId = this?.nextValueConnector.targetReference
+    if (nextConId) targets.push({ id: nextConId })
+    const defaultConId = this.defaultConnector.targetReference
+    if (defaultConId) targets.push({ id: defaultConId })
     return {
       id: this.id,
       label: this.name,
@@ -93,7 +104,10 @@ export class FlowLoop extends FlowMetaNode {
       height,
       x,
       y,
-      targets: [this.nextValueConnector.targetReference],
+      targets:
+        this.freeFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT
+          ? [this.nextValueConnector.targetReference]
+          : targets,
       loopEndTarget: this.defaultConnector.targetReference,
       component,
     }
@@ -156,6 +170,18 @@ export class FlowLoop extends FlowMetaNode {
       this.metaFlow.flow.addFlowNode(flowNodes[1])
       this.metaFlow.flow.addFlowNode(flowNodes[2])
     }
+  }
+
+  appendFreeAt(flowData: FlowMetaParamWithSize) {
+    const nodeProps = {
+      x: flowData.x,
+      y: flowData.y,
+      width: flowData.width || FlowLoop.DefaultNodeProps.width,
+      height: flowData.height || FlowLoop.DefaultNodeProps.height,
+      component: FlowLoop.DefaultNodeProps.component,
+    }
+    const flowNode = this.makeFlowNode(nodeProps)
+    this.freeFlow.flow.addFlowFreeNode(flowNode)
   }
 
   update = (flowLoop: FlowMetaUpdate) => {

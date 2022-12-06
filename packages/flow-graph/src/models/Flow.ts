@@ -4,6 +4,8 @@ import { FlowGraph } from './FlowGraph'
 import { ReactFlowCanvas } from '../canvas'
 import { FlowNode, IFlowNodeProps } from './FlowNode'
 import { IEdge, LayoutModeEnum } from '../types'
+import { freeEdgeOptions } from '../edges'
+import { Connection } from 'reactflow'
 
 const getAreaWidth = (start: FlowNode, end: FlowNode) => {
   return Math.max(start.areaWidth, end.areaWidth)
@@ -51,6 +53,8 @@ export class Flow {
       setCanvas: batch,
       addFlowNodeAt: batch,
       addFlowNode: action,
+      addFlowFreeNode: action,
+      // addFlowFreeNodes: action,
       addFlowNodes: action,
       addGraphNode: action,
       updateNode: action,
@@ -137,6 +141,44 @@ export class Flow {
 
   addFlowNode(node: IFlowNodeProps) {
     return this.flowGraph.addNode(node)
+  }
+
+  // addFlowFreeNodes(nodes: IFlowNodeProps[]) {
+  //   nodes.map((node) => {
+  //     if (this.layoutMode === LayoutModeEnum.FREE_LAYOUT) {
+  //       if (node?.targets?.length === 0 || !node?.targets) return
+  //       node.targets.forEach((target) => {
+  //         const connection: Connection = {
+  //           ...freeEdgeOptions,
+  //           source: node.id,
+  //           target: typeof target === 'string' ? target : target.id,
+  //           sourceHandle: null,
+  //           targetHandle: null,
+  //         }
+  //         // this.canvas.onConnect(connection, node)
+  //         this.canvas.addEdge(connection)
+  //       })
+  //     }
+  //   })
+  // }
+
+  addFlowFreeNode(node: IFlowNodeProps) {
+    const freeNode = this.flowGraph.addFreeNode(node)
+    this.canvas?.addNode(freeNode)
+    if (this.layoutMode === LayoutModeEnum.FREE_LAYOUT) {
+      if (node?.targets?.length === 0 || !node?.targets) return
+      node.targets.forEach((target) => {
+        const connection: Connection = {
+          ...freeEdgeOptions,
+          source: node.id,
+          target: typeof target === 'string' ? target : target.id,
+          sourceHandle: null,
+          targetHandle: null,
+        }
+        // this.canvas.onConnect(connection, node)
+        this.canvas.addEdge(connection)
+      })
+    }
   }
 
   addFlowNodes(nodes: IFlowNodeProps[]) {

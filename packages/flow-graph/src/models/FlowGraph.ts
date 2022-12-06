@@ -40,6 +40,7 @@ export class FlowGraph {
       setNodes: batch,
       addNodeAt: batch,
       addNode: action,
+      addFreeNode: action,
       updateNode: batch,
       removeNode: batch,
       removeNodes: batch,
@@ -88,6 +89,12 @@ export class FlowGraph {
     })
     this.setTarget(at, [{ id: newNode.id }])
     return newNode
+  }
+
+  addFreeNode(node: IFlowNodeProps) {
+    const flowNode = new FlowNode(node, this)
+    this.nodeMap[flowNode.id] = flowNode
+    return flowNode
   }
 
   addNode(node: IFlowNodeProps) {

@@ -1,5 +1,5 @@
 import { FlowNode, IFlowNodeProps, LayoutModeEnum } from '@toy-box/flow-graph'
-import { FlowMetaType, TargetReference } from '../../types'
+import { FlowMetaParam, FlowMetaType, TargetReference } from '../../types'
 import { MetaFlow } from '../MetaFlow'
 import { FreeFlow } from '../FreeFlow'
 export interface IMakeFlowNodeProps {
@@ -85,6 +85,8 @@ export abstract class FlowMetaNode {
   abstract makeFlowNode(props?: IMakeFlowNodeProps): IFlowNodeProps
 
   abstract appendAt(at: FlowNode): void
+
+  abstract appendFreeAt(flowData: FlowMetaParam): void
 
   // abstract append(at: FlowNode): void
 

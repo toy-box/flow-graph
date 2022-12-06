@@ -153,7 +153,7 @@ export class MetaFlow {
   addNode(flowData: FlowMetaParam) {
     const flowNode = this.makeFlowNode(flowData)
     this.flowMetaNodeMap[flowNode.id] = flowNode
-    // this.flow.addGraphNode({ ...flowData, data: flowNode })
+    this.flow.addGraphNode({ ...flowData, data: flowNode })
   }
 
   mountNodes(flowDatas: FlowMetaParam[], parent?: FlowMetaNode) {
