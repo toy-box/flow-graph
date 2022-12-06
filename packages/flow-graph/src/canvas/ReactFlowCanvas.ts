@@ -163,6 +163,8 @@ export class ReactFlowCanvas implements ICanvas {
 
   onConnect(connection: Connection, sourceFlowmetaNode?: any) {
     console.log('miwoyo onConnect', connection)
+    const newEdgeId =
+      'reactflow__edge' + uid() + `-${connection.source}-${connection.target}`
     const sourceNode = this.nodes.find((node) => node.id === connection.source)
     const targetNode = this.nodes.find((node) => node.id === connection.target)
       .data.name
@@ -222,6 +224,7 @@ export class ReactFlowCanvas implements ICanvas {
             sourceFlowmetaNode.defaultConnector.targetReference === ''
           const newEdge = {
             ...connection,
+            id: newEdgeId,
             label: isDefaultConnecter ? 'For Each Item' : 'After Last Item',
           }
           isDefaultConnecter
@@ -233,13 +236,16 @@ export class ReactFlowCanvas implements ICanvas {
                 connection.target,
                 'nextValueConnector'
               )
-          this.edges = flowAddEdge(newEdge, this.edges)
+          // this.edges = flowAddEdge(newEdge, this.edges)
+          this.edges = [...this.edges, newEdge]
         }
         break
-      default:
+      case FlowMetaType.ASSIGNMENT:
         console.log('sourceNode', sourceNode)
         sourceFlowmetaNode.updateConnector(connection.target)
         this.edges = flowAddEdge(connection, this.edges)
+      default:
+        return
     }
     this.nodes.map((node) => {
       if (node.id === connection.source) {
