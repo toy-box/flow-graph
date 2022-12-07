@@ -223,14 +223,15 @@ export class FlowDecision extends FlowMetaNode {
     this.toJson()
   }
 
-  deleteConnector(target) {
+  deleteConnector(target, nodeTarget) {
     if (this.defaultConnector.targetReference === target) {
       this.defaultConnector = { targetReference: '' }
     } else {
-      // debugger
-      console.log('deleteConnector', this.rules)
       this.rules.map((rule, index) => {
-        if (rule.connector.targetReference === target) {
+        if (
+          rule.connector.targetReference === target &&
+          rule.name === nodeTarget.label
+        ) {
           this.rules[index] = {
             ...this.rules[index],
             connector: { targetReference: '' },

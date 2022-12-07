@@ -146,24 +146,36 @@ export class ReactFlowCanvas implements ICanvas {
   }
 
   onEdgesChange(changes: EdgeChange[], flowMetaNodeMap?: any) {
+    // debugger
     console.log('miwoyo onEdgesChange', changes, this.edges)
     changes.map((change) => {
       if (change.type === 'remove') {
         const { source, target, label } = this.edges.find(
           (edge) => edge.id === change.id
         )
-        const preSourceNode = this.nodes.find((node) => node.id === source)
-        const sourceNode = {
-          ...preSourceNode,
-          nextNodes: preSourceNode.nextNodes.filter((id) => id !== target),
-        }
-        this.nodes = [
-          ...this.nodes.filter((node) => node.id !== source),
-          sourceNode,
-        ]
-        // todo 1.生成的数据id格式不是 reactflow-source-node，这块根据id调整
-        //      2.两个节点多线判断
-        flowMetaNodeMap[source].deleteConnector(target, label)
+        // const preSourceNode = this.nodes.find((node) => node.id === source)
+        // const sourceNode = {
+        //   ...preSourceNode,
+        //   nextNodes: preSourceNode.nextNodes.filter((id) => id !== target),
+        // }
+        // this.nodes = [
+        //   ...this.nodes.filter((node) => node.id !== source),
+        //   sourceNode,
+        // ]
+        const nodeTarget = flowMetaNodeMap[source].flowNode.targets.map(
+          (target, index) => {
+            if (target?.edgeId === change.id) {
+              return { ...target, index }
+            }
+          }
+        )
+        const filterTargets = flowMetaNodeMap[source].flowNode.targets.filter(
+          (target) => target?.edgeId !== change.id
+        )
+        // debugger
+        // flowMetaNodeMap[source].flowNode.targets.filter((target)=>target?.edgeId !== change.id)
+        flowMetaNodeMap[source].flowNode.targets = [...filterTargets]
+        flowMetaNodeMap[source].deleteConnector(target, nodeTarget)
         this.onNodesChange([{ id: source, type: 'select', selected: true }])
       }
     })
@@ -264,22 +276,22 @@ export class ReactFlowCanvas implements ICanvas {
         this.edges = flowAddEdge(casualEdge, this.edges)
         return
     }
-    this.nodes.map((node) => {
-      if (node.id === connection.source) {
-        if (node.nextNodes) {
-          node.nextNodes.push(connection.target)
-        } else {
-          node.nextNodes = [connection.target]
-        }
-      }
-      // if (node.id === connection.target) {
-      //   if (node.parents) {
-      //     node.parents.push(connection.source)
-      //   } else {
-      //     node.parents = [connection.source]
-      //   }
-      // }
-    })
-    console.log('miwoyo onConnect', connection, this.nodes, this.edges)
+    sourceFlowmetaNode.flowNode.targets.push(connection.target)
+    // this.nodes.map((node) => {
+    //   if (node.id === connection.source) {
+    //     if (node.nextNodes) {
+    //       node.nextNodes.push(connection.target)
+    //     } else {
+    //       node.nextNodes = [connection.target]
+    //     }
+    //   }
+    //   // if (node.id === connection.target) {
+    //   //   if (node.parents) {
+    //   //     node.parents.push(connection.source)
+    //   //   } else {
+    //   //     node.parents = [connection.source]
+    //   //   }
+    //   // }
+    // })
   }
 }
