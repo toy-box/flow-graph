@@ -87,7 +87,7 @@ export class FlowGraph {
     const newNode = this.addNode({
       ...node,
     })
-    this.setTarget(at, [{ id: newNode.id }])
+    this.setTarget(at, [{ id: newNode.id, edgeId: uid() }])
     return newNode
   }
 

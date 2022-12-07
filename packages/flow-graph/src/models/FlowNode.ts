@@ -8,6 +8,7 @@ export type TargetType = string | TargetProps
 
 export interface TargetProps {
   id: string
+  edgeId: string
   label?: string
 }
 
@@ -53,7 +54,9 @@ export class FlowNode {
     this.y = props.y || 0
     this.label = props.label
     this.targets = props.targets?.map((target) =>
-      typeof target === 'string' ? { id: target } : target
+      typeof target === 'string'
+        ? { id: target, edgeId: uid() }
+        : { ...target, edgeId: uid() }
     )
     this.component = props.component
     // this.loopBackTarget = props.loopBackTarget;
@@ -68,7 +71,9 @@ export class FlowNode {
     this.flowGraph.setTarget(
       this.id,
       targets.map((target) =>
-        typeof target === 'string' ? { id: target } : target
+        typeof target === 'string'
+          ? { id: target, edgeId: uid() }
+          : { ...target, edgeId: uid() }
       )
     )
   }

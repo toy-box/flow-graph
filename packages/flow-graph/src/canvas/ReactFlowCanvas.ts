@@ -99,9 +99,9 @@ export class ReactFlowCanvas implements ICanvas {
     }
   }
 
-  protected makeEdge = (edgeProps: IEdge): Edge => {
+  protected makeEdge = (edgeProps: IEdge, edgeId?: string): Edge => {
     return {
-      id: uid(),
+      id: edgeId || uid(),
       source: edgeProps.source,
       target: edgeProps.target,
       sourceHandle: edgeProps.sourceHandle,
@@ -130,8 +130,8 @@ export class ReactFlowCanvas implements ICanvas {
     this.nodes = [...this.nodes, ...nodes.map((node) => this.makeNode(node))]
   }
 
-  addEdge(edge: IEdge) {
-    this.edges = [...this.edges, this.makeEdge(edge)]
+  addEdge(edge: IEdge, edgeId?: string) {
+    this.edges = [...this.edges, this.makeEdge(edge, edgeId)]
     console.log('miwoyo this.edges', this.edges)
   }
 

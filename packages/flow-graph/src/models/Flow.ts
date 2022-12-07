@@ -165,18 +165,19 @@ export class Flow {
     const freeNode = this.flowGraph.addFreeNode(node)
     this.canvas?.addNode(freeNode)
     if (this.layoutMode === LayoutModeEnum.FREE_LAYOUT) {
-      if (node?.targets?.length === 0 || !node?.targets) return
-      node.targets.forEach((target) => {
+      if (freeNode?.targets?.length === 0 || !node?.targets) return
+      freeNode.targets.forEach((target) => {
         const connection: IConnectionWithLabel = {
           ...freeEdgeOptions,
           source: node.id,
-          target: typeof target === 'string' ? target : target.id,
+          target: target.id,
           sourceHandle: null,
           targetHandle: null,
-          label: typeof target !== 'string' ? target.label : '',
+          label: target?.label,
         }
         // this.canvas.onConnect(connection, node)
-        this.canvas.addEdge(connection)
+        const edgeId = target?.edgeId
+        this.canvas.addEdge(connection, edgeId)
       })
     }
   }
