@@ -201,8 +201,11 @@ export class FlowLoop extends FlowMetaNode {
     this.toJson()
   }
 
-  deleteConnector(target) {
-    if (this.defaultConnector.targetReference === target) {
+  deleteConnector(target, label) {
+    if (
+      this.defaultConnector.targetReference === target &&
+      label === 'After Last Item'
+    ) {
       this.defaultConnector = { targetReference: '' }
     } else {
       this.nextValueConnector = { targetReference: '' }
