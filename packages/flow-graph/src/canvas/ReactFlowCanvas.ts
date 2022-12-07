@@ -147,27 +147,27 @@ export class ReactFlowCanvas implements ICanvas {
 
   onEdgesChange(changes: EdgeChange[], flowMetaNodeMap?: any) {
     console.log('miwoyo onEdgesChange', changes, this.edges)
-    debugger
-    this.edges = applyEdgeChanges(changes, this.edges)
     changes.map((change) => {
       if (change.type === 'remove') {
-        const [, source, target] = change.id.split('-')
-        // const preSourceNode = this.nodes.find((node) => node.id === source)
-        // const sourceNode = {
-        //   ...preSourceNode,
-        //   nextNodes: preSourceNode.nextNodes.filter((id) => id !== target),
-        // }
-        // this.nodes = [
-        //   ...this.nodes.filter((node) => node.id !== source),
-        //   sourceNode,
-        // ]
-        this.edges.find((edge) => edge.id === change.id)
+        const { source, target, label } = this.edges.find(
+          (edge) => edge.id === change.id
+        )
+        const preSourceNode = this.nodes.find((node) => node.id === source)
+        const sourceNode = {
+          ...preSourceNode,
+          nextNodes: preSourceNode.nextNodes.filter((id) => id !== target),
+        }
+        this.nodes = [
+          ...this.nodes.filter((node) => node.id !== source),
+          sourceNode,
+        ]
         // todo 1.生成的数据id格式不是 reactflow-source-node，这块根据id调整
         //      2.两个节点多线判断
-        flowMetaNodeMap[source].deleteConnector(target)
+        flowMetaNodeMap[source].deleteConnector(target, label)
         this.onNodesChange([{ id: source, type: 'select', selected: true }])
       }
     })
+    this.edges = applyEdgeChanges(changes, this.edges)
   }
 
   onConnect(connection: Connection, sourceFlowmetaNode?: any) {

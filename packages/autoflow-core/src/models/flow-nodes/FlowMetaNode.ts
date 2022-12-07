@@ -94,7 +94,7 @@ export abstract class FlowMetaNode {
 
   // abstract updateConnector(targetId: string, options?: string | number): void
 
-  abstract deleteConnector(targetId: string): void
+  abstract deleteConnector(targetId: string, label?: string): void
 
   abstract toJson()
 }
