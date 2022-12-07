@@ -8,8 +8,9 @@ export type TargetType = string | TargetProps
 
 export interface TargetProps {
   id: string
-  edgeId: string
+  edgeId?: string
   label?: string
+  ruleId?: string
 }
 
 export interface IFlowNodeProps extends Omit<INode, 'id' | 'x' | 'y'> {
