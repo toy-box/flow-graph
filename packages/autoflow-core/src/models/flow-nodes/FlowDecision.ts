@@ -232,10 +232,11 @@ export class FlowDecision extends FlowMetaNode {
     if (this.defaultConnector.targetReference === target) {
       this.defaultConnector = { targetReference: '' }
     } else {
+      // debugger
       this.rules.map((rule, index) => {
         if (
           rule.connector.targetReference === target &&
-          rule.name === nodeTarget.label
+          rule.id === nodeTarget.ruleId
         ) {
           this.rules[index] = {
             ...this.rules[index],

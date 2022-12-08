@@ -237,10 +237,10 @@ export const FlowCanvas = observer(() => {
         dragFlow.canvas.edges.map((edge: Edge) => {
           console.log('dispatchClickEdge edge', edge)
           if (edge.id === data.id) {
-            edge.zIndex = -1
+            edge.zIndex = 1
             // edge.selected = true
           } else {
-            edge.zIndex = -2
+            edge.zIndex = 0
           }
 
           return edge

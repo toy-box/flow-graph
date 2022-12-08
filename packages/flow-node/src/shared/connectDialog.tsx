@@ -4,6 +4,7 @@ import React from 'react'
 import { ICanvas } from '@toy-box/flow-graph'
 import { Connection, addEdge } from 'reactflow'
 import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
+import { uid } from '@toy-box/toybox-shared'
 
 const SchemaField = createSchemaField({
   components: {
@@ -78,27 +79,43 @@ export const decisonConnectDialog = (
     })
     .forConfirm((payload, next) => {
       setTimeout(() => {
+        const { label } = loadData.find(
+          (data) => data.value === payload.values.decisionResult
+        )
         const newEdge = {
           ...connection,
-          label: payload.values.decisionResult,
+          label: label,
+          id:
+            payload.values.decisionResult.split('-')[0] === 'default'
+              ? uid()
+              : payload.values.decisionResult,
         }
-        canvas.edges = addEdge(newEdge, canvas.edges)
-        if (payload.values.decisionResult === 'default') {
+        canvas.edges = [newEdge, ...canvas.edges]
+        if (payload.values.decisionResult.split('-')[0] === 'default') {
           sourceFlowmetaNode.updateConnector(
             connection.target,
             'defaultConnector'
           )
+          sourceFlowmetaNode.flowNode.targets.push({
+            id: connection.target,
+            label: newEdge.label,
+            edgeId: newEdge.id,
+            ruleId: null,
+          })
         } else {
           const Index = sourceFlowmetaNode.rules.findIndex(
-            ({ name }) => name === payload.values.decisionResult
+            ({ id }) => id === payload.values.decisionResult
           )
           sourceFlowmetaNode.updateConnector(connection.target, Index)
+          sourceFlowmetaNode.flowNode.targets.push({
+            id: connection.target,
+            label: newEdge.label,
+            ruleId: payload.values.decisionResult ?? null,
+            edgeId: newEdge.id,
+          })
         }
         next(payload)
       }, 500)
-
-      // canvas.edges = addEdge(newEdge, canvas.edges)
-      // console.log('canvas.edges', canvas.edges)
     })
     .forCancel((payload, next) => {
       setTimeout(() => {
@@ -132,24 +149,26 @@ export const loopConnectDialog = (
       setTimeout(() => {
         const newEdge = {
           ...connection,
+          id: uid(),
           label: payload.values.loopResult,
         }
         payload.values.loopResult === 'For Each Item'
           ? sourceFlowmetaNode.updateConnector(
               connection.target,
-              'defaultConnector'
+              'nextValueConnector'
             )
           : sourceFlowmetaNode.updateConnector(
               connection.target,
-              'nextValueConnector'
+              'defaultConnector'
             )
-        canvas.edges = addEdge(newEdge, canvas.edges)
-        console.log('cavas', canvas.edges)
+        sourceFlowmetaNode.flowNode.targets.push({
+          id: connection.target,
+          label: newEdge.label,
+          edgeId: newEdge.id,
+        })
+        canvas.edges = [newEdge, ...canvas.edges]
         next(payload)
       }, 500)
-
-      // canvas.edges = addEdge(newEdge, canvas.edges)
-      // console.log('canvas.edges', canvas.edges)
     })
     .forCancel((payload, next) => {
       setTimeout(() => {

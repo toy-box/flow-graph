@@ -36,23 +36,27 @@ export function connectFreeFlow({
       freeFlow.flow.canvas.nodes
     )
     const {
-      nextNodes,
+      // nextNodes,
       data: { rules },
+      data: {
+        flowNode: { targets },
+      },
     } = freeFlow.flow.canvas.nodes.find((node) => node.id === props.id)
 
     const isTargetHandle = () => {
       switch (props.type) {
         case 'AssignmentNode':
-          return nextNodes ? !nextNodes.length : true
+        case 'StartNode':
+          return targets ? !targets.length : true
         case 'DecisionNode':
-          return nextNodes ? nextNodes.length < rules.length + 1 : true
+          console.log('IConnectReactFlowProps targets,rules', targets, rules)
+          return targets ? targets.length < rules.length + 1 : true
         case 'LoopNode':
-          return nextNodes ? nextNodes.length < 2 : true
+          return targets ? targets.length < 2 : true
         default:
           return true
       }
     }
-    console.log('isTargetHandle', isTargetHandle(), nextNodes)
 
     return (
       <React.Fragment>
@@ -67,15 +71,16 @@ export function connectFreeFlow({
                 style={{ zIndex: isTarget ? 3 : -1 }}
               />
             )}
-            {handleProps.type === 'source' && isTargetHandle() && (
-              <Handle
-                className="targetHandle"
-                key={idx}
-                isConnectable={true}
-                {...handleProps}
-                style={{ zIndex: 2 }}
-              />
-            )}
+            <Handle
+              className="targetHandle"
+              key={idx}
+              isConnectable={true}
+              {...handleProps}
+              style={{
+                zIndex: 2,
+                display: isTargetHandle() ? 'inherit' : 'none',
+              }}
+            />
           </>
         ))}
         <FlowMetaNodeContext.Provider
