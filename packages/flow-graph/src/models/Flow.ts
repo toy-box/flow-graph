@@ -66,7 +66,6 @@ export class Flow {
     })
   }
   setCanvas(canvas: ReactFlowCanvas) {
-    console.log('canvas', canvas)
     this.canvas = canvas
   }
 
@@ -76,7 +75,6 @@ export class Flow {
 
   layoutFlow() {
     if (this.canvas) {
-      console.log('this.flowGraph.layoutData', this.flowGraph.layoutData())
       const layout = this.flowGraph.layoutData()
       this.setGraphNodes(layout.nodes)
       const edges: IEdge[] = []
@@ -223,7 +221,6 @@ export class Flow {
 
   /// canve graph
   setGraphNodes = (nodes: FlowNode[]) => {
-    console.log('set nodes', nodes)
     this.canvas?.setNodes(nodes)
   }
 

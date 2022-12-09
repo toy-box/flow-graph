@@ -33,10 +33,6 @@ export const NodePanel: React.FC<INodePanelProps> = ({
     closeExtend && closeExtend()
   }, [])
 
-  // todo:剪切功能
-  // const handleExport = React.useCallback(() => {
-  //   console.log('flowMetaNode', flowMetaNode.toJson())
-  // }, [])
   return (
     <div className={cls(prefixCls, className)} style={style}>
       <Button type="text" size="small" onClick={handleEdit} block>

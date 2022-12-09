@@ -116,7 +116,6 @@ export class ReactFlowCanvas implements ICanvas {
 
   setNodes(nodes: INode[]) {
     this.nodes = nodes.map((node) => this.makeNode(node))
-    console.log('this.nodes->setNodes', this.nodes)
   }
 
   setEdges(edges: IEdge[]) {
@@ -133,7 +132,6 @@ export class ReactFlowCanvas implements ICanvas {
 
   addEdge(edge: IEdge, edgeId?: string) {
     this.edges = [...this.edges, this.makeEdge(edge, edgeId)]
-    console.log('miwoyo this.edges', this.edges)
   }
 
   addEdges(edges: IEdge[]) {
@@ -141,7 +139,6 @@ export class ReactFlowCanvas implements ICanvas {
   }
 
   onNodesChange(changes: NodeChange[]) {
-    console.log('onNodesChange---', changes)
     this.nodes = applyNodeChanges(changes, this.nodes)
   }
 
@@ -170,7 +167,6 @@ export class ReactFlowCanvas implements ICanvas {
   }
 
   onConnect(connection: Connection, sourceFlowmetaNode?: any) {
-    console.log('miwoyo onConnect', connection)
     const casualEdge = { id: uid(), ...connection }
     const sourceNode = this.nodes.find((node) => node.id === connection.source)
     const targetNode = this.nodes.find((node) => node.id === connection.target)
@@ -182,7 +178,6 @@ export class ReactFlowCanvas implements ICanvas {
         ).data
         const loadData = rules
           .map(({ name, id: ruleId }) => {
-            console.log('label,name', this.edges, name)
             if (
               this.edges.findIndex(
                 ({ source, id }) =>
@@ -274,7 +269,6 @@ export class ReactFlowCanvas implements ICanvas {
         }
         break
       case FlowMetaType.ASSIGNMENT:
-        console.log('sourceNode', sourceNode)
         sourceFlowmetaNode.updateConnector(connection.target)
         sourceFlowmetaNode.flowNode.targets.push({ id: connection.target })
         this.edges = flowAddEdge(casualEdge, this.edges)

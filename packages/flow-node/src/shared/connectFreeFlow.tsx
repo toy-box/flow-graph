@@ -26,15 +26,7 @@ export function connectFreeFlow({
   const FlowNodeWrapper = (props: IStandardNodeProps) => {
     const connectionNodeId = useStore(connectionNodeIdSelector)
     const isTarget = connectionNodeId && connectionNodeId !== props.id
-    console.log('connectionNodeId', connectionNodeId, props)
     const freeFlow = useFreeFlow()
-    console.log('connect ', freeFlow.flowMetaNodeMap)
-    console.log(
-      'miwoyo handles props nods',
-      handles,
-      props,
-      freeFlow.flow.canvas.nodes
-    )
     const {
       // nextNodes,
       data: { rules },
@@ -49,7 +41,6 @@ export function connectFreeFlow({
         case 'StartNode':
           return targets ? !targets.length : true
         case 'DecisionNode':
-          console.log('IConnectReactFlowProps targets,rules', targets, rules)
           return targets ? targets.length < rules.length + 1 : true
         case 'LoopNode':
           return targets ? targets.length < 2 : true

@@ -315,7 +315,6 @@ export const FixStepEdge = memo(
     interactionWidth,
     data,
   }: FixStepEdgeProps) => {
-    console.log('FixStepEdge', sourceX, sourceY, targetX, targetY, label)
     const [path, labelX, labelY] = getFixStepPath({
       sourceX,
       sourceY,

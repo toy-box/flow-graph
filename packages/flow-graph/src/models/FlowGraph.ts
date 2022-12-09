@@ -217,7 +217,6 @@ export class FlowGraph {
   }
 
   layout() {
-    console.log('nodes layout', this.nodes)
     this.nodes
       .filter((node) => node.isAreaBegin)
       .forEach((node) => {

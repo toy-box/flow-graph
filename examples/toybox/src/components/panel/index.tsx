@@ -22,10 +22,8 @@ export const Panel = () => {
   }, [metaFlow])
   const handleFreeLayout = useCallback(() => {
     // metaFlow.flow.setGraphNodes([])
-    console.log('metaFlow.flowMeta', metaFlow.flowMeta, metaFlow.toJsonList)
     freeFlow.setMetaFlow(freeFlow.flowMeta ?? freeMeta, 'FREE_START_UP')
     metaFlow.setMetaFlow({}, 'FREE_START_UP')
-    console.log('metaFlow.flowType', metaFlow.flowType)
     // freeFlow.
     // freeFlow..layoutFlow()
   }, [metaFlow])

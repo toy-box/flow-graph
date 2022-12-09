@@ -126,7 +126,6 @@ export class FlowAssignment extends FlowMetaNode {
   }
 
   appendAt(at: FlowNode) {
-    console.log('this.metaFlow flowAssignMent', this.metaFlow, at)
     if (this.flowNode == null) {
       if (at.isLoopBack) {
         this.connector.targetReference = at.loopBegin.id
@@ -156,11 +155,9 @@ export class FlowAssignment extends FlowMetaNode {
   }
 
   update = (payload: FlowMetaUpdate) => {
-    console.log('update assign', this)
     this.name = payload.name
     this.description = payload.description
     this.assignmentItems = payload.assignmentItems
-    console.log('assign toJson', this.toJson())
     this.toJson()
   }
 

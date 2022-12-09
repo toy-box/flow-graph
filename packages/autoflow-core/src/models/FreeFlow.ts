@@ -286,7 +286,6 @@ export class FreeFlow {
   }
 
   makeFlowNode(node: FlowMetaParam): FlowMetaNode {
-    console.log('makeFlowNode', node)
     switch (node.type) {
       case FlowMetaType.START:
         return new FlowStart(

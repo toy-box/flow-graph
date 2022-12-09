@@ -45,7 +45,6 @@ export const FlowCanvas = observer(() => {
   const eventEngine = useEvent()
   const metaflow = useMetaFlow()
   const freeFlow = useFreeFlow()
-  console.log('freeFlow', freeFlow, metaflow)
   const style = {
     width: '100%',
     height: '800px',
@@ -60,7 +59,6 @@ export const FlowCanvas = observer(() => {
     graphEle.ondrop = (e) => {
       e.stopPropagation()
       const { clientX, clientY } = e
-      console.log('e---ondrop', e, clientX, clientY)
       const nodeType = e.dataTransfer.getData('text/plain')
       addFreeLayoutNode(clientX, clientY, nodeType, nodes)
     }
@@ -205,7 +203,6 @@ export const FlowCanvas = observer(() => {
   })
   useEffect(() => {
     flow.setCanvas(reactFlowCanvas)
-    // console.log('flowFree', flowFree)
     dragFlow.setCanvas(freeFlowCanvas)
   }, [])
 
@@ -231,14 +228,11 @@ export const FlowCanvas = observer(() => {
 
   const dispatchClickEdge = React.useCallback(
     (event, data) => {
-      console.log('dispatchClickEdge edge', data, dragFlow.canvas.edges)
       const new_edges: any[] =
         dragFlow &&
         dragFlow.canvas.edges.map((edge: Edge) => {
-          console.log('dispatchClickEdge edge', edge)
           if (edge.id === data.id) {
             edge.zIndex = 1
-            // edge.selected = true
           } else {
             edge.zIndex = 0
           }
@@ -264,12 +258,7 @@ export const FlowCanvas = observer(() => {
     },
     [eventEngine]
   )
-  const onEdgesDelete = (e) => {
-    console.log('onEdgesDelete e', e)
-  }
-  const onConnectEnd = (e) => {
-    console.log('onConnectEnd e', e)
-  }
+
   return (
     <div id="flow-canvas" style={style} ref={ref}>
       {(metaflow.flowType === 'AUTO_START_UP' || !metaflow.flowType) && (
@@ -299,10 +288,8 @@ export const FlowCanvas = observer(() => {
           defaultEdgeOptions={freeEdgeOptions}
           connectionLineStyle={connectionLineStyle}
           connectionLineType={ConnectionLineType.SmoothStep}
-          onConnectEnd={onConnectEnd}
           onNodesChange={dragFlow.canvas?.onNodesChange}
           onEdgesChange={freeFlow.updateEdges}
-          onEdgesDelete={onEdgesDelete}
           onConnect={freeFlow.addEdge}
           nodeTypes={dragFlow.canvas?.components}
           edgeTypes={dragFlow.canvas?.edgeComponents}
