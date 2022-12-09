@@ -354,7 +354,7 @@ export const freeMeta: IFlowMeta = {
         id: 'assignment1',
         name: 'Assignment',
         type: FlowMetaType.ASSIGNMENT,
-        connector: {},
+        connector: { targetReference: 'assignment12323' },
         x: 100,
         y: 180,
       },

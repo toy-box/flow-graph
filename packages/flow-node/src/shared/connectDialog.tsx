@@ -85,10 +85,10 @@ export const decisonConnectDialog = (
         const newEdge = {
           ...connection,
           label: label,
-          id:
-            payload.values.decisionResult.split('-')[0] === 'default'
-              ? uid()
-              : payload.values.decisionResult,
+          id: uid(),
+          // payload.values.decisionResult.split('-')[0] === 'default'
+          //   ? uid()
+          //   : payload.values.decisionResult+ '-' + uid(),
         }
         canvas.edges = [newEdge, ...canvas.edges]
         if (payload.values.decisionResult.split('-')[0] === 'default') {
@@ -100,7 +100,7 @@ export const decisonConnectDialog = (
             id: connection.target,
             label: newEdge.label,
             edgeId: newEdge.id,
-            ruleId: null,
+            ruleId: payload.values.decisionResult,
           })
         } else {
           const Index = sourceFlowmetaNode.rules.findIndex(

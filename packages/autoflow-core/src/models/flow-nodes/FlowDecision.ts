@@ -229,15 +229,15 @@ export class FlowDecision extends FlowMetaNode {
   }
 
   deleteConnector(target, nodeTarget) {
-    if (this.defaultConnector.targetReference === target) {
+    const { ruleId } = nodeTarget
+    if (
+      this.defaultConnector.targetReference === target &&
+      (ruleId === null || ruleId.split('-')[0] === 'default')
+    ) {
       this.defaultConnector = { targetReference: '' }
     } else {
-      // debugger
       this.rules.map((rule, index) => {
-        if (
-          rule.connector.targetReference === target &&
-          rule.id === nodeTarget.ruleId
-        ) {
+        if (rule.connector.targetReference === target && rule.id === ruleId) {
           this.rules[index] = {
             ...this.rules[index],
             connector: { targetReference: '' },

@@ -11,6 +11,7 @@ import {
   StartFlowMetaUpdate,
   FlowMetaParamWithSize,
 } from '../types'
+import { NodeChange } from 'reactflow'
 import {
   FlowStart,
   FlowDecision,
@@ -82,6 +83,7 @@ export class FreeFlow {
       // mountNodes: batch,
       addEdge: action,
       updateEdges: action,
+      changeNodes: action,
     })
   }
   get flowGraph() {
@@ -317,5 +319,9 @@ export class FreeFlow {
 
   updateEdges(changes) {
     this.flow.canvas.onEdgesChange(changes, this.flowMetaNodeMap)
+  }
+
+  changeNodes(changes: NodeChange[]) {
+    this.flow.canvas.onNodesChange(changes, this)
   }
 }

@@ -21,7 +21,7 @@ import { ICanvas } from './Canvas'
 import { INode, IEdge, LayoutModeEnum } from '../types'
 import { FlowGraph } from '../models'
 import { decisonConnectDialog, loopConnectDialog } from '@toy-box/flow-node'
-import { FlowMetaType } from '@toy-box/autoflow-core'
+import { FlowMetaType, FreeFlow } from '@toy-box/autoflow-core'
 
 import 'reactflow/dist/style.css'
 import './canvas.less'
@@ -138,7 +138,19 @@ export class ReactFlowCanvas implements ICanvas {
     edges.forEach((edge) => this.addEdge(edge))
   }
 
-  onNodesChange(changes: NodeChange[]) {
+  onNodesChange(changes: NodeChange[], freeFlow?: FreeFlow) {
+    if (freeFlow) {
+      const { flowMetaNodeMap } = freeFlow
+      changes.map((change) => {
+        if (change.type === 'remove') {
+          const {
+            [change.id]: {},
+            ...rest
+          } = flowMetaNodeMap
+          freeFlow.getFlowMetaNodeMap(rest)
+        }
+      })
+    }
     this.nodes = applyNodeChanges(changes, this.nodes)
   }
 
@@ -168,7 +180,6 @@ export class ReactFlowCanvas implements ICanvas {
 
   onConnect(connection: Connection, sourceFlowmetaNode?: any) {
     const casualEdge = { id: uid(), ...connection }
-    const sourceNode = this.nodes.find((node) => node.id === connection.source)
     const targetNode = this.nodes.find((node) => node.id === connection.target)
       .data.name
     switch (sourceFlowmetaNode.type) {
@@ -176,18 +187,18 @@ export class ReactFlowCanvas implements ICanvas {
         const { rules } = this.nodes.find(
           (node) => node.id === connection.source
         ).data
+        sourceFlowmetaNode.flowNode.targets
         const loadData = rules
-          .map(({ name, id: ruleId }) => {
+          .map(({ name, id }) => {
             if (
-              this.edges.findIndex(
-                ({ source, id }) =>
-                  source === connection.source && id === ruleId
+              sourceFlowmetaNode.flowNode.targets.findIndex(
+                ({ ruleId }) => id === ruleId
               ) === -1
             ) {
               return {
                 label: name,
-                value: ruleId,
-                id: ruleId,
+                value: id,
+                id: id,
               }
             }
           })
@@ -212,7 +223,7 @@ export class ReactFlowCanvas implements ICanvas {
         } else if (loadData.length === 1) {
           const newEdge = {
             ...connection,
-            id: loadData[0].id ?? uid(),
+            id: uid(),
             label: loadData[0].label,
           }
           // this.edges = flowAddEdge(newEdge, this.edges)
@@ -231,8 +242,8 @@ export class ReactFlowCanvas implements ICanvas {
           sourceFlowmetaNode.flowNode.targets.push({
             id: connection.target,
             label: newEdge.label,
-            ruleId: loadData[0].id ?? null,
-            edgeId: uid(),
+            ruleId: loadData[0].id,
+            edgeId: newEdge.id,
           })
         }
         break
@@ -240,7 +251,6 @@ export class ReactFlowCanvas implements ICanvas {
         const isDialog =
           sourceFlowmetaNode.defaultConnector.targetReference === '' &&
           sourceFlowmetaNode.nextValueConnector.targetReference === ''
-        // debugger
         if (isDialog) {
           loopConnectDialog(targetNode, connection, this, sourceFlowmetaNode)
         } else {

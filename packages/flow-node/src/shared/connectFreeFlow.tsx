@@ -6,6 +6,7 @@ import { IStandardNodeProps } from '../standard-node'
 import { FlowMetaNodeContext } from './context'
 import { INodeTemplate } from '../types'
 import { NodeMake } from '../shared'
+import { uid } from '@toy-box/toybox-shared'
 
 import './connectFreeFlow.less'
 
@@ -56,7 +57,6 @@ export function connectFreeFlow({
             {handleProps.type === 'target' && (
               <Handle
                 className="sourceHandle"
-                key={idx}
                 isConnectable={true}
                 {...handleProps}
                 style={{ zIndex: isTarget ? 3 : -1 }}
@@ -64,12 +64,11 @@ export function connectFreeFlow({
             )}
             <Handle
               className="targetHandle"
-              key={idx}
               isConnectable={true}
               {...handleProps}
               style={{
                 zIndex: 2,
-                display: isTargetHandle() ? 'inherit' : 'none',
+                visibility: isTargetHandle() ? 'inherit' : 'hidden',
               }}
             />
           </>

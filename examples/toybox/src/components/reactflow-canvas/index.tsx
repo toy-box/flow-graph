@@ -288,7 +288,7 @@ export const FlowCanvas = observer(() => {
           defaultEdgeOptions={freeEdgeOptions}
           connectionLineStyle={connectionLineStyle}
           connectionLineType={ConnectionLineType.SmoothStep}
-          onNodesChange={dragFlow.canvas?.onNodesChange}
+          onNodesChange={freeFlow.changeNodes}
           onEdgesChange={freeFlow.updateEdges}
           onConnect={freeFlow.addEdge}
           nodeTypes={dragFlow.canvas?.components}
