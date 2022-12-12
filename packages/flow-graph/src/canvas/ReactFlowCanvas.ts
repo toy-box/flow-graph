@@ -160,14 +160,14 @@ export class ReactFlowCanvas implements ICanvas {
         const { source, target } = this.edges.find(
           (edge) => edge.id === change.id
         )
-        const nodeTarget = flowMetaNodeMap[source].flowNode.targets
+        const nodeTarget = this.flowGraph.nodeMap[source].targets
           .map((target, index) => {
             if (target?.edgeId === change.id || target.ruleId === change.id) {
               return { ...target, index }
             }
           })
           .filter(Boolean)[0]
-        flowMetaNodeMap[source].flowNode.targets.splice(
+        this.flowGraph.nodeMap[source].targets.splice(
           nodeTarget ? nodeTarget.index : 0,
           1
         )
@@ -179,21 +179,17 @@ export class ReactFlowCanvas implements ICanvas {
   }
 
   onConnect(connection: Connection, sourceFlowmetaNode?: any) {
+    const { target, source } = connection
+    const nodeMapTargets = this.flowGraph.nodeMap[source].targets
     const casualEdge = { id: uid(), ...connection }
-    const targetNode = this.nodes.find((node) => node.id === connection.target)
-      .data.name
+    const targetNode = this.nodes.find((node) => node.id === target).data.name
     switch (sourceFlowmetaNode.type) {
       case FlowMetaType.DECISION:
-        const { rules } = this.nodes.find(
-          (node) => node.id === connection.source
-        ).data
-        sourceFlowmetaNode.flowNode.targets
+        const { rules } = this.nodes.find((node) => node.id === source).data
         const loadData = rules
           .map(({ name, id }) => {
             if (
-              sourceFlowmetaNode.flowNode.targets.findIndex(
-                ({ ruleId }) => id === ruleId
-              ) === -1
+              nodeMapTargets.findIndex(({ ruleId }) => id === ruleId) === -1
             ) {
               return {
                 label: name,
@@ -226,25 +222,24 @@ export class ReactFlowCanvas implements ICanvas {
             id: uid(),
             label: loadData[0].label,
           }
-          // this.edges = flowAddEdge(newEdge, this.edges)
           this.edges = [...this.edges, newEdge]
           if (loadData[0].id.split('-')[0] === 'default') {
-            sourceFlowmetaNode.updateConnector(
-              connection.target,
-              'defaultConnector'
-            )
+            sourceFlowmetaNode.updateConnector(target, 'defaultConnector')
           } else {
             const Index = sourceFlowmetaNode.rules.findIndex(
               ({ id }) => id === loadData[0].id
             )
-            sourceFlowmetaNode.updateConnector(connection.target, Index)
+            sourceFlowmetaNode.updateConnector(target, Index)
           }
-          sourceFlowmetaNode.flowNode.targets.push({
-            id: connection.target,
-            label: newEdge.label,
-            ruleId: loadData[0].id,
-            edgeId: newEdge.id,
-          })
+          this.flowGraph.setTarget(source, [
+            ...nodeMapTargets,
+            {
+              id: target,
+              label: newEdge.label,
+              ruleId: loadData[0].id,
+              edgeId: newEdge.id,
+            },
+          ])
         }
         break
       case FlowMetaType.LOOP:
@@ -262,30 +257,27 @@ export class ReactFlowCanvas implements ICanvas {
             label: isDefaultConnecter ? 'After Last Item' : 'For Each Item',
           }
           isDefaultConnecter
-            ? sourceFlowmetaNode.updateConnector(
-                connection.target,
-                'defaultConnector'
-              )
-            : sourceFlowmetaNode.updateConnector(
-                connection.target,
-                'nextValueConnector'
-              )
-          sourceFlowmetaNode.flowNode.targets.push({
-            id: connection.target,
-            label: newEdge.label,
-            edgeId: newEdge.id,
-          })
+            ? sourceFlowmetaNode.updateConnector(target, 'defaultConnector')
+            : sourceFlowmetaNode.updateConnector(target, 'nextValueConnector')
+          this.flowGraph.setTarget(source, [
+            ...nodeMapTargets,
+            {
+              id: target,
+              label: newEdge.label,
+              edgeId: newEdge.id,
+            },
+          ])
           this.edges = [...this.edges, newEdge]
         }
         break
       case FlowMetaType.ASSIGNMENT:
-        sourceFlowmetaNode.updateConnector(connection.target)
-        sourceFlowmetaNode.flowNode.targets.push({ id: connection.target })
+        sourceFlowmetaNode.updateConnector(target)
+        this.flowGraph.setTarget(source, [...nodeMapTargets, { id: target }])
         this.edges = flowAddEdge(casualEdge, this.edges)
         break
       case FlowMetaType.START:
-        sourceFlowmetaNode.updateConnector(connection.target)
-        sourceFlowmetaNode.flowNode.targets.push({ id: connection.target })
+        sourceFlowmetaNode.updateConnector(target)
+        this.flowGraph.setTarget(source, [...nodeMapTargets, { id: target }])
         this.edges = flowAddEdge(casualEdge, this.edges)
         break
       default:

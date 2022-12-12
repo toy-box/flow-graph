@@ -1,7 +1,7 @@
 import { FormDialog, FormItem, FormLayout, Select } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
 import React from 'react'
-import { ICanvas } from '@toy-box/flow-graph'
+import { ReactFlowCanvas } from '@toy-box/flow-graph'
 import { Connection, addEdge } from 'reactflow'
 import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
 import { uid } from '@toy-box/toybox-shared'
@@ -52,10 +52,11 @@ const loopConnectSchema = {
 export const decisonConnectDialog = (
   targetNode: string,
   connection: Connection,
-  canvas: ICanvas,
+  canvas: ReactFlowCanvas,
   loadData?: any,
-  sourceFlowmetaNode?: FlowMetaNode
+  sourceFlowmetaNode?: any
 ) => {
+  const { target, source } = connection
   const useAsyncDataSource = (loadData) => (field) => {
     field.dataSource = loadData
     field.data = loadData[0].value
@@ -86,29 +87,26 @@ export const decisonConnectDialog = (
           ...connection,
           label: label,
           id: uid(),
-          // payload.values.decisionResult.split('-')[0] === 'default'
-          //   ? uid()
-          //   : payload.values.decisionResult+ '-' + uid(),
         }
         canvas.edges = [newEdge, ...canvas.edges]
         if (payload.values.decisionResult.split('-')[0] === 'default') {
-          sourceFlowmetaNode.updateConnector(
-            connection.target,
-            'defaultConnector'
-          )
-          sourceFlowmetaNode.flowNode.targets.push({
-            id: connection.target,
-            label: newEdge.label,
-            edgeId: newEdge.id,
-            ruleId: payload.values.decisionResult,
-          })
+          sourceFlowmetaNode.updateConnector(target, 'defaultConnector')
+          canvas.flowGraph.setTarget(source, [
+            ...canvas.flowGraph.nodeMap[source].targets,
+            {
+              id: target,
+              label: newEdge.label,
+              edgeId: newEdge.id,
+              ruleId: payload.values.decisionResult,
+            },
+          ])
         } else {
           const Index = sourceFlowmetaNode.rules.findIndex(
             ({ id }) => id === payload.values.decisionResult
           )
-          sourceFlowmetaNode.updateConnector(connection.target, Index)
+          sourceFlowmetaNode.updateConnector(target, Index)
           sourceFlowmetaNode.flowNode.targets.push({
-            id: connection.target,
+            id: target,
             label: newEdge.label,
             ruleId: payload.values.decisionResult ?? null,
             edgeId: newEdge.id,
@@ -128,9 +126,10 @@ export const decisonConnectDialog = (
 export const loopConnectDialog = (
   targetNode: string,
   connection: Connection,
-  canvas: ICanvas,
-  sourceFlowmetaNode: FlowMetaNode
+  canvas: ReactFlowCanvas,
+  sourceFlowmetaNode: any
 ) => {
+  const { target, source } = connection
   const dialog = FormDialog('选择决策连接器的结果', () => {
     return (
       <FormLayout labelCol={6} wrapperCol={10}>
@@ -153,19 +152,16 @@ export const loopConnectDialog = (
           label: payload.values.loopResult,
         }
         payload.values.loopResult === 'For Each Item'
-          ? sourceFlowmetaNode.updateConnector(
-              connection.target,
-              'nextValueConnector'
-            )
-          : sourceFlowmetaNode.updateConnector(
-              connection.target,
-              'defaultConnector'
-            )
-        sourceFlowmetaNode.flowNode.targets.push({
-          id: connection.target,
-          label: newEdge.label,
-          edgeId: newEdge.id,
-        })
+          ? sourceFlowmetaNode.updateConnector(target, 'nextValueConnector')
+          : sourceFlowmetaNode.updateConnector(target, 'defaultConnector')
+        canvas.flowGraph.setTarget(source, [
+          ...canvas.flowGraph.nodeMap[source].targets,
+          {
+            id: target,
+            label: newEdge.label,
+            edgeId: newEdge.id,
+          },
+        ])
         canvas.edges = [newEdge, ...canvas.edges]
         next(payload)
       }, 500)
