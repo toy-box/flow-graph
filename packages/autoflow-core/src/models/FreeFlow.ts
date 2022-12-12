@@ -19,6 +19,7 @@ import {
   FlowMetaNode,
   FlowAssignment,
   FlowEnd,
+  FlowRecordCreate,
 } from './flow-nodes'
 
 enum MetaFieldType {
@@ -307,6 +308,8 @@ export class FreeFlow {
         return new FlowAssignment(node, this)
       case FlowMetaType.END:
         return new FlowEnd(node, this)
+      case FlowMetaType.RECORD_CREATE:
+        return new FlowRecordCreate(node, this)
       default:
         return
     }
