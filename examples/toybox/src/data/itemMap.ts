@@ -19,17 +19,24 @@ export const itemMap: ItemMapType[] = [
     content: ComponentItem({ title: 'Assignment', icon: 'titleText' }),
   },
   {
-    id: 'Assignment',
+    id: 'Decision',
     key: 'Decision',
     type: 'Decision',
     title: '决策',
     content: ComponentItem({ title: 'Decision', icon: 'titleText' }),
   },
   {
-    id: 'Assignment',
+    id: 'Loop',
     key: 'Loop',
     type: 'Loop',
     title: '循环',
     content: ComponentItem({ title: 'Loop', icon: 'titleText' }),
+  },
+  {
+    id: 'RecordCreate',
+    key: 'RecordCreate',
+    type: 'RecordCreate',
+    title: '循环',
+    content: ComponentItem({ title: 'Create Records', icon: 'titleText' }),
   },
 ]

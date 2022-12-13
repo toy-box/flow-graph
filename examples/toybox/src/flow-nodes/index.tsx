@@ -370,6 +370,16 @@ const loopRender = () => {
   })
 }
 
+const recordCreateRender = () => {
+  return FormDialog({ title: `New Create Records`, width: '90vw' }, () => {
+    return (
+      <FormLayout labelCol={6} wrapperCol={10}>
+        <SchemaField schema={assignNodeSchema} />
+      </FormLayout>
+    )
+  })
+}
+
 export const assignOnEdit = (node: any, at?: string, additionInfo?: any) => {
   const dialog = assignRender()
   dialog
@@ -483,6 +493,40 @@ export const loopOnEdit = (node: any, at?: string, additionInfo?: any) => {
     .open()
 }
 
+export const recordCreateOnEdit = (
+  node: any,
+  at?: string,
+  additionInfo?: any
+) => {
+  const dialog = recordCreateRender()
+  dialog
+    .forOpen((payload, next) => {
+      setTimeout(() => {
+        next({
+          initialValues: {
+            name: node.name ?? node.title,
+            description: node.description,
+          },
+        })
+      }, 500)
+    })
+    .forConfirm((payload, next) => {
+      console.log('payload.values - node', payload.values, node)
+      setTimeout(() => {
+        at
+          ? node.make(at, { ...payload.values, ...additionInfo })
+          : node.update(payload.values)
+        next(payload)
+      }, 500)
+    })
+    .forCancel((payload, next) => {
+      setTimeout(() => {
+        next(payload)
+      }, 500)
+    })
+    .open()
+}
+
 export const onPanelEdit = (
   node: INodeTemplate<NodeMake>,
   at: string,
@@ -496,6 +540,8 @@ export const onPanelEdit = (
         return decideOnEdit(node, at, additionInfo)
       case 'Loop':
         return loopOnEdit(node, at, additionInfo)
+      case 'RecordCreate':
+        return recordCreateOnEdit(node, at, additionInfo)
       default:
         return assignOnEdit(node, at, additionInfo)
     }

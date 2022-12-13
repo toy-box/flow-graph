@@ -62,6 +62,7 @@ export interface IFlowMetaNodes {
   decisions?: FlowMetaParam[]
   waits?: FlowMetaParam[]
   loops?: FlowMetaParam[]
+  recordCreates?: FlowMetaParam[]
 }
 export interface IFlowMeta {
   resources: IFlowMetaResource

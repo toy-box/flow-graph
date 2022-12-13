@@ -42,6 +42,7 @@ declare type templateSource = {
 
 export interface IConnectionWithLabel extends Connection {
   label?: string
+  type?: string
 }
 
 export class ReactFlowCanvas implements ICanvas {
@@ -243,10 +244,10 @@ export class ReactFlowCanvas implements ICanvas {
         }
         break
       case FlowMetaType.LOOP:
-        const isDialog =
-          sourceFlowmetaNode.defaultConnector.targetReference === '' &&
-          sourceFlowmetaNode.nextValueConnector.targetReference === ''
-        if (isDialog) {
+        // const isLoopDialog =
+        //   sourceFlowmetaNode.defaultConnector.targetReference === '' &&
+        //   sourceFlowmetaNode.nextValueConnector.targetReference === ''
+        if (nodeMapTargets.length === 0) {
           loopConnectDialog(targetNode, connection, this, sourceFlowmetaNode)
         } else {
           const isDefaultConnecter =
@@ -279,6 +280,38 @@ export class ReactFlowCanvas implements ICanvas {
         sourceFlowmetaNode.updateConnector(target)
         this.flowGraph.setTarget(source, [...nodeMapTargets, { id: target }])
         this.edges = flowAddEdge(casualEdge, this.edges)
+        break
+      case FlowMetaType.RECORD_CREATE:
+        if (nodeMapTargets.length === 0) {
+          const newEdge = { ...connection, id: uid() }
+          this.flowGraph.setTarget(source, [
+            ...nodeMapTargets,
+            { id: target, edgeId: newEdge.id },
+          ])
+          this.edges = [...this.edges, newEdge]
+          sourceFlowmetaNode.updateConnector(target, 'connector')
+        } else {
+          const isFaultConnector =
+            sourceFlowmetaNode.faultConnector.targetReference === ''
+          const newEdge = {
+            ...connection,
+            id: uid(),
+            label: isFaultConnector ? 'Fault' : '',
+            type: isFaultConnector ? 'faultEdge' : 'freeEdge',
+          }
+          isFaultConnector
+            ? sourceFlowmetaNode.updateConnector(target, 'faultConnector')
+            : sourceFlowmetaNode.updateConnector(target, 'connector')
+          this.flowGraph.setTarget(source, [
+            ...nodeMapTargets,
+            {
+              id: target,
+              label: newEdge.label,
+              edgeId: newEdge.id,
+            },
+          ])
+          this.edges = [...this.edges, newEdge]
+        }
         break
       default:
         this.edges = flowAddEdge(casualEdge, this.edges)

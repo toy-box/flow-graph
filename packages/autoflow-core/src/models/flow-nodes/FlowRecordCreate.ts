@@ -1,5 +1,5 @@
 import { define, observable, action } from '@formily/reactive'
-import { FlowNode, TargetProps } from '@toy-box/flow-graph'
+import { FlowNode, TargetProps, LayoutModeEnum } from '@toy-box/flow-graph'
 import { IFlowNodeProps } from '@toy-box/flow-graph/src'
 import { uid } from '@toy-box/toybox-shared'
 import {
@@ -20,6 +20,12 @@ export class FlowRecordCreate extends FlowMetaNode {
 
   static DefaultConnectorProps = {
     targetReference: '',
+  }
+
+  static DefaultNodeProps: IMakeFlowNodeProps = {
+    width: 60,
+    height: 60,
+    component: 'RecordCreateNode',
   }
 
   get type() {
@@ -44,27 +50,11 @@ export class FlowRecordCreate extends FlowMetaNode {
       flowRecordCreate.description
     )
     this.connector =
-      flowRecordCreate.defaultConnector ??
-      FlowRecordCreate.DefaultConnectorProps
+      flowRecordCreate.connector ?? FlowRecordCreate.DefaultConnectorProps
     this.faultConnector =
-      flowRecordCreate.nextValueConnector ??
-      FlowRecordCreate.DefaultConnectorProps
+      flowRecordCreate.faultConnector ?? FlowRecordCreate.DefaultConnectorProps
     this.makeObservable()
   }
-
-  // constructor(flowRecordCreate: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
-  //   super(metaFlow, flowRecordCreate.id, flowRecordCreate.name, flowRecordCreate.description)
-  //   // this.defaultConnector = flowLoop.defaultConnector ?? {
-  //   //   targetReference: '',
-  //   // }
-  //   // this.nextValueConnector = flowLoop.nextValueConnector ?? {
-  //   //   targetReference: '',
-  //   // }
-  //   // this.collectionReference = flowLoop.collectionReference
-  //   // this.iterationOrder = flowLoop.iterationOrder
-  //   // this.description = flowLoop.description
-  //   // this.makeObservable()
-  // }
 
   protected makeObservable() {
     define(this, {
@@ -76,23 +66,80 @@ export class FlowRecordCreate extends FlowMetaNode {
     })
   }
 
-  makeFlowNode(props?: IMakeFlowNodeProps): IFlowNodeProps {
-    throw new Error('Method not implemented.')
+  makeFlowNode(
+    {
+      width,
+      height,
+      x,
+      y,
+      component,
+    }: IMakeFlowNodeProps = FlowRecordCreate.DefaultNodeProps
+  ): IFlowNodeProps {
+    const targets = []
+    const conId = this.connector.targetReference
+    if (conId) targets.push({ id: conId })
+    const faultConId = this.faultConnector.targetReference
+    if (faultConId) targets.push({ id: faultConId, label: 'Fault' })
+    return {
+      id: this.id,
+      label: this.name,
+      data: this,
+      type: 'loopBegin',
+      width,
+      height,
+      x,
+      y,
+      targets:
+        this.freeFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT
+          ? [this.connector.targetReference]
+          : targets,
+      faultTarget: this.faultConnector.targetReference,
+      component,
+    }
   }
+
   appendAt(at: FlowNode): void {
     throw new Error('Method not implemented.')
   }
-  appendFreeAt(flowData: FlowMetaParam): void {
-    throw new Error('Method not implemented.')
+
+  appendFreeAt(flowData: FlowMetaParamWithSize) {
+    const nodeProps = {
+      x: flowData.x,
+      y: flowData.y,
+      width: flowData.width || FlowRecordCreate.DefaultNodeProps.width,
+      height: flowData.height || FlowRecordCreate.DefaultNodeProps.height,
+      component: FlowRecordCreate.DefaultNodeProps.component,
+    }
+    const flowNode = this.makeFlowNode(nodeProps)
+    this.freeFlow.flow.addFlowFreeNode(flowNode)
   }
+
   update(flowRecordCreate: FlowMetaUpdate): void {
     this.name = flowRecordCreate.name
     this.description = flowRecordCreate.description
     this.toJson()
   }
-  deleteConnector(targetId: string, label?: string): void {
-    throw new Error('Method not implemented.')
+
+  updateConnector(
+    targetId: string,
+    options: 'connector' | 'faultConnector'
+  ): void {
+    this[options] = { targetReference: targetId }
+    this.toJson()
   }
+
+  deleteConnector(target, nodeTarget) {
+    if (
+      this.faultConnector.targetReference === target &&
+      nodeTarget.label === 'Fault'
+    ) {
+      this.faultConnector = { targetReference: '' }
+    } else {
+      this.connector = { targetReference: '' }
+    }
+    this.toJson()
+  }
+
   toJson(): FlowMetaParam {
     return {
       id: this.id,

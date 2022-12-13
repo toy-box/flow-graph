@@ -165,6 +165,10 @@ export class Flow {
     if (this.layoutMode === LayoutModeEnum.FREE_LAYOUT) {
       if (freeNode?.targets?.length === 0 || !node?.targets) return
       freeNode.targets.forEach((target) => {
+        const edgeType =
+          freeNode.component === 'RecordCreateNode' && target?.label === 'Fault'
+            ? 'faultEdge'
+            : 'freeEdge'
         const connection: IConnectionWithLabel = {
           ...freeEdgeOptions,
           source: node.id,
@@ -172,6 +176,7 @@ export class Flow {
           sourceHandle: null,
           targetHandle: null,
           label: target?.label,
+          type: edgeType,
         }
         // this.canvas.onConnect(connection, node)
         const edgeId = target?.edgeId

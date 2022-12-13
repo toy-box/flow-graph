@@ -44,6 +44,7 @@ export function connectFreeFlow({
         case 'DecisionNode':
           return targets ? targets.length < rules.length + 1 : true
         case 'LoopNode':
+        case 'RecordCreateNode':
           return targets ? targets.length < 2 : true
         default:
           return true

@@ -74,6 +74,22 @@ export const nodeTemplatesProvider = (
         appendOrAddNode(at, flowData)
       },
     },
+    {
+      icon: 'flow',
+      title: 'RecordCreate',
+      description: 'Create Records',
+      group: 'flow',
+      make: (at: string, editInfo: INodeEdit) => {
+        const flowData = {
+          id: uid(),
+          name: 'Loop',
+          type: FlowMetaType.RECORD_CREATE,
+          connector: { targetReference: '' },
+          ...editInfo,
+        }
+        appendOrAddNode(at, flowData)
+      },
+    },
     // {
     //   icon: 'flow',
     //   title: 'Decision',

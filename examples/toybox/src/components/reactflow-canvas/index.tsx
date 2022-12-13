@@ -13,6 +13,7 @@ import {
   FixStepEdge,
   ForkEdge,
   FreeEdge,
+  FaultEdge,
   freeEdgeOptions,
   connectionLineStyle,
   LayoutModeEnum,
@@ -143,6 +144,7 @@ export const FlowCanvas = observer(() => {
       fixEdge: FixStepEdge,
       forkEdge: ForkEdge,
       freeEdge: FreeEdge,
+      faultEdge: FaultEdge,
     },
     components: {
       StartNode: connectFreeFlow({
@@ -193,6 +195,15 @@ export const FlowCanvas = observer(() => {
       LoopNode: connectFreeFlow({
         component: StandardNode,
         content: <h3>Loop</h3>,
+        handles: [
+          { type: 'target', position: Position.Top },
+          { type: 'source', position: Position.Bottom },
+        ],
+        onEdit: loopOnEdit,
+      }),
+      RecordCreateNode: connectFreeFlow({
+        component: StandardNode,
+        content: <h3>action</h3>,
         handles: [
           { type: 'target', position: Position.Top },
           { type: 'source', position: Position.Bottom },
