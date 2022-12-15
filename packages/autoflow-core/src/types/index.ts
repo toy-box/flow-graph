@@ -252,7 +252,6 @@ export type FlowType =
   | 'PLATFORM_EVENT'
   | 'RECORD_TRIGGER'
   | 'SCREEN'
-  | 'FREE_START_UP'
 
 export type LayoutType = 'AUTO_START_UP' | 'FREE_START_UP'
 

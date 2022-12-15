@@ -31,11 +31,13 @@ export abstract class FlowMetaNode {
     name: string,
     description?: string
   ) {
-    if (flow.flowType === 'AUTO_START_UP') {
-      this.metaFlow = flow as MetaFlow
-    } else {
-      this.freeFlow = flow as FreeFlow
-    }
+    this.metaFlow = flow
+    this.freeFlow = flow
+    // if (flow.flowType === 'AUTO_START_UP') {
+    //   this.metaFlow = flow as MetaFlow
+    // } else {
+    //   this.freeFlow = flow as FreeFlow
+    // }
     this.flowType = flow.flowType
     this.id = id
     this.name = name

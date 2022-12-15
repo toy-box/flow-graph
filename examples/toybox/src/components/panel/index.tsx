@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import { useMetaFlow, useFreeFlow } from '@toy-box/flow-node'
 import { flowData1, flowData2, flowMeta, freeMeta } from '../../data/flowData'
+import { LayoutModeEnum } from '@toy-box/flow-graph'
 
 export const Panel = () => {
   const metaFlow = useMetaFlow()
@@ -12,8 +13,12 @@ export const Panel = () => {
     metaFlow.flow.setFlowNodes(flowData2)
   }, [])
   const handleMetaFlow = useCallback(() => {
-    metaFlow.setMetaFlow(freeFlow.flowMeta ?? flowMeta, 'AUTO_START_UP')
-    freeFlow.setMetaFlow({}, 'AUTO_START_UP')
+    metaFlow.setMetaFlow(
+      freeFlow.flowMeta ?? flowMeta,
+      'AUTO_START_UP',
+      LayoutModeEnum.AUTO_LAYOUT
+    )
+    freeFlow.setMetaFlow({}, 'AUTO_START_UP', LayoutModeEnum.AUTO_LAYOUT)
     metaFlow.flow.layoutFlow()
   }, [metaFlow])
   const handleExport = useCallback(() => {
@@ -22,8 +27,12 @@ export const Panel = () => {
   }, [metaFlow])
   const handleFreeLayout = useCallback(() => {
     // metaFlow.flow.setGraphNodes([])
-    freeFlow.setMetaFlow(freeFlow.flowMeta ?? freeMeta, 'FREE_START_UP')
-    metaFlow.setMetaFlow({}, 'FREE_START_UP')
+    freeFlow.setMetaFlow(
+      freeFlow.flowMeta ?? freeMeta,
+      'AUTO_START_UP',
+      LayoutModeEnum.FREE_LAYOUT
+    )
+    metaFlow.setMetaFlow({}, 'AUTO_START_UP', LayoutModeEnum.FREE_LAYOUT)
     // freeFlow.
     // freeFlow..layoutFlow()
   }, [metaFlow])
