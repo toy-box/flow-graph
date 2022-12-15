@@ -19,6 +19,7 @@ export const nodeTemplatesProvider = (
       icon: 'flow',
       title: 'Assignment',
       description: 'Assignment node',
+      type: FlowMetaType.ASSIGNMENT,
       group: 'flow',
       make: (at: string, editInfo: INodeEdit) => {
         const flowData = {
@@ -35,6 +36,7 @@ export const nodeTemplatesProvider = (
       icon: 'flow',
       title: 'Loop',
       description: 'Loop node',
+      type: FlowMetaType.LOOP,
       group: 'flow',
       make: (at: string, editInfo: INodeEdit) => {
         const flowData = {
@@ -51,6 +53,7 @@ export const nodeTemplatesProvider = (
       icon: 'flow',
       title: 'Decision',
       description: 'Decision node',
+      type: FlowMetaType.DECISION,
       group: 'flow',
       make: (at: string, editInfo: INodeEdit) => {
         const flowData = {
@@ -78,6 +81,7 @@ export const nodeTemplatesProvider = (
       icon: 'flow',
       title: 'RecordCreate',
       description: 'Create Records',
+      type: FlowMetaType.RECORD_CREATE,
       group: 'flow',
       make: (at: string, editInfo: INodeEdit) => {
         const flowData = {

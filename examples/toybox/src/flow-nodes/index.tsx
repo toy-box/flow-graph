@@ -11,7 +11,7 @@ import {
   Radio,
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
-import { FlowMetaNode } from '@toy-box/autoflow-core'
+import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 
 export * from './addNode'
@@ -387,7 +387,7 @@ export const assignOnEdit = (node: any, at?: string, additionInfo?: any) => {
       setTimeout(() => {
         next({
           initialValues: {
-            name: node.name ?? node.title,
+            name: node.type,
             description: node.description,
             assignmentItems: node.assignmentItems,
           },
@@ -417,7 +417,7 @@ export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
       setTimeout(() => {
         next({
           initialValues: {
-            name: node.name ?? node.title,
+            name: node.type,
             description: node.description,
             rules: node.rules ?? [
               {
@@ -468,7 +468,7 @@ export const loopOnEdit = (node: any, at?: string, additionInfo?: any) => {
       setTimeout(() => {
         next({
           initialValues: {
-            name: node.name ?? node.title,
+            name: node.type,
             description: node.description,
             collectionReference: node.collectionReference,
             iterationOrder: node.iterationOrder,
@@ -504,7 +504,7 @@ export const recordCreateOnEdit = (
       setTimeout(() => {
         next({
           initialValues: {
-            name: node.name ?? node.title,
+            name: node.type,
             description: node.description,
           },
         })
@@ -528,19 +528,19 @@ export const recordCreateOnEdit = (
 }
 
 export const onPanelEdit = (
-  node: INodeTemplate<NodeMake>,
+  node: INodeTemplate<NodeMake> | FlowMetaNode,
   at: string,
   additionInfo?: any
 ) => {
   const chooseDialog = () => {
-    switch (node.title) {
-      case 'AssignMent':
+    switch (node.type) {
+      case FlowMetaType.ASSIGNMENT:
         return assignOnEdit(node, at, additionInfo)
-      case 'Decision':
+      case FlowMetaType.DECISION:
         return decideOnEdit(node, at, additionInfo)
-      case 'Loop':
+      case FlowMetaType.LOOP:
         return loopOnEdit(node, at, additionInfo)
-      case 'RecordCreate':
+      case FlowMetaType.RECORD_CREATE:
         return recordCreateOnEdit(node, at, additionInfo)
       default:
         return assignOnEdit(node, at, additionInfo)

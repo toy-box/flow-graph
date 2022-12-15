@@ -6,6 +6,7 @@ import ReactFlow, {
   BackgroundVariant,
   ConnectionLineType,
   Edge,
+  Node,
 } from 'reactflow'
 import { observer } from '@formily/reactive-react'
 import {
@@ -270,6 +271,10 @@ export const FlowCanvas = observer(() => {
     [eventEngine]
   )
 
+  const doubleClickNode = (event: React.MouseEvent, node: Node) => {
+    onPanelEdit(freeFlow.flowMetaNodeMap[node.id], node.id)
+  }
+
   return (
     <div id="flow-canvas" style={style} ref={ref}>
       {(metaflow.flowType === 'AUTO_START_UP' || !metaflow.flowType) && (
@@ -300,6 +305,7 @@ export const FlowCanvas = observer(() => {
           connectionLineStyle={connectionLineStyle}
           connectionLineType={ConnectionLineType.SmoothStep}
           onNodesChange={freeFlow.changeNodes}
+          onNodeDoubleClick={doubleClickNode}
           onEdgesChange={freeFlow.updateEdges}
           onConnect={freeFlow.addEdge}
           nodeTypes={dragFlow.canvas?.components}
