@@ -78,6 +78,16 @@ export abstract class FlowMetaNode {
     }
   }
 
+  get position() {
+    if (this.freeFlow.layoutMode === LayoutModeEnum.FREE_LAYOUT) {
+      const {
+        position: { x, y },
+      } = this.freeFlow.flow.canvas.nodes.find(({ id }) => this.id === id)
+      return { x, y }
+    }
+    // return { x: 1, y: 2 }
+  }
+
   abstract lowerLeverConnector?: TargetReference
 
   abstract nextNodes: FlowMetaNode[]

@@ -106,7 +106,7 @@ export class FreeFlow {
 
   get toJsonList() {
     return this.flowMetaNodes.map((node) => {
-      return node.toJson()
+      return { ...node.toJson(), ...node.position }
     })
   }
 
