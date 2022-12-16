@@ -75,6 +75,7 @@ export class FreeFlow {
       // flowFree: observable.ref,
       mode: observable.ref,
       flowType: observable.ref,
+      layoutMode: observable.ref,
       setMetaFlow: batch,
       getFlowMetaNodeMap: batch,
       // removeNodeWithBind: batch,
@@ -105,13 +106,18 @@ export class FreeFlow {
 
   get toJsonList() {
     return this.flowMetaNodes.map((node) => {
-      return node.toJson()
+      return { ...node.toJson(), ...node.position }
     })
   }
 
-  setMetaFlow(flowMeta: IFlowMeta, flowType: FlowType) {
+  setMetaFlow(
+    flowMeta: IFlowMeta,
+    flowType: FlowType,
+    layoutMode?: LayoutModeEnum
+  ) {
     this.flowMeta = flowMeta
     this.flowType = flowType
+    this.layoutMode = layoutMode
     this.onInit()
   }
 

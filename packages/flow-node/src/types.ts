@@ -3,6 +3,7 @@ export interface INodeTemplate<T> {
   title: string
   description: string
   group: string
+  type: string
   make: T
 }
 

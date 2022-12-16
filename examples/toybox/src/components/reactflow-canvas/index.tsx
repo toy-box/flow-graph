@@ -6,6 +6,7 @@ import ReactFlow, {
   BackgroundVariant,
   ConnectionLineType,
   Edge,
+  Node,
 } from 'reactflow'
 import { observer } from '@formily/reactive-react'
 import {
@@ -49,7 +50,8 @@ export const FlowCanvas = observer(() => {
   const style = {
     width: '100%',
     height: '800px',
-    marginLeft: metaflow.flowType === 'FREE_START_UP' ? '120px' : 0,
+    marginLeft:
+      metaflow.layoutMode === LayoutModeEnum.FREE_LAYOUT ? '120px' : 0,
   }
   const graphEle: any = document.querySelector('#flow-canvas')
   window.onload = function () {
@@ -67,7 +69,7 @@ export const FlowCanvas = observer(() => {
   useEffect(() => {
     flow.flowGraph.centerX = ref?.current?.offsetWidth / 2
     dragFlow.flowGraph.centerX = ref?.current?.offsetWidth / 2
-  }, [metaflow.flowType, freeFlow.flowType])
+  }, [metaflow.layoutMode, freeFlow.layoutMode])
   const reactFlowCanvas = new ReactFlowCanvas({
     flowGraph: flow.flowGraph,
     edgeComponents: {
@@ -270,9 +272,14 @@ export const FlowCanvas = observer(() => {
     [eventEngine]
   )
 
+  const doubleClickNode = (event: React.MouseEvent, node: Node) => {
+    onPanelEdit(freeFlow.flowMetaNodeMap[node.id], node.id)
+  }
+
   return (
     <div id="flow-canvas" style={style} ref={ref}>
-      {(metaflow.flowType === 'AUTO_START_UP' || !metaflow.flowType) && (
+      {(metaflow.layoutMode === LayoutModeEnum.AUTO_LAYOUT ||
+        !metaflow.layoutMode) && (
         <ReactFlow
           nodes={flow.canvas?.nodes}
           edges={flow.canvas?.edges}
@@ -292,7 +299,7 @@ export const FlowCanvas = observer(() => {
           <Controls />
         </ReactFlow>
       )}
-      {metaflow.flowType === 'FREE_START_UP' && (
+      {metaflow.layoutMode === LayoutModeEnum.FREE_LAYOUT && (
         <ReactFlow
           nodes={dragFlow.canvas?.nodes}
           edges={dragFlow.canvas?.edges}
@@ -300,6 +307,7 @@ export const FlowCanvas = observer(() => {
           connectionLineStyle={connectionLineStyle}
           connectionLineType={ConnectionLineType.SmoothStep}
           onNodesChange={freeFlow.changeNodes}
+          onNodeDoubleClick={doubleClickNode}
           onEdgesChange={freeFlow.updateEdges}
           onConnect={freeFlow.addEdge}
           nodeTypes={dragFlow.canvas?.components}

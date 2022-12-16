@@ -1,5 +1,6 @@
 import React from 'react'
 import { useMetaFlow, useFreeFlow } from '@toy-box/flow-node'
+import { LayoutModeEnum } from '@toy-box/flow-graph'
 import { itemMap } from '../../data/itemMap'
 import { observer } from '@formily/reactive-react'
 import classNames from 'classnames'
@@ -17,8 +18,8 @@ export const LeftPanel = observer(() => {
   }
 
   if (
-    metaFlow.flowType === 'FREE_START_UP' ||
-    freeFlow.flowType === 'FREE_START_UP'
+    metaFlow.layoutMode === LayoutModeEnum.FREE_LAYOUT ||
+    freeFlow.layoutMode === LayoutModeEnum.FREE_LAYOUT
   ) {
     return (
       <div className="flow-graph-left-panel" style={style}>

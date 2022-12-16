@@ -1,6 +1,6 @@
 import { isArr, uid } from '@toy-box/toybox-shared'
 import { define, observable, action, batch } from '@formily/reactive'
-import { Flow } from '@toy-box/flow-graph'
+import { Flow, LayoutModeEnum } from '@toy-box/flow-graph'
 import {
   FlowMetaType,
   FlowMetaParam,
@@ -48,6 +48,7 @@ export class MetaFlow {
   // flowVariables: IFieldMeta[] = []
   mode: FlowModeType = FlowModeEnum.EDIT
   flowType: FlowType
+  layoutMode?: LayoutModeEnum
 
   get flowMetaNodes() {
     return Object.keys(this.flowMetaNodeMap).map(
@@ -55,9 +56,10 @@ export class MetaFlow {
     )
   }
 
-  constructor(mode: FlowModeType, flow?: Flow) {
+  constructor(mode: FlowModeType, flow?: Flow, layoutMode?: LayoutModeEnum) {
+    this.layoutMode = layoutMode || LayoutModeEnum.AUTO_LAYOUT
     this.mode = mode || this.mode
-    this.flow = flow ?? new Flow()
+    this.flow = flow ?? new Flow(this.layoutMode)
     this.makeObservable()
   }
 
@@ -68,6 +70,7 @@ export class MetaFlow {
       flow: observable.ref,
       mode: observable.ref,
       flowType: observable.ref,
+      layoutMode: observable.ref,
       setMetaFlow: batch,
       getFlowMetaNodeMap: batch,
       removeNodeWithBind: batch,
@@ -99,9 +102,14 @@ export class MetaFlow {
     })
   }
 
-  setMetaFlow(flowMeta: IFlowMeta, flowType: FlowType) {
+  setMetaFlow(
+    flowMeta: IFlowMeta,
+    flowType: FlowType,
+    layoutMode?: LayoutModeEnum
+  ) {
     this.flowMeta = flowMeta
     this.flowType = flowType
+    this.layoutMode = layoutMode
     this.onInit()
   }
 
