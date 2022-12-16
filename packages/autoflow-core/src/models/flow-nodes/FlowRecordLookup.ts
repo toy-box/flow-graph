@@ -11,21 +11,28 @@ import {
   FlowMetaParam,
   FlowMetaUpdate,
   TargetReference,
-  IInputAssignment,
+  IOutputAssignment,
   FlowMetaType,
   FlowMetaParamWithSize,
+  Criteria,
+  SortOrder,
 } from '../../types'
 import { FreeFlow } from '../FreeFlow'
 import { MetaFlow } from '../MetaFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 
-export class FlowRecordCreate extends FlowMetaNode {
+export class FlowRecordLookup extends FlowMetaNode {
   connector?: TargetReference
   faultConnector?: TargetReference
+  criteria?: Criteria | null
   registerId?: string
-  inputAssignments?: IInputAssignment[]
+  outputAssignments?: IOutputAssignment[]
+  outputReference?: null | string
+  queriedFields?: string[]
+  sortOrder?: SortOrder
+  sortField?: string
+  getFirstRecordOnly?: boolean
   storeOutputAutomatically?: boolean
-  assignRecordIdToReference?: string
 
   static DefaultConnectorProps = {
     targetReference: '',
@@ -34,11 +41,11 @@ export class FlowRecordCreate extends FlowMetaNode {
   static DefaultNodeProps: IMakeFlowNodeProps = {
     width: 60,
     height: 60,
-    component: 'RecordCreateNode',
+    component: 'RecordLookupNode',
   }
 
   get type() {
-    return FlowMetaType.RECORD_CREATE
+    return FlowMetaType.RECORD_LOOKUP
   }
 
   get nextNodes() {
@@ -51,21 +58,26 @@ export class FlowRecordCreate extends FlowMetaNode {
     return this.connector
   }
 
-  constructor(flowRecordCreate: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
+  constructor(flowRecordLookup: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
     super(
       metaFlow,
-      flowRecordCreate.id,
-      flowRecordCreate.name,
-      flowRecordCreate.description
+      flowRecordLookup.id,
+      flowRecordLookup.name,
+      flowRecordLookup.description
     )
     this.connector =
-      flowRecordCreate.connector ?? FlowRecordCreate.DefaultConnectorProps
+      flowRecordLookup.connector ?? FlowRecordLookup.DefaultConnectorProps
     this.faultConnector =
-      flowRecordCreate.faultConnector ?? FlowRecordCreate.DefaultConnectorProps
-    this.registerId = flowRecordCreate.registerId
-    this.inputAssignments = flowRecordCreate.inputAssignments
-    this.storeOutputAutomatically = flowRecordCreate.storeOutputAutomatically
-    this.assignRecordIdToReference = flowRecordCreate.assignRecordIdToReference
+      flowRecordLookup.faultConnector ?? FlowRecordLookup.DefaultConnectorProps
+    this.registerId = flowRecordLookup.registerId
+    this.outputAssignments = flowRecordLookup.outputAssignments
+    this.outputReference = flowRecordLookup.outputReference
+    this.queriedFields = flowRecordLookup.queriedFields
+    this.sortOrder = flowRecordLookup.sortOrder
+    this.sortField = flowRecordLookup.sortField
+    this.getFirstRecordOnly = flowRecordLookup.getFirstRecordOnly
+    this.storeOutputAutomatically = flowRecordLookup.storeOutputAutomatically
+    this.criteria = flowRecordLookup.criteria
     this.makeObservable()
   }
 
@@ -74,9 +86,14 @@ export class FlowRecordCreate extends FlowMetaNode {
       id: observable.ref,
       name: observable.ref,
       registerId: observable.ref,
+      criteria: observable.deep,
+      outputAssignments: observable.deep,
+      outputReference: observable.ref,
+      queriedFields: observable.deep,
+      sortOrder: observable.deep,
+      sortField: observable.ref,
+      getFirstRecordOnly: observable.ref,
       storeOutputAutomatically: observable.ref,
-      assignRecordIdToReference: observable.ref,
-      inputAssignments: observable.deep,
       connector: observable.deep,
       faultConnector: observable.deep,
       update: action,
@@ -90,7 +107,7 @@ export class FlowRecordCreate extends FlowMetaNode {
       x,
       y,
       component,
-    }: IMakeFlowNodeProps = FlowRecordCreate.DefaultNodeProps
+    }: IMakeFlowNodeProps = FlowRecordLookup.DefaultNodeProps
   ): IFlowNodeProps {
     const targets = []
     const conId = this.connector.targetReference
@@ -126,7 +143,7 @@ export class FlowRecordCreate extends FlowMetaNode {
       x,
       y,
       component,
-    }: IMakeFlowNodeProps = FlowRecordCreate.DefaultNodeProps,
+    }: IMakeFlowNodeProps = FlowRecordLookup.DefaultNodeProps,
     targets: TargetProps[]
   ): IFlowNodeProps[] {
     const extendId = uid()
@@ -163,7 +180,7 @@ export class FlowRecordCreate extends FlowMetaNode {
         this.connector.targetReference = at.targets[0].id
       }
       const flowNodes = this.makeFlowNodeWithExtend(
-        FlowRecordCreate.DefaultNodeProps,
+        FlowRecordLookup.DefaultNodeProps,
         at.targets
       )
       this.metaFlow.flow.addFlowNodeAt(at.id, flowNodes[0])
@@ -176,21 +193,26 @@ export class FlowRecordCreate extends FlowMetaNode {
     const nodeProps = {
       x: flowData.x,
       y: flowData.y,
-      width: flowData.width || FlowRecordCreate.DefaultNodeProps.width,
-      height: flowData.height || FlowRecordCreate.DefaultNodeProps.height,
-      component: FlowRecordCreate.DefaultNodeProps.component,
+      width: flowData.width || FlowRecordLookup.DefaultNodeProps.width,
+      height: flowData.height || FlowRecordLookup.DefaultNodeProps.height,
+      component: FlowRecordLookup.DefaultNodeProps.component,
     }
     const flowNode = this.makeFlowNode(nodeProps)
     this.metaFlow.flow.addFlowFreeNode(flowNode)
   }
 
-  update(flowRecordCreate: FlowMetaUpdate): void {
-    this.name = flowRecordCreate.name
-    this.description = flowRecordCreate.description
-    this.registerId = flowRecordCreate.registerId
-    this.inputAssignments = flowRecordCreate.inputAssignments
-    this.storeOutputAutomatically = flowRecordCreate.storeOutputAutomatically
-    this.assignRecordIdToReference = flowRecordCreate.assignRecordIdToReference
+  update(flowRecordLookup: FlowMetaUpdate): void {
+    this.name = flowRecordLookup.name
+    this.description = flowRecordLookup.description
+    this.registerId = flowRecordLookup.registerId
+    this.outputAssignments = flowRecordLookup.outputAssignments
+    this.outputReference = flowRecordLookup.outputReference
+    this.queriedFields = flowRecordLookup.queriedFields
+    this.sortOrder = flowRecordLookup.sortOrder
+    this.sortField = flowRecordLookup.sortField
+    this.getFirstRecordOnly = flowRecordLookup.getFirstRecordOnly
+    this.storeOutputAutomatically = flowRecordLookup.storeOutputAutomatically
+    this.criteria = flowRecordLookup.criteria
     this.toJson()
   }
 
@@ -223,9 +245,14 @@ export class FlowRecordCreate extends FlowMetaNode {
       connector: this.connector,
       faultConnector: this.faultConnector,
       registerId: this.registerId,
-      inputAssignments: this.inputAssignments,
+      outputAssignments: this.outputAssignments,
+      criteria: this.criteria,
+      outputReference: this.outputReference,
+      queriedFields: this.queriedFields,
+      sortOrder: this.sortOrder,
+      sortField: this.sortField,
+      getFirstRecordOnly: this.getFirstRecordOnly,
       storeOutputAutomatically: this.storeOutputAutomatically,
-      assignRecordIdToReference: this.assignRecordIdToReference,
     }
   }
 }
