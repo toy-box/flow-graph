@@ -59,7 +59,7 @@ export class FlowDecision extends FlowMetaNode {
     this.defaultConnector = flowDecision.defaultConnector ?? {
       targetReference: '',
     }
-    this.defaultConnectorName = flowDecision.defaultConnectorName
+    this.defaultConnectorName = flowDecision.defaultConnectorName ?? 'default'
     this.rules = flowDecision.rules
     this.makeObservable()
   }
@@ -152,7 +152,7 @@ export class FlowDecision extends FlowMetaNode {
           })),
           {
             id: defaultRuleId,
-            label: 'default',
+            label: this.defaultConnectorName,
           },
         ],
         component,

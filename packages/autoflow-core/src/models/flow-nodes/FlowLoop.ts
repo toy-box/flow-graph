@@ -19,7 +19,9 @@ import { FreeFlow } from '../FreeFlow'
 
 export class FlowLoop extends FlowMetaNode {
   defaultConnector?: TargetReference
+  defaultConnectorName?: string
   nextValueConnector?: TargetReference
+  nextValueConnectorName?: string
   collectionReference?: string
   iterationOrder?: string
 
@@ -63,6 +65,10 @@ export class FlowLoop extends FlowMetaNode {
     this.nextValueConnector = flowLoop.nextValueConnector ?? {
       targetReference: '',
     }
+    this.defaultConnectorName =
+      flowLoop.defaultConnectorName ?? 'After Last Item'
+    this.nextValueConnectorName =
+      flowLoop.nextValueConnectorName ?? 'For Each Item'
     this.collectionReference = flowLoop.collectionReference
     this.iterationOrder = flowLoop.iterationOrder
     this.description = flowLoop.description
@@ -92,10 +98,11 @@ export class FlowLoop extends FlowMetaNode {
   ): IFlowNodeProps {
     const targets = []
     const nextConId = this?.nextValueConnector.targetReference
-    if (nextConId) targets.push({ id: nextConId, label: 'For Each Item' })
+    if (nextConId)
+      targets.push({ id: nextConId, label: this.nextValueConnectorName })
     const defaultConId = this.defaultConnector.targetReference
     if (defaultConId)
-      targets.push({ id: defaultConId, label: 'After Last Item' })
+      targets.push({ id: defaultConId, label: this.defaultConnectorName })
     return {
       id: this.id,
       label: this.name,
@@ -204,7 +211,7 @@ export class FlowLoop extends FlowMetaNode {
   deleteConnector(target, nodeTarget) {
     if (
       this.defaultConnector.targetReference === target &&
-      nodeTarget.label === 'After Last Item'
+      nodeTarget.label === this.defaultConnectorName
     ) {
       this.defaultConnector = { targetReference: '' }
     } else {

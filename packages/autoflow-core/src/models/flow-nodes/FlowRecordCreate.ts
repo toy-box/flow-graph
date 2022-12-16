@@ -17,6 +17,7 @@ import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 export class FlowRecordCreate extends FlowMetaNode {
   connector?: TargetReference
   faultConnector?: TargetReference
+  faultConnectorName?: string
 
   static DefaultConnectorProps = {
     targetReference: '',
@@ -53,6 +54,7 @@ export class FlowRecordCreate extends FlowMetaNode {
       flowRecordCreate.connector ?? FlowRecordCreate.DefaultConnectorProps
     this.faultConnector =
       flowRecordCreate.faultConnector ?? FlowRecordCreate.DefaultConnectorProps
+    this.faultConnectorName = flowRecordCreate.defaultConnectorName ?? 'Fault'
     this.makeObservable()
   }
 
@@ -79,7 +81,8 @@ export class FlowRecordCreate extends FlowMetaNode {
     const conId = this.connector.targetReference
     if (conId) targets.push({ id: conId })
     const faultConId = this.faultConnector.targetReference
-    if (faultConId) targets.push({ id: faultConId, label: 'Fault' })
+    if (faultConId)
+      targets.push({ id: faultConId, label: this.faultConnectorName })
     return {
       id: this.id,
       label: this.name,
@@ -130,7 +133,7 @@ export class FlowRecordCreate extends FlowMetaNode {
   deleteConnector(target, nodeTarget) {
     if (
       this.faultConnector.targetReference === target &&
-      nodeTarget.label === 'Fault'
+      nodeTarget.label === this.faultConnectorName
     ) {
       this.faultConnector = { targetReference: '' }
     } else {

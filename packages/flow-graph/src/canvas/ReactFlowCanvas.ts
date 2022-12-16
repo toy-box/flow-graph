@@ -204,7 +204,7 @@ export class ReactFlowCanvas implements ICanvas {
           sourceFlowmetaNode.defaultConnector.targetReference === ''
         if (isDefaultConnecter) {
           loadData.push({
-            label: 'default',
+            label: sourceFlowmetaNode.defaultConnectorName,
             value: 'default' + '-' + uid(),
             id: 'default' + '-' + uid(),
           })
@@ -224,7 +224,10 @@ export class ReactFlowCanvas implements ICanvas {
             label: loadData[0].label,
           }
           this.edges = [...this.edges, newEdge]
-          if (loadData[0].id.split('-')[0] === 'default') {
+          if (
+            loadData[0].id.split('-')[0] ===
+            sourceFlowmetaNode.defaultConnectorName
+          ) {
             sourceFlowmetaNode.updateConnector(target, 'defaultConnector')
           } else {
             const Index = sourceFlowmetaNode.rules.findIndex(
@@ -244,9 +247,8 @@ export class ReactFlowCanvas implements ICanvas {
         }
         break
       case FlowMetaType.LOOP:
-        // const isLoopDialog =
-        //   sourceFlowmetaNode.defaultConnector.targetReference === '' &&
-        //   sourceFlowmetaNode.nextValueConnector.targetReference === ''
+        const { defaultConnectorName, nextValueConnectorName } =
+          sourceFlowmetaNode
         if (nodeMapTargets.length === 0) {
           loopConnectDialog(targetNode, connection, this, sourceFlowmetaNode)
         } else {
@@ -255,7 +257,9 @@ export class ReactFlowCanvas implements ICanvas {
           const newEdge = {
             ...connection,
             id: uid(),
-            label: isDefaultConnecter ? 'After Last Item' : 'For Each Item',
+            label: isDefaultConnecter
+              ? defaultConnectorName
+              : nextValueConnectorName,
           }
           isDefaultConnecter
             ? sourceFlowmetaNode.updateConnector(target, 'defaultConnector')
@@ -272,10 +276,6 @@ export class ReactFlowCanvas implements ICanvas {
         }
         break
       case FlowMetaType.ASSIGNMENT:
-        sourceFlowmetaNode.updateConnector(target)
-        this.flowGraph.setTarget(source, [...nodeMapTargets, { id: target }])
-        this.edges = flowAddEdge(casualEdge, this.edges)
-        break
       case FlowMetaType.START:
         sourceFlowmetaNode.updateConnector(target)
         this.flowGraph.setTarget(source, [...nodeMapTargets, { id: target }])
@@ -296,7 +296,9 @@ export class ReactFlowCanvas implements ICanvas {
           const newEdge = {
             ...connection,
             id: uid(),
-            label: isFaultConnector ? 'Fault' : '',
+            label: isFaultConnector
+              ? sourceFlowmetaNode.faultConnectorName
+              : '',
             type: isFaultConnector ? 'faultEdge' : 'freeEdge',
           }
           isFaultConnector
