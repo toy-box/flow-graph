@@ -7,21 +7,21 @@ import {
   FlowMetaParamWithSize,
   FlowMetaType,
   FlowMetaUpdate,
-  IFlowMetaDecisionRule,
+  IwaitEvent,
   TargetReference,
 } from '../../types'
 import { FreeFlow } from '../FreeFlow'
 import { MetaFlow } from '../MetaFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 
-export class FlowDecision extends FlowMetaNode {
+export class FlowWait extends FlowMetaNode {
   id: string
   name: string
   description?: string
   connector?: TargetReference
   defaultConnector?: TargetReference
   defaultConnectorName?: string
-  rules?: IFlowMetaDecisionRule[]
+  waitEvents?: IwaitEvent[]
 
   static DefaultNodeProps = {
     width: 60,
@@ -30,7 +30,7 @@ export class FlowDecision extends FlowMetaNode {
   }
 
   get type() {
-    return FlowMetaType.DECISION
+    return FlowMetaType.WAIT
   }
 
   get defaultRuleId() {
@@ -39,7 +39,10 @@ export class FlowDecision extends FlowMetaNode {
 
   get commRules() {
     return [
-      ...this.rules.map((rule) => ({ id: rule.id, connector: rule.connector })),
+      ...this.waitEvents.map((rule) => ({
+        id: rule.id,
+        connector: rule.connector,
+      })),
       { id: this.defaultRuleId, connector: this.defaultConnector },
     ]
   }
@@ -48,19 +51,14 @@ export class FlowDecision extends FlowMetaNode {
     return this.defaultConnector
   }
 
-  constructor(flowDecision: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
-    super(
-      metaFlow,
-      flowDecision.id,
-      flowDecision.name,
-      flowDecision.description
-    )
-    this.connector = flowDecision.connector
-    this.defaultConnector = flowDecision.defaultConnector ?? {
+  constructor(flowWait: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
+    super(metaFlow, flowWait.id, flowWait.name, flowWait.description)
+    this.connector = flowWait.connector
+    this.defaultConnector = flowWait.defaultConnector ?? {
       targetReference: '',
     }
-    this.defaultConnectorName = flowDecision.defaultConnectorName
-    this.rules = flowDecision.rules
+    this.defaultConnectorName = flowWait.defaultConnectorName
+    this.waitEvents = flowWait.waitEvents
     this.makeObservable()
   }
 
@@ -71,7 +69,7 @@ export class FlowDecision extends FlowMetaNode {
       description: observable.ref,
       defaultConnector: observable.shallow,
       defaultConnectorName: observable.ref,
-      rules: observable.deep,
+      waitEvents: observable.deep,
       update: action,
     })
   }
@@ -83,10 +81,10 @@ export class FlowDecision extends FlowMetaNode {
       x,
       y,
       component,
-    }: IMakeFlowNodeProps = FlowDecision.DefaultNodeProps
+    }: IMakeFlowNodeProps = FlowWait.DefaultNodeProps
   ): IFlowNodeProps {
     const targets = []
-    this.rules.forEach((rule) => {
+    this.waitEvents.forEach((rule) => {
       const conId = rule?.connector?.targetReference
       if (conId)
         targets.push({
@@ -129,7 +127,7 @@ export class FlowDecision extends FlowMetaNode {
       x,
       y,
       component,
-    }: IMakeFlowNodeProps = FlowDecision.DefaultNodeProps,
+    }: IMakeFlowNodeProps = FlowWait.DefaultNodeProps,
     targets: TargetProps[]
   ): IFlowNodeProps[] {
     const defaultRuleId = uid()
@@ -146,7 +144,7 @@ export class FlowDecision extends FlowMetaNode {
         x,
         y,
         targets: [
-          ...this.rules.map((rule) => ({
+          ...this.waitEvents.map((rule) => ({
             id: rule.id,
             label: rule.name,
           })),
@@ -157,7 +155,7 @@ export class FlowDecision extends FlowMetaNode {
         ],
         component,
       },
-      ...this.rules.map((rule) => ({
+      ...this.waitEvents.map((rule) => ({
         id: rule.id,
         type: 'extend' as FlowNodeType,
         targets: [rule.connector.targetReference ?? decisionEndId],
@@ -181,7 +179,7 @@ export class FlowDecision extends FlowMetaNode {
   appendAt(at: FlowNode) {
     if (this.flowNode == null) {
       const flowNodes = this.makeFlowNodeWithExtend(
-        FlowDecision.DefaultNodeProps,
+        FlowWait.DefaultNodeProps,
         at.targets
       )
       this.metaFlow.flow.addFlowNodeAt(at.id, flowNodes[0])
@@ -197,9 +195,9 @@ export class FlowDecision extends FlowMetaNode {
     const nodeProps = {
       x: flowData.x,
       y: flowData.y,
-      width: flowData.width || FlowDecision.DefaultNodeProps.width,
-      height: flowData.height || FlowDecision.DefaultNodeProps.height,
-      component: FlowDecision.DefaultNodeProps.component,
+      width: flowData.width || FlowWait.DefaultNodeProps.width,
+      height: flowData.height || FlowWait.DefaultNodeProps.height,
+      component: FlowWait.DefaultNodeProps.component,
     }
     const flowNode = this.makeFlowNode(nodeProps)
     this.freeFlow.flow.addFlowFreeNode(flowNode)
@@ -209,7 +207,7 @@ export class FlowDecision extends FlowMetaNode {
     this.name = payload.name
     this.description = payload.description
     this.defaultConnectorName = payload.defaultConnectorName
-    this.rules = payload.rules
+    this.waitEvents = payload.waitEvents
   }
 
   updateConnector(
@@ -220,8 +218,8 @@ export class FlowDecision extends FlowMetaNode {
     if (options === 'defaultConnector') {
       this.defaultConnector = { targetReference: targetId }
     } else {
-      this.rules[options] = {
-        ...this.rules[options],
+      this.waitEvents[options] = {
+        ...this.waitEvents[options],
         connector: { targetReference: targetId },
       }
     }
@@ -236,10 +234,10 @@ export class FlowDecision extends FlowMetaNode {
     ) {
       this.defaultConnector = { targetReference: '' }
     } else {
-      this.rules.map((rule, index) => {
+      this.waitEvents.map((rule, index) => {
         if (rule.connector.targetReference === target && rule.id === ruleId) {
-          this.rules[index] = {
-            ...this.rules[index],
+          this.waitEvents[index] = {
+            ...this.waitEvents[index],
             connector: { targetReference: '' },
           }
         }
@@ -256,7 +254,7 @@ export class FlowDecision extends FlowMetaNode {
       type: this.type,
       defaultConnector: this.defaultConnector,
       defaultConnectorName: this.defaultConnectorName,
-      rules: this.rules,
+      waitEvents: this.waitEvents,
     }
   }
 }
