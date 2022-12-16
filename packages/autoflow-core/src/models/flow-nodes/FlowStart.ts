@@ -146,7 +146,7 @@ export class FlowStart extends FlowMetaNode {
       component: FlowStart.DefaultNodeProps.component,
     }
     const flowNode = this.makeFlowNode(nodeProps)
-    this.freeFlow.flow.addFlowFreeNode(flowNode)
+    this.metaFlow.flow.addFlowFreeNode(flowNode)
   }
 
   append(): void {

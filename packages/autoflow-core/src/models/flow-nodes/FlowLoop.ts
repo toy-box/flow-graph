@@ -106,7 +106,7 @@ export class FlowLoop extends FlowMetaNode {
       x,
       y,
       targets:
-        this.freeFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT
+        this.metaFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT
           ? [this.nextValueConnector.targetReference]
           : targets,
       loopEndTarget: this.defaultConnector.targetReference,
@@ -182,7 +182,7 @@ export class FlowLoop extends FlowMetaNode {
       component: FlowLoop.DefaultNodeProps.component,
     }
     const flowNode = this.makeFlowNode(nodeProps)
-    this.freeFlow.flow.addFlowFreeNode(flowNode)
+    this.metaFlow.flow.addFlowFreeNode(flowNode)
   }
 
   update = (flowLoop: FlowMetaUpdate) => {

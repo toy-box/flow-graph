@@ -202,7 +202,7 @@ export class FlowDecision extends FlowMetaNode {
       component: FlowDecision.DefaultNodeProps.component,
     }
     const flowNode = this.makeFlowNode(nodeProps)
-    this.freeFlow.flow.addFlowFreeNode(flowNode)
+    this.metaFlow.flow.addFlowFreeNode(flowNode)
   }
 
   update(payload: FlowMetaUpdate) {

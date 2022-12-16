@@ -14,8 +14,8 @@ export abstract class FlowMetaNode {
   id: string
   name: string
   description?: string
-  metaFlow: MetaFlow
-  freeFlow: FreeFlow
+  metaFlow: MetaFlow | FreeFlow
+  // freeFlow: FreeFlow
   flowType: string
   static StandardSize = 30
 
@@ -32,7 +32,7 @@ export abstract class FlowMetaNode {
     description?: string
   ) {
     this.metaFlow = flow
-    this.freeFlow = flow
+    // this.freeFlow = flow
     // if (flow.flowType === 'AUTO_START_UP') {
     //   this.metaFlow = flow as MetaFlow
     // } else {
@@ -45,23 +45,27 @@ export abstract class FlowMetaNode {
   }
 
   get flowNode() {
-    if (this.freeFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT) {
-      return this.metaFlow.flow.getFlowNode(this.id)
-    } else {
-      return this.freeFlow.flow.getFlowNode(this.id)
-    }
+    return this.metaFlow.flow.getFlowNode(this.id)
+    // if (this.freeFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT) {
+    //   return this.metaFlow.flow.getFlowNode(this.id)
+    // } else {
+    //   return this.freeFlow.flow.getFlowNode(this.id)
+    // }
   }
 
   get parents() {
-    if (this.freeFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT) {
-      return this.metaFlow.flowMetaNodes.filter((node) =>
-        node.nextNodes.some((next) => next.id === this.id)
-      )
-    } else {
-      return this.freeFlow.flowMetaNodes.filter((node) =>
-        node.nextNodes.some((next) => next.id === this.id)
-      )
-    }
+    return this.metaFlow.flowMetaNodes.filter((node) =>
+      node.nextNodes.some((next) => next.id === this.id)
+    )
+    // if (this.freeFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT) {
+    //   return this.metaFlow.flowMetaNodes.filter((node) =>
+    //     node.nextNodes.some((next) => next.id === this.id)
+    //   )
+    // } else {
+    //   return this.freeFlow.flowMetaNodes.filter((node) =>
+    //     node.nextNodes.some((next) => next.id === this.id)
+    //   )
+    // }
   }
 
   findLoopBack(id: string = this.id) {
@@ -79,10 +83,10 @@ export abstract class FlowMetaNode {
   }
 
   get position() {
-    if (this.freeFlow.layoutMode === LayoutModeEnum.FREE_LAYOUT) {
+    if (this.metaFlow.layoutMode === LayoutModeEnum.FREE_LAYOUT) {
       const {
         position: { x, y },
-      } = this.freeFlow.flow.canvas.nodes.find(({ id }) => this.id === id)
+      } = this.metaFlow.flow.canvas.nodes.find(({ id }) => this.id === id)
       return { x, y }
     }
     // return { x: 1, y: 2 }

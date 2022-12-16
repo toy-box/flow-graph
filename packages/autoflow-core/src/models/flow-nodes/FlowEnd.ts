@@ -103,7 +103,7 @@ export class FlowEnd extends FlowMetaNode {
       component: FlowEnd.DefaultNodeProps.component,
     }
     const flowNode = this.makeFlowNode(nodeProps)
-    this.freeFlow.flow.addFlowFreeNode(flowNode)
+    this.metaFlow.flow.addFlowFreeNode(flowNode)
   }
 
   update = (flowEnd: IFlowEndProps) => {

@@ -159,7 +159,7 @@ export class FlowSortCollectionProcessor extends FlowMetaNode {
       component: FlowSortCollectionProcessor.DefaultNodeProps.component,
     }
     const flowNode = this.makeFlowNode(nodeProps)
-    this.freeFlow.flow.addFlowFreeNode(flowNode)
+    this.metaFlow.flow.addFlowFreeNode(flowNode)
   }
 
   update = (payload: FlowMetaUpdate) => {
