@@ -1,6 +1,6 @@
 import { uid } from '@toy-box/toybox-shared'
 import { FlowGraph } from './FlowGraph'
-import { FlowNodeType, INode } from '../types'
+import { EdgeTypeEnum, FlowNodeType, INode } from '../types'
 
 const CYCLE_FLOW_WIDTH = 50
 
@@ -11,6 +11,7 @@ export interface TargetProps {
   edgeId?: string
   label?: string
   ruleId?: string
+  edgeType?: EdgeTypeEnum
 }
 
 export interface IFlowNodeProps extends Omit<INode, 'id' | 'x' | 'y'> {

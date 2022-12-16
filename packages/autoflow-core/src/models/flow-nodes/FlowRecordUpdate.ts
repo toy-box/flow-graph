@@ -14,19 +14,18 @@ import {
   IInputAssignment,
   FlowMetaType,
   FlowMetaParamWithSize,
+  Criteria,
 } from '../../types'
 import { FreeFlow } from '../FreeFlow'
 import { MetaFlow } from '../MetaFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 
-export class FlowRecordCreate extends FlowMetaNode {
+export class FlowRecordUpdate extends FlowMetaNode {
   connector?: TargetReference
   faultConnector?: TargetReference
-  faultConnectorName?: string
+  criteria?: Criteria | null
   registerId?: string
   inputAssignments?: IInputAssignment[]
-  storeOutputAutomatically?: boolean
-  assignRecordIdToReference?: string
 
   static DefaultConnectorProps = {
     targetReference: '',
@@ -35,11 +34,11 @@ export class FlowRecordCreate extends FlowMetaNode {
   static DefaultNodeProps: IMakeFlowNodeProps = {
     width: 60,
     height: 60,
-    component: 'RecordCreateNode',
+    component: 'RecordUpdateNode',
   }
 
   get type() {
-    return FlowMetaType.RECORD_CREATE
+    return FlowMetaType.RECORD_UPDATE
   }
 
   get nextNodes() {
@@ -52,22 +51,20 @@ export class FlowRecordCreate extends FlowMetaNode {
     return this.connector
   }
 
-  constructor(flowRecordCreate: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
+  constructor(flowRecordUpdate: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
     super(
       metaFlow,
-      flowRecordCreate.id,
-      flowRecordCreate.name,
-      flowRecordCreate.description
+      flowRecordUpdate.id,
+      flowRecordUpdate.name,
+      flowRecordUpdate.description
     )
     this.connector =
-      flowRecordCreate.connector ?? FlowRecordCreate.DefaultConnectorProps
+      flowRecordUpdate.connector ?? FlowRecordUpdate.DefaultConnectorProps
     this.faultConnector =
-      flowRecordCreate.faultConnector ?? FlowRecordCreate.DefaultConnectorProps
-    this.faultConnectorName = flowRecordCreate.defaultConnectorName ?? 'Fault'
-    this.registerId = flowRecordCreate.registerId
-    this.inputAssignments = flowRecordCreate.inputAssignments
-    this.storeOutputAutomatically = flowRecordCreate.storeOutputAutomatically
-    this.assignRecordIdToReference = flowRecordCreate.assignRecordIdToReference
+      flowRecordUpdate.faultConnector ?? FlowRecordUpdate.DefaultConnectorProps
+    this.registerId = flowRecordUpdate.registerId
+    this.inputAssignments = flowRecordUpdate.inputAssignments
+    this.criteria = flowRecordUpdate.criteria
     this.makeObservable()
   }
 
@@ -76,8 +73,7 @@ export class FlowRecordCreate extends FlowMetaNode {
       id: observable.ref,
       name: observable.ref,
       registerId: observable.ref,
-      storeOutputAutomatically: observable.ref,
-      assignRecordIdToReference: observable.ref,
+      criteria: observable.deep,
       inputAssignments: observable.deep,
       connector: observable.deep,
       faultConnector: observable.deep,
@@ -92,7 +88,7 @@ export class FlowRecordCreate extends FlowMetaNode {
       x,
       y,
       component,
-    }: IMakeFlowNodeProps = FlowRecordCreate.DefaultNodeProps
+    }: IMakeFlowNodeProps = FlowRecordUpdate.DefaultNodeProps
   ): IFlowNodeProps {
     const targets = []
     const conId = this.connector.targetReference
@@ -101,7 +97,7 @@ export class FlowRecordCreate extends FlowMetaNode {
     if (faultConId)
       targets.push({
         id: faultConId,
-        label: this.faultConnectorName,
+        label: 'Fault',
         edgeType: EdgeTypeEnum.FAULT_EDGE,
       })
     return {
@@ -128,7 +124,7 @@ export class FlowRecordCreate extends FlowMetaNode {
       x,
       y,
       component,
-    }: IMakeFlowNodeProps = FlowRecordCreate.DefaultNodeProps,
+    }: IMakeFlowNodeProps = FlowRecordUpdate.DefaultNodeProps,
     targets: TargetProps[]
   ): IFlowNodeProps[] {
     const extendId = uid()
@@ -165,7 +161,7 @@ export class FlowRecordCreate extends FlowMetaNode {
         this.connector.targetReference = at.targets[0].id
       }
       const flowNodes = this.makeFlowNodeWithExtend(
-        FlowRecordCreate.DefaultNodeProps,
+        FlowRecordUpdate.DefaultNodeProps,
         at.targets
       )
       this.metaFlow.flow.addFlowNodeAt(at.id, flowNodes[0])
@@ -178,21 +174,20 @@ export class FlowRecordCreate extends FlowMetaNode {
     const nodeProps = {
       x: flowData.x,
       y: flowData.y,
-      width: flowData.width || FlowRecordCreate.DefaultNodeProps.width,
-      height: flowData.height || FlowRecordCreate.DefaultNodeProps.height,
-      component: FlowRecordCreate.DefaultNodeProps.component,
+      width: flowData.width || FlowRecordUpdate.DefaultNodeProps.width,
+      height: flowData.height || FlowRecordUpdate.DefaultNodeProps.height,
+      component: FlowRecordUpdate.DefaultNodeProps.component,
     }
     const flowNode = this.makeFlowNode(nodeProps)
     this.metaFlow.flow.addFlowFreeNode(flowNode)
   }
 
-  update(flowRecordCreate: FlowMetaUpdate): void {
-    this.name = flowRecordCreate.name
-    this.description = flowRecordCreate.description
-    this.registerId = flowRecordCreate.registerId
-    this.inputAssignments = flowRecordCreate.inputAssignments
-    this.storeOutputAutomatically = flowRecordCreate.storeOutputAutomatically
-    this.assignRecordIdToReference = flowRecordCreate.assignRecordIdToReference
+  update(flowRecordupdate: FlowMetaUpdate): void {
+    this.name = flowRecordupdate.name
+    this.description = flowRecordupdate.description
+    this.registerId = flowRecordupdate.registerId
+    this.inputAssignments = flowRecordupdate.inputAssignments
+    this.criteria = flowRecordupdate.criteria
     this.toJson()
   }
 
@@ -207,7 +202,7 @@ export class FlowRecordCreate extends FlowMetaNode {
   deleteConnector(target, nodeTarget) {
     if (
       this.faultConnector.targetReference === target &&
-      nodeTarget.label === this.faultConnectorName
+      nodeTarget.label === 'Fault'
     ) {
       this.faultConnector = { targetReference: '' }
     } else {
@@ -226,8 +221,7 @@ export class FlowRecordCreate extends FlowMetaNode {
       faultConnector: this.faultConnector,
       registerId: this.registerId,
       inputAssignments: this.inputAssignments,
-      storeOutputAutomatically: this.storeOutputAutomatically,
-      assignRecordIdToReference: this.assignRecordIdToReference,
+      criteria: this.criteria,
     }
   }
 }

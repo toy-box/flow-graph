@@ -1,4 +1,4 @@
-import { Node } from 'reactflow'
+import { Node, Edge } from 'reactflow'
 
 export type FlowNodeType =
   | 'begin'
@@ -44,6 +44,12 @@ export interface IEdge {
 export enum LayoutModeEnum {
   AUTO_LAYOUT = 'auto_layout',
   FREE_LAYOUT = 'free_layout',
+}
+
+export enum EdgeTypeEnum {
+  FAULT_EDGE = 'faultEdge',
+  FREE_EDGE = 'freeEdge',
+  FIX_EDGE = 'fixEdge',
 }
 
 export type INodeProps = Node
