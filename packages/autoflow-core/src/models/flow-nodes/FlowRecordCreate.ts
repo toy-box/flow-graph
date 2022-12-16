@@ -93,7 +93,6 @@ export class FlowRecordCreate extends FlowMetaNode {
         this.metaFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT
           ? [this.connector.targetReference]
           : targets,
-      faultTarget: this.faultConnector.targetReference,
       component,
     }
   }

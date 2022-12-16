@@ -26,7 +26,7 @@ export class FlowWait extends FlowMetaNode {
   static DefaultNodeProps = {
     width: 60,
     height: 60,
-    component: 'DecisionNode',
+    component: 'WaitNode',
   }
 
   get type() {
