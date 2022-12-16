@@ -15,7 +15,6 @@ export abstract class FlowMetaNode {
   name: string
   description?: string
   metaFlow: MetaFlow | FreeFlow
-  // freeFlow: FreeFlow
   flowType: string
   static StandardSize = 30
 
@@ -32,12 +31,6 @@ export abstract class FlowMetaNode {
     description?: string
   ) {
     this.metaFlow = flow
-    // this.freeFlow = flow
-    // if (flow.flowType === 'AUTO_START_UP') {
-    //   this.metaFlow = flow as MetaFlow
-    // } else {
-    //   this.freeFlow = flow as FreeFlow
-    // }
     this.flowType = flow.flowType
     this.id = id
     this.name = name
@@ -46,26 +39,12 @@ export abstract class FlowMetaNode {
 
   get flowNode() {
     return this.metaFlow.flow.getFlowNode(this.id)
-    // if (this.freeFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT) {
-    //   return this.metaFlow.flow.getFlowNode(this.id)
-    // } else {
-    //   return this.freeFlow.flow.getFlowNode(this.id)
-    // }
   }
 
   get parents() {
     return this.metaFlow.flowMetaNodes.filter((node) =>
       node.nextNodes.some((next) => next.id === this.id)
     )
-    // if (this.freeFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT) {
-    //   return this.metaFlow.flowMetaNodes.filter((node) =>
-    //     node.nextNodes.some((next) => next.id === this.id)
-    //   )
-    // } else {
-    //   return this.freeFlow.flowMetaNodes.filter((node) =>
-    //     node.nextNodes.some((next) => next.id === this.id)
-    //   )
-    // }
   }
 
   findLoopBack(id: string = this.id) {
@@ -89,7 +68,6 @@ export abstract class FlowMetaNode {
       } = this.metaFlow.flow.canvas.nodes.find(({ id }) => this.id === id)
       return { x, y }
     }
-    // return { x: 1, y: 2 }
   }
 
   abstract lowerLeverConnector?: TargetReference
