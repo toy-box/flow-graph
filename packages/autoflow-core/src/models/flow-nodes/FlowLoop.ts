@@ -21,7 +21,6 @@ export class FlowLoop extends FlowMetaNode {
   defaultConnector?: TargetReference
   defaultConnectorName?: string
   nextValueConnector?: TargetReference
-  nextValueConnectorName?: string
   collectionReference?: string
   iterationOrder?: string
 
@@ -57,6 +56,10 @@ export class FlowLoop extends FlowMetaNode {
     return this.nextValueConnector
   }
 
+  get nextValueConnectorName() {
+    return 'For Each Item'
+  }
+
   constructor(flowLoop: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
     super(metaFlow, flowLoop.id, flowLoop.name, flowLoop.description)
     this.defaultConnector = flowLoop.defaultConnector ?? {
@@ -67,8 +70,8 @@ export class FlowLoop extends FlowMetaNode {
     }
     this.defaultConnectorName =
       flowLoop.defaultConnectorName ?? 'After Last Item'
-    this.nextValueConnectorName =
-      flowLoop.nextValueConnectorName ?? 'For Each Item'
+    // this.nextValueConnectorName =
+    //   flowLoop.nextValueConnectorName ?? 'For Each Item'
     this.collectionReference = flowLoop.collectionReference
     this.iterationOrder = flowLoop.iterationOrder
     this.description = flowLoop.description
@@ -80,6 +83,7 @@ export class FlowLoop extends FlowMetaNode {
       id: observable.ref,
       name: observable.ref,
       defaultConnector: observable.deep,
+      defaultConnectorName: observable.ref,
       nextValueConnector: observable.deep,
       collectionReference: observable.ref,
       iterationOrder: observable.ref,

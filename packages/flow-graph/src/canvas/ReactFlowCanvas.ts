@@ -282,6 +282,9 @@ export class ReactFlowCanvas implements ICanvas {
         this.edges = flowAddEdge(casualEdge, this.edges)
         break
       case FlowMetaType.RECORD_CREATE:
+      case FlowMetaType.RECORD_LOOKUP:
+      case FlowMetaType.RECORD_UPDATE:
+      case FlowMetaType.RECORD_DELETE:
         if (nodeMapTargets.length === 0) {
           const newEdge = { ...connection, id: uid() }
           this.flowGraph.setTarget(source, [

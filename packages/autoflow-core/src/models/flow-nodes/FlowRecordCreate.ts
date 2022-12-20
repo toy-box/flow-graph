@@ -22,7 +22,6 @@ import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 export class FlowRecordCreate extends FlowMetaNode {
   connector?: TargetReference
   faultConnector?: TargetReference
-  faultConnectorName?: string
   registerId?: string
   inputAssignments?: IInputAssignment[]
   storeOutputAutomatically?: boolean
@@ -52,6 +51,10 @@ export class FlowRecordCreate extends FlowMetaNode {
     return this.connector
   }
 
+  get faultConnectorName() {
+    return 'Fault'
+  }
+
   constructor(flowRecordCreate: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
     super(
       metaFlow,
@@ -63,7 +66,6 @@ export class FlowRecordCreate extends FlowMetaNode {
       flowRecordCreate.connector ?? FlowRecordCreate.DefaultConnectorProps
     this.faultConnector =
       flowRecordCreate.faultConnector ?? FlowRecordCreate.DefaultConnectorProps
-    this.faultConnectorName = flowRecordCreate.defaultConnectorName ?? 'Fault'
     this.registerId = flowRecordCreate.registerId
     this.inputAssignments = flowRecordCreate.inputAssignments
     this.storeOutputAutomatically = flowRecordCreate.storeOutputAutomatically
