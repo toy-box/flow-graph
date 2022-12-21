@@ -45,6 +45,9 @@ export function connectFreeFlow({
           return targets ? targets.length < rules.length + 1 : true
         case 'LoopNode':
         case 'RecordCreateNode':
+        case 'RecordUpdateNode':
+        case 'RecordDeleteNode':
+        case 'RecordLookupNode':
           return targets ? targets.length < 2 : true
         default:
           return true

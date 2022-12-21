@@ -79,6 +79,40 @@ export const nodeTemplatesProvider = (
     },
     {
       icon: 'flow',
+      title: 'Wait',
+      description: 'Wait',
+      type: FlowMetaType.WAIT,
+      group: 'flow',
+      make: (at: string, editInfo: INodeEdit) => {
+        const flowData = {
+          id: uid(),
+          name: 'Wait',
+          type: FlowMetaType.WAIT,
+          connector: { targetReference: '' },
+          ...editInfo,
+        }
+        appendOrAddNode(at, flowData)
+      },
+    },
+    {
+      icon: 'flow',
+      title: 'Sort',
+      description: 'Collection Sort',
+      type: FlowMetaType.SORT_COLLECTION_PROCESSOR,
+      group: 'flow',
+      make: (at: string, editInfo: INodeEdit) => {
+        const flowData = {
+          id: uid(),
+          name: 'Sort',
+          type: FlowMetaType.SORT_COLLECTION_PROCESSOR,
+          connector: { targetReference: '' },
+          ...editInfo,
+        }
+        appendOrAddNode(at, flowData)
+      },
+    },
+    {
+      icon: 'flow',
       title: 'RecordCreate',
       description: 'Create Records',
       type: FlowMetaType.RECORD_CREATE,
@@ -86,8 +120,59 @@ export const nodeTemplatesProvider = (
       make: (at: string, editInfo: INodeEdit) => {
         const flowData = {
           id: uid(),
-          name: 'Loop',
+          name: 'RecordCreate',
           type: FlowMetaType.RECORD_CREATE,
+          connector: { targetReference: '' },
+          ...editInfo,
+        }
+        appendOrAddNode(at, flowData)
+      },
+    },
+    {
+      icon: 'flow',
+      title: 'RecordUpdate',
+      description: 'Update Records',
+      type: FlowMetaType.RECORD_UPDATE,
+      group: 'flow',
+      make: (at: string, editInfo: INodeEdit) => {
+        const flowData = {
+          id: uid(),
+          name: 'RecordUpdate',
+          type: FlowMetaType.RECORD_UPDATE,
+          connector: { targetReference: '' },
+          ...editInfo,
+        }
+        appendOrAddNode(at, flowData)
+      },
+    },
+    {
+      icon: 'flow',
+      title: 'RecordDelete',
+      description: 'Delete Records',
+      type: FlowMetaType.RECORD_DELETE,
+      group: 'flow',
+      make: (at: string, editInfo: INodeEdit) => {
+        const flowData = {
+          id: uid(),
+          name: 'RecordDelete',
+          type: FlowMetaType.RECORD_DELETE,
+          connector: { targetReference: '' },
+          ...editInfo,
+        }
+        appendOrAddNode(at, flowData)
+      },
+    },
+    {
+      icon: 'flow',
+      title: 'RecordLookup',
+      description: 'Lookup Records',
+      type: FlowMetaType.RECORD_LOOKUP,
+      group: 'flow',
+      make: (at: string, editInfo: INodeEdit) => {
+        const flowData = {
+          id: uid(),
+          name: 'RecordLookup',
+          type: FlowMetaType.RECORD_LOOKUP,
           connector: { targetReference: '' },
           ...editInfo,
         }

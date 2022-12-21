@@ -203,6 +203,22 @@ export const FlowCanvas = observer(() => {
         ],
         onEdit: loopOnEdit,
       }),
+      WaitNode: connectFreeFlow({
+        component: StandardNode,
+        content: <h3>Pause</h3>,
+        handles: [
+          { type: 'target', position: Position.Top },
+          { type: 'source', position: Position.Bottom },
+        ],
+      }),
+      SortCollectionNode: connectFreeFlow({
+        component: StandardNode,
+        content: <h3>Sort</h3>,
+        handles: [
+          { type: 'target', position: Position.Top },
+          { type: 'source', position: Position.Bottom },
+        ],
+      }),
       RecordCreateNode: connectFreeFlow({
         component: StandardNode,
         content: <h3>action</h3>,
@@ -210,7 +226,30 @@ export const FlowCanvas = observer(() => {
           { type: 'target', position: Position.Top },
           { type: 'source', position: Position.Bottom },
         ],
-        onEdit: loopOnEdit,
+      }),
+      RecordUpdateNode: connectFreeFlow({
+        component: StandardNode,
+        content: <h3>action</h3>,
+        handles: [
+          { type: 'target', position: Position.Top },
+          { type: 'source', position: Position.Bottom },
+        ],
+      }),
+      RecordDeleteNode: connectFreeFlow({
+        component: StandardNode,
+        content: <h3>action</h3>,
+        handles: [
+          { type: 'target', position: Position.Top },
+          { type: 'source', position: Position.Bottom },
+        ],
+      }),
+      RecordLookupNode: connectFreeFlow({
+        component: StandardNode,
+        content: <h3>action</h3>,
+        handles: [
+          { type: 'target', position: Position.Top },
+          { type: 'source', position: Position.Bottom },
+        ],
       }),
     },
   })

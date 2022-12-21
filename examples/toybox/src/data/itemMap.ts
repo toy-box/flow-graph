@@ -33,9 +33,9 @@ export const itemMap: ItemMapType[] = [
     content: ComponentItem({ title: 'Loop', icon: 'titleText' }),
   },
   {
-    id: 'Pause',
-    key: 'Pause',
-    type: 'Pause',
+    id: 'Wait',
+    key: 'Wait',
+    type: 'Wait',
     title: '暂停',
     content: ComponentItem({ title: 'Pause', icon: 'titleText' }),
   },

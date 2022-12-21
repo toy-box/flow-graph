@@ -16,10 +16,15 @@ import {
   FlowStart,
   FlowDecision,
   FlowLoop,
+  FlowWait,
+  FlowSortCollectionProcessor,
   FlowMetaNode,
   FlowAssignment,
   FlowEnd,
   FlowRecordCreate,
+  FlowRecordUpdate,
+  FlowRecordLookup,
+  FlowRecordDelete,
 } from './flow-nodes'
 
 enum MetaFieldType {
@@ -312,10 +317,20 @@ export class FreeFlow {
         return new FlowLoop(node, this)
       case FlowMetaType.ASSIGNMENT:
         return new FlowAssignment(node, this)
+      case FlowMetaType.WAIT:
+        return new FlowWait(node, this)
+      case FlowMetaType.SORT_COLLECTION_PROCESSOR:
+        return new FlowSortCollectionProcessor(node, this)
       case FlowMetaType.END:
         return new FlowEnd(node, this)
       case FlowMetaType.RECORD_CREATE:
         return new FlowRecordCreate(node, this)
+      case FlowMetaType.RECORD_UPDATE:
+        return new FlowRecordUpdate(node, this)
+      case FlowMetaType.RECORD_LOOKUP:
+        return new FlowRecordLookup(node, this)
+      case FlowMetaType.RECORD_DELETE:
+        return new FlowRecordDelete(node, this)
       default:
         return
     }

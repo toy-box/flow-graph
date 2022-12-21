@@ -51,6 +51,10 @@ export class FlowRecordUpdate extends FlowMetaNode {
     return this.connector
   }
 
+  get faultConnectorName() {
+    return 'Fault'
+  }
+
   constructor(flowRecordUpdate: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
     super(
       metaFlow,

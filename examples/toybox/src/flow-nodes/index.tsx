@@ -543,7 +543,7 @@ export const onPanelEdit = (
       case FlowMetaType.RECORD_CREATE:
         return recordCreateOnEdit(node, at, additionInfo)
       default:
-        return assignOnEdit(node, at, additionInfo)
+        return recordCreateOnEdit(node, at, additionInfo)
     }
   }
   chooseDialog()
