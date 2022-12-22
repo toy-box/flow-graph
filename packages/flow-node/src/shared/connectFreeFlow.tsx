@@ -28,29 +28,41 @@ export function connectFreeFlow({
     const connectionNodeId = useStore(connectionNodeIdSelector)
     const isTarget = connectionNodeId && connectionNodeId !== props.id
     const freeFlow = useFreeFlow()
-    const {
-      // nextNodes,
-      data: { rules },
-      data: {
-        flowNode: { targets },
-      },
-    } = freeFlow.flow.canvas.nodes.find((node) => node.id === props.id)
+    const targetNode = freeFlow.flow.canvas.nodes.find(
+      (node) => node.id === props.id
+    )
+    // const {
+    //   // nextNodes,
+    //   data: { rules },
+    //   data: {
+    //     flowNode: { targets },
+    //   },
+    // } = freeFlow.flow.canvas.nodes.find((node) => node.id === props.id)
 
     const isTargetHandle = () => {
-      switch (props.type) {
-        case 'AssignmentNode':
-        case 'StartNode':
-          return targets ? !targets.length : true
-        case 'DecisionNode':
-          return targets ? targets.length < rules.length + 1 : true
-        case 'LoopNode':
-        case 'RecordCreateNode':
-        case 'RecordUpdateNode':
-        case 'RecordDeleteNode':
-        case 'RecordLookupNode':
-          return targets ? targets.length < 2 : true
-        default:
-          return true
+      if (targetNode) {
+        const {
+          data: { rules },
+          data: {
+            flowNode: { targets },
+          },
+        } = targetNode
+        switch (props.type) {
+          case 'AssignmentNode':
+          case 'StartNode':
+          case 'SortCollectionNode':
+            return targets ? !targets.length : true
+          case 'DecisionNode':
+            return targets ? targets.length < rules.length + 1 : true
+          case 'LoopNode':
+          case 'RecordCreateNode':
+          case 'RecordUpdateNode':
+          case 'RecordDeleteNode':
+          case 'RecordLookupNode':
+            return targets ? targets.length < 2 : true
+          default:
+            return true
+        }
       }
     }
 

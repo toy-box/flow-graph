@@ -54,8 +54,8 @@ export const StandardNode: React.FC<
         </div>
       </Popover>
       <div className={`${prefixCls}__label`}>
-        <div className="title">{flowMetaNode.name}</div>
-        <div className="description">{flowMetaNode.description}</div>
+        <div className="title">{flowMetaNode?.name}</div>
+        <div className="description">{flowMetaNode?.description}</div>
       </div>
     </React.Fragment>
   )
