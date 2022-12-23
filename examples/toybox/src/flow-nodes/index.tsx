@@ -194,51 +194,49 @@ const decidePanelSchema = {
                 items: {
                   type: 'object',
                   'x-component': 'ArrayItems.Item',
-                  remove: {
-                    type: 'void',
-                    'x-decorator': 'FormItem',
-                    'x-component': 'ArrayItems.Remove',
-                  },
                   properties: {
-                    conditionObj: {
+                    // conditionObj: {
+                    //   type: 'void',
+                    //   'x-decorator': 'FormItem',
+                    //   'x-decorator-props': {
+                    //     layout: 'virtical',
+                    //   },
+                    // 'x-component': 'FormGrid',
+                    // properties: {
+                    operation: {
+                      type: 'string',
+                      title: 'resource',
+                      required: true,
+                      'x-decorator': 'FormItem',
+                      'x-component': 'Input',
+                      'x-component-props': {
+                        placeholder: 'Search Resources',
+                      },
+                    },
+                    type: {
+                      type: 'string',
+                      title: 'operator',
+                      required: true,
+                      'x-decorator': 'FormItem',
+                      'x-component': 'Input',
+                      'x-component-props': {
+                        placeholder: 'operator',
+                      },
+                    },
+                    value: {
+                      type: 'string',
+                      title: 'value',
+                      required: true,
+                      'x-decorator': 'FormItem',
+                      'x-component': 'Input',
+                      'x-component-props': {
+                        placeholder: 'Enter value or search resources...',
+                      },
+                    },
+                    remove: {
                       type: 'void',
                       'x-decorator': 'FormItem',
-                      'x-decorator-props': {
-                        layout: 'virtical',
-                      },
-                      'x-component': 'FormGrid',
-                      properties: {
-                        operation: {
-                          type: 'string',
-                          title: 'resource',
-                          required: true,
-                          'x-decorator': 'FormItem',
-                          'x-component': 'Input',
-                          'x-component-props': {
-                            placeholder: 'Search Resources',
-                          },
-                        },
-                        type: {
-                          type: 'string',
-                          title: 'operator',
-                          required: true,
-                          'x-decorator': 'FormItem',
-                          'x-component': 'Input',
-                          'x-component-props': {
-                            placeholder: 'operator',
-                          },
-                        },
-                        value: {
-                          type: 'string',
-                          title: 'value',
-                          required: true,
-                          'x-decorator': 'FormItem',
-                          'x-component': 'Input',
-                          'x-component-props': {
-                            placeholder: 'Enter value or search resources...',
-                          },
-                        },
-                      },
+                      'x-component': 'ArrayItems.Remove',
                     },
                   },
                 },
@@ -396,7 +394,7 @@ export const assignOnEdit = (node: any, at?: string, additionInfo?: any) => {
     })
     .forConfirm((payload, next) => {
       setTimeout(() => {
-        at
+        node.make
           ? node.make(at, { ...payload.values, ...additionInfo })
           : node.update(payload.values)
         next(payload)
@@ -447,7 +445,7 @@ export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
     })
     .forConfirm((payload, next) => {
       setTimeout(() => {
-        at
+        node.make
           ? node.make(at, { ...payload.values, ...additionInfo })
           : node.update(payload.values)
         next(payload)
@@ -479,7 +477,37 @@ export const loopOnEdit = (node: any, at?: string, additionInfo?: any) => {
     .forConfirm((payload, next) => {
       console.log('payload.values - node', payload.values, node)
       setTimeout(() => {
-        at
+        node.make
+          ? node.make(at, { ...payload.values, ...additionInfo })
+          : node.update(payload.values)
+        next(payload)
+      }, 500)
+    })
+    .forCancel((payload, next) => {
+      setTimeout(() => {
+        next(payload)
+      }, 500)
+    })
+    .open()
+}
+
+export const waitOnEdit = (node: any, at?: string, additionInfo?: any) => {
+  const dialog = recordCreateRender()
+  dialog
+    .forOpen((payload, next) => {
+      setTimeout(() => {
+        next({
+          initialValues: {
+            name: node.type,
+            description: node.description,
+          },
+        })
+      }, 500)
+    })
+    .forConfirm((payload, next) => {
+      console.log('payload.values - node', payload.values, node)
+      setTimeout(() => {
+        node.make
           ? node.make(at, { ...payload.values, ...additionInfo })
           : node.update(payload.values)
         next(payload)
@@ -513,7 +541,7 @@ export const recordCreateOnEdit = (
     .forConfirm((payload, next) => {
       console.log('payload.values - node', payload.values, node)
       setTimeout(() => {
-        at
+        node.make
           ? node.make(at, { ...payload.values, ...additionInfo })
           : node.update(payload.values)
         next(payload)
@@ -540,6 +568,8 @@ export const onPanelEdit = (
         return decideOnEdit(node, at, additionInfo)
       case FlowMetaType.LOOP:
         return loopOnEdit(node, at, additionInfo)
+      case FlowMetaType.WAIT:
+        return waitOnEdit(node, at, additionInfo)
       case FlowMetaType.RECORD_CREATE:
         return recordCreateOnEdit(node, at, additionInfo)
       default:
