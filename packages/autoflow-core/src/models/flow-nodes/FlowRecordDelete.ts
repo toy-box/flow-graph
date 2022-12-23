@@ -50,6 +50,10 @@ export class FlowRecordDelete extends FlowMetaNode {
     return this.connector
   }
 
+  get faultConnectorName() {
+    return 'Fault'
+  }
+
   constructor(flowRecordDelete: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
     super(
       metaFlow,

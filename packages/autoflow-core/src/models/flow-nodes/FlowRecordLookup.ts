@@ -58,6 +58,10 @@ export class FlowRecordLookup extends FlowMetaNode {
     return this.connector
   }
 
+  get faultConnectorName() {
+    return 'Fault'
+  }
+
   constructor(flowRecordLookup: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
     super(
       metaFlow,

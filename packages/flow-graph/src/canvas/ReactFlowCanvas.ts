@@ -263,8 +263,9 @@ export class ReactFlowCanvas implements ICanvas {
           this.edges = [...this.edges, newEdge]
         }
         break
-      case FlowMetaType.ASSIGNMENT:
       case FlowMetaType.START:
+      case FlowMetaType.ASSIGNMENT:
+      case FlowMetaType.SORT_COLLECTION_PROCESSOR:
         sourceFlowmetaNode.updateConnector(target)
         this.flowGraph.setTarget(source, [...nodeMapTargets, { id: target }])
         this.edges = flowAddEdge(casualEdge, this.edges)
