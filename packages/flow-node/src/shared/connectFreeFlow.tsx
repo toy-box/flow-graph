@@ -42,7 +42,7 @@ export function connectFreeFlow({
     const isTargetHandle = () => {
       if (targetNode) {
         const {
-          data: { rules },
+          data: { rules, waitEvents },
           data: {
             flowNode: { targets },
           },
@@ -52,8 +52,10 @@ export function connectFreeFlow({
           case 'StartNode':
           case 'SortCollectionNode':
             return targets ? !targets.length : true
+          case 'WaitNode':
           case 'DecisionNode':
-            return targets ? targets.length < rules.length + 1 : true
+            const array = rules ?? waitEvents
+            return targets ? targets.length < array.length + 1 : true
           case 'LoopNode':
           case 'RecordCreateNode':
           case 'RecordUpdateNode':
