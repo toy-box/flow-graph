@@ -174,8 +174,12 @@ export class ReactFlowCanvas implements ICanvas {
     const targetNode = this.nodes.find((node) => node.id === target).data.name
     switch (sourceFlowmetaNode.type) {
       case FlowMetaType.DECISION:
-        const { rules } = this.nodes.find((node) => node.id === source).data
-        const loadData = rules
+      case FlowMetaType.WAIT:
+        const { rules, waitEvents } = this.nodes.find(
+          (node) => node.id === source
+        ).data
+        const loadDataMap = rules ?? waitEvents
+        const loadData = loadDataMap
           .map(({ name, id }) => {
             if (
               nodeMapTargets.findIndex(({ ruleId }) => id === ruleId) === -1
@@ -218,9 +222,9 @@ export class ReactFlowCanvas implements ICanvas {
           ) {
             sourceFlowmetaNode.updateConnector(target, 'defaultConnector')
           } else {
-            const Index = sourceFlowmetaNode.rules.findIndex(
-              ({ id }) => id === loadData[0].id
-            )
+            const Index = sourceFlowmetaNode[
+              rules ? 'rules' : 'waitEvents'
+            ].findIndex(({ id }) => id === loadData[0].id)
             sourceFlowmetaNode.updateConnector(target, Index)
           }
           this.flowGraph.setTarget(source, [

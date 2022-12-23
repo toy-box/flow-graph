@@ -325,6 +325,171 @@ const loopPanelSchema = {
     },
   },
 }
+
+const waitPanelSchema = {
+  type: 'object',
+  properties: {
+    name: {
+      type: 'string',
+      title: '名称',
+      required: true,
+      'x-decorator': 'FormItem',
+      'x-component': 'Input',
+    },
+    description: {
+      type: 'string',
+      title: '简述',
+      'x-decorator': 'FormItem',
+      'x-component': 'Input',
+    },
+    pauseInfo: {
+      type: 'void',
+      'x-decorator': 'FormItem',
+      'x-component': () => {
+        return (
+          <div>
+            Add a pause configuration for each event that can resume the flow.
+            Such an event can be a specified time or a platform event message.
+            Pause conditions determine whether to pause the flow until the event
+            occurs. When no pause conditions are met, the flow takes the default
+            path without pausing.
+          </div>
+        )
+      },
+    },
+    waitEvents: {
+      type: 'array',
+      title: '暂停选项',
+      'x-decorator': 'FormItem',
+      'x-decorator-props': {
+        layout: 'vertical',
+      },
+      'x-component': 'ArrayTabs',
+      'x-component-props': {
+        tabPosition: 'left',
+      },
+      items: {
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            'x-decorator': 'FormItem',
+            'x-decorator-props': {
+              layout: 'virtical',
+            },
+            title: 'Pause Configuration API Name',
+            required: true,
+            'x-component': 'Input',
+          },
+          id: {
+            type: 'string',
+            'x-decorator': 'FormItem',
+            'x-decorator-props': {
+              layout: 'virtical',
+            },
+            title: 'Pause Configuration API Id',
+            required: true,
+            'x-component': 'Input',
+          },
+          criteria: {
+            type: 'object',
+            properties: {
+              logic: {
+                type: 'string',
+                title: 'Condition Requirements to Execute Outcome',
+                required: true,
+                enum: [
+                  {
+                    label: 'All Conditions Are Met (AND)',
+                    value: '$and',
+                  },
+                  {
+                    label: 'Any Condition Is Met (OR)',
+                    value: '$or',
+                  },
+                  {
+                    label: 'Custom Condition Logic Is Met',
+                    value: '$custom',
+                  },
+                ],
+                'x-decorator': 'FormItem',
+                'x-decorator-props': {
+                  layout: 'virtical',
+                },
+                'x-component-props': {},
+                'x-component': 'Select',
+              },
+              conditions: {
+                type: 'array',
+                required: true,
+                title: '',
+                'x-decorator': 'FormItem',
+                'x-component': 'ArrayItems',
+                items: {
+                  type: 'object',
+                  'x-component': 'ArrayItems.Item',
+                  properties: {
+                    // conditionObj: {
+                    //   type: 'void',
+                    //   'x-decorator': 'FormItem',
+                    //   'x-decorator-props': {
+                    //     layout: 'virtical',
+                    //   },
+                    // 'x-component': 'FormGrid',
+                    // properties: {
+                    operation: {
+                      type: 'string',
+                      title: 'resource',
+                      required: true,
+                      'x-decorator': 'FormItem',
+                      'x-component': 'Input',
+                      'x-component-props': {
+                        placeholder: 'Search Resources',
+                      },
+                    },
+                    type: {
+                      type: 'string',
+                      title: 'operator',
+                      required: true,
+                      'x-decorator': 'FormItem',
+                      'x-component': 'Input',
+                      'x-component-props': {
+                        placeholder: 'operator',
+                      },
+                    },
+                    value: {
+                      type: 'string',
+                      title: 'value',
+                      required: true,
+                      'x-decorator': 'FormItem',
+                      'x-component': 'Input',
+                      'x-component-props': {
+                        placeholder: 'Enter value or search resources...',
+                      },
+                    },
+                    remove: {
+                      type: 'void',
+                      'x-decorator': 'FormItem',
+                      'x-component': 'ArrayItems.Remove',
+                    },
+                  },
+                },
+                properties: {
+                  addition: {
+                    type: 'void',
+                    title: 'Add Contact',
+                    'x-component': 'ArrayItems.Addition',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+}
+
 const assignRender = () => {
   return FormDialog({ title: `AssignMent Node Properites` }, () => {
     return (
@@ -363,6 +528,16 @@ const loopRender = () => {
     return (
       <FormLayout labelCol={6} wrapperCol={10}>
         <SchemaField schema={loopPanelSchema} />
+      </FormLayout>
+    )
+  })
+}
+
+const waitRender = () => {
+  return FormDialog({ title: `Pause Node Properites`, width: '90vw' }, () => {
+    return (
+      <FormLayout labelCol={6} wrapperCol={10}>
+        <SchemaField schema={waitPanelSchema} />
       </FormLayout>
     )
   })
@@ -475,7 +650,6 @@ export const loopOnEdit = (node: any, at?: string, additionInfo?: any) => {
       }, 500)
     })
     .forConfirm((payload, next) => {
-      console.log('payload.values - node', payload.values, node)
       setTimeout(() => {
         node.make
           ? node.make(at, { ...payload.values, ...additionInfo })
@@ -492,7 +666,7 @@ export const loopOnEdit = (node: any, at?: string, additionInfo?: any) => {
 }
 
 export const waitOnEdit = (node: any, at?: string, additionInfo?: any) => {
-  const dialog = recordCreateRender()
+  const dialog = waitRender()
   dialog
     .forOpen((payload, next) => {
       setTimeout(() => {
@@ -505,7 +679,6 @@ export const waitOnEdit = (node: any, at?: string, additionInfo?: any) => {
       }, 500)
     })
     .forConfirm((payload, next) => {
-      console.log('payload.values - node', payload.values, node)
       setTimeout(() => {
         node.make
           ? node.make(at, { ...payload.values, ...additionInfo })
@@ -539,7 +712,6 @@ export const recordCreateOnEdit = (
       }, 500)
     })
     .forConfirm((payload, next) => {
-      console.log('payload.values - node', payload.values, node)
       setTimeout(() => {
         node.make
           ? node.make(at, { ...payload.values, ...additionInfo })
