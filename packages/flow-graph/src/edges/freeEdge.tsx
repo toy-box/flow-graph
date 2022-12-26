@@ -15,6 +15,7 @@ export const freeEdgeOptions: DefaultEdgeOptions = {
   markerEnd: {
     type: MarkerType.ArrowClosed,
   },
+  // markerEnd: 'logo',
   labelBgPadding: [8, 4],
   labelBgBorderRadius: 4,
   labelBgStyle: { fill: '#FFCC00', color: '#fff', fillOpacity: 1 },
@@ -81,6 +82,13 @@ export const FreeEdge = ({
       />
       {/* <path
         id={id}
+        style={style}
+        className="react-flow__edge-path"
+        d={edgePath}
+        markerEnd={markerEnd}
+      /> */}
+      {/* <path
+        id={id}
         className="react-flow__edge-path"
         d={edgePath}
         markerEnd={markerEnd}
@@ -91,11 +99,29 @@ export const FreeEdge = ({
           href={`#${id}`}
           startOffset="50%"
           textAnchor="middle"
+          style={{
+            position: 'absolute',
+            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+            background: '#ffcc00',
+            padding: 10,
+            borderRadius: 5,
+            fontSize: 12,
+            fontWeight: 700,
+          }}
         >
-          {data.text}
+          {label}
         </textPath>
       </text> */}
-      {/* <div>{data.text}</div> */}
+      {/* <div           style={{
+            position: 'absolute',
+            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+            background: '#ffcc00',
+            padding: 10,
+            borderRadius: 5,
+            fontSize: 12,
+            fontWeight: 700,
+          }}
+          className="nodrag nopan">{label}</div> */}
       {/* <text>
       <div
           style={{

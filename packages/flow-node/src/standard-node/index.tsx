@@ -65,7 +65,14 @@ export const StandardNode: React.FC<
         {!isAutoLayout && isNodeSelected && (
           <DeleteFilled className={`${prefixCls}__icon`} onClick={deleteNode} />
         )}
-        <div className={classNames(prefixCls, className)} style={style}>
+        <div
+          className={classNames(
+            prefixCls,
+            className,
+            isNodeSelected && 'flow-node__selected'
+          )}
+          style={style}
+        >
           {children}
         </div>
       </Popover>
