@@ -11,14 +11,21 @@
   width: @node-width;
   height: @node-height;
   padding: @node-padding;
-  border: @border-width-base @border-color-base @border-style-base;
+  // border: @border-width-base @border-color-base @border-style-base;
   border-radius: @node-radius;
-  background-color: @white;
+  background-color: #ff9a3c;
   transition: 0.25s;
   cursor: pointer;
   &:hover {
-    border-color: @active-color;
-    box-shadow: @box-shadow-base;
+    // border-color: @active-color;
+    // box-shadow: @box-shadow-base;
+    transform: scale(1.05, 1.05);
+  }
+
+  &__icon {
+    position: absolute;
+    top: -15px;
+    right: -15px;
   }
 
   &__label {
@@ -37,4 +44,10 @@
       color: @text-color-secondary;
     }
   }
+}
+
+.flow-node__selected {
+  border-radius: @node-radius;
+  box-shadow: @node-selected-shadow;
+  transform: scale(1.05, 1.05);
 }

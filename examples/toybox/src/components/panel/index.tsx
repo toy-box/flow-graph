@@ -13,11 +13,7 @@ export const Panel = () => {
     metaFlow.flow.setFlowNodes(flowData2)
   }, [])
   const handleMetaFlow = useCallback(() => {
-    metaFlow.setMetaFlow(
-      freeFlow.flowMeta ?? flowMeta,
-      'AUTO_START_UP',
-      LayoutModeEnum.AUTO_LAYOUT
-    )
+    metaFlow.setMetaFlow(flowMeta, 'AUTO_START_UP', LayoutModeEnum.AUTO_LAYOUT)
     freeFlow.setMetaFlow({}, 'AUTO_START_UP', LayoutModeEnum.AUTO_LAYOUT)
     metaFlow.flow.layoutFlow()
   }, [metaFlow])

@@ -1,10 +1,11 @@
 import React from 'react'
 import classNames from 'classnames'
 import { Popover } from 'antd'
+import { DeleteFilled } from '@ant-design/icons'
 import { observer } from '@formily/reactive-react'
-import { FlowNode } from '@toy-box/flow-graph'
+import { FlowNode, LayoutModeEnum } from '@toy-box/flow-graph'
 import { ICustomEvent } from '../shared'
-import { useEvent, useFlowMetaNodeContext, useFreeFlow } from '../hooks'
+import { useEvent, useFlowMetaNodeContext } from '../hooks'
 import { NodePanel } from '../node-panel'
 
 import './styles'
@@ -20,7 +21,15 @@ export const StandardNode: React.FC<
 > = observer(({ id, className, style, children }) => {
   const prefixCls = 'tbox-flow-node'
   const eventEngine = useEvent()
-  const { flowMetaNode } = useFlowMetaNodeContext()
+  const {
+    flowMetaNode: { metaFlow },
+    flowMetaNode,
+  } = useFlowMetaNodeContext()
+  const isAutoLayout = metaFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT
+  const isNodeSelected =
+    metaFlow.flow.canvas.nodes.findIndex(
+      (node) => node.id === id && node.selected === true
+    ) !== -1 && id !== 'start'
   const [active, setActive] = React.useState(false)
   React.useEffect(() => {
     const unsubscribe = eventEngine.subscribe((payload: ICustomEvent) => {
@@ -39,17 +48,31 @@ export const StandardNode: React.FC<
     setActive(false)
   }
 
+  const deleteNode = () => {
+    metaFlow.flow.canvas.onNodesChange([{ id, type: 'remove' }])
+  }
+
   return (
     <React.Fragment>
       <Popover
         visible={active}
         trigger="click"
-        onVisibleChange={(visible) => setActive(visible)}
+        onVisibleChange={(visible) => isAutoLayout && setActive(visible)}
         placement="bottom"
         content={<NodePanel closeExtend={closeExtend} nodeId={id} />}
         overlayClassName="no-padding"
       >
-        <div className={classNames(prefixCls, className)} style={style}>
+        {!isAutoLayout && isNodeSelected && (
+          <DeleteFilled className={`${prefixCls}__icon`} onClick={deleteNode} />
+        )}
+        <div
+          className={classNames(
+            prefixCls,
+            className,
+            isNodeSelected && 'flow-node__selected'
+          )}
+          style={style}
+        >
           {children}
         </div>
       </Popover>

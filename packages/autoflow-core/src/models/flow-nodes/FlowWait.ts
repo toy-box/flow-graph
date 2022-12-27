@@ -57,7 +57,7 @@ export class FlowWait extends FlowMetaNode {
     this.defaultConnector = flowWait.defaultConnector ?? {
       targetReference: '',
     }
-    this.defaultConnectorName = flowWait.defaultConnectorName
+    this.defaultConnectorName = flowWait.defaultConnectorName ?? 'Defalut Path'
     this.waitEvents = flowWait.waitEvents
     this.makeObservable()
   }

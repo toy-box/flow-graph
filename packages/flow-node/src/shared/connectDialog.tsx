@@ -101,9 +101,10 @@ export const decisonConnectDialog = (
             },
           ])
         } else {
-          const Index = sourceFlowmetaNode.rules.findIndex(
-            ({ id }) => id === payload.values.decisionResult
-          )
+          const { rules, waitEvents } = sourceFlowmetaNode
+          const Index = sourceFlowmetaNode[
+            rules ? 'rules' : 'waitEvents'
+          ].findIndex(({ id }) => id === payload.values.decisionResult)
           sourceFlowmetaNode.updateConnector(target, Index)
           sourceFlowmetaNode.flowNode.targets.push({
             id: target,
