@@ -378,6 +378,44 @@ export const FlowCanvas = observer(() => {
           </marker>
         </defs>
       </svg>
+      <svg style={{ position: 'absolute', top: 0, left: 0 }}>
+        <defs>
+          <marker
+            id="faultHoverArrow"
+            orient="auto"
+            viewBox="0 0 40 40"
+            markerHeight={2}
+            markerWidth={2}
+            refX={9}
+            refY={10}
+          >
+            <path
+              d="M0 0 L10 10 L0 20 z"
+              fill="rgb(142, 3, 15)"
+              strokeWidth="2"
+            ></path>
+          </marker>
+        </defs>
+      </svg>
+      <svg style={{ position: 'absolute', top: 0, left: 0 }}>
+        <defs>
+          <marker
+            id="faultSelectedArrow"
+            orient="auto"
+            viewBox="0 0 40 40"
+            markerHeight={2.2}
+            markerWidth={2.2}
+            refX={9}
+            refY={10}
+          >
+            <path
+              d="M0 0 L10 10 L0 20 z"
+              fill="rgb(142, 3, 15)"
+              strokeWidth="2"
+            ></path>
+          </marker>
+        </defs>
+      </svg>
       {(metaflow.layoutMode === LayoutModeEnum.AUTO_LAYOUT ||
         !metaflow.layoutMode) && (
         <ReactFlow
