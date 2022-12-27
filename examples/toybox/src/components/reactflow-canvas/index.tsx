@@ -38,6 +38,7 @@ import {
   onPanelEdit,
   addFreeLayoutNode,
 } from '../../flow-nodes'
+import { freeInitMeta } from '../../data/flowData'
 
 export const FlowCanvas = observer(() => {
   const ref: any = useRef()
@@ -49,9 +50,9 @@ export const FlowCanvas = observer(() => {
   const freeFlow = useFreeFlow()
   const style = {
     width: '100%',
-    height: '800px',
+    height: '100%',
     marginLeft:
-      metaflow.layoutMode === LayoutModeEnum.FREE_LAYOUT ? '120px' : 0,
+      metaflow.layoutMode === LayoutModeEnum.FREE_LAYOUT ? '300px' : 0,
   }
   const graphEle: any = document.querySelector('#flow-canvas')
   window.onload = function () {
@@ -317,7 +318,7 @@ export const FlowCanvas = observer(() => {
 
   return (
     <div id="flow-canvas" style={style} ref={ref}>
-      {(metaflow.layoutMode === LayoutModeEnum.AUTO_LAYOUT ||
+      {/* {(metaflow.layoutMode === LayoutModeEnum.AUTO_LAYOUT ||
         !metaflow.layoutMode) && (
         <ReactFlow
           nodes={flow.canvas?.nodes}
@@ -337,8 +338,32 @@ export const FlowCanvas = observer(() => {
           <Background gap={30} variant={BackgroundVariant.Cross} />
           <Controls />
         </ReactFlow>
-      )}
-      {metaflow.layoutMode === LayoutModeEnum.FREE_LAYOUT && (
+      )} */}
+      <ReactFlow
+        nodes={dragFlow.canvas?.nodes}
+        edges={dragFlow.canvas?.edges}
+        defaultEdgeOptions={freeEdgeOptions}
+        connectionLineStyle={connectionLineStyle}
+        connectionLineType={ConnectionLineType.SmoothStep}
+        onNodesChange={freeFlow.changeNodes}
+        onNodeDoubleClick={doubleClickNode}
+        onEdgesChange={freeFlow.updateEdges}
+        onConnect={freeFlow.addEdge}
+        nodeTypes={dragFlow.canvas?.components}
+        edgeTypes={dragFlow.canvas?.edgeComponents}
+        onPaneClick={dispatchClickPane}
+        onNodeClick={dispatchClickNode}
+        onEdgeClick={dispatchClickEdge}
+        onMoveStart={dispatchMoveStart}
+        proOptions={{ hideAttribution: true }}
+        zoomOnScroll={false}
+      >
+        <Background gap={30} variant={BackgroundVariant.Cross} />
+        <Controls />
+      </ReactFlow>
+      {/* {freeFlow.layoutMode === LayoutModeEnum.FREE_LAYOUT && (
+        <div>
+          <div>121111111111</div>
         <ReactFlow
           nodes={dragFlow.canvas?.nodes}
           edges={dragFlow.canvas?.edges}
@@ -361,7 +386,8 @@ export const FlowCanvas = observer(() => {
           <Background gap={30} variant={BackgroundVariant.Cross} />
           <Controls />
         </ReactFlow>
-      )}
+        </div>
+      )} */}
     </div>
   )
 })

@@ -75,6 +75,7 @@ export class FlowAssignment extends FlowMetaNode {
     const conId = this?.connector?.targetReference
     const targets = []
     if (conId) targets.push(conId)
+    debugger
     return {
       id: this.id,
       label: this.name,

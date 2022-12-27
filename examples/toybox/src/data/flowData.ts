@@ -388,3 +388,19 @@ export const freeMeta: IFlowMeta = {
     ],
   },
 }
+
+export const freeInitMeta: IFlowMeta = {
+  resources: {},
+  nodes: {
+    start: {
+      id: 'start',
+      name: 'Start',
+      type: FlowMetaType.START,
+      x: 300,
+      y: 30,
+      connector: {
+        targetReference: null,
+      },
+    },
+  },
+}

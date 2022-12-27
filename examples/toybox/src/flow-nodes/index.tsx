@@ -13,6 +13,7 @@ import {
 import { createSchemaField } from '@formily/react'
 import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
+import { TextWidget } from '../widgets'
 
 export * from './addNode'
 const SchemaField = createSchemaField({
@@ -51,14 +52,18 @@ const assignPanelSchema = {
   properties: {
     name: {
       type: 'string',
-      title: '名称',
+      title: (
+        <TextWidget token="flowDesigner.flow.form.comm.label"></TextWidget>
+      ),
       required: true,
       'x-decorator': 'FormItem',
       'x-component': 'Input',
     },
     description: {
       type: 'string',
-      title: '简述',
+      title: (
+        <TextWidget token="flowDesigner.flow.form.comm.description"></TextWidget>
+      ),
       'x-decorator': 'FormItem',
       'x-component': 'Input',
     },

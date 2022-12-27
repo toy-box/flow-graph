@@ -109,7 +109,7 @@ export class MetaFlow {
   ) {
     this.flowMeta = flowMeta
     this.flowType = flowType
-    this.layoutMode = layoutMode
+    // this.layoutMode = layoutMode
     this.onInit()
   }
 

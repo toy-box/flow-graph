@@ -122,7 +122,7 @@ export class FreeFlow {
   ) {
     this.flowMeta = flowMeta
     this.flowType = flowType
-    this.layoutMode = layoutMode
+    // this.layoutMode = layoutMode
     this.onInit()
   }
 
@@ -349,6 +349,6 @@ export class FreeFlow {
     changes.map((change) => {
       if (change.type === 'remove') delete this.flowNodeMap[change.id]
     })
-    this.flow.canvas.onNodesChange(changes)
+    if (this.flow?.canvas) this.flow?.canvas?.onNodesChange(changes)
   }
 }

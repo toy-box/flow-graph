@@ -29,13 +29,13 @@ export const Panel = () => {
     // metaFlow.flow.setGraphNodes([])
     freeFlow.setMetaFlow(
       freeFlow.flowMeta ?? freeMeta,
-      'AUTO_START_UP',
-      LayoutModeEnum.FREE_LAYOUT
+      'AUTO_START_UP'
+      // LayoutModeEnum.FREE_LAYOUT
     )
     metaFlow.setMetaFlow({}, 'AUTO_START_UP', LayoutModeEnum.FREE_LAYOUT)
     // freeFlow.
     // freeFlow..layoutFlow()
-  }, [metaFlow])
+  }, [])
   return (
     <div>
       <button onClick={init}>init</button>
