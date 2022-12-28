@@ -12,10 +12,10 @@ export const freeEdgeOptions: DefaultEdgeOptions = {
   style: { strokeWidth: 2, stroke: 'rgb(145, 146, 151)' },
   type: 'freeEdge',
   // type: 'fixEdge',
-  markerEnd: {
-    type: MarkerType.ArrowClosed,
-  },
-  // markerEnd: 'logo',
+  // markerEnd: {
+  //   type: MarkerType.ArrowClosed,
+  // },
+  markerEnd: 'myArrowClosed',
   labelBgPadding: [8, 4],
   labelBgBorderRadius: 4,
   labelBgStyle: { fill: '#FFCC00', color: '#fff', fillOpacity: 1 },
@@ -55,15 +55,22 @@ export const FreeEdge = ({
     sourceNode,
     targetNode
   )
-
+  console.log('targetPos', targetPos)
   const [edgePath, labelX, labelY] = getSmoothStepPath({
-    sourceX: sx,
-    sourceY: sy,
-    targetX: tx,
-    targetY: ty,
+    sourceX:
+      sourcePos === 'left' ? sx - 10 : sourcePos === 'right' ? sx + 10 : sx,
+    sourceY:
+      sourcePos === 'top' ? sy - 10 : sourcePos === 'bottom' ? sy + 10 : sy,
+    targetX:
+      targetPos === 'left' ? tx - 10 : targetPos === 'right' ? tx + 10 : tx,
+    targetY:
+      targetPos === 'top' ? ty - 10 : targetPos === 'bottom' ? ty + 10 : ty,
     sourcePosition: sourcePos,
     targetPosition: targetPos,
   })
+  // const newEdgeArray = edgePath.split(' ')
+  // newEdgeArray[newEdgeArray.length-1] = Number(newEdgeArray[newEdgeArray.length-1]) - 10 + ''
+  // console.log('edgePath', newEdgeArray.join(' '))
 
   return (
     <>
