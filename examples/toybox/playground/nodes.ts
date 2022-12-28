@@ -22,6 +22,8 @@ export const nodeTemplatesProvider = (
       type: FlowMetaType.ASSIGNMENT,
       group: 'flow',
       make: (at: string, editInfo: INodeEdit) => {
+        editInfo.x = editInfo.x - 200
+        console.log(editInfo)
         const flowData = {
           id: uid(),
           name: 'Assignment',

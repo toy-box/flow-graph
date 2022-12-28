@@ -257,7 +257,6 @@ export const FlowCanvas = observer(() => {
   useEffect(() => {
     flow.setCanvas(reactFlowCanvas)
     dragFlow.setCanvas(freeFlowCanvas)
-    // freeFlow.flow.layoutFlow()
   }, [])
 
   const dispatchClickPane = React.useCallback(
