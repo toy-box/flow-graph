@@ -6,8 +6,8 @@ import { INodeTemplate, INodeEdit } from '../types'
 export type NodeMake = (at: string, editInfo?: INodeEdit) => void
 
 export interface IFlowContextProps<T> {
-  freeFlow: FreeFlow
-  metaFlow: MetaFlow
+  // freeFlow: FreeFlow
+  metaFlow: MetaFlow | FreeFlow
   templates: INodeTemplate<T>[]
   icons: Record<string, ReactNode>
   eventEngine: EventEngine

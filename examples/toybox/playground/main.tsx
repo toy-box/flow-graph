@@ -36,22 +36,21 @@ export const App: React.FC = () => {
   const eventEngine = new EventEngine()
   const metaFlow = new MetaFlow(FlowModeEnum.EDIT)
   const freeFlow = new FreeFlow(FlowModeEnum.EDIT)
-  useEffect(() => {
-    freeFlow.setMetaFlow(freeInitMeta, 'AUTO_START_UP')
-    metaFlow.setMetaFlow({}, 'AUTO_START_UP')
-  }, [metaFlow])
+  // useEffect(() => {
+  //   freeFlow.setMetaFlow(freeInitMeta, 'AUTO_START_UP')
+  //   metaFlow.setMetaFlow({}, 'AUTO_START_UP')
+  // }, [metaFlow])
   return (
     <div className="App">
       <FlowContext.Provider
         value={{
-          metaFlow,
-          freeFlow,
+          metaFlow: freeFlow,
           templates: nodeTemplatesProvider(metaFlow, freeFlow),
           icons: {},
           eventEngine,
         }}
       >
-        {/* <Panel /> */}
+        <Panel />
         {/* <LeftPanel /> */}
         <StudioPanel>
           <TopbarPanel>

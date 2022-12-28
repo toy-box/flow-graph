@@ -710,7 +710,7 @@ export const recordCreateOnEdit = (
       setTimeout(() => {
         next({
           initialValues: {
-            name: node.type,
+            name: node.name,
             description: node.description,
           },
         })

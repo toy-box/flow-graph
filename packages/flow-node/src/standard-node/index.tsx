@@ -4,8 +4,14 @@ import { Popover } from 'antd'
 import { DeleteFilled } from '@ant-design/icons'
 import { observer } from '@formily/reactive-react'
 import { FlowNode, LayoutModeEnum } from '@toy-box/flow-graph'
+import { FreeFlow } from '@toy-box/autoflow-core'
 import { ICustomEvent } from '../shared'
-import { useEvent, useFlowMetaNodeContext } from '../hooks'
+import {
+  useEvent,
+  useFlowMetaNodeContext,
+  useFreeFlow,
+  useMetaFlow,
+} from '../hooks'
 import { NodePanel } from '../node-panel'
 
 import './styles'
@@ -21,13 +27,15 @@ export const StandardNode: React.FC<
 > = observer(({ id, className, style, children }) => {
   const prefixCls = 'tbox-flow-node'
   const eventEngine = useEvent()
+  const freeFlow = useFreeFlow()
+  const metaFlow = useMetaFlow()
   const {
-    flowMetaNode: { metaFlow },
+    // flowMetaNode: { metaFlow },
     flowMetaNode,
   } = useFlowMetaNodeContext()
   const isAutoLayout = metaFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT
   const isNodeSelected =
-    metaFlow.flow.canvas.nodes.findIndex(
+    freeFlow.flow.canvas.nodes.findIndex(
       (node) => node.id === id && node.selected === true
     ) !== -1 && id !== 'start'
   const [active, setActive] = React.useState(false)
@@ -49,7 +57,10 @@ export const StandardNode: React.FC<
   }
 
   const deleteNode = () => {
-    metaFlow.flow.canvas.onNodesChange([{ id, type: 'remove' }])
+    metaFlow.flow.canvas.onNodesChange(
+      [{ id, type: 'remove' }],
+      freeFlow as FreeFlow
+    )
   }
 
   return (

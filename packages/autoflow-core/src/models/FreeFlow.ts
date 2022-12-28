@@ -346,9 +346,6 @@ export class FreeFlow {
   }
 
   changeNodes(changes: NodeChange[]) {
-    changes.map((change) => {
-      if (change.type === 'remove') delete this.flowNodeMap[change.id]
-    })
-    if (this.flow?.canvas) this.flow?.canvas?.onNodesChange(changes)
+    if (this.flow?.canvas) this.flow?.canvas?.onNodesChange(changes, this)
   }
 }

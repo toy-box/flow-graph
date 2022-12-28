@@ -51,8 +51,8 @@ export const FlowCanvas = observer(() => {
   const style = {
     width: '100%',
     height: '100%',
-    marginLeft:
-      metaflow.layoutMode === LayoutModeEnum.FREE_LAYOUT ? '300px' : 0,
+    // marginLeft:
+    //   metaflow.layoutMode === LayoutModeEnum.FREE_LAYOUT ? '300px' : 0,
   }
   const graphEle: any = document.querySelector('#flow-canvas')
   window.onload = function () {

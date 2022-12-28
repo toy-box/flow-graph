@@ -139,8 +139,21 @@ export class ReactFlowCanvas implements ICanvas {
     edges.forEach((edge) => this.addEdge(edge))
   }
 
-  onNodesChange(changes: NodeChange[]) {
+  onNodesChange(changes: NodeChange[], freeFlow?: FreeFlow) {
+    if (freeFlow) {
+      const { flowMetaNodeMap } = freeFlow
+      changes.map((change) => {
+        if (change.type === 'remove') {
+          const {
+            [change.id]: {},
+            ...rest
+          } = flowMetaNodeMap
+          freeFlow.getFlowMetaNodeMap(rest)
+        }
+      })
+    }
     this.nodes = applyNodeChanges(changes, this.nodes)
+    console.log(this.nodes, this.edges, changes)
   }
 
   onEdgesChange(changes: EdgeChange[], flowMetaNodeMap?: any) {

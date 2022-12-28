@@ -2,5 +2,5 @@ import { useFlowContext } from './useFlowContext'
 
 export const useFreeFlow = () => {
   const flowContext = useFlowContext()
-  return flowContext.freeFlow
+  return flowContext.metaFlow
 }
