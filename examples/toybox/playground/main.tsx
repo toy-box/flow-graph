@@ -5,7 +5,7 @@ import { FlowModeEnum, MetaFlow, FreeFlow } from '@toy-box/autoflow-core'
 import { icons } from '@toy-box/studio-base'
 import { GlobalRegistry } from '@toy-box/designable-core'
 import { Panel } from '../src'
-import { freeInitMeta } from '../src/data/flowData'
+import { freeInitMeta, freeMeta } from '../src/data/flowData'
 import { nodeTemplatesProvider } from './nodes'
 import '../src/styles/theme.less'
 
@@ -18,7 +18,7 @@ export const App: React.FC = () => {
   const freeFlow = new FreeFlow(FlowModeEnum.EDIT)
   useEffect(() => {
     metaFlow.setMetaFlow({}, 'AUTO_START_UP')
-    freeFlow.setMetaFlow(freeInitMeta, 'AUTO_START_UP')
+    freeFlow.setMetaFlow(freeMeta, 'AUTO_START_UP')
   }, [metaFlow, freeFlow])
   return (
     <div className="App">
