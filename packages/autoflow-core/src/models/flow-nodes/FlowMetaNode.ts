@@ -1,4 +1,10 @@
-import { FlowNode, IFlowNodeProps, LayoutModeEnum } from '@toy-box/flow-graph'
+import { Connection } from 'reactflow'
+import {
+  FlowNode,
+  IFlowNodeProps,
+  LayoutModeEnum,
+  ReactFlowCanvas,
+} from '@toy-box/flow-graph'
 import { FlowMetaParam, FlowMetaType, TargetReference } from '../../types'
 import { MetaFlow } from '../MetaFlow'
 import { FreeFlow } from '../FreeFlow'
@@ -69,6 +75,14 @@ export abstract class FlowMetaNode {
       return { x, y }
     }
   }
+
+  abstract connectDialog(
+    targetNode: string,
+    connection: Connection,
+    canvas: ReactFlowCanvas,
+    loadData?: any,
+    sourceFlowmetaNode?: FlowMetaNode
+  ): void
 
   abstract lowerLeverConnector?: TargetReference
 

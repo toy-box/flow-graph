@@ -55,7 +55,6 @@ export const FreeEdge = ({
     sourceNode,
     targetNode
   )
-  console.log('targetPos', targetPos)
   const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX:
       sourcePos === 'left' ? sx - 10 : sourcePos === 'right' ? sx + 10 : sx,

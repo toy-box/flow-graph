@@ -1,6 +1,7 @@
-import { FlowMetaNode } from '@toy-box/autoflow-core'
 import React, { FC, ReactNode } from 'react'
-import { Handle, HandleProps, Position, useStore } from 'reactflow'
+import { Handle, HandleProps, useStore, Connection } from 'reactflow'
+import { FlowMetaNode } from '@toy-box/autoflow-core'
+import { ReactFlowCanvas } from '@toy-box/flow-graph'
 import { useFreeFlow, useMetaFlow } from '../hooks'
 import { IStandardNodeProps } from '../standard-node'
 import { FlowMetaNodeContext } from './context'
@@ -15,6 +16,13 @@ interface IConnectReactFlowProps {
   content?: ReactNode
   handles?: HandleProps[]
   onEdit?: (node: FlowMetaNode | INodeTemplate<NodeMake>, at?: string) => void
+  connectDialog?: (
+    targetNode: string,
+    connection: Connection,
+    canvas: ReactFlowCanvas,
+    loadData?: any,
+    sourceFlowmetaNode?: FlowMetaNode
+  ) => void
 }
 
 export function connectFreeFlow({
@@ -22,12 +30,15 @@ export function connectFreeFlow({
   content,
   handles,
   onEdit,
+  connectDialog,
 }: IConnectReactFlowProps) {
   const connectionNodeIdSelector = (state) => state.connectionNodeId
   const FlowNodeWrapper = (props: IStandardNodeProps) => {
     const connectionNodeId = useStore(connectionNodeIdSelector)
     const isTarget = connectionNodeId && connectionNodeId !== props.id
     const freeFlow = useFreeFlow()
+    const getFlowMetaNode = freeFlow.flowMetaNodeMap[props.id]
+    getFlowMetaNode.connectDialog = connectDialog
     const targetNode = freeFlow.flow.canvas.nodes.find(
       (node) => node.id === props.id
     )
@@ -92,7 +103,7 @@ export function connectFreeFlow({
           </>
         ))}
         <FlowMetaNodeContext.Provider
-          value={{ flowMetaNode: freeFlow.flowMetaNodeMap[props.id], onEdit }}
+          value={{ flowMetaNode: getFlowMetaNode, onEdit }}
         >
           <TargetComponent {...props}>{content}</TargetComponent>
         </FlowMetaNodeContext.Provider>

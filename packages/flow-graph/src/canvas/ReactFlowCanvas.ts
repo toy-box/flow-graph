@@ -3,7 +3,6 @@ import {
   MemoExoticComponent,
   ComponentType,
 } from 'react'
-import { action, batch, define, observable } from '@formily/reactive'
 import {
   applyEdgeChanges,
   applyNodeChanges,
@@ -16,12 +15,12 @@ import {
   EdgeProps,
   NodeProps,
 } from 'reactflow'
+import { action, batch, define, observable } from '@formily/reactive'
+import { FlowMetaType, FreeFlow, OpearteTypeEnum } from '@toy-box/autoflow-core'
 import { uid } from '@toy-box/toybox-shared'
 import { ICanvas } from './Canvas'
 import { INode, IEdge, LayoutModeEnum, EdgeTypeEnum } from '../types'
 import { FlowGraph } from '../models'
-import { decisonConnectDialog, loopConnectDialog } from '@toy-box/flow-node'
-import { FlowMetaType, FreeFlow, OpearteTypeEnum } from '@toy-box/autoflow-core'
 
 import 'reactflow/dist/style.css'
 import './canvas.less'
@@ -165,7 +164,6 @@ export class ReactFlowCanvas implements ICanvas {
       })
     }
     this.nodes = applyNodeChanges(changes, this.nodes)
-    console.log(this.nodes, this.edges, changes)
   }
 
   onEdgesChange(changes: EdgeChange[], freeFlow?: FreeFlow) {
@@ -216,6 +214,7 @@ export class ReactFlowCanvas implements ICanvas {
                 label: name,
                 value: id,
                 id: id,
+                ruleId: id,
               }
             }
           })
@@ -225,12 +224,12 @@ export class ReactFlowCanvas implements ICanvas {
         if (isDefaultConnecter) {
           loadData.push({
             label: sourceFlowmetaNode.defaultConnectorName,
-            value: 'default' + '-' + uid(),
-            id: 'default' + '-' + uid(),
+            value: uid(),
+            id: uid(),
           })
         }
         if (loadData.length > 1) {
-          decisonConnectDialog(
+          sourceFlowmetaNode.connectDialog(
             targetNode,
             connection,
             this,
@@ -244,10 +243,7 @@ export class ReactFlowCanvas implements ICanvas {
           }
           edgeId = uid()
           this.addEdge(newEdge, edgeId)
-          if (
-            loadData[0].id.split('-')[0] ===
-            sourceFlowmetaNode.defaultConnectorName
-          ) {
+          if (!loadData[0].ruleId) {
             sourceFlowmetaNode.updateConnector(target, 'defaultConnector')
           } else {
             const Index = sourceFlowmetaNode[

@@ -16,6 +16,7 @@ import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { TextWidget } from '../widgets'
 
 export * from './addNode'
+export * from './connectDialog'
 const SchemaField = createSchemaField({
   components: {
     ArrayTabs,
@@ -65,7 +66,10 @@ const assignPanelSchema = {
         <TextWidget token="flowDesigner.flow.form.comm.description"></TextWidget>
       ),
       'x-decorator': 'FormItem',
-      'x-component': 'Input',
+      'x-decorator-props': {
+        layout: 'vertical',
+      },
+      'x-component': 'Input.TextArea',
     },
     assignmentItems: {
       type: 'object',
@@ -496,13 +500,16 @@ const waitPanelSchema = {
 }
 
 const assignRender = () => {
-  return FormDialog({ title: `AssignMent Node Properites` }, () => {
-    return (
-      <FormLayout labelCol={6} wrapperCol={10}>
-        <SchemaField schema={assignPanelSchema} />
-      </FormLayout>
-    )
-  })
+  return FormDialog(
+    { title: `AssignMent Node Properites`, width: '60vw' },
+    () => {
+      return (
+        <FormLayout labelCol={6} wrapperCol={10}>
+          <SchemaField schema={assignPanelSchema} />
+        </FormLayout>
+      )
+    }
+  )
 }
 
 const decideRender = () => {
