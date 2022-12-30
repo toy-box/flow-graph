@@ -1,5 +1,10 @@
 import { define, observable, action } from '@formily/reactive'
-import { FlowNode, FlowNodeType, TargetProps } from '@toy-box/flow-graph'
+import {
+  FlowNode,
+  FlowNodeType,
+  LayoutModeEnum,
+  TargetProps,
+} from '@toy-box/flow-graph'
 import { IFlowNodeProps } from '@toy-box/flow-graph/src'
 import { uid } from '@toy-box/toybox-shared'
 import {
@@ -209,7 +214,21 @@ export class FlowDecision extends FlowMetaNode {
     this.name = payload.name
     this.description = payload.description
     this.defaultConnectorName = payload.defaultConnectorName
-    this.rules = payload.rules
+    const rules = payload.rules.map((rule) => {
+      if (!rule.connector)
+        return {
+          ...rule,
+          connector: {
+            targetReference: '',
+          },
+        }
+      return rule
+    })
+    this.rules = rules
+    if (this.metaFlow.layoutMode === LayoutModeEnum.FREE_LAYOUT) {
+      const flowNode = this.makeFlowNode()
+      this.metaFlow.flow.updateFreeNode(flowNode)
+    }
   }
 
   updateConnector(
@@ -237,7 +256,7 @@ export class FlowDecision extends FlowMetaNode {
       this.defaultConnector = { targetReference: '' }
     } else {
       this.rules.map((rule, index) => {
-        if (rule.connector.targetReference === target && rule.id === ruleId) {
+        if (rule?.connector?.targetReference === target && rule.id === ruleId) {
           this.rules[index] = {
             ...this.rules[index],
             connector: { targetReference: '' },

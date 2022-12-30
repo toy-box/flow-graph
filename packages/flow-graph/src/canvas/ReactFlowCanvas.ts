@@ -18,10 +18,10 @@ import {
 } from 'reactflow'
 import { uid } from '@toy-box/toybox-shared'
 import { ICanvas } from './Canvas'
-import { INode, IEdge, LayoutModeEnum } from '../types'
+import { INode, IEdge, LayoutModeEnum, EdgeTypeEnum } from '../types'
 import { FlowGraph } from '../models'
 import { decisonConnectDialog, loopConnectDialog } from '@toy-box/flow-node'
-import { FlowMetaType, FreeFlow } from '@toy-box/autoflow-core'
+import { FlowMetaType, FreeFlow, OpearteTypeEnum } from '@toy-box/autoflow-core'
 
 import 'reactflow/dist/style.css'
 import './canvas.less'
@@ -139,6 +139,10 @@ export class ReactFlowCanvas implements ICanvas {
     edges.forEach((edge) => this.addEdge(edge))
   }
 
+  removeEdges(changes: EdgeChange[]) {
+    this.edges = applyEdgeChanges(changes, this.edges)
+  }
+
   onNodesChange(changes: NodeChange[], freeFlow?: FreeFlow) {
     if (freeFlow) {
       const { flowMetaNodeMap } = freeFlow
@@ -149,6 +153,14 @@ export class ReactFlowCanvas implements ICanvas {
             ...rest
           } = flowMetaNodeMap
           freeFlow.getFlowMetaNodeMap(rest)
+          freeFlow?.history.push({
+            type: OpearteTypeEnum.REMOVE_NODE,
+            nodeChange: {
+              id: change.id,
+              type: 'remove',
+            },
+            flowMetaNodeMap: rest,
+          })
         }
       })
     }
@@ -156,12 +168,11 @@ export class ReactFlowCanvas implements ICanvas {
     console.log(this.nodes, this.edges, changes)
   }
 
-  onEdgesChange(changes: EdgeChange[], flowMetaNodeMap?: any) {
+  onEdgesChange(changes: EdgeChange[], freeFlow?: FreeFlow) {
     changes.map((change) => {
       if (change.type === 'remove') {
-        const { source, target } = this.edges.find(
-          (edge) => edge.id === change.id
-        )
+        const edge: any = this.edges.find((edge) => edge.id === change.id)
+        const { source, target } = edge
         const nodeTarget = this.flowGraph.nodeMap[source].targets
           .map((target, index) => {
             if (target?.edgeId === change.id || target.ruleId === change.id) {
@@ -173,7 +184,12 @@ export class ReactFlowCanvas implements ICanvas {
           nodeTarget ? nodeTarget.index : 0,
           1
         )
-        flowMetaNodeMap[source].deleteConnector(target, nodeTarget)
+        freeFlow.flowMetaNodeMap[source].deleteConnector(target, nodeTarget)
+        freeFlow?.history?.push({
+          type: OpearteTypeEnum.REMOVE_Edge,
+          edge,
+          flowMetaNodeMap: freeFlow.flowMetaNodeMap,
+        })
         this.onNodesChange([{ id: source, type: 'select', selected: true }])
       }
     })
@@ -183,14 +199,13 @@ export class ReactFlowCanvas implements ICanvas {
   onConnect(connection: Connection, sourceFlowmetaNode?: any) {
     const { target, source } = connection
     const nodeMapTargets = this.flowGraph.nodeMap[source].targets
-    const casualEdge = { id: uid(), ...connection }
+    let edgeId = uid()
+    let newEdge: IEdge = { ...connection }
     const targetNode = this.nodes.find((node) => node.id === target).data.name
     switch (sourceFlowmetaNode.type) {
       case FlowMetaType.DECISION:
       case FlowMetaType.WAIT:
-        const { rules, waitEvents } = this.nodes.find(
-          (node) => node.id === source
-        ).data
+        const { rules, waitEvents } = sourceFlowmetaNode
         const loadDataMap = rules ?? waitEvents
         const loadData = loadDataMap
           .map(({ name, id }) => {
@@ -223,12 +238,12 @@ export class ReactFlowCanvas implements ICanvas {
             sourceFlowmetaNode
           )
         } else if (loadData.length === 1) {
-          const newEdge = {
+          newEdge = {
             ...connection,
-            id: uid(),
             label: loadData[0].label,
           }
-          this.edges = [...this.edges, newEdge]
+          edgeId = uid()
+          this.addEdge(newEdge, edgeId)
           if (
             loadData[0].id.split('-')[0] ===
             sourceFlowmetaNode.defaultConnectorName
@@ -246,7 +261,7 @@ export class ReactFlowCanvas implements ICanvas {
               id: target,
               label: newEdge.label,
               ruleId: loadData[0].id,
-              edgeId: newEdge.id,
+              edgeId,
             },
           ])
         }
@@ -258,75 +273,59 @@ export class ReactFlowCanvas implements ICanvas {
           loopConnectDialog(targetNode, connection, this, sourceFlowmetaNode)
         } else {
           const isDefaultConnecter =
-            sourceFlowmetaNode.defaultConnector.targetReference === ''
-          const newEdge = {
+            sourceFlowmetaNode.defaultConnector.targetReference == ''
+          newEdge = {
             ...connection,
-            id: uid(),
             label: isDefaultConnecter
               ? defaultConnectorName
               : nextValueConnectorName,
           }
-          isDefaultConnecter
-            ? sourceFlowmetaNode.updateConnector(target, 'defaultConnector')
-            : sourceFlowmetaNode.updateConnector(target, 'nextValueConnector')
+          edgeId = uid()
+          this.addEdge(newEdge, edgeId)
+          sourceFlowmetaNode.updateConnector(target, isDefaultConnecter)
           this.flowGraph.setTarget(source, [
             ...nodeMapTargets,
             {
               id: target,
               label: newEdge.label,
-              edgeId: newEdge.id,
+              edgeId,
             },
           ])
-          this.edges = [...this.edges, newEdge]
-        }
-        break
-      case FlowMetaType.START:
-      case FlowMetaType.ASSIGNMENT:
-      case FlowMetaType.SORT_COLLECTION_PROCESSOR:
-        sourceFlowmetaNode.updateConnector(target)
-        this.flowGraph.setTarget(source, [...nodeMapTargets, { id: target }])
-        this.edges = flowAddEdge(casualEdge, this.edges)
-        break
-      case FlowMetaType.RECORD_CREATE:
-      case FlowMetaType.RECORD_LOOKUP:
-      case FlowMetaType.RECORD_UPDATE:
-      case FlowMetaType.RECORD_DELETE:
-        if (nodeMapTargets.length === 0) {
-          const newEdge = { ...connection, id: uid() }
-          this.flowGraph.setTarget(source, [
-            ...nodeMapTargets,
-            { id: target, edgeId: newEdge.id },
-          ])
-          this.edges = [...this.edges, newEdge]
-          sourceFlowmetaNode.updateConnector(target, 'connector')
-        } else {
-          const isFaultConnector =
-            sourceFlowmetaNode.faultConnector.targetReference === ''
-          const newEdge = {
-            ...connection,
-            id: uid(),
-            label: isFaultConnector
-              ? sourceFlowmetaNode.faultConnectorName
-              : '',
-            type: isFaultConnector ? 'faultEdge' : 'freeEdge',
-          }
-          isFaultConnector
-            ? sourceFlowmetaNode.updateConnector(target, 'faultConnector')
-            : sourceFlowmetaNode.updateConnector(target, 'connector')
-          this.flowGraph.setTarget(source, [
-            ...nodeMapTargets,
-            {
-              id: target,
-              label: newEdge.label,
-              edgeId: newEdge.id,
-            },
-          ])
-          this.edges = [...this.edges, newEdge]
         }
         break
       default:
-        this.edges = flowAddEdge(casualEdge, this.edges)
-        return
+        if (nodeMapTargets.length === 0) {
+          edgeId = uid()
+          this.flowGraph.setTarget(source, [
+            ...nodeMapTargets,
+            { id: target, edgeId },
+          ])
+          sourceFlowmetaNode.updateConnector(target)
+        } else {
+          const isFaultConnector =
+            sourceFlowmetaNode.faultConnector.targetReference == ''
+          newEdge = {
+            ...connection,
+            label: isFaultConnector
+              ? sourceFlowmetaNode.faultConnectorName
+              : '',
+            type: isFaultConnector
+              ? EdgeTypeEnum.FAULT_EDGE
+              : EdgeTypeEnum.FREE_EDGE,
+          }
+          edgeId = uid()
+          sourceFlowmetaNode.updateConnector(target, isFaultConnector)
+          this.flowGraph.setTarget(source, [
+            ...nodeMapTargets,
+            {
+              id: target,
+              label: newEdge.label,
+              edgeId,
+            },
+          ])
+        }
+        this.addEdge(newEdge, edgeId)
+        break
     }
   }
 }

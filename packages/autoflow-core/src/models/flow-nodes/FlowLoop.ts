@@ -204,12 +204,12 @@ export class FlowLoop extends FlowMetaNode {
     this.toJson()
   }
 
-  updateConnector(
-    targetId: string,
-    options: 'nextValueConnector' | 'defaultConnector'
-  ): void {
-    this[options] = { targetReference: targetId }
-    this.toJson()
+  updateConnector(targetId: string, isDefaultConnecter: boolean): void {
+    if (isDefaultConnecter) {
+      this.defaultConnector.targetReference = targetId
+    } else {
+      this.nextValueConnector.targetReference = targetId
+    }
   }
 
   deleteConnector(target, nodeTarget) {

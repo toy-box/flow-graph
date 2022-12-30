@@ -3,7 +3,7 @@ import { uid } from '@toy-box/toybox-shared'
 import { FlowGraph } from './FlowGraph'
 import { IConnectionWithLabel, ReactFlowCanvas } from '../canvas'
 import { FlowNode, IFlowNodeProps } from './FlowNode'
-import { IEdge, LayoutModeEnum } from '../types'
+import { EdgeTypeEnum, IEdge, LayoutModeEnum } from '../types'
 import { freeEdgeOptions } from '../edges'
 
 const getAreaWidth = (start: FlowNode, end: FlowNode) => {
@@ -57,6 +57,7 @@ export class Flow {
       addFlowNodes: action,
       addGraphNode: action,
       updateNode: action,
+      updateFreeNode: action,
       removeNode: action,
       removeNodes: action,
       addGraphEdge: action,
@@ -162,16 +163,20 @@ export class Flow {
   addFlowFreeNode(node: IFlowNodeProps) {
     const freeNode = this.flowGraph.addFreeNode(node)
     this.canvas?.addNode(freeNode)
+    this.addFlowFreeEdge(freeNode)
+  }
+
+  addFlowFreeEdge(freeNode) {
     if (this.layoutMode === LayoutModeEnum.FREE_LAYOUT) {
-      if (freeNode?.targets?.length === 0 || !node?.targets) return
+      if (freeNode?.targets?.length === 0) return
       freeNode.targets.forEach((target) => {
         const edgeType =
-          freeNode.component === 'RecordCreateNode' && target?.label === 'Fault'
-            ? 'faultEdge'
-            : 'freeEdge'
+          target?.edgeType === EdgeTypeEnum.FAULT_EDGE
+            ? EdgeTypeEnum.FAULT_EDGE
+            : EdgeTypeEnum.FREE_EDGE
         const connection: IConnectionWithLabel = {
           ...freeEdgeOptions,
-          source: node.id,
+          source: freeNode.id,
           target: target.id,
           sourceHandle: null,
           targetHandle: null,
@@ -183,10 +188,25 @@ export class Flow {
         this.canvas.addEdge(connection, edgeId)
       })
     }
+    console.log(this.canvas.edges, 'edges')
   }
 
   addFlowNodes(nodes: IFlowNodeProps[]) {
     return this.flowGraph.addNodes(nodes)
+  }
+
+  updateFreeNode(nodeUpdate: IFlowNodeProps) {
+    const freeNode = this.flowGraph.nodeMap[nodeUpdate.id]
+    const changes: any = freeNode.targets.map((target) => {
+      return {
+        id: target.edgeId,
+        type: 'remove',
+      }
+    })
+    this.canvas?.removeEdges(changes)
+    this.flowGraph.updateFreeNode(nodeUpdate)
+    const updateNode = this.flowGraph.nodeMap[nodeUpdate.id]
+    this.addFlowFreeEdge(updateNode)
   }
 
   updateNode(nodeUpdate: UpdateNodeProps) {

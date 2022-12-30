@@ -36,8 +36,9 @@ export const StandardNode: React.FC<
   const isAutoLayout = metaFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT
   const isNodeSelected =
     freeFlow.flow.canvas.nodes.findIndex(
-      (node) => node.id === id && node.selected === true
-    ) !== -1 && id !== 'start'
+      (node) =>
+        node.id === id && node.selected === true && node.type !== 'StartNode'
+    ) !== -1
   const [active, setActive] = React.useState(false)
   React.useEffect(() => {
     const unsubscribe = eventEngine.subscribe((payload: ICustomEvent) => {

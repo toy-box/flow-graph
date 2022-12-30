@@ -80,6 +80,17 @@ export class FlowNode {
     )
   }
 
+  update(props: IFlowNodeProps) {
+    this.label = props.label
+    this.targets = props.targets?.map((target) =>
+      typeof target === 'string'
+        ? { id: target, edgeId: uid() }
+        : { ...target, edgeId: uid() }
+    )
+    this.component = props.component
+    this.data = props.data
+  }
+
   setPostion(x: number, y: number) {
     this.x = x
     this.y = y

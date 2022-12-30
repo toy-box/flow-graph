@@ -42,6 +42,7 @@ export class FlowGraph {
       addNode: action,
       addFreeNode: action,
       updateNode: batch,
+      updateFreeNode: batch,
       removeNode: batch,
       removeNodes: batch,
       layout: batch,
@@ -165,6 +166,13 @@ export class FlowGraph {
 
   addNodes(nodes: IFlowNodeProps[]) {
     return nodes.map((node) => this.addNode(node))
+  }
+
+  updateFreeNode(updateNode: IFlowNodeProps) {
+    const { id } = updateNode
+    const node = this.nodeMap[id]
+    node.update(updateNode)
+    console.log(this.nodeMap)
   }
 
   updateNode(updateNode: UpdateNodeProps) {

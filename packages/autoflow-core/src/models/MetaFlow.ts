@@ -18,6 +18,7 @@ import {
   FlowAssignment,
   FlowEnd,
 } from './flow-nodes'
+import { History, OpearteTypeEnum } from './History'
 
 export enum MetaFieldType {
   EDIT = 'EDIT',
@@ -48,6 +49,7 @@ export class MetaFlow {
   // flowVariables: IFieldMeta[] = []
   mode: FlowModeType = FlowModeEnum.EDIT
   flowType: FlowType
+  history: History
   layoutMode?: LayoutModeEnum
 
   get flowMetaNodes() {
@@ -60,6 +62,14 @@ export class MetaFlow {
     this.layoutMode = layoutMode || LayoutModeEnum.AUTO_LAYOUT
     this.mode = mode || this.mode
     this.flow = flow ?? new Flow(this.layoutMode)
+    this.history = new History(undefined, {
+      onRedo: (item) => {
+        console.log(item, 'onRedo')
+      },
+      onUndo: (item) => {
+        console.log(item, 'onUndo')
+      },
+    })
     this.makeObservable()
   }
 

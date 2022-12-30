@@ -13,8 +13,8 @@ import {
 import { FlowCanvas, ErrorWidget, ResourceWidget } from '../../../src'
 import { itemMap } from '../../../src/data/itemMap'
 export const Panel = () => {
-  // const metaFlow = useMetaFlow()
-  // const freeFlow = useFreeFlow()
+  const metaFlow = useMetaFlow()
+  const freeFlow = useFreeFlow()
   // const init = useCallback(() => {
   //   metaFlow.flow.setFlowNodes(flowData1)
   // }, [])
@@ -26,10 +26,10 @@ export const Panel = () => {
   //   freeFlow.setMetaFlow({}, 'AUTO_START_UP', LayoutModeEnum.AUTO_LAYOUT)
   //   metaFlow.flow.layoutFlow()
   // }, [metaFlow])
-  // const handleExport = useCallback(() => {
-  //   console.log('freeFlow', freeFlow)
-  //   console.log('freeFlowdata数据json化', freeFlow.toJsonList)
-  // }, [metaFlow])
+  const handleExport = useCallback(() => {
+    console.log('freeFlow', freeFlow)
+    console.log('freeFlowdata数据json化', freeFlow.toJsonList)
+  }, [metaFlow])
   // const handleFreeLayout = useCallback(() => {
   //   // metaFlow.flow.setGraphNodes([])
   //   freeFlow.setMetaFlow(
@@ -67,15 +67,22 @@ export const Panel = () => {
             <CompositePanel.Item
               title="flowDesigner.panels.resource"
               icon="Add"
+              activeKey="1"
             />
           </CompositePanel>
         </TopbarPanel.Region>
-        {/* <TopbarPanel.Region position="center">
-      <CompositePanel>
-        <CompositePanel.Item title="回退" onClick={back} icon="Undo" />
-        <CompositePanel.Item title="前进" onClick={next} icon="Redo" />
-      </CompositePanel>
-    </TopbarPanel.Region> */}
+        <TopbarPanel.Region position="center">
+          <CompositePanel>
+            <CompositePanel.Item
+              title="export"
+              shape="button"
+              onClick={handleExport}
+              icon="Undo"
+              activeKey="2"
+            />
+            {/* <CompositePanel.Item title="前进" onClick={next} icon="Redo" /> */}
+          </CompositePanel>
+        </TopbarPanel.Region>
         <TopbarPanel.Region position="right">
           <CompositePanel
             direction="right"
@@ -109,7 +116,10 @@ export const Panel = () => {
           visible={leftVisible}
           onClose={() => setLeftVisible(false)}
         >
-          <CompositePanelContent.Item title="flowDesigner.panels.element">
+          <CompositePanelContent.Item
+            title="flowDesigner.panels.element"
+            activeKey="1"
+          >
             {/* <ResourceWidget flowGraph={flowGraph} /> */}
             {/* <LeftPanel /> */}
             <ResourceWidget

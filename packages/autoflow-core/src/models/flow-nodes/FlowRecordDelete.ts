@@ -191,12 +191,12 @@ export class FlowRecordDelete extends FlowMetaNode {
     this.toJson()
   }
 
-  updateConnector(
-    targetId: string,
-    options: 'connector' | 'faultConnector'
-  ): void {
-    this[options] = { targetReference: targetId }
-    this.toJson()
+  updateConnector(targetId: string, isFaultConnector?: boolean): void {
+    if (isFaultConnector) {
+      this.faultConnector.targetReference = targetId
+    } else {
+      this.connector.targetReference = targetId
+    }
   }
 
   deleteConnector(target, nodeTarget) {

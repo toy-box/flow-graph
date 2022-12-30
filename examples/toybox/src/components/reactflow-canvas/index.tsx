@@ -20,6 +20,7 @@ import {
   LayoutModeEnum,
 } from '@toy-box/flow-graph'
 import { useMetaFlow, useFreeFlow } from '@toy-box/flow-node'
+import { FreeFlow } from '@toy-box/autoflow-core'
 import {
   connectReactFlow,
   connectFreeFlow,
@@ -431,7 +432,7 @@ export const FlowCanvas = observer(() => {
           <Controls />
         </ReactFlow>
       )} */}
-      {freeFlow.layoutMode === LayoutModeEnum.FREE_LAYOUT && (
+      {freeFlow instanceof FreeFlow && (
         <ReactFlow
           nodes={dragFlow.canvas?.nodes}
           edges={dragFlow.canvas?.edges}

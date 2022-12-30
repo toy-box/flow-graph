@@ -36,7 +36,7 @@ export interface IEdge {
   type?: string
   label?: string
   data?: unknown
-  // id?: string
+  id?: string
   // zIndex?: number
   // selected?: boolean
 }

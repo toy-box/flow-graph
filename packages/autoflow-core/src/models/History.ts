@@ -1,5 +1,7 @@
 import { define, observable, action } from '@formily/reactive'
+import { IConnectionWithLabel, IEdge } from '@toy-box/flow-graph'
 import { FlowMetaParam, FlowMetaType } from '../types'
+import { FlowMetaNode } from './flow-nodes'
 // import { NodeProps } from './AutoFlow'
 
 export enum OpearteTypeEnum {
@@ -10,25 +12,16 @@ export enum OpearteTypeEnum {
   REMOVE_Edge = 'removeEdge',
 }
 
-export enum ConnectorKeyEnum {
-  CONNECTOR = 'connector',
-  DEFAULT_CONNECTOR = 'defaultConnector',
-  FAULT_CONNECTOR = 'faultConnector',
-  NEXT_VALUE_CONNECTOR = 'nextValueConnector',
-}
-
 export interface HistoryItem {
-  opearteId?: string
-  opearteType?: OpearteTypeEnum
-  useConnectorKey?: ConnectorKeyEnum
-  opearteRule?: {
+  type: OpearteTypeEnum
+  flowMetaNodeMap: Record<string, FlowMetaNode>
+  flowNode?: FlowMetaNode
+  nodeChange?: {
     id: string
-    connector: string
+    type: string
   }
-  type?: FlowMetaType
-  data?: FlowMetaParam
+  edge?: IEdge
   // flow: FlowMeta
-  // flowNodes: NodeProps[]
   timestamp?: number
 }
 

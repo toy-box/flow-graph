@@ -11,6 +11,7 @@ import {
   FlowMetaParamWithSize,
 } from '../../types'
 import { FreeFlow } from '../FreeFlow'
+import { OpearteTypeEnum } from '../History'
 import { MetaFlow } from '../MetaFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 
@@ -158,6 +159,14 @@ export class FlowAssignment extends FlowMetaNode {
     this.name = payload.name
     this.description = payload.description
     this.assignmentItems = payload.assignmentItems
+    this.metaFlow?.history.push({
+      type: OpearteTypeEnum.ADD_NODE,
+      nodeChange: {
+        id: this.id,
+        type: 'update',
+      },
+      flowMetaNodeMap: this.metaFlow.flowMetaNodeMap,
+    })
     this.toJson()
   }
 

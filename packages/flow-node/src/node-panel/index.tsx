@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button } from 'antd'
 import cls from 'classnames'
+import { MetaFlow } from '@toy-box/autoflow-core'
 import { useFlowMetaNodeContext, useMetaFlow } from '../hooks'
 import './styles'
 
@@ -23,7 +24,7 @@ export const NodePanel: React.FC<INodePanelProps> = ({
   const metaFlow = useMetaFlow()
   const { flowMetaNode, onEdit } = useFlowMetaNodeContext()
   const handleRemove = React.useCallback(() => {
-    metaFlow.removeNodeWithBind(nodeId)
+    if (metaFlow instanceof MetaFlow) metaFlow.removeNodeWithBind(nodeId)
     metaFlow.flow.layoutFlow()
     closeExtend && closeExtend()
   }, [])

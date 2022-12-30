@@ -27,6 +27,8 @@ import {
   FlowRecordDelete,
 } from './flow-nodes'
 
+import { History, HistoryItem, OpearteTypeEnum } from './History'
+
 enum MetaFieldType {
   EDIT = 'EDIT',
   ADD = 'ADD',
@@ -56,6 +58,7 @@ export class FreeFlow {
   // flowVariables: IFieldMeta[] = []
   mode: FlowModeType = FlowModeEnum.EDIT
   flowType: FlowType
+  history: History
   layoutMode?: LayoutModeEnum
   // flowFree: FlowFree
 
@@ -69,12 +72,21 @@ export class FreeFlow {
     this.layoutMode = layoutMode || LayoutModeEnum.FREE_LAYOUT
     this.mode = mode || this.mode
     this.flow = flow ?? new Flow(this.layoutMode)
+    this.history = new History(undefined, {
+      onRedo: (item) => {
+        console.log(item, 'onRedo')
+      },
+      onUndo: (item) => {
+        console.log(item, 'onUndo')
+      },
+    })
     this.makeObservable()
   }
 
   protected makeObservable() {
     define(this, {
       flowMetaNodeMap: observable.deep,
+      history: observable.deep,
       flowMetaNodes: observable.computed,
       flow: observable.ref,
       // flowFree: observable.ref,
@@ -181,6 +193,11 @@ export class FreeFlow {
   addNode(flowData: FlowMetaParamWithSize) {
     const flowNode = this.makeFlowNode(flowData)
     this.flowMetaNodeMap[flowNode.id] = flowNode
+    this.history.push({
+      type: OpearteTypeEnum.ADD_NODE,
+      flowNode,
+      flowMetaNodeMap: this.flowMetaNodeMap,
+    })
     flowNode.appendFreeAt(flowData)
   }
 
@@ -342,7 +359,7 @@ export class FreeFlow {
   }
 
   updateEdges(changes) {
-    this.flow.canvas.onEdgesChange(changes, this.flowMetaNodeMap)
+    this.flow.canvas.onEdgesChange(changes, this)
   }
 
   changeNodes(changes: NodeChange[]) {
