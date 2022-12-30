@@ -12,7 +12,7 @@ export const FaultEdge = ({
   id,
   source,
   target,
-  markerEnd,
+  markerEnd = 'myArrowClosed',
   style = { strokeWidth: 5, stroke: 'rgb(145, 146, 151)' },
   label,
   labelStyle = { fontWeight: 'bolder' },
@@ -39,10 +39,14 @@ export const FaultEdge = ({
   )
 
   const [edgePath, labelX, labelY] = getSmoothStepPath({
-    sourceX: sx,
-    sourceY: sy,
-    targetX: tx,
-    targetY: ty,
+    sourceX:
+      sourcePos === 'left' ? sx - 10 : sourcePos === 'right' ? sx + 10 : sx,
+    sourceY:
+      sourcePos === 'top' ? sy - 10 : sourcePos === 'bottom' ? sy + 10 : sy,
+    targetX:
+      targetPos === 'left' ? tx - 10 : targetPos === 'right' ? tx + 10 : tx,
+    targetY:
+      targetPos === 'top' ? ty - 10 : targetPos === 'bottom' ? ty + 10 : ty,
     sourcePosition: sourcePos,
     targetPosition: targetPos,
   })
