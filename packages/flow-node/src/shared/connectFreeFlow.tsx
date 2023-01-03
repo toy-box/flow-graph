@@ -38,7 +38,9 @@ export function connectFreeFlow({
     const isTarget = connectionNodeId && connectionNodeId !== props.id
     const freeFlow = useFreeFlow()
     const getFlowMetaNode = freeFlow.flowMetaNodeMap[props.id]
-    getFlowMetaNode.connectDialog = connectDialog
+    if (getFlowMetaNode) {
+      getFlowMetaNode.connectDialog = connectDialog
+    }
     const targetNode = freeFlow.flow.canvas.nodes.find(
       (node) => node.id === props.id
     )

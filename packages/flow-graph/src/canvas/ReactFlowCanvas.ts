@@ -144,6 +144,7 @@ export class ReactFlowCanvas implements ICanvas {
 
   onNodesChange(changes: NodeChange[], freeFlow?: FreeFlow) {
     if (freeFlow) {
+      console.log('changes', changes)
       const { flowMetaNodeMap } = freeFlow
       changes.map((change) => {
         if (change.type === 'remove') {
@@ -169,6 +170,7 @@ export class ReactFlowCanvas implements ICanvas {
   onEdgesChange(changes: EdgeChange[], freeFlow?: FreeFlow) {
     changes.map((change) => {
       if (change.type === 'remove') {
+        console.log('onEdgesChange', changes)
         const edge: any = this.edges.find((edge) => edge.id === change.id)
         const { source, target } = edge
         const nodeTarget = this.flowGraph.nodeMap[source].targets
@@ -266,7 +268,12 @@ export class ReactFlowCanvas implements ICanvas {
         const { defaultConnectorName, nextValueConnectorName } =
           sourceFlowmetaNode
         if (nodeMapTargets.length === 0) {
-          loopConnectDialog(targetNode, connection, this, sourceFlowmetaNode)
+          sourceFlowmetaNode.connectDialog(
+            targetNode,
+            connection,
+            this,
+            sourceFlowmetaNode
+          )
         } else {
           const isDefaultConnecter =
             sourceFlowmetaNode.defaultConnector.targetReference == ''
