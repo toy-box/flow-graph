@@ -1,6 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
 import { Popover } from 'antd'
+import { EdgeRemoveChange } from 'reactflow'
 import { DeleteFilled } from '@ant-design/icons'
 import { observer } from '@formily/reactive-react'
 import { FlowNode, LayoutModeEnum } from '@toy-box/flow-graph'
@@ -34,11 +35,9 @@ export const StandardNode: React.FC<
     flowMetaNode,
   } = useFlowMetaNodeContext()
   const isAutoLayout = metaFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT
+  const node = freeFlow.flow.canvas.nodes.find((node) => node.id === id)
   const isNodeSelected =
-    freeFlow.flow.canvas.nodes.findIndex(
-      (node) =>
-        node.id === id && node.selected === true && node.type !== 'StartNode'
-    ) !== -1
+    node && node.selected === true && node.type !== 'StartNode'
   const [active, setActive] = React.useState(false)
   React.useEffect(() => {
     const unsubscribe = eventEngine.subscribe((payload: ICustomEvent) => {
@@ -58,6 +57,18 @@ export const StandardNode: React.FC<
   }
 
   const deleteNode = () => {
+    if (node) {
+      const deleteEdges = freeFlow.flow.canvas.edges
+        .map(({ id: edgeId, source, target }) => {
+          if (id === source || id === target) {
+            const target: EdgeRemoveChange = { id: edgeId, type: 'remove' }
+            return target
+          }
+        })
+        .filter(Boolean)
+      deleteEdges &&
+        metaFlow.flow.canvas.onEdgesChange(deleteEdges, freeFlow as FreeFlow)
+    }
     metaFlow.flow.canvas.onNodesChange(
       [{ id, type: 'remove' }],
       freeFlow as FreeFlow
