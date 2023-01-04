@@ -50,6 +50,9 @@ const zhCN = {
             setVariable: '设置变量值',
             tip: '每个变量由运算符和值组合修改。',
           },
+          decision: {
+            tagTitle: '结果顺序',
+          },
           deciConnect: {
             addTitle: '选择决策连接器的结果',
             extraConnectTip: '要转到 ',
@@ -124,6 +127,9 @@ const enUS = {
             removeTitle: 'delete assignment',
             setVariable: 'set variable value',
             tip: 'each variable is modified by a combination of operators and values.',
+          },
+          decision: {
+            tagTitle: 'OUTCOME ORDER',
           },
           deciConnect: {
             addTitle: 'Select outcome for decision connector',

@@ -22,8 +22,8 @@ export const freeEdgeOptions: DefaultEdgeOptions = {
 }
 
 export const connectionLineStyle = {
-  strokeWidth: 3,
-  stroke: 'black',
+  strokeWidth: 2,
+  stroke: 'rgb(145, 146, 151)',
 }
 
 export const FreeEdge = ({

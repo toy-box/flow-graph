@@ -188,7 +188,7 @@ export class ReactFlowCanvas implements ICanvas {
           edge,
           flowMetaNodeMap: freeFlow.flowMetaNodeMap,
         })
-        this.onNodesChange([{ id: source, type: 'select', selected: true }])
+        // this.onNodesChange([{ id: source, type: 'select', selected: true }])
       }
     })
     this.edges = applyEdgeChanges(changes, this.edges)
