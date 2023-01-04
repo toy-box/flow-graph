@@ -75,9 +75,117 @@ export class FreeFlow {
     this.history = new History(undefined, {
       onRedo: (item) => {
         console.log(item, 'onRedo')
+        switch (item.type) {
+          case OpearteTypeEnum.ADD_NODE:
+            this.flowMetaNodeMap = item.updateMetaNodeMap
+            item.flowNode.appendFreeAt(item.flowNode)
+            break
+          case OpearteTypeEnum.UPDATE_NODE:
+            this.flowMetaNodeMap = item.updateMetaNodeMap
+            const flowNode = item.flowNode.makeFlowNode()
+            this.flow.updateFreeNode(flowNode)
+            break
+          case OpearteTypeEnum.REMOVE_NODE:
+            this.flowMetaNodeMap = item.updateMetaNodeMap
+            this.flow.canvas.onNodesChange({
+              changes: [
+                {
+                  id: item.flowNode.id,
+                  type: 'remove',
+                },
+              ],
+              freeFlow: this,
+              isHistory: true,
+            })
+            break
+          case OpearteTypeEnum.ADD_EDGE:
+            this.flowMetaNodeMap = item.updateMetaNodeMap
+            item.edges.forEach((edge) => {
+              const sourceNode = this.flowMetaNodeMap[edge.source]
+              this.flow.canvas.onConnect({
+                connection: edge as any,
+                sourceFlowmetaNode: sourceNode,
+                freeFlow: this,
+                isHistory: true,
+                edge,
+              })
+            })
+            break
+          case OpearteTypeEnum.REMOVE_EDGE:
+            this.flowMetaNodeMap = item.updateMetaNodeMap
+            const edges: any = item.edges.map((edge) => {
+              return {
+                id: edge.id,
+                type: 'remove',
+              }
+            })
+            this.flow.canvas.onEdgesChange({
+              changes: edges,
+              freeFlow: this,
+              isHistory: true,
+              edges,
+            })
+            break
+          default:
+            break
+        }
       },
       onUndo: (item) => {
         console.log(item, 'onUndo')
+        switch (item.type) {
+          case OpearteTypeEnum.ADD_NODE:
+            this.flowMetaNodeMap = item.flowMetaNodeMap
+            this.flow.canvas.onNodesChange({
+              changes: [
+                {
+                  id: item.flowNode.id,
+                  type: 'remove',
+                },
+              ],
+              freeFlow: this,
+              isHistory: true,
+            })
+            break
+          case OpearteTypeEnum.UPDATE_NODE:
+            this.flowMetaNodeMap = item.flowMetaNodeMap
+            const flowNode = item.flowNode.makeFlowNode()
+            this.flow.updateFreeNode(flowNode)
+            break
+          case OpearteTypeEnum.REMOVE_NODE:
+            this.flowMetaNodeMap = item.flowMetaNodeMap
+            item.flowNode.appendFreeAt(item.flowNode)
+            break
+          case OpearteTypeEnum.ADD_EDGE:
+            this.flowMetaNodeMap = item.flowMetaNodeMap
+            const edges: any = item.edges.map((edge) => {
+              return {
+                id: edge.id,
+                type: 'remove',
+              }
+            })
+            this.flow.canvas.onEdgesChange({
+              changes: edges,
+              freeFlow: this,
+              isHistory: true,
+            })
+            break
+          case OpearteTypeEnum.REMOVE_EDGE:
+            this.flowMetaNodeMap = item.flowMetaNodeMap
+            item.edges.forEach((edge) => {
+              const sourceNode = this.flowMetaNodeMap[edge.source]
+              this.flow.canvas.onConnect({
+                connection: edge as any,
+                sourceFlowmetaNode: sourceNode,
+                freeFlow: this,
+                isHistory: true,
+                edge,
+              })
+            })
+            break
+          default:
+            break
+        }
+        console.log(this.flowMetaNodeMap, 'this.flowMetaNodeMap')
       },
     })
     this.makeObservable()
@@ -146,6 +254,7 @@ export class FreeFlow {
       this.flowMetaNodeMap[currentNode.id] = currentNode
       currentNode.appendFreeAt(meta)
     })
+    console.log(this.flowMetaNodeMap, 'sssssssssssssssssss')
     // this.flow.addFlowFreeNodes(this.flowNodes)
   }
 
@@ -192,11 +301,13 @@ export class FreeFlow {
   // special for drag items in free-layout
   addNode(flowData: FlowMetaParamWithSize) {
     const flowNode = this.makeFlowNode(flowData)
+    const flowMetaNodeMap = { ...this.flowMetaNodeMap }
     this.flowMetaNodeMap[flowNode.id] = flowNode
     this.history.push({
       type: OpearteTypeEnum.ADD_NODE,
       flowNode,
-      flowMetaNodeMap: this.flowMetaNodeMap,
+      flowMetaNodeMap,
+      updateMetaNodeMap: this.flowMetaNodeMap,
     })
     flowNode.appendFreeAt(flowData)
   }
@@ -355,14 +466,19 @@ export class FreeFlow {
 
   addEdge(connection) {
     const sourceNode = this.flowMetaNodeMap[connection.source]
-    this.flow.canvas.onConnect(connection, sourceNode)
+    this.flow.canvas.onConnect({
+      connection,
+      sourceFlowmetaNode: sourceNode,
+      freeFlow: this,
+    })
   }
 
   updateEdges(changes) {
-    this.flow.canvas.onEdgesChange(changes, this)
+    this.flow.canvas.onEdgesChange({ changes, freeFlow: this })
   }
 
   changeNodes(changes: NodeChange[]) {
-    if (this.flow?.canvas) this.flow?.canvas?.onNodesChange(changes, this)
+    if (this.flow?.canvas)
+      this.flow?.canvas?.onNodesChange({ changes, freeFlow: this })
   }
 }

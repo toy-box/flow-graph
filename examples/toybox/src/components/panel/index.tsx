@@ -27,7 +27,7 @@ export const Panel = () => {
   //   metaFlow.flow.layoutFlow()
   // }, [metaFlow])
   const handleExport = useCallback(() => {
-    console.log('freeFlow', freeFlow)
+    console.log('freeFlow', freeFlow.history.list())
     console.log('freeFlowdata数据json化', freeFlow.toJsonList)
   }, [metaFlow])
   // const handleFreeLayout = useCallback(() => {
@@ -47,6 +47,14 @@ export const Panel = () => {
   const [rightActiveKey, setRightActiveKey] = React.useState()
   const [errorData, setErrorData] = React.useState([])
   const [warnData, setWarnData] = React.useState([])
+
+  const back = useCallback(() => {
+    freeFlow.history.undo()
+  }, [])
+  const next = useCallback(() => {
+    freeFlow.history.redo()
+  }, [])
+
   return (
     // <div>
     //   <button onClick={init}>init</button>
@@ -74,13 +82,18 @@ export const Panel = () => {
         <TopbarPanel.Region position="center">
           <CompositePanel>
             <CompositePanel.Item
-              title="export"
+              title="back"
               shape="button"
-              onClick={handleExport}
+              onClick={back}
               icon="Undo"
               activeKey="2"
             />
-            {/* <CompositePanel.Item title="前进" onClick={next} icon="Redo" /> */}
+            <CompositePanel.Item
+              title="next"
+              shape="button"
+              onClick={next}
+              icon="Redo"
+            />
           </CompositePanel>
         </TopbarPanel.Region>
         <TopbarPanel.Region position="right">

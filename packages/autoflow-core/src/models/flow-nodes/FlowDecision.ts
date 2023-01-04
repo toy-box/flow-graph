@@ -199,6 +199,8 @@ export class FlowDecision extends FlowMetaNode {
   }
 
   appendFreeAt(flowData: FlowMetaParamWithSize) {
+    this.x = flowData.x
+    this.y = flowData.y
     const nodeProps = {
       x: flowData.x,
       y: flowData.y,
@@ -276,6 +278,8 @@ export class FlowDecision extends FlowMetaNode {
       defaultConnector: this.defaultConnector,
       defaultConnectorName: this.defaultConnectorName,
       rules: this.rules,
+      x: this.x,
+      y: this.y,
     }
   }
 }

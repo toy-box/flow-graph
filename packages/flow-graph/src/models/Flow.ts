@@ -182,6 +182,7 @@ export class Flow {
           targetHandle: null,
           label: target?.label,
           type: edgeType,
+          data: freeNode.data,
         }
         // this.canvas.onConnect(connection, node)
         const edgeId = target?.edgeId

@@ -58,10 +58,10 @@ export const StandardNode: React.FC<
   }
 
   const deleteNode = () => {
-    metaFlow.flow.canvas.onNodesChange(
-      [{ id, type: 'remove' }],
-      freeFlow as FreeFlow
-    )
+    metaFlow.flow.canvas.onNodesChange({
+      changes: [{ id, type: 'remove' }],
+      freeFlow: freeFlow as FreeFlow,
+    })
   }
 
   return (

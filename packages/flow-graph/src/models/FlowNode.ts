@@ -75,7 +75,7 @@ export class FlowNode {
       targets.map((target) =>
         typeof target === 'string'
           ? { id: target, edgeId: uid() }
-          : { ...target, edgeId: uid() }
+          : { ...target, edgeId: target.edgeId ?? uid() }
       )
     )
   }
@@ -85,7 +85,7 @@ export class FlowNode {
     this.targets = props.targets?.map((target) =>
       typeof target === 'string'
         ? { id: target, edgeId: uid() }
-        : { ...target, edgeId: uid() }
+        : { ...target, edgeId: target.edgeId ?? uid() }
     )
     this.component = props.component
     this.data = props.data

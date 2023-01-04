@@ -13,6 +13,8 @@ export interface IMakeFlowNodeProps {
 export abstract class FlowMetaNode {
   id: string
   name: string
+  x?: number
+  y?: number
   description?: string
   metaFlow: MetaFlow | FreeFlow
   flowType: string

@@ -144,6 +144,8 @@ export class FlowAssignment extends FlowMetaNode {
   }
 
   appendFreeAt(flowData: FlowMetaParamWithSize) {
+    this.x = flowData.x
+    this.y = flowData.y
     const nodeProps = {
       x: flowData.x,
       y: flowData.y,
@@ -156,16 +158,14 @@ export class FlowAssignment extends FlowMetaNode {
   }
 
   update = (payload: FlowMetaUpdate) => {
+    const flowMetaNodeMap = { ...this.metaFlow.flowMetaNodeMap }
     this.name = payload.name
     this.description = payload.description
     this.assignmentItems = payload.assignmentItems
     this.metaFlow?.history.push({
       type: OpearteTypeEnum.ADD_NODE,
-      nodeChange: {
-        id: this.id,
-        type: 'update',
-      },
-      flowMetaNodeMap: this.metaFlow.flowMetaNodeMap,
+      updateMetaNodeMap: this.metaFlow.flowMetaNodeMap,
+      flowMetaNodeMap,
     })
     this.toJson()
   }
@@ -188,6 +188,8 @@ export class FlowAssignment extends FlowMetaNode {
       type: this.type,
       connector: this.connector,
       assignmentItems: this.assignmentItems,
+      x: this.x,
+      y: this.y,
     }
   }
 }

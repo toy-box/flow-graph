@@ -1,5 +1,5 @@
 import { define, observable, action } from '@formily/reactive'
-import { IConnectionWithLabel, IEdge } from '@toy-box/flow-graph'
+import { IConnectionWithLabel, IEdge, TargetProps } from '@toy-box/flow-graph'
 import { FlowMetaParam, FlowMetaType } from '../types'
 import { FlowMetaNode } from './flow-nodes'
 // import { NodeProps } from './AutoFlow'
@@ -9,18 +9,15 @@ export enum OpearteTypeEnum {
   REMOVE_NODE = 'removeNode',
   UPDATE_NODE = 'updateNode',
   ADD_EDGE = 'addEdge',
-  REMOVE_Edge = 'removeEdge',
+  REMOVE_EDGE = 'removeEdge',
 }
 
 export interface HistoryItem {
   type: OpearteTypeEnum
   flowMetaNodeMap: Record<string, FlowMetaNode>
+  updateMetaNodeMap: Record<string, FlowMetaNode>
   flowNode?: FlowMetaNode
-  nodeChange?: {
-    id: string
-    type: string
-  }
-  edge?: IEdge
+  edges?: IEdge[]
   // flow: FlowMeta
   timestamp?: number
 }
@@ -65,11 +62,34 @@ export class History {
     //   this.history = this.history.slice(0, this.current + 1)
     // }
     this.current = this.history.length
-    this.context = {
-      ...context,
-      timestamp: new Date().getTime(),
+    const timestamp = new Date().getTime()
+    const isRemoveNode = this.context?.edges.some((edge) => {
+      const sourceData = context.updateMetaNodeMap[edge.source]
+      const targetData = context.updateMetaNodeMap[edge.target]
+      const target = context?.flowNode?.flowNode.targets.find(
+        (target) => target.id === edge.target
+      )
+      if ((!sourceData || !targetData) && target) return true
+    })
+    if (
+      this.context &&
+      this.context?.type === OpearteTypeEnum.REMOVE_EDGE &&
+      isRemoveNode
+    ) {
+      const idx = this.current - 1
+      this.current--
+      this.history[idx].type = context.type
+      this.history[idx].flowNode = context.flowNode
+      this.history[idx].flowMetaNodeMap = context.flowMetaNodeMap
+      this.history[idx].updateMetaNodeMap = context.updateMetaNodeMap
+    } else {
+      // this.history.splice(this.current + 1, 0, this.context)
+      this.context = {
+        ...context,
+        timestamp,
+      }
+      this.history.push(this.context)
     }
-    this.history.push(this.context)
     // const overSizeCount = this.history.length - this.maxSize
     // if (overSizeCount > 0) {
     //   this.history.splice(0, overSizeCount)
@@ -78,7 +98,7 @@ export class History {
   }
 
   get allowUndo() {
-    return this.history.length > 0 && this.current - 1 >= 0
+    return this.history.length > 0 && this.current >= 0
   }
 
   get allowRedo() {
@@ -98,7 +118,7 @@ export class History {
 
   undo() {
     if (this.allowUndo) {
-      const item = this.history[this.current - 1]
+      const item = this.history[this.current]
       this.context = item
       this.current--
       if (this.props?.onUndo) {

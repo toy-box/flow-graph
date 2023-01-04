@@ -43,6 +43,28 @@ declare type templateSource = {
 export interface IConnectionWithLabel extends Connection {
   label?: string
   type?: string
+  data?: any
+}
+
+export interface INodesChangeProps {
+  changes: NodeChange[]
+  freeFlow?: FreeFlow
+  isHistory?: boolean
+}
+
+export interface IEdgesChangeProps {
+  changes: EdgeChange[]
+  freeFlow?: FreeFlow
+  isHistory?: boolean
+  edges?: Edge[]
+}
+
+export interface IConnectionProps {
+  connection: Connection
+  sourceFlowmetaNode: any
+  freeFlow?: FreeFlow
+  isHistory?: boolean
+  edge?: IEdge
 }
 
 export class ReactFlowCanvas implements ICanvas {
@@ -125,6 +147,7 @@ export class ReactFlowCanvas implements ICanvas {
 
   addNode(nodeProps: INode) {
     this.nodes = [...this.nodes, this.makeNode(nodeProps)]
+    console.log(this.nodes, 'this.nodes')
   }
 
   addNodes(nodes: INode[]) {
@@ -143,69 +166,86 @@ export class ReactFlowCanvas implements ICanvas {
     this.edges = applyEdgeChanges(changes, this.edges)
   }
 
-  onNodesChange(changes: NodeChange[], freeFlow?: FreeFlow) {
-    if (freeFlow) {
-      const { flowMetaNodeMap } = freeFlow
-      changes.map((change) => {
+  onNodesChange(nodesChange: INodesChangeProps) {
+    if (nodesChange.freeFlow) {
+      const { flowMetaNodeMap } = nodesChange.freeFlow
+      nodesChange.changes.map((change) => {
         if (change.type === 'remove') {
           const {
             [change.id]: {},
             ...rest
           } = flowMetaNodeMap
-          freeFlow.getFlowMetaNodeMap(rest)
-          freeFlow?.history.push({
-            type: OpearteTypeEnum.REMOVE_NODE,
-            nodeChange: {
-              id: change.id,
-              type: 'remove',
-            },
-            flowMetaNodeMap: rest,
-          })
+          if (!nodesChange.isHistory) {
+            nodesChange.freeFlow?.history.push({
+              type: OpearteTypeEnum.REMOVE_NODE,
+              flowNode: flowMetaNodeMap[change.id],
+              updateMetaNodeMap: { ...rest },
+              flowMetaNodeMap: { ...flowMetaNodeMap },
+            })
+          }
+          nodesChange.freeFlow.getFlowMetaNodeMap(rest)
         }
       })
     }
-    this.nodes = applyNodeChanges(changes, this.nodes)
-    console.log(this.nodes, this.edges, changes)
+    this.nodes = applyNodeChanges(nodesChange.changes, this.nodes)
+    console.log(this.nodes, this.edges, this.flowGraph.nodeMap)
   }
 
-  onEdgesChange(changes: EdgeChange[], freeFlow?: FreeFlow) {
-    changes.map((change) => {
+  onEdgesChange(edgesChange: IEdgesChangeProps) {
+    const removeEdges = []
+    const flowMetaNodeMap = { ...edgesChange.freeFlow?.flowMetaNodeMap }
+    edgesChange.changes.map((change) => {
       if (change.type === 'remove') {
-        const edge: any = this.edges.find((edge) => edge.id === change.id)
+        const edges = edgesChange.edges ?? this.edges
+        const edge: any = edges?.find((edge) => edge.id === change.id)
+        if (edge) removeEdges.push(edge)
         const { source, target } = edge
-        const nodeTarget = this.flowGraph.nodeMap[source].targets
+        const nodeTarget = this.flowGraph?.nodeMap?.[source]?.targets
           .map((target, index) => {
             if (target?.edgeId === change.id || target.ruleId === change.id) {
               return { ...target, index }
             }
           })
           .filter(Boolean)[0]
-        this.flowGraph.nodeMap[source].targets.splice(
+        this.flowGraph?.nodeMap[source]?.targets.splice(
           nodeTarget ? nodeTarget.index : 0,
           1
         )
-        freeFlow.flowMetaNodeMap[source].deleteConnector(target, nodeTarget)
-        freeFlow?.history?.push({
-          type: OpearteTypeEnum.REMOVE_Edge,
-          edge,
-          flowMetaNodeMap: freeFlow.flowMetaNodeMap,
+        edgesChange.freeFlow?.flowMetaNodeMap[source]?.deleteConnector(
+          target,
+          nodeTarget
+        )
+        console.log(edgesChange.freeFlow, edgesChange.changes, 'freeFlow')
+        this.onNodesChange({
+          changes: [{ id: source, type: 'select', selected: true }],
         })
-        this.onNodesChange([{ id: source, type: 'select', selected: true }])
       }
     })
-    this.edges = applyEdgeChanges(changes, this.edges)
+    const hasRemoveChanges = edgesChange.changes.filter(
+      (change) => change.type === 'remove'
+    )
+    if (hasRemoveChanges.length > 0 && !edgesChange.isHistory) {
+      edgesChange.freeFlow?.history?.push({
+        type: OpearteTypeEnum.REMOVE_EDGE,
+        edges: removeEdges,
+        updateMetaNodeMap: { ...edgesChange.freeFlow.flowMetaNodeMap },
+        flowMetaNodeMap,
+      })
+    }
+    this.edges = applyEdgeChanges(edgesChange.changes, this.edges)
   }
 
-  onConnect(connection: Connection, sourceFlowmetaNode?: any) {
-    const { target, source } = connection
+  onConnect(connecObj: IConnectionProps) {
+    const { target, source } = connecObj.connection
     const nodeMapTargets = this.flowGraph.nodeMap[source].targets
     let edgeId = uid()
-    let newEdge: IEdge = { ...connection }
+    let newEdge: IEdge = { ...connecObj.connection }
     const targetNode = this.nodes.find((node) => node.id === target).data.name
-    switch (sourceFlowmetaNode.type) {
+    const flowMetaNodeMap = { ...connecObj.freeFlow.flowMetaNodeMap }
+    switch (connecObj.sourceFlowmetaNode.type) {
       case FlowMetaType.DECISION:
       case FlowMetaType.WAIT:
-        const { rules, waitEvents } = sourceFlowmetaNode
+        const { rules, waitEvents } = connecObj.sourceFlowmetaNode
         const loadDataMap = rules ?? waitEvents
         const loadData = loadDataMap
           .map(({ name, id }) => {
@@ -221,39 +261,76 @@ export class ReactFlowCanvas implements ICanvas {
           })
           .filter(Boolean)
         const isDefaultConnecter =
-          sourceFlowmetaNode.defaultConnector.targetReference === ''
+          connecObj.sourceFlowmetaNode.defaultConnector.targetReference === ''
         if (isDefaultConnecter) {
           loadData.push({
-            label: sourceFlowmetaNode.defaultConnectorName,
+            label: connecObj.sourceFlowmetaNode.defaultConnectorName,
             value: 'default' + '-' + uid(),
             id: 'default' + '-' + uid(),
           })
         }
         if (loadData.length > 1) {
-          decisonConnectDialog(
-            targetNode,
-            connection,
-            this,
-            loadData,
-            sourceFlowmetaNode
-          )
+          if (connecObj.isHistory) {
+            newEdge = {
+              ...connecObj.connection,
+              label: connecObj.edge?.label as any,
+            }
+            this.addEdge(newEdge, connecObj.edge.id)
+            connecObj.sourceFlowmetaNode.updateConnector(
+              target,
+              'defaultConnector'
+            )
+            this.flowGraph.setTarget(source, [
+              ...this.flowGraph.nodeMap[source].targets,
+              {
+                id: target,
+                label: newEdge.label,
+                edgeId: newEdge.id,
+                ruleId: null,
+              },
+            ])
+          } else {
+            decisonConnectDialog(
+              targetNode,
+              connecObj.connection,
+              this,
+              loadData,
+              connecObj.sourceFlowmetaNode
+            )
+          }
         } else if (loadData.length === 1) {
           newEdge = {
-            ...connection,
+            ...connecObj.connection,
             label: loadData[0].label,
           }
           edgeId = uid()
           this.addEdge(newEdge, edgeId)
           if (
             loadData[0].id.split('-')[0] ===
-            sourceFlowmetaNode.defaultConnectorName
+            connecObj.sourceFlowmetaNode.defaultConnectorName
           ) {
-            sourceFlowmetaNode.updateConnector(target, 'defaultConnector')
+            connecObj.sourceFlowmetaNode.updateConnector(
+              target,
+              'defaultConnector'
+            )
           } else {
-            const Index = sourceFlowmetaNode[
+            const Index = connecObj.sourceFlowmetaNode[
               rules ? 'rules' : 'waitEvents'
             ].findIndex(({ id }) => id === loadData[0].id)
-            sourceFlowmetaNode.updateConnector(target, Index)
+            connecObj.sourceFlowmetaNode.updateConnector(target, Index)
+          }
+          if (!connecObj.isHistory) {
+            connecObj.freeFlow?.history?.push({
+              type: OpearteTypeEnum.ADD_EDGE,
+              edges: [
+                {
+                  ...newEdge,
+                  id: edgeId,
+                },
+              ],
+              updateMetaNodeMap: { ...connecObj.freeFlow.flowMetaNodeMap },
+              flowMetaNodeMap,
+            })
           }
           this.flowGraph.setTarget(source, [
             ...nodeMapTargets,
@@ -268,21 +345,50 @@ export class ReactFlowCanvas implements ICanvas {
         break
       case FlowMetaType.LOOP:
         const { defaultConnectorName, nextValueConnectorName } =
-          sourceFlowmetaNode
+          connecObj.sourceFlowmetaNode
         if (nodeMapTargets.length === 0) {
-          loopConnectDialog(targetNode, connection, this, sourceFlowmetaNode)
+          if (connecObj.isHistory) {
+            newEdge = {
+              ...connecObj.connection,
+              label: connecObj.edge?.label as any,
+            }
+            this.addEdge(newEdge, connecObj.edge.id)
+          } else {
+            loopConnectDialog(
+              targetNode,
+              connecObj.connection,
+              this,
+              connecObj.sourceFlowmetaNode
+            )
+          }
         } else {
           const isDefaultConnecter =
-            sourceFlowmetaNode.defaultConnector.targetReference == ''
+            connecObj.sourceFlowmetaNode.defaultConnector.targetReference == ''
           newEdge = {
-            ...connection,
+            ...connecObj.connection,
             label: isDefaultConnecter
               ? defaultConnectorName
               : nextValueConnectorName,
           }
           edgeId = uid()
           this.addEdge(newEdge, edgeId)
-          sourceFlowmetaNode.updateConnector(target, isDefaultConnecter)
+          connecObj.sourceFlowmetaNode.updateConnector(
+            target,
+            isDefaultConnecter
+          )
+          if (!connecObj.isHistory) {
+            connecObj.freeFlow?.history?.push({
+              type: OpearteTypeEnum.ADD_EDGE,
+              edges: [
+                {
+                  ...newEdge,
+                  id: edgeId,
+                },
+              ],
+              updateMetaNodeMap: { ...connecObj.freeFlow.flowMetaNodeMap },
+              flowMetaNodeMap,
+            })
+          }
           this.flowGraph.setTarget(source, [
             ...nodeMapTargets,
             {
@@ -300,21 +406,21 @@ export class ReactFlowCanvas implements ICanvas {
             ...nodeMapTargets,
             { id: target, edgeId },
           ])
-          sourceFlowmetaNode.updateConnector(target)
+          connecObj.sourceFlowmetaNode.updateConnector(target)
         } else {
           const isFaultConnector =
-            sourceFlowmetaNode.faultConnector.targetReference == ''
+            connecObj.sourceFlowmetaNode.faultConnector.targetReference == ''
           newEdge = {
-            ...connection,
+            ...connecObj.connection,
             label: isFaultConnector
-              ? sourceFlowmetaNode.faultConnectorName
+              ? connecObj.sourceFlowmetaNode.faultConnectorName
               : '',
             type: isFaultConnector
               ? EdgeTypeEnum.FAULT_EDGE
               : EdgeTypeEnum.FREE_EDGE,
           }
           edgeId = uid()
-          sourceFlowmetaNode.updateConnector(target, isFaultConnector)
+          connecObj.sourceFlowmetaNode.updateConnector(target, isFaultConnector)
           this.flowGraph.setTarget(source, [
             ...nodeMapTargets,
             {
@@ -325,6 +431,19 @@ export class ReactFlowCanvas implements ICanvas {
           ])
         }
         this.addEdge(newEdge, edgeId)
+        if (!connecObj.isHistory) {
+          connecObj.freeFlow?.history?.push({
+            type: OpearteTypeEnum.ADD_EDGE,
+            edges: [
+              {
+                ...newEdge,
+                id: edgeId,
+              },
+            ],
+            updateMetaNodeMap: { ...connecObj.freeFlow.flowMetaNodeMap },
+            flowMetaNodeMap,
+          })
+        }
         break
     }
   }
