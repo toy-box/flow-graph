@@ -33,6 +33,7 @@ const zhCN = {
             empty: '暂无数据',
             reference: '引用变量',
             input: '直接输入',
+            result: '结果',
           },
           validator: {
             filter: '筛选记录是必填项',
@@ -48,6 +49,21 @@ const zhCN = {
             removeTitle: '删除分配',
             setVariable: '设置变量值',
             tip: '每个变量由运算符和值组合修改。',
+          },
+          decision: {
+            tagTitle: '结果顺序',
+          },
+          deciConnect: {
+            addTitle: '选择决策连接器的结果',
+            extraConnectTip: '要转到 ',
+            lastConnectTip: ' 元素，必须满足哪些结果条件？',
+          },
+          loopConnect: {
+            addTitle: '选择循环连接器的结果',
+            extraConnectTip: '指定何时转到 ',
+            lastConnectTip: ' 元素',
+            eachResult: '对于集合中的每个项目',
+            lastResult: '对于集合中的最后一项',
           },
         },
       },
@@ -94,6 +110,7 @@ const enUS = {
             empty: 'empty',
             reference: 'reference',
             input: 'input',
+            result: 'Outcome',
           },
           validator: {
             filter: 'filtering record is required',
@@ -110,6 +127,21 @@ const enUS = {
             removeTitle: 'delete assignment',
             setVariable: 'set variable value',
             tip: 'each variable is modified by a combination of operators and values.',
+          },
+          decision: {
+            tagTitle: 'OUTCOME ORDER',
+          },
+          deciConnect: {
+            addTitle: 'Select outcome for decision connector',
+            extraConnectTip: 'To go to the ',
+            lastConnectTip: ' element, which outcome’s conditions must be met?',
+          },
+          loopConnect: {
+            addTitle: 'Select loop connector',
+            extraConnectTip: 'Specify when to go to the ',
+            lastConnectTip: ' element.',
+            eachResult: 'For each item in the collection',
+            lastResult: 'After Last item in the collection',
           },
         },
       },

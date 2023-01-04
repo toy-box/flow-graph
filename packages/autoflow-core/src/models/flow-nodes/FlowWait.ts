@@ -230,7 +230,7 @@ export class FlowWait extends FlowMetaNode {
     const { ruleId } = nodeTarget
     if (
       this.defaultConnector.targetReference === target &&
-      (ruleId === null || ruleId.split('-')[0] === 'default')
+      (ruleId === null || !ruleId)
     ) {
       this.defaultConnector = { targetReference: '' }
     } else {

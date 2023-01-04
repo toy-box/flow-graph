@@ -1,10 +1,11 @@
+import React from 'react'
+import { Connection, addEdge } from 'reactflow'
 import { FormDialog, FormItem, FormLayout, Select } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
-import React from 'react'
 import { ReactFlowCanvas } from '@toy-box/flow-graph'
-import { Connection, addEdge } from 'reactflow'
 import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
 import { uid } from '@toy-box/toybox-shared'
+import { TextWidget } from '../widgets'
 
 const SchemaField = createSchemaField({
   components: {
@@ -17,7 +18,9 @@ const decisonConnectSchema = {
   properties: {
     decisionResult: {
       type: 'string',
-      title: '结果',
+      title: (
+        <TextWidget token="flowDesigner.flow.form.comm.result"></TextWidget>
+      ),
       required: true,
       'x-decorator': 'FormItem',
       'x-component': 'Select',
@@ -31,17 +34,23 @@ const loopConnectSchema = {
   properties: {
     loopResult: {
       type: 'string',
-      title: '结果',
+      title: (
+        <TextWidget token="flowDesigner.flow.form.comm.result"></TextWidget>
+      ),
       required: true,
       'x-decorator': 'FormItem',
       'x-component': 'Select',
       enum: [
         {
-          label: 'For each item in the collection',
+          label: (
+            <TextWidget token="flowDesigner.flow.form.loopConnect.eachResult" />
+          ),
           value: 'For Each Item',
         },
         {
-          label: 'After Last item in the collection',
+          label: (
+            <TextWidget token="flowDesigner.flow.form.loopConnect.lastResult" />
+          ),
           value: 'After Last Item',
         },
       ],
@@ -61,17 +70,32 @@ export const decisonConnectDialog = (
     field.dataSource = loadData
     field.data = loadData[0].value
   }
-  const dialog = FormDialog('选择决策连接器的结果', () => {
-    return (
-      <FormLayout labelCol={6} wrapperCol={10}>
-        <div>要转到&quot;{targetNode}&quot; 元素，必须满足哪些结果条件？</div>
-        <SchemaField
-          schema={decisonConnectSchema}
-          scope={{ useAsyncDataSource, loadData }}
-        />
-      </FormLayout>
-    )
-  })
+  const dialog = FormDialog(
+    {
+      title: (
+        <TextWidget token="flowDesigner.flow.form.deciConnect.addTitle"></TextWidget>
+      ),
+    },
+    () => {
+      return (
+        <FormLayout labelCol={6} wrapperCol={10}>
+          <div>
+            <TextWidget>
+              flowDesigner.flow.form.deciConnect.extraConnectTip
+            </TextWidget>
+            &quot;{targetNode}&quot;
+            <TextWidget>
+              flowDesigner.flow.form.deciConnect.lastConnectTip
+            </TextWidget>
+          </div>
+          <SchemaField
+            schema={decisonConnectSchema}
+            scope={{ useAsyncDataSource, loadData }}
+          />
+        </FormLayout>
+      )
+    }
+  )
   dialog
     .forOpen((payload, next) => {
       setTimeout(() => {
@@ -80,7 +104,7 @@ export const decisonConnectDialog = (
     })
     .forConfirm((payload, next) => {
       setTimeout(() => {
-        const { label } = loadData.find(
+        const { label, ruleId } = loadData.find(
           (data) => data.value === payload.values.decisionResult
         )
         const newEdge = {
@@ -89,7 +113,7 @@ export const decisonConnectDialog = (
           id: uid(),
         }
         canvas.edges = [newEdge, ...canvas.edges]
-        if (payload.values.decisionResult.split('-')[0] === 'default') {
+        if (!ruleId) {
           sourceFlowmetaNode.updateConnector(target, 'defaultConnector')
           canvas.flowGraph.setTarget(source, [
             ...canvas.flowGraph.nodeMap[source].targets,
@@ -97,7 +121,6 @@ export const decisonConnectDialog = (
               id: target,
               label: newEdge.label,
               edgeId: newEdge.id,
-              ruleId: payload.values.decisionResult,
             },
           ])
         } else {
@@ -131,14 +154,29 @@ export const loopConnectDialog = (
   sourceFlowmetaNode: any
 ) => {
   const { target, source } = connection
-  const dialog = FormDialog('选择决策连接器的结果', () => {
-    return (
-      <FormLayout labelCol={6} wrapperCol={10}>
-        <div>要转到&quot;{targetNode}&quot; 元素，必须满足哪些结果条件？</div>
-        <SchemaField schema={loopConnectSchema} />
-      </FormLayout>
-    )
-  })
+  const dialog = FormDialog(
+    {
+      title: (
+        <TextWidget token="flowDesigner.flow.form.deciConnect.addTitle"></TextWidget>
+      ),
+    },
+    () => {
+      return (
+        <FormLayout labelCol={6} wrapperCol={10}>
+          <div>
+            <TextWidget>
+              flowDesigner.flow.form.loopConnect.extraConnectTip
+            </TextWidget>
+            &quot;{targetNode}&quot;
+            <TextWidget>
+              flowDesigner.flow.form.loopConnect.lastConnectTip
+            </TextWidget>
+          </div>
+          <SchemaField schema={loopConnectSchema} />
+        </FormLayout>
+      )
+    }
+  )
   dialog
     .forOpen((payload, next) => {
       setTimeout(() => {

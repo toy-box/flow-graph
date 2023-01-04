@@ -38,6 +38,8 @@ import {
   loopOnEdit,
   onPanelEdit,
   addFreeLayoutNode,
+  decisonConnectDialog,
+  loopConnectDialog,
 } from '../../flow-nodes'
 import { freeInitMeta } from '../../data/flowData'
 
@@ -178,6 +180,7 @@ export const FlowCanvas = observer(() => {
           { type: 'source', position: Position.Bottom },
         ],
         onEdit: decideOnEdit,
+        connectDialog: decisonConnectDialog,
       }),
       AssignmentNode: connectFreeFlow({
         component: StandardNode,
@@ -204,6 +207,7 @@ export const FlowCanvas = observer(() => {
           { type: 'source', position: Position.Bottom },
         ],
         onEdit: loopOnEdit,
+        connectDialog: loopConnectDialog,
       }),
       WaitNode: connectFreeFlow({
         component: StandardNode,
@@ -212,6 +216,7 @@ export const FlowCanvas = observer(() => {
           { type: 'target', position: Position.Top },
           { type: 'source', position: Position.Bottom },
         ],
+        connectDialog: decisonConnectDialog,
       }),
       SortCollectionNode: connectFreeFlow({
         component: StandardNode,

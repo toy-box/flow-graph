@@ -3,7 +3,6 @@ import {
   MemoExoticComponent,
   ComponentType,
 } from 'react'
-import { action, batch, define, observable } from '@formily/reactive'
 import {
   applyEdgeChanges,
   applyNodeChanges,
@@ -16,12 +15,12 @@ import {
   EdgeProps,
   NodeProps,
 } from 'reactflow'
+import { action, batch, define, observable } from '@formily/reactive'
+import { FlowMetaType, FreeFlow, OpearteTypeEnum } from '@toy-box/autoflow-core'
 import { uid } from '@toy-box/toybox-shared'
 import { ICanvas } from './Canvas'
 import { INode, IEdge, LayoutModeEnum, EdgeTypeEnum } from '../types'
 import { FlowGraph } from '../models'
-import { decisonConnectDialog, loopConnectDialog } from '@toy-box/flow-node'
-import { FlowMetaType, FreeFlow, OpearteTypeEnum } from '@toy-box/autoflow-core'
 
 import 'reactflow/dist/style.css'
 import './canvas.less'
@@ -188,7 +187,6 @@ export class ReactFlowCanvas implements ICanvas {
       })
     }
     this.nodes = applyNodeChanges(nodesChange.changes, this.nodes)
-    console.log(this.nodes, this.edges, this.flowGraph.nodeMap)
   }
 
   onEdgesChange(edgesChange: IEdgesChangeProps) {
@@ -256,6 +254,7 @@ export class ReactFlowCanvas implements ICanvas {
                 label: name,
                 value: id,
                 id: id,
+                ruleId: id,
               }
             }
           })
@@ -265,8 +264,8 @@ export class ReactFlowCanvas implements ICanvas {
         if (isDefaultConnecter) {
           loadData.push({
             label: connecObj.sourceFlowmetaNode.defaultConnectorName,
-            value: 'default' + '-' + uid(),
-            id: 'default' + '-' + uid(),
+            value: uid(),
+            id: uid(),
           })
         }
         if (loadData.length > 1) {
@@ -290,7 +289,7 @@ export class ReactFlowCanvas implements ICanvas {
               },
             ])
           } else {
-            decisonConnectDialog(
+            connecObj.sourceFlowmetaNode.decisonConnectDialog(
               targetNode,
               connecObj.connection,
               this,
@@ -305,10 +304,7 @@ export class ReactFlowCanvas implements ICanvas {
           }
           edgeId = uid()
           this.addEdge(newEdge, edgeId)
-          if (
-            loadData[0].id.split('-')[0] ===
-            connecObj.sourceFlowmetaNode.defaultConnectorName
-          ) {
+          if (!loadData[0].ruleId) {
             connecObj.sourceFlowmetaNode.updateConnector(
               target,
               'defaultConnector'
@@ -354,7 +350,7 @@ export class ReactFlowCanvas implements ICanvas {
             }
             this.addEdge(newEdge, connecObj.edge.id)
           } else {
-            loopConnectDialog(
+            connecObj.sourceFlowmetaNode.loopConnectDialog(
               targetNode,
               connecObj.connection,
               this,

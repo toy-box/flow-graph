@@ -13,8 +13,6 @@ import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { Divider } from 'antd'
 import { TextWidget } from '../widgets'
 
-export * from './addNode'
-
 const AssignmentDesc = () => {
   return (
     <div>
@@ -116,27 +114,6 @@ const assignPanelSchema = {
         assignmentItems: {
           type: 'object',
           properties: {
-            titleVariable: {
-              type: 'void',
-              'x-decorator': 'FormItem',
-              'x-component': () => {
-                return (
-                  <div style={{ fontSize: '1rem' }}>Set Variable Values</div>
-                )
-              },
-            },
-            textVariable: {
-              type: 'void',
-              'x-decorator': 'FormItem',
-              'x-component': () => {
-                return (
-                  <div>
-                    Each variable is modified by the operator and value
-                    combination.
-                  </div>
-                )
-              },
-            },
             operation: {
               type: 'string',
               title: 'Variable',
@@ -181,6 +158,7 @@ const assignRender = () => {
       title: (
         <TextWidget token="flowDesigner.flow.form.assignment.addTitle"></TextWidget>
       ),
+      width: '60vw',
     },
     () => {
       return (
@@ -202,12 +180,14 @@ export const assignOnEdit = (node: any, at?: string, additionInfo?: any) => {
             name: node.type,
             description: node.description,
             assignmentItems: node.assignmentItems,
+            id: node.id,
           },
         })
       }, 500)
     })
     .forConfirm((payload, next) => {
       setTimeout(() => {
+        console.log('assign payload', payload.values)
         node.make
           ? node.make(at, { ...payload.values, ...additionInfo })
           : node.update(payload.values)
@@ -255,7 +235,7 @@ export const recordCreateOnEdit = (
     .open()
 }
 
-export const onPanelEdit = (
+const onPanelEdit = (
   node: INodeTemplate<NodeMake> | FlowMetaNode,
   at: string,
   additionInfo?: any

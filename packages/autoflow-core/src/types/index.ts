@@ -93,7 +93,7 @@ export interface IFlowMetaDecisionRule {
 
 export type FlowMetaUpdate = Omit<
   FlowMetaParam,
-  | 'id'
+  // | 'id'
   | 'type'
   | 'connector'
   | 'defaultConnector'
