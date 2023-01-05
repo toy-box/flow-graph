@@ -229,16 +229,6 @@ const assignRender = () => {
   )
 }
 
-const loopRender = () => {
-  return FormDialog({ title: `Loop Node Properites`, width: '90vw' }, () => {
-    return (
-      <FormLayout labelCol={6} wrapperCol={10}>
-        <SchemaField schema={loopPanelSchema} />
-      </FormLayout>
-    )
-  })
-}
-
 const waitRender = () => {
   return FormDialog({ title: `Pause Node Properites`, width: '90vw' }, () => {
     return (

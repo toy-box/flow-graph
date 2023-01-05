@@ -1,4 +1,5 @@
 import React from 'react'
+import { Divider } from 'antd'
 import {
   FormDialog,
   FormItem,
@@ -13,10 +14,27 @@ import {
 import { createSchemaField } from '@formily/react'
 import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
-import { TextWidget } from '../widgets'
+import { TextWidget, takeMessage } from '../widgets'
+
+const DecisionDesc = () => {
+  return (
+    <div>
+      <Divider />
+      <div className="decision-content">
+        <div className="decision-title">
+          <TextWidget>flowDesigner.flow.form.decision.tipTitle</TextWidget>
+        </div>
+        <div className="decision-desc">
+          <TextWidget>flowDesigner.flow.form.decision.tip</TextWidget>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const SchemaField = createSchemaField({
   components: {
+    DecisionDesc,
     ArrayTabs,
     ArrayItems,
     FormItem,
@@ -26,25 +44,6 @@ const SchemaField = createSchemaField({
     Radio,
   },
 })
-
-const assignNodeSchema = {
-  type: 'object',
-  properties: {
-    name: {
-      type: 'string',
-      title: '名称',
-      required: true,
-      'x-decorator': 'FormItem',
-      'x-component': 'Input',
-    },
-    description: {
-      type: 'string',
-      title: '简述',
-      'x-decorator': 'FormItem',
-      'x-component': 'Input',
-    },
-  },
-}
 
 const decidePanelSchema = {
   type: 'object',
@@ -56,14 +55,58 @@ const decidePanelSchema = {
         maxColumns: 2,
       },
       properties: {
-        rules: {
-          type: 'array',
+        name: {
+          type: 'string',
           title: (
             <TextWidget token="flowDesigner.flow.form.comm.label"></TextWidget>
           ),
+          required: true,
+          'x-decorator': 'FormItem',
+          'x-component': 'Input',
+        },
+        id: {
+          type: 'string',
+          title: <TextWidget>flowDesigner.flow.form.comm.value</TextWidget>,
+          required: true,
+          'x-validator': [
+            {
+              triggerType: 'onBlur',
+              required: true,
+              message: (
+                <TextWidget>flowDesigner.flow.form.validator.value</TextWidget>
+              ),
+            },
+          ],
+          'x-decorator': 'FormItem',
+          'x-component': 'Input',
+        },
+        description: {
+          type: 'string',
+          title: (
+            <TextWidget token="flowDesigner.flow.form.comm.description"></TextWidget>
+          ),
+          'x-decorator': 'FormItem',
+          'x-component': 'Input.TextArea',
+          'x-decorator-props': {
+            gridSpan: 2,
+          },
+        },
+        desc: {
+          type: 'string',
+          title: '',
+          'x-decorator': 'FormItem',
+          'x-component': 'DecisionDesc',
+          'x-decorator-props': {
+            gridSpan: 2,
+          },
+        },
+        rules: {
+          type: 'array',
+          title: takeMessage('flowDesigner.flow.form.decision.ruleTitle'),
           'x-decorator': 'FormItem',
           'x-decorator-props': {
             layout: 'vertical',
+            gridSpan: 2,
           },
           'x-component': 'ArrayTabs',
           'x-component-props': {
@@ -78,7 +121,9 @@ const decidePanelSchema = {
                 'x-decorator-props': {
                   layout: 'virtical',
                 },
-                title: '标签',
+                title: (
+                  <TextWidget token="flowDesigner.flow.form.decision.ruleLabel"></TextWidget>
+                ),
                 required: true,
                 'x-component': 'Input',
               },
@@ -88,7 +133,9 @@ const decidePanelSchema = {
                 'x-decorator-props': {
                   layout: 'virtical',
                 },
-                title: '结果 API 名称',
+                title: (
+                  <TextWidget token="flowDesigner.flow.form.decision.ruleId"></TextWidget>
+                ),
                 required: true,
                 'x-component': 'Input',
               },
@@ -97,19 +144,27 @@ const decidePanelSchema = {
                 properties: {
                   logic: {
                     type: 'string',
-                    title: 'Condition Requirements to Execute Outcome',
+                    title: (
+                      <TextWidget token="flowDesigner.flow.form.decision.logicTitle"></TextWidget>
+                    ),
                     required: true,
                     enum: [
                       {
-                        label: 'All Conditions Are Met (AND)',
+                        label: (
+                          <TextWidget token="flowDesigner.flow.form.decision.logicAnd"></TextWidget>
+                        ),
                         value: '$and',
                       },
                       {
-                        label: 'Any Condition Is Met (OR)',
+                        label: (
+                          <TextWidget token="flowDesigner.flow.form.decision.logicOr"></TextWidget>
+                        ),
                         value: '$or',
                       },
                       {
-                        label: 'Custom Condition Logic Is Met',
+                        label: (
+                          <TextWidget token="flowDesigner.flow.form.decision.logicCustom"></TextWidget>
+                        ),
                         value: '$custom',
                       },
                     ],
@@ -145,7 +200,9 @@ const decidePanelSchema = {
                           'x-decorator': 'FormItem',
                           'x-component': 'Input',
                           'x-component-props': {
-                            placeholder: 'Search Resources',
+                            placeholder: takeMessage(
+                              'flowDesigner.flow.form.decision.operationPlace'
+                            ),
                           },
                         },
                         type: {
@@ -155,7 +212,9 @@ const decidePanelSchema = {
                           'x-decorator': 'FormItem',
                           'x-component': 'Input',
                           'x-component-props': {
-                            placeholder: 'operator',
+                            placeholder: takeMessage(
+                              'flowDesigner.flow.form.decision.typePlace'
+                            ),
                           },
                         },
                         value: {
@@ -165,7 +224,9 @@ const decidePanelSchema = {
                           'x-decorator': 'FormItem',
                           'x-component': 'Input',
                           'x-component-props': {
-                            placeholder: 'Enter value or search resources...',
+                            placeholder: takeMessage(
+                              'flowDesigner.flow.form.decision.valuePlace'
+                            ),
                           },
                         },
                         remove: {
@@ -202,14 +263,7 @@ const decideRender = () => {
       // })
       return (
         <FormLayout labelCol={6} wrapperCol={10}>
-          {/* <Form form={decideForm}> */}
-          <SchemaField schema={assignNodeSchema} />
-          <div style={{ fontSize: '0.75rem' }}>
-            <span style={{ fontSize: '1rem' }}>结果</span>{' '}
-            对于流可以使用的每个路径，创建结果。对于每个结果，指定必须满足的条件，以便流使用该路径。
-          </div>
           <SchemaField schema={decidePanelSchema} />
-          {/* </Form> */}
         </FormLayout>
       )
     }
