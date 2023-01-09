@@ -1,4 +1,5 @@
 import React from 'react'
+import { Divider } from 'antd'
 import {
   FormDialog,
   FormItem,
@@ -10,7 +11,6 @@ import {
 import { createSchemaField } from '@formily/react'
 import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
-import { Divider } from 'antd'
 import { TextWidget } from '../widgets'
 
 const AssignmentDesc = () => {
