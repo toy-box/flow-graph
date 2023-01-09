@@ -18,6 +18,7 @@ export interface HistoryItem {
   updateMetaNodeMap: Record<string, FlowMetaNode>
   flowNode?: FlowMetaNode
   edges?: IEdge[]
+  nodeId?: string
   // flow: FlowMeta
   timestamp?: number
 }
@@ -63,25 +64,25 @@ export class History {
     // }
     this.current = this.history.length
     const timestamp = new Date().getTime()
-    const isRemoveNode = this.context?.edges.some((edge) => {
-      const sourceData = context.updateMetaNodeMap[edge.source]
-      const targetData = context.updateMetaNodeMap[edge.target]
-      const target = context?.flowNode?.flowNode.targets.find(
-        (target) => target.id === edge.target
-      )
-      if ((!sourceData || !targetData) && target) return true
-    })
+    // const isRemoveNode = this.context?.edges.some((edge) => {
+    //   const sourceData = context.updateMetaNodeMap[edge.source]
+    //   const targetData = context.updateMetaNodeMap[edge.target]
+    //   const target = context?.flowNode?.flowNode.targets.find(
+    //     (target) => target.id === edge.target
+    //   )
+    //   if ((!sourceData || !targetData) && target) return true
+    // })
+    const idx = this.current - 1
     if (
-      this.context &&
-      this.context?.type === OpearteTypeEnum.REMOVE_EDGE &&
-      isRemoveNode
+      context?.type === OpearteTypeEnum.REMOVE_NODE &&
+      this.history?.[idx]?.nodeId
     ) {
-      const idx = this.current - 1
       this.current--
       this.history[idx].type = context.type
       this.history[idx].flowNode = context.flowNode
       this.history[idx].flowMetaNodeMap = context.flowMetaNodeMap
       this.history[idx].updateMetaNodeMap = context.updateMetaNodeMap
+      this.history[idx].nodeId = undefined
     } else {
       // this.history.splice(this.current + 1, 0, this.context)
       this.context = {
@@ -90,6 +91,7 @@ export class History {
       }
       this.history.push(this.context)
     }
+    console.log(this.history, 'this.history')
     // const overSizeCount = this.history.length - this.maxSize
     // if (overSizeCount > 0) {
     //   this.history.splice(0, overSizeCount)

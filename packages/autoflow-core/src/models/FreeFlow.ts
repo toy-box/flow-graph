@@ -87,6 +87,19 @@ export class FreeFlow {
             break
           case OpearteTypeEnum.REMOVE_NODE:
             this.flowMetaNodeMap = item.updateMetaNodeMap
+            if (item?.edges?.length > 0) {
+              const edges: any = item?.edges?.map((edge) => {
+                return {
+                  id: edge.id,
+                  type: 'remove',
+                }
+              })
+              this.flow.canvas.onEdgesChange({
+                changes: edges,
+                freeFlow: this,
+                isHistory: true,
+              })
+            }
             this.flow.canvas.onNodesChange({
               changes: [
                 {
@@ -154,6 +167,16 @@ export class FreeFlow {
           case OpearteTypeEnum.REMOVE_NODE:
             this.flowMetaNodeMap = item.flowMetaNodeMap
             item.flowNode.appendFreeAt(item.flowNode)
+            item?.edges?.forEach((edge) => {
+              const sourceNode = this.flowMetaNodeMap[edge.source]
+              this.flow.canvas.onConnect({
+                connection: edge as any,
+                sourceFlowmetaNode: sourceNode,
+                freeFlow: this,
+                isHistory: true,
+                edge,
+              })
+            })
             break
           case OpearteTypeEnum.ADD_EDGE:
             this.flowMetaNodeMap = item.flowMetaNodeMap

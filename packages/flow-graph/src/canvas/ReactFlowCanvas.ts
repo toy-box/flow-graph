@@ -194,38 +194,42 @@ export class ReactFlowCanvas implements ICanvas {
     const flowMetaNodeMap = { ...edgesChange.freeFlow?.flowMetaNodeMap }
     edgesChange.changes.map((change) => {
       if (change.type === 'remove') {
-        const edges = edgesChange.edges ?? this.edges
+        const edges = this.edges
         const edge: any = edges?.find((edge) => edge.id === change.id)
-        if (edge) removeEdges.push(edge)
-        const { source, target } = edge
-        const nodeTarget = this.flowGraph?.nodeMap?.[source]?.targets
-          .map((target, index) => {
-            if (target?.edgeId === change.id || target.ruleId === change.id) {
-              return { ...target, index }
-            }
-          })
-          .filter(Boolean)[0]
-        this.flowGraph?.nodeMap[source]?.targets.splice(
-          nodeTarget ? nodeTarget.index : 0,
-          1
-        )
-        edgesChange.freeFlow?.flowMetaNodeMap[source]?.deleteConnector(
-          target,
-          nodeTarget
-        )
-        console.log(edgesChange.freeFlow, edgesChange.changes, 'freeFlow')
-        this.onNodesChange({
-          changes: [{ id: source, type: 'select', selected: true }],
-        })
+        if (edge) {
+          removeEdges.push(edge)
+          const { source, target } = edge
+          const nodeTarget = this.flowGraph?.nodeMap?.[source]?.targets
+            .map((target, index) => {
+              if (target?.edgeId === change.id || target.ruleId === change.id) {
+                return { ...target, index }
+              }
+            })
+            .filter(Boolean)[0]
+          this.flowGraph?.nodeMap[source]?.targets.splice(
+            nodeTarget ? nodeTarget.index : 0,
+            1
+          )
+          edgesChange.freeFlow?.flowMetaNodeMap[source]?.deleteConnector(
+            target,
+            nodeTarget
+          )
+          console.log(edgesChange.freeFlow, edgesChange.changes, 'freeFlow')
+          // this.onNodesChange({
+          //   changes: [{ id: source, type: 'select', selected: true }],
+          // })
+        }
       }
     })
     const hasRemoveChanges = edgesChange.changes.filter(
       (change) => change.type === 'remove'
     )
     if (hasRemoveChanges.length > 0 && !edgesChange.isHistory) {
+      const selectNode = this.nodes?.find((node) => node.selected)
       edgesChange.freeFlow?.history?.push({
         type: OpearteTypeEnum.REMOVE_EDGE,
         edges: removeEdges,
+        nodeId: selectNode?.id,
         updateMetaNodeMap: { ...edgesChange.freeFlow.flowMetaNodeMap },
         flowMetaNodeMap,
       })
@@ -236,7 +240,7 @@ export class ReactFlowCanvas implements ICanvas {
   onConnect(connecObj: IConnectionProps) {
     const { target, source } = connecObj.connection
     const nodeMapTargets = this.flowGraph.nodeMap[source].targets
-    let edgeId = uid()
+    let edgeId = connecObj?.edge.id ?? uid()
     let newEdge: IEdge = { ...connecObj.connection }
     const targetNode = this.nodes.find((node) => node.id === target).data.name
     const flowMetaNodeMap = { ...connecObj.freeFlow.flowMetaNodeMap }
@@ -302,7 +306,7 @@ export class ReactFlowCanvas implements ICanvas {
             ...connecObj.connection,
             label: loadData[0].label,
           }
-          edgeId = uid()
+          edgeId = connecObj?.edge.id ?? uid()
           this.addEdge(newEdge, edgeId)
           if (!loadData[0].ruleId) {
             connecObj.sourceFlowmetaNode.updateConnector(
@@ -366,7 +370,7 @@ export class ReactFlowCanvas implements ICanvas {
               ? defaultConnectorName
               : nextValueConnectorName,
           }
-          edgeId = uid()
+          edgeId = connecObj?.edge.id ?? uid()
           this.addEdge(newEdge, edgeId)
           connecObj.sourceFlowmetaNode.updateConnector(
             target,
@@ -397,7 +401,7 @@ export class ReactFlowCanvas implements ICanvas {
         break
       default:
         if (nodeMapTargets.length === 0) {
-          edgeId = uid()
+          edgeId = connecObj?.edge.id ?? uid()
           this.flowGraph.setTarget(source, [
             ...nodeMapTargets,
             { id: target, edgeId },
@@ -415,7 +419,7 @@ export class ReactFlowCanvas implements ICanvas {
               ? EdgeTypeEnum.FAULT_EDGE
               : EdgeTypeEnum.FREE_EDGE,
           }
-          edgeId = uid()
+          edgeId = connecObj?.edge.id ?? uid()
           connecObj.sourceFlowmetaNode.updateConnector(target, isFaultConnector)
           this.flowGraph.setTarget(source, [
             ...nodeMapTargets,
