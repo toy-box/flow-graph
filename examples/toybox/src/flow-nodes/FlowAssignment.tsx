@@ -7,18 +7,21 @@ import {
   Input,
   Select,
   FormGrid,
+  ArrayItems,
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
 import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { TextWidget } from '../widgets'
 
+import './flowNodes.less'
+
 const AssignmentDesc = () => {
   return (
     <div>
-      <Divider />
+      <Divider className="margin-0" />
       <div className="assignment-content">
-        <div className="assignment-title">
+        <div className="assignment-title connectDialog-title">
           <TextWidget>flowDesigner.flow.form.assignment.setVariable</TextWidget>
         </div>
         <div className="assignment-desc">
@@ -33,6 +36,7 @@ const SchemaField = createSchemaField({
   components: {
     FormItem,
     FormGrid,
+    ArrayItems,
     Input,
     Select,
     AssignmentDesc,
@@ -56,6 +60,10 @@ const assignPanelSchema = {
           ),
           required: true,
           'x-decorator': 'FormItem',
+          'x-decorator-props': {
+            layout: 'vertical',
+            colon: false,
+          },
           'x-component': 'Input',
         },
         id: {
@@ -89,6 +97,10 @@ const assignPanelSchema = {
             //   },
           ],
           'x-decorator': 'FormItem',
+          'x-decorator-props': {
+            layout: 'vertical',
+            colon: false,
+          },
           'x-component': 'Input',
         },
         description: {
@@ -99,7 +111,10 @@ const assignPanelSchema = {
           'x-decorator': 'FormItem',
           'x-component': 'Input.TextArea',
           'x-decorator-props': {
+            layout: 'vertical',
+            colon: false,
             gridSpan: 2,
+            feedbackLayout: 'terse',
           },
         },
         desc: {
@@ -109,41 +124,105 @@ const assignPanelSchema = {
           'x-component': 'AssignmentDesc',
           'x-decorator-props': {
             gridSpan: 2,
+            feedbackLayout: 'terse',
           },
         },
         assignmentItems: {
-          type: 'object',
+          type: 'array',
+          required: true,
+          title: '',
+          'x-decorator': 'FormItem',
+          'x-decorator-props': {
+            gridSpan: 2,
+          },
+          'x-component': 'ArrayItems',
+          items: {
+            type: 'object',
+            'x-decorator': 'FormItem',
+            'x-component': 'ArrayItems.Item',
+            'x-decorator-props': {
+              gridSpan: 2,
+              fullness: true,
+            },
+            properties: {
+              grid: {
+                type: 'void',
+                'x-component': 'FormGrid',
+                'x-component-props': {
+                  maxColumns: 17,
+                  colWrap: false,
+                  style: {
+                    width: '100%',
+                  },
+                },
+                properties: {
+                  operation: {
+                    type: 'string',
+                    title: 'Variable',
+                    required: true,
+                    'x-decorator': 'FormItem',
+                    'x-decorator-props': {
+                      layout: 'vertical',
+                      colon: false,
+                      gridSpan: 6,
+                    },
+                    'x-component': 'Input',
+                  },
+                  type: {
+                    type: 'string',
+                    title: 'Operator',
+                    required: true,
+                    enum: [
+                      {
+                        label: 'Equals',
+                        value: 'Equals',
+                      },
+                      {
+                        label: 'Add',
+                        value: 'Add',
+                      },
+                    ],
+                    'x-decorator': 'FormItem',
+                    'x-decorator-props': {
+                      layout: 'vertical',
+                      colon: false,
+                      gridSpan: 4,
+                    },
+                    'x-component': 'Select',
+                  },
+                  value: {
+                    type: 'string',
+                    title: 'Value',
+                    required: true,
+                    'x-decorator': 'FormItem',
+                    'x-decorator-props': {
+                      layout: 'vertical',
+                      colon: false,
+                      gridSpan: 6,
+                    },
+                    'x-component': 'Input',
+                  },
+                  remove: {
+                    type: 'void',
+                    'x-decorator': 'FormItem',
+                    'x-decorator-props': {
+                      style: {
+                        alignItems: 'center',
+                        marginTop: '22px',
+                      },
+                      gridSpan: 1,
+                    },
+                    'x-component': 'ArrayItems.Remove',
+                  },
+                },
+              },
+            },
+          },
           properties: {
-            operation: {
-              type: 'string',
-              title: 'Variable',
-              required: true,
-              'x-decorator': 'FormItem',
-              'x-component': 'Input',
-            },
-            type: {
-              type: 'string',
-              title: 'Operator',
-              required: true,
-              enum: [
-                {
-                  label: 'Equals',
-                  value: 'Equals',
-                },
-                {
-                  label: 'Add',
-                  value: 'Add',
-                },
-              ],
-              'x-decorator': 'FormItem',
-              'x-component': 'Select',
-            },
-            value: {
-              type: 'string',
-              title: 'Value',
-              required: true,
-              'x-decorator': 'FormItem',
-              'x-component': 'Input',
+            addition: {
+              type: 'void',
+              title: 'Add Assignment',
+              'x-component': 'ArrayItems.Addition',
             },
           },
         },
@@ -179,7 +258,9 @@ export const assignOnEdit = (node: any, at?: string, additionInfo?: any) => {
           initialValues: {
             name: node.type,
             description: node.description,
-            assignmentItems: node.assignmentItems,
+            assignmentItems: node.assignmentItems ?? [
+              { operation: '', type: '', value: '' },
+            ],
             id: node.id,
           },
         })
@@ -200,61 +281,4 @@ export const assignOnEdit = (node: any, at?: string, additionInfo?: any) => {
       }, 500)
     })
     .open()
-}
-
-export const recordCreateOnEdit = (
-  node: any,
-  at?: string,
-  additionInfo?: any
-) => {
-  const dialog = recordCreateRender()
-  dialog
-    .forOpen((payload, next) => {
-      setTimeout(() => {
-        next({
-          initialValues: {
-            name: node.type,
-            description: node.description,
-          },
-        })
-      }, 500)
-    })
-    .forConfirm((payload, next) => {
-      setTimeout(() => {
-        node.make
-          ? node.make(at, { ...payload.values, ...additionInfo })
-          : node.update(payload.values)
-        next(payload)
-      }, 500)
-    })
-    .forCancel((payload, next) => {
-      setTimeout(() => {
-        next(payload)
-      }, 500)
-    })
-    .open()
-}
-
-const onPanelEdit = (
-  node: INodeTemplate<NodeMake> | FlowMetaNode,
-  at: string,
-  additionInfo?: any
-) => {
-  const chooseDialog = () => {
-    switch (node.type) {
-      case FlowMetaType.ASSIGNMENT:
-        return assignOnEdit(node, at, additionInfo)
-      case FlowMetaType.DECISION:
-        return decideOnEdit(node, at, additionInfo)
-      case FlowMetaType.LOOP:
-        return loopOnEdit(node, at, additionInfo)
-      case FlowMetaType.WAIT:
-        return waitOnEdit(node, at, additionInfo)
-      case FlowMetaType.RECORD_CREATE:
-        return recordCreateOnEdit(node, at, additionInfo)
-      default:
-        return recordCreateOnEdit(node, at, additionInfo)
-    }
-  }
-  chooseDialog()
 }

@@ -123,7 +123,7 @@ const enUS = {
         },
         form: {
           comm: {
-            label: 'title',
+            label: 'Title',
             value: 'API name',
             description: 'description',
             cancel: 'cancel',
@@ -143,11 +143,11 @@ const enUS = {
             repeatName: 'API name repeat',
           },
           assignment: {
-            addTitle: 'create assignment',
-            editTitle: 'update assignment',
+            addTitle: 'Create Assignment',
+            editTitle: 'Update Assignment',
             removeTitle: 'delete assignment',
-            setVariable: 'set variable value',
-            tip: 'each variable is modified by a combination of operators and values.',
+            setVariable: 'Set variable value',
+            tip: 'Each variable is modified by a combination of operators and values.',
           },
           decision: {
             tagTitle: 'OUTCOME ORDER',
