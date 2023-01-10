@@ -12,7 +12,7 @@ import {
 import { createSchemaField } from '@formily/react'
 import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
-import { TextWidget } from '../widgets'
+import { TextWidget, takeMessage } from '../widgets'
 
 import './flowNodes.less'
 
@@ -139,10 +139,20 @@ const assignPanelSchema = {
           items: {
             type: 'object',
             'x-decorator': 'FormItem',
-            'x-component': 'ArrayItems.Item',
             'x-decorator-props': {
               gridSpan: 2,
               fullness: true,
+              // feedbackLayout: 'terse',
+            },
+            'x-component': 'ArrayItems.Item',
+            'x-component-props': {
+              maxColumns: 17,
+              minColumns: 17,
+              // colWrap: false,
+              style: {
+                border: 'none',
+                padding: 0,
+              },
             },
             properties: {
               grid: {
@@ -150,7 +160,8 @@ const assignPanelSchema = {
                 'x-component': 'FormGrid',
                 'x-component-props': {
                   maxColumns: 17,
-                  colWrap: false,
+                  minColumns: 17,
+                  // colWrap: false,
                   style: {
                     width: '100%',
                   },
@@ -158,27 +169,49 @@ const assignPanelSchema = {
                 properties: {
                   operation: {
                     type: 'string',
-                    title: 'Variable',
+                    title: (
+                      <TextWidget>
+                        flowDesigner.flow.form.comm.operationTitle
+                      </TextWidget>
+                    ),
                     required: true,
                     'x-decorator': 'FormItem',
                     'x-decorator-props': {
                       layout: 'vertical',
                       colon: false,
                       gridSpan: 6,
+                      labelWidth: '100px',
                     },
                     'x-component': 'Input',
+                    'x-component-props': {
+                      placeholder: takeMessage(
+                        'flowDesigner.flow.form.comm.operationPlace'
+                      ),
+                    },
                   },
                   type: {
                     type: 'string',
-                    title: 'Operator',
+                    title: (
+                      <TextWidget>
+                        flowDesigner.flow.form.comm.typeTitle
+                      </TextWidget>
+                    ),
                     required: true,
                     enum: [
                       {
-                        label: 'Equals',
+                        label: (
+                          <TextWidget>
+                            flowDesigner.flow.form.assignment.typeEquals
+                          </TextWidget>
+                        ),
                         value: 'Equals',
                       },
                       {
-                        label: 'Add',
+                        label: (
+                          <TextWidget>
+                            flowDesigner.flow.form.assignment.typeAdd
+                          </TextWidget>
+                        ),
                         value: 'Add',
                       },
                     ],
@@ -187,20 +220,36 @@ const assignPanelSchema = {
                       layout: 'vertical',
                       colon: false,
                       gridSpan: 4,
+                      labelWidth: '100px',
                     },
                     'x-component': 'Select',
+                    'x-component-props': {
+                      placeholder: takeMessage(
+                        'flowDesigner.flow.form.comm.typePlace'
+                      ),
+                    },
                   },
                   value: {
                     type: 'string',
-                    title: 'Value',
+                    title: (
+                      <TextWidget>
+                        flowDesigner.flow.form.comm.valueTitle
+                      </TextWidget>
+                    ),
                     required: true,
                     'x-decorator': 'FormItem',
                     'x-decorator-props': {
                       layout: 'vertical',
                       colon: false,
                       gridSpan: 6,
+                      labelWidth: '100px',
                     },
                     'x-component': 'Input',
+                    'x-component-props': {
+                      placeholder: takeMessage(
+                        'flowDesigner.flow.form.comm.valuePlace'
+                      ),
+                    },
                   },
                   remove: {
                     type: 'void',
@@ -223,6 +272,11 @@ const assignPanelSchema = {
               type: 'void',
               title: 'Add Assignment',
               'x-component': 'ArrayItems.Addition',
+              'x-component-props': {
+                style: {
+                  width: '30%',
+                },
+              },
             },
           },
         },
@@ -259,7 +313,7 @@ export const assignOnEdit = (node: any, at?: string, additionInfo?: any) => {
             name: node.type,
             description: node.description,
             assignmentItems: node.assignmentItems ?? [
-              { operation: '', type: '', value: '' },
+              { operation: undefined, type: undefined, value: undefined },
             ],
             id: node.id,
           },

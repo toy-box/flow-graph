@@ -16,12 +16,14 @@ import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { TextWidget, takeMessage } from '../widgets'
 
+import './flowNodes.less'
+
 const DecisionDesc = () => {
   return (
     <div>
-      <Divider />
+      <Divider className="margin-0" />
       <div className="decision-content">
-        <div className="decision-title">
+        <div className="decision-title connectDialog-title">
           <TextWidget>flowDesigner.flow.form.decision.tipTitle</TextWidget>
         </div>
         <div className="decision-desc">
@@ -62,6 +64,10 @@ const decidePanelSchema = {
           ),
           required: true,
           'x-decorator': 'FormItem',
+          'x-decorator-props': {
+            layout: 'vertical',
+            colon: false,
+          },
           'x-component': 'Input',
         },
         id: {
@@ -78,6 +84,10 @@ const decidePanelSchema = {
             },
           ],
           'x-decorator': 'FormItem',
+          'x-decorator-props': {
+            layout: 'vertical',
+            colon: false,
+          },
           'x-component': 'Input',
         },
         description: {
@@ -88,7 +98,10 @@ const decidePanelSchema = {
           'x-decorator': 'FormItem',
           'x-component': 'Input.TextArea',
           'x-decorator-props': {
+            layout: 'vertical',
+            colon: false,
             gridSpan: 2,
+            feedbackLayout: 'terse',
           },
         },
         desc: {
@@ -98,6 +111,7 @@ const decidePanelSchema = {
           'x-component': 'DecisionDesc',
           'x-decorator-props': {
             gridSpan: 2,
+            feedbackLayout: 'terse',
           },
         },
         rules: {
@@ -115,29 +129,40 @@ const decidePanelSchema = {
           items: {
             type: 'object',
             properties: {
-              name: {
-                type: 'string',
-                'x-decorator': 'FormItem',
-                'x-decorator-props': {
-                  layout: 'virtical',
+              grid: {
+                type: 'void',
+                'x-component': 'FormGrid',
+                'x-component-props': {
+                  maxColumns: 2,
                 },
-                title: (
-                  <TextWidget token="flowDesigner.flow.form.decision.ruleLabel"></TextWidget>
-                ),
-                required: true,
-                'x-component': 'Input',
-              },
-              id: {
-                type: 'string',
-                'x-decorator': 'FormItem',
-                'x-decorator-props': {
-                  layout: 'virtical',
+                properties: {
+                  name: {
+                    type: 'string',
+                    'x-decorator': 'FormItem',
+                    'x-decorator-props': {
+                      layout: 'vertical',
+                      colon: false,
+                    },
+                    title: (
+                      <TextWidget token="flowDesigner.flow.form.decision.ruleLabel"></TextWidget>
+                    ),
+                    required: true,
+                    'x-component': 'Input',
+                  },
+                  id: {
+                    type: 'string',
+                    'x-decorator': 'FormItem',
+                    'x-decorator-props': {
+                      layout: 'vertical',
+                      colon: false,
+                    },
+                    title: (
+                      <TextWidget token="flowDesigner.flow.form.decision.ruleId"></TextWidget>
+                    ),
+                    required: true,
+                    'x-component': 'Input',
+                  },
                 },
-                title: (
-                  <TextWidget token="flowDesigner.flow.form.decision.ruleId"></TextWidget>
-                ),
-                required: true,
-                'x-component': 'Input',
               },
               criteria: {
                 type: 'object',
@@ -170,7 +195,9 @@ const decidePanelSchema = {
                     ],
                     'x-decorator': 'FormItem',
                     'x-decorator-props': {
-                      layout: 'virtical',
+                      layout: 'vertical',
+                      colon: false,
+                      wrapperWidth: 350,
                     },
                     'x-component-props': {},
                     'x-component': 'Select',
@@ -195,37 +222,49 @@ const decidePanelSchema = {
                         // properties: {
                         operation: {
                           type: 'string',
-                          title: 'resource',
+                          title: (
+                            <TextWidget>
+                              flowDesigner.flow.form.decision.operationTitle
+                            </TextWidget>
+                          ),
                           required: true,
                           'x-decorator': 'FormItem',
                           'x-component': 'Input',
                           'x-component-props': {
                             placeholder: takeMessage(
-                              'flowDesigner.flow.form.decision.operationPlace'
+                              'flowDesigner.flow.form.comm.operationPlace'
                             ),
                           },
                         },
                         type: {
                           type: 'string',
-                          title: 'operator',
+                          title: (
+                            <TextWidget>
+                              flowDesigner.flow.form.comm.typeTitle
+                            </TextWidget>
+                          ),
                           required: true,
                           'x-decorator': 'FormItem',
                           'x-component': 'Input',
                           'x-component-props': {
                             placeholder: takeMessage(
-                              'flowDesigner.flow.form.decision.typePlace'
+                              'flowDesigner.flow.form.comm.typePlace'
                             ),
                           },
                         },
                         value: {
                           type: 'string',
-                          title: 'value',
+                          title: (
+                            <TextWidget>
+                              flowDesigner.flow.form.comm.valueTitle
+                            </TextWidget>
+                          ),
                           required: true,
                           'x-decorator': 'FormItem',
                           'x-component': 'Input',
                           'x-component-props': {
                             placeholder: takeMessage(
-                              'flowDesigner.flow.form.decision.valuePlace'
+                              'flowDesigner.flow.form.comm.valuePlace'
                             ),
                           },
                         },
