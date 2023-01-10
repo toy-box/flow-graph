@@ -12,7 +12,8 @@ import {
 } from '@toy-box/studio-base'
 import { FlowCanvas, ErrorWidget, ResourceWidget } from '../../../src'
 import { itemMap } from '../../../src/data/itemMap'
-export const Panel = () => {
+import { DesignerFlowContext } from '../../context'
+export const Panel: React.FC<any> = () => {
   const metaFlow = useMetaFlow()
   const freeFlow = useFreeFlow()
   // const init = useCallback(() => {

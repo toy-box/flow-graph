@@ -11,6 +11,7 @@ import {
 import { createSchemaField } from '@formily/react'
 import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
+import { useLocale } from '../hooks'
 import { TextWidget } from '../widgets'
 
 const AssignmentDesc = () => {
@@ -200,61 +201,4 @@ export const assignOnEdit = (node: any, at?: string, additionInfo?: any) => {
       }, 500)
     })
     .open()
-}
-
-export const recordCreateOnEdit = (
-  node: any,
-  at?: string,
-  additionInfo?: any
-) => {
-  const dialog = recordCreateRender()
-  dialog
-    .forOpen((payload, next) => {
-      setTimeout(() => {
-        next({
-          initialValues: {
-            name: node.type,
-            description: node.description,
-          },
-        })
-      }, 500)
-    })
-    .forConfirm((payload, next) => {
-      setTimeout(() => {
-        node.make
-          ? node.make(at, { ...payload.values, ...additionInfo })
-          : node.update(payload.values)
-        next(payload)
-      }, 500)
-    })
-    .forCancel((payload, next) => {
-      setTimeout(() => {
-        next(payload)
-      }, 500)
-    })
-    .open()
-}
-
-const onPanelEdit = (
-  node: INodeTemplate<NodeMake> | FlowMetaNode,
-  at: string,
-  additionInfo?: any
-) => {
-  const chooseDialog = () => {
-    switch (node.type) {
-      case FlowMetaType.ASSIGNMENT:
-        return assignOnEdit(node, at, additionInfo)
-      case FlowMetaType.DECISION:
-        return decideOnEdit(node, at, additionInfo)
-      case FlowMetaType.LOOP:
-        return loopOnEdit(node, at, additionInfo)
-      case FlowMetaType.WAIT:
-        return waitOnEdit(node, at, additionInfo)
-      case FlowMetaType.RECORD_CREATE:
-        return recordCreateOnEdit(node, at, additionInfo)
-      default:
-        return recordCreateOnEdit(node, at, additionInfo)
-    }
-  }
-  chooseDialog()
 }

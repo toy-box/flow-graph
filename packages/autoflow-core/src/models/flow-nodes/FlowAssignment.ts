@@ -159,13 +159,15 @@ export class FlowAssignment extends FlowMetaNode {
 
   update = (payload: FlowMetaUpdate) => {
     const flowMetaNodeMap = { ...this.metaFlow.flowMetaNodeMap }
+    flowMetaNodeMap[this.id] = { ...this }
     this.name = payload.name
     this.description = payload.description
     this.assignmentItems = payload.assignmentItems
     this.metaFlow?.history.push({
-      type: OpearteTypeEnum.ADD_NODE,
+      type: OpearteTypeEnum.UPDATE_NODE,
       updateMetaNodeMap: this.metaFlow.flowMetaNodeMap,
       flowMetaNodeMap,
+      flowNode: this,
     })
     this.toJson()
   }
