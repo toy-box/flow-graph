@@ -7,19 +7,22 @@ import {
   Input,
   Select,
   FormGrid,
+  ArrayItems,
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
 import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { useLocale } from '../hooks'
-import { TextWidget } from '../widgets'
+import { TextWidget, takeMessage } from '../widgets'
+
+import './flowNodes.less'
 
 const AssignmentDesc = () => {
   return (
     <div>
-      <Divider />
+      <Divider className="margin-0" />
       <div className="assignment-content">
-        <div className="assignment-title">
+        <div className="assignment-title connectDialog-title">
           <TextWidget>flowDesigner.flow.form.assignment.setVariable</TextWidget>
         </div>
         <div className="assignment-desc">
@@ -34,6 +37,7 @@ const SchemaField = createSchemaField({
   components: {
     FormItem,
     FormGrid,
+    ArrayItems,
     Input,
     Select,
     AssignmentDesc,
@@ -57,6 +61,10 @@ const assignPanelSchema = {
           ),
           required: true,
           'x-decorator': 'FormItem',
+          'x-decorator-props': {
+            layout: 'vertical',
+            colon: false,
+          },
           'x-component': 'Input',
         },
         id: {
@@ -90,6 +98,10 @@ const assignPanelSchema = {
             //   },
           ],
           'x-decorator': 'FormItem',
+          'x-decorator-props': {
+            layout: 'vertical',
+            colon: false,
+          },
           'x-component': 'Input',
         },
         description: {
@@ -100,7 +112,10 @@ const assignPanelSchema = {
           'x-decorator': 'FormItem',
           'x-component': 'Input.TextArea',
           'x-decorator-props': {
+            layout: 'vertical',
+            colon: false,
             gridSpan: 2,
+            feedbackLayout: 'terse',
           },
         },
         desc: {
@@ -110,41 +125,159 @@ const assignPanelSchema = {
           'x-component': 'AssignmentDesc',
           'x-decorator-props': {
             gridSpan: 2,
+            feedbackLayout: 'terse',
           },
         },
         assignmentItems: {
-          type: 'object',
+          type: 'array',
+          required: true,
+          title: '',
+          'x-decorator': 'FormItem',
+          'x-decorator-props': {
+            gridSpan: 2,
+          },
+          'x-component': 'ArrayItems',
+          items: {
+            type: 'object',
+            'x-decorator': 'FormItem',
+            'x-decorator-props': {
+              gridSpan: 2,
+              fullness: true,
+              // feedbackLayout: 'terse',
+            },
+            'x-component': 'ArrayItems.Item',
+            'x-component-props': {
+              maxColumns: 17,
+              minColumns: 17,
+              // colWrap: false,
+              style: {
+                border: 'none',
+                padding: 0,
+              },
+            },
+            properties: {
+              grid: {
+                type: 'void',
+                'x-component': 'FormGrid',
+                'x-component-props': {
+                  maxColumns: 17,
+                  minColumns: 17,
+                  // colWrap: false,
+                  style: {
+                    width: '100%',
+                  },
+                },
+                properties: {
+                  operation: {
+                    type: 'string',
+                    title: (
+                      <TextWidget>
+                        flowDesigner.flow.form.comm.operationTitle
+                      </TextWidget>
+                    ),
+                    required: true,
+                    'x-decorator': 'FormItem',
+                    'x-decorator-props': {
+                      layout: 'vertical',
+                      colon: false,
+                      gridSpan: 6,
+                      labelWidth: '100px',
+                    },
+                    'x-component': 'Input',
+                    'x-component-props': {
+                      placeholder: takeMessage(
+                        'flowDesigner.flow.form.comm.operationPlace'
+                      ),
+                    },
+                  },
+                  type: {
+                    type: 'string',
+                    title: (
+                      <TextWidget>
+                        flowDesigner.flow.form.comm.typeTitle
+                      </TextWidget>
+                    ),
+                    required: true,
+                    enum: [
+                      {
+                        label: (
+                          <TextWidget>
+                            flowDesigner.flow.form.assignment.typeEquals
+                          </TextWidget>
+                        ),
+                        value: 'Equals',
+                      },
+                      {
+                        label: (
+                          <TextWidget>
+                            flowDesigner.flow.form.assignment.typeAdd
+                          </TextWidget>
+                        ),
+                        value: 'Add',
+                      },
+                    ],
+                    'x-decorator': 'FormItem',
+                    'x-decorator-props': {
+                      layout: 'vertical',
+                      colon: false,
+                      gridSpan: 4,
+                      labelWidth: '100px',
+                    },
+                    'x-component': 'Select',
+                    'x-component-props': {
+                      placeholder: takeMessage(
+                        'flowDesigner.flow.form.comm.typePlace'
+                      ),
+                    },
+                  },
+                  value: {
+                    type: 'string',
+                    title: (
+                      <TextWidget>
+                        flowDesigner.flow.form.comm.valueTitle
+                      </TextWidget>
+                    ),
+                    required: true,
+                    'x-decorator': 'FormItem',
+                    'x-decorator-props': {
+                      layout: 'vertical',
+                      colon: false,
+                      gridSpan: 6,
+                      labelWidth: '100px',
+                    },
+                    'x-component': 'Input',
+                    'x-component-props': {
+                      placeholder: takeMessage(
+                        'flowDesigner.flow.form.comm.valuePlace'
+                      ),
+                    },
+                  },
+                  remove: {
+                    type: 'void',
+                    'x-decorator': 'FormItem',
+                    'x-decorator-props': {
+                      style: {
+                        alignItems: 'center',
+                        marginTop: '22px',
+                      },
+                      gridSpan: 1,
+                    },
+                    'x-component': 'ArrayItems.Remove',
+                  },
+                },
+              },
+            },
+          },
           properties: {
-            operation: {
-              type: 'string',
-              title: 'Variable',
-              required: true,
-              'x-decorator': 'FormItem',
-              'x-component': 'Input',
-            },
-            type: {
-              type: 'string',
-              title: 'Operator',
-              required: true,
-              enum: [
-                {
-                  label: 'Equals',
-                  value: 'Equals',
+            addition: {
+              type: 'void',
+              title: 'Add Assignment',
+              'x-component': 'ArrayItems.Addition',
+              'x-component-props': {
+                style: {
+                  width: '30%',
                 },
-                {
-                  label: 'Add',
-                  value: 'Add',
-                },
-              ],
-              'x-decorator': 'FormItem',
-              'x-component': 'Select',
-            },
-            value: {
-              type: 'string',
-              title: 'Value',
-              required: true,
-              'x-decorator': 'FormItem',
-              'x-component': 'Input',
+              },
             },
           },
         },
@@ -180,7 +313,9 @@ export const assignOnEdit = (node: any, at?: string, additionInfo?: any) => {
           initialValues: {
             name: node.type,
             description: node.description,
-            assignmentItems: node.assignmentItems,
+            assignmentItems: node.assignmentItems ?? [
+              { operation: undefined, type: undefined, value: undefined },
+            ],
             id: node.id,
           },
         })
