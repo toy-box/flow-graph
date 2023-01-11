@@ -146,9 +146,6 @@ const assignPanelSchema = {
             },
             'x-component': 'ArrayItems.Item',
             'x-component-props': {
-              maxColumns: 17,
-              minColumns: 17,
-              // colWrap: false,
               style: {
                 border: 'none',
                 padding: 0,
@@ -161,7 +158,6 @@ const assignPanelSchema = {
                 'x-component-props': {
                   maxColumns: 17,
                   minColumns: 17,
-                  // colWrap: false,
                   style: {
                     width: '100%',
                   },

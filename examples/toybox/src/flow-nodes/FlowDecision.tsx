@@ -12,6 +12,8 @@ import {
   Radio,
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
+import { IGeneralFieldState } from '@formily/core'
+import { observable } from '@formily/reactive'
 import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { TextWidget, takeMessage } from '../widgets'
@@ -47,6 +49,10 @@ const SchemaField = createSchemaField({
   },
 })
 
+// const obs = observable({
+//   logic: '',
+// })
+
 const decidePanelSchema = {
   type: 'object',
   properties: {
@@ -57,19 +63,6 @@ const decidePanelSchema = {
         maxColumns: 2,
       },
       properties: {
-        name: {
-          type: 'string',
-          title: (
-            <TextWidget token="flowDesigner.flow.form.comm.label"></TextWidget>
-          ),
-          required: true,
-          'x-decorator': 'FormItem',
-          'x-decorator-props': {
-            layout: 'vertical',
-            colon: false,
-          },
-          'x-component': 'Input',
-        },
         id: {
           type: 'string',
           title: <TextWidget>flowDesigner.flow.form.comm.value</TextWidget>,
@@ -201,6 +194,16 @@ const decidePanelSchema = {
                     },
                     'x-component-props': {},
                     'x-component': 'Select',
+                    'x-reactions': {
+                      target: 'grid.rules.*.criteria.conditions.*.grid.case',
+                      // effects: ["onFieldInputValueChange"],
+                      fulfill: {
+                        state: {
+                          // display: "{{$self.value === '$and' ? 'visible' : 'hidden'}}",
+                          title: '{{$self.value}}',
+                        },
+                      },
+                    },
                   },
                   conditions: {
                     type: 'array',
@@ -211,75 +214,128 @@ const decidePanelSchema = {
                     items: {
                       type: 'object',
                       'x-component': 'ArrayItems.Item',
+                      'x-component-props': {
+                        style: {
+                          border: 'none',
+                          padding: 0,
+                        },
+                      },
                       properties: {
-                        // conditionObj: {
-                        //   type: 'void',
-                        //   'x-decorator': 'FormItem',
-                        //   'x-decorator-props': {
-                        //     layout: 'virtical',
-                        //   },
-                        // 'x-component': 'FormGrid',
-                        // properties: {
-                        operation: {
-                          type: 'string',
-                          title: (
-                            <TextWidget>
-                              flowDesigner.flow.form.decision.operationTitle
-                            </TextWidget>
-                          ),
-                          required: true,
-                          'x-decorator': 'FormItem',
-                          'x-component': 'Input',
-                          'x-component-props': {
-                            placeholder: takeMessage(
-                              'flowDesigner.flow.form.comm.operationPlace'
-                            ),
-                          },
-                        },
-                        type: {
-                          type: 'string',
-                          title: (
-                            <TextWidget>
-                              flowDesigner.flow.form.comm.typeTitle
-                            </TextWidget>
-                          ),
-                          required: true,
-                          'x-decorator': 'FormItem',
-                          'x-component': 'Input',
-                          'x-component-props': {
-                            placeholder: takeMessage(
-                              'flowDesigner.flow.form.comm.typePlace'
-                            ),
-                          },
-                        },
-                        value: {
-                          type: 'string',
-                          title: (
-                            <TextWidget>
-                              flowDesigner.flow.form.comm.valueTitle
-                            </TextWidget>
-                          ),
-                          required: true,
-                          'x-decorator': 'FormItem',
-                          'x-component': 'Input',
-                          'x-component-props': {
-                            placeholder: takeMessage(
-                              'flowDesigner.flow.form.comm.valuePlace'
-                            ),
-                          },
-                        },
-                        remove: {
+                        grid: {
                           type: 'void',
-                          'x-decorator': 'FormItem',
-                          'x-component': 'ArrayItems.Remove',
+                          'x-component': 'FormGrid',
+                          'x-component-props': {
+                            maxColumns: 18,
+                            minColumns: 18,
+                            style: {
+                              width: '100%',
+                            },
+                          },
+                          properties: {
+                            case: {
+                              type: 'void',
+                              'x-decorator': 'FormItem',
+                              'x-decorator-props': {
+                                style: {
+                                  alignItems: 'center',
+                                  marginTop: '22px',
+                                },
+                                gridSpan: 1,
+                              },
+                              'x-component': 'Input',
+                            },
+                            operation: {
+                              type: 'string',
+                              title: (
+                                <TextWidget>
+                                  flowDesigner.flow.form.decision.operationTitle
+                                </TextWidget>
+                              ),
+                              required: true,
+                              'x-decorator': 'FormItem',
+                              'x-decorator-props': {
+                                layout: 'vertical',
+                                colon: false,
+                                gridSpan: 6,
+                                labelWidth: '100px',
+                              },
+                              'x-component': 'Input',
+                              'x-component-props': {
+                                placeholder: takeMessage(
+                                  'flowDesigner.flow.form.comm.operationPlace'
+                                ),
+                              },
+                            },
+                            type: {
+                              type: 'string',
+                              title: (
+                                <TextWidget>
+                                  flowDesigner.flow.form.comm.typeTitle
+                                </TextWidget>
+                              ),
+                              required: true,
+                              'x-decorator': 'FormItem',
+                              'x-decorator-props': {
+                                layout: 'vertical',
+                                colon: false,
+                                gridSpan: 4,
+                                labelWidth: '100px',
+                              },
+                              'x-component': 'Input',
+                              'x-component-props': {
+                                placeholder: takeMessage(
+                                  'flowDesigner.flow.form.comm.typePlace'
+                                ),
+                              },
+                            },
+                            value: {
+                              type: 'string',
+                              title: (
+                                <TextWidget>
+                                  flowDesigner.flow.form.comm.valueTitle
+                                </TextWidget>
+                              ),
+                              required: true,
+                              'x-decorator': 'FormItem',
+                              'x-decorator-props': {
+                                layout: 'vertical',
+                                colon: false,
+                                gridSpan: 6,
+                                labelWidth: '100px',
+                              },
+                              'x-component': 'Input',
+                              'x-component-props': {
+                                placeholder: takeMessage(
+                                  'flowDesigner.flow.form.comm.valuePlace'
+                                ),
+                              },
+                            },
+                            remove: {
+                              type: 'void',
+                              'x-decorator': 'FormItem',
+                              'x-decorator-props': {
+                                style: {
+                                  alignItems: 'center',
+                                  marginTop: '22px',
+                                },
+                                gridSpan: 1,
+                              },
+                              'x-component': 'ArrayItems.Remove',
+                            },
+                          },
                         },
                       },
                     },
                     properties: {
                       addition: {
                         type: 'void',
-                        title: 'Add Contact',
+                        title: 'Add Condition',
                         'x-component': 'ArrayItems.Addition',
+                        'x-component-props': {
+                          style: {
+                            width: '30%',
+                          },
+                        },
                       },
                     },
                   },
