@@ -10,6 +10,7 @@ import {
   ArrayItems,
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
+import * as ICONS from '@ant-design/icons'
 import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { useLocale } from '../hooks'
@@ -42,6 +43,11 @@ const SchemaField = createSchemaField({
     Select,
     AssignmentDesc,
   },
+  scope: {
+    icon(name) {
+      return React.createElement(ICONS[name])
+    },
+  },
 })
 
 const assignPanelSchema = {
@@ -70,11 +76,11 @@ const assignPanelSchema = {
         id: {
           type: 'string',
           title: <TextWidget>flowDesigner.flow.form.comm.value</TextWidget>,
-          required: true,
+          // required: true,
           'x-validator': [
             {
               triggerType: 'onBlur',
-              required: true,
+              required: false,
               message: (
                 <TextWidget>flowDesigner.flow.form.validator.value</TextWidget>
               ),
@@ -103,6 +109,9 @@ const assignPanelSchema = {
             colon: false,
           },
           'x-component': 'Input',
+          'x-component-props': {
+            disabled: true,
+          },
         },
         description: {
           type: 'string',
@@ -147,9 +156,6 @@ const assignPanelSchema = {
             },
             'x-component': 'ArrayItems.Item',
             'x-component-props': {
-              maxColumns: 17,
-              minColumns: 17,
-              // colWrap: false,
               style: {
                 border: 'none',
                 padding: 0,
@@ -162,7 +168,6 @@ const assignPanelSchema = {
                 'x-component-props': {
                   maxColumns: 17,
                   minColumns: 17,
-                  // colWrap: false,
                   style: {
                     width: '100%',
                   },
@@ -185,6 +190,7 @@ const assignPanelSchema = {
                     },
                     'x-component': 'Input',
                     'x-component-props': {
+                      suffix: "{{icon('SearchOutlined')}}",
                       placeholder: takeMessage(
                         'flowDesigner.flow.form.comm.operationPlace'
                       ),
@@ -247,6 +253,7 @@ const assignPanelSchema = {
                     },
                     'x-component': 'Input',
                     'x-component-props': {
+                      suffix: "{{icon('SearchOutlined')}}",
                       placeholder: takeMessage(
                         'flowDesigner.flow.form.comm.valuePlace'
                       ),
@@ -286,12 +293,13 @@ const assignPanelSchema = {
   },
 }
 
-const assignRender = () => {
+const assignRender = (isNew: boolean) => {
+  const getToken = isNew
+    ? 'flowDesigner.flow.form.assignment.addTitle'
+    : 'flowDesigner.flow.form.assignment.editTitle'
   return FormDialog(
     {
-      title: (
-        <TextWidget token="flowDesigner.flow.form.assignment.addTitle"></TextWidget>
-      ),
+      title: <TextWidget>{getToken}</TextWidget>,
       width: '60vw',
     },
     () => {
@@ -305,7 +313,7 @@ const assignRender = () => {
 }
 
 export const assignOnEdit = (node: any, at?: string, additionInfo?: any) => {
-  const dialog = assignRender()
+  const dialog = assignRender(node.make)
   dialog
     .forOpen((payload, next) => {
       setTimeout(() => {

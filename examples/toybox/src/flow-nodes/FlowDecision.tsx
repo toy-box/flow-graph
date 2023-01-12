@@ -10,8 +10,12 @@ import {
   Select,
   FormGrid,
   Radio,
+  Form,
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
+import * as ICONS from '@ant-design/icons'
+import { createForm } from '@formily/core'
+import { observable } from '@formily/reactive'
 import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { TextWidget, takeMessage } from '../widgets'
@@ -34,6 +38,7 @@ const DecisionDesc = () => {
   )
 }
 
+// const form = createForm()
 const SchemaField = createSchemaField({
   components: {
     DecisionDesc,
@@ -45,7 +50,26 @@ const SchemaField = createSchemaField({
     Select,
     Radio,
   },
+  scope: {
+    icon(name) {
+      return React.createElement(ICONS[name])
+    },
+    //   asyncVisible(field) {
+    //     // setTimeout(() => {
+    //       // form.setFieldState('grid.rules.*.criteria.conditions.*.grid.case', (state) => {
+    //         //对于初始联动，如果字段找不到，setFieldState会将更新推入更新队列，直到字段出现再执行操作
+    //         // if (state.index) {
+    //         //   state.title = field.value.slice(1).toUpperCase()
+    //         // }
+    //       // })
+    //     // }, 1000)
+    //   },
+  },
 })
+
+// const obs = observable({
+//   logic: '',
+// })
 
 const decidePanelSchema = {
   type: 'object',
@@ -73,11 +97,11 @@ const decidePanelSchema = {
         id: {
           type: 'string',
           title: <TextWidget>flowDesigner.flow.form.comm.value</TextWidget>,
-          required: true,
+          required: false,
           'x-validator': [
             {
               triggerType: 'onBlur',
-              required: true,
+              // required: true,
               message: (
                 <TextWidget>flowDesigner.flow.form.validator.value</TextWidget>
               ),
@@ -89,6 +113,9 @@ const decidePanelSchema = {
             colon: false,
           },
           'x-component': 'Input',
+          'x-component-props': {
+            disabled: true,
+          },
         },
         description: {
           type: 'string',
@@ -201,6 +228,16 @@ const decidePanelSchema = {
                     },
                     'x-component-props': {},
                     'x-component': 'Select',
+                    'x-reactions': {
+                      target: 'grid.rules.*.criteria.conditions.*.grid.case',
+                      fulfill: {
+                        // run: 'asyncVisible($self,$target)',
+                        state: {
+                          title:
+                            '{{$target.index !== 0 && $self.value.substring(1).toUpperCase()}}',
+                        },
+                      },
+                    },
                   },
                   conditions: {
                     type: 'array',
@@ -211,75 +248,135 @@ const decidePanelSchema = {
                     items: {
                       type: 'object',
                       'x-component': 'ArrayItems.Item',
+                      'x-component-props': {
+                        style: {
+                          border: 'none',
+                          padding: 0,
+                        },
+                      },
                       properties: {
-                        // conditionObj: {
-                        //   type: 'void',
-                        //   'x-decorator': 'FormItem',
-                        //   'x-decorator-props': {
-                        //     layout: 'virtical',
-                        //   },
-                        // 'x-component': 'FormGrid',
-                        // properties: {
-                        operation: {
-                          type: 'string',
-                          title: (
-                            <TextWidget>
-                              flowDesigner.flow.form.decision.operationTitle
-                            </TextWidget>
-                          ),
-                          required: true,
-                          'x-decorator': 'FormItem',
-                          'x-component': 'Input',
-                          'x-component-props': {
-                            placeholder: takeMessage(
-                              'flowDesigner.flow.form.comm.operationPlace'
-                            ),
-                          },
-                        },
-                        type: {
-                          type: 'string',
-                          title: (
-                            <TextWidget>
-                              flowDesigner.flow.form.comm.typeTitle
-                            </TextWidget>
-                          ),
-                          required: true,
-                          'x-decorator': 'FormItem',
-                          'x-component': 'Input',
-                          'x-component-props': {
-                            placeholder: takeMessage(
-                              'flowDesigner.flow.form.comm.typePlace'
-                            ),
-                          },
-                        },
-                        value: {
-                          type: 'string',
-                          title: (
-                            <TextWidget>
-                              flowDesigner.flow.form.comm.valueTitle
-                            </TextWidget>
-                          ),
-                          required: true,
-                          'x-decorator': 'FormItem',
-                          'x-component': 'Input',
-                          'x-component-props': {
-                            placeholder: takeMessage(
-                              'flowDesigner.flow.form.comm.valuePlace'
-                            ),
-                          },
-                        },
-                        remove: {
+                        grid: {
                           type: 'void',
-                          'x-decorator': 'FormItem',
-                          'x-component': 'ArrayItems.Remove',
+                          'x-component': 'FormGrid',
+                          'x-component-props': {
+                            maxColumns: 18,
+                            minColumns: 18,
+                            style: {
+                              width: '100%',
+                            },
+                          },
+                          properties: {
+                            case: {
+                              type: 'void',
+                              'x-decorator': 'FormItem',
+                              'x-decorator-props': {
+                                colon: false,
+                                style: {
+                                  alignItems: 'center',
+                                  marginTop: '22px',
+                                  fontWeight: 700,
+                                },
+                                gridSpan: 1,
+                              },
+                              // 'x-component': (value)=>{
+                              //   console.log('value', value)
+                              //   return <div></div>
+                              // },
+                            },
+                            operation: {
+                              type: 'string',
+                              title: (
+                                <TextWidget>
+                                  flowDesigner.flow.form.decision.operationTitle
+                                </TextWidget>
+                              ),
+                              required: true,
+                              'x-decorator': 'FormItem',
+                              'x-decorator-props': {
+                                layout: 'vertical',
+                                colon: false,
+                                gridSpan: 6,
+                                labelWidth: '100px',
+                              },
+                              'x-component': 'Input',
+                              'x-component-props': {
+                                suffix: "{{icon('SearchOutlined')}}",
+                                placeholder: takeMessage(
+                                  'flowDesigner.flow.form.comm.operationPlace'
+                                ),
+                              },
+                            },
+                            type: {
+                              type: 'string',
+                              title: (
+                                <TextWidget>
+                                  flowDesigner.flow.form.comm.typeTitle
+                                </TextWidget>
+                              ),
+                              required: true,
+                              'x-decorator': 'FormItem',
+                              'x-decorator-props': {
+                                layout: 'vertical',
+                                colon: false,
+                                gridSpan: 4,
+                                labelWidth: '100px',
+                              },
+                              'x-component': 'Input',
+                              'x-component-props': {
+                                placeholder: takeMessage(
+                                  'flowDesigner.flow.form.comm.typePlace'
+                                ),
+                              },
+                            },
+                            value: {
+                              type: 'string',
+                              title: (
+                                <TextWidget>
+                                  flowDesigner.flow.form.comm.valueTitle
+                                </TextWidget>
+                              ),
+                              required: true,
+                              'x-decorator': 'FormItem',
+                              'x-decorator-props': {
+                                layout: 'vertical',
+                                colon: false,
+                                gridSpan: 6,
+                                labelWidth: '100px',
+                              },
+                              'x-component': 'Input',
+                              'x-component-props': {
+                                suffix: "{{icon('SearchOutlined')}}",
+                                placeholder: takeMessage(
+                                  'flowDesigner.flow.form.comm.valuePlace'
+                                ),
+                              },
+                            },
+                            remove: {
+                              type: 'void',
+                              'x-decorator': 'FormItem',
+                              'x-decorator-props': {
+                                style: {
+                                  alignItems: 'center',
+                                  marginTop: '22px',
+                                },
+                                gridSpan: 1,
+                              },
+                              'x-component': 'ArrayItems.Remove',
+                            },
+                          },
                         },
                       },
                     },
                     properties: {
                       addition: {
                         type: 'void',
-                        title: 'Add Contact',
+                        title: 'Add Condition',
                         'x-component': 'ArrayItems.Addition',
+                        'x-component-props': {
+                          style: {
+                            width: '30%',
+                          },
+                        },
                       },
                     },
                   },
@@ -293,9 +390,15 @@ const decidePanelSchema = {
   },
 }
 
-const decideRender = () => {
+const decideRender = (isNew: boolean) => {
+  const getToken = isNew
+    ? 'flowDesigner.flow.form.decision.addTitle'
+    : 'flowDesigner.flow.form.decision.editTitle'
   return FormDialog(
-    { title: `Decision Node Properites`, width: '90vw' },
+    {
+      title: <TextWidget>{getToken}</TextWidget>,
+      width: '90vw',
+    },
     () => {
       // const decideForm = createForm()
       // decideForm.setInitialValues({
@@ -310,7 +413,8 @@ const decideRender = () => {
 }
 
 export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
-  const dialog = decideRender()
+  console.log('node', node)
+  const dialog = decideRender(node.make)
   dialog
     .forOpen((payload, next) => {
       setTimeout(() => {
@@ -318,6 +422,7 @@ export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
           initialValues: {
             name: node.type,
             description: node.description,
+            id: node.id,
             rules: node.rules ?? [
               {
                 criteria: {
