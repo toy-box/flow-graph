@@ -240,7 +240,7 @@ export class ReactFlowCanvas implements ICanvas {
   onConnect(connecObj: IConnectionProps) {
     const { target, source } = connecObj.connection
     const nodeMapTargets = this.flowGraph.nodeMap[source].targets
-    let edgeId = connecObj?.edge.id ?? uid()
+    let edgeId = connecObj?.edge?.id ?? uid()
     let newEdge: IEdge = { ...connecObj.connection }
     const targetNode = this.nodes.find((node) => node.id === target).data.name
     const flowMetaNodeMap = { ...connecObj.freeFlow.flowMetaNodeMap }
@@ -293,10 +293,11 @@ export class ReactFlowCanvas implements ICanvas {
               },
             ])
           } else {
-            connecObj.sourceFlowmetaNode.decisonConnectDialog(
+            connecObj.sourceFlowmetaNode.connectDialog(
               targetNode,
               connecObj.connection,
               this,
+              connecObj.freeFlow,
               loadData,
               connecObj.sourceFlowmetaNode
             )
@@ -354,10 +355,11 @@ export class ReactFlowCanvas implements ICanvas {
             }
             this.addEdge(newEdge, connecObj.edge.id)
           } else {
-            connecObj.sourceFlowmetaNode.loopConnectDialog(
+            connecObj.sourceFlowmetaNode.connectDialog(
               targetNode,
               connecObj.connection,
               this,
+              connecObj.freeFlow,
               connecObj.sourceFlowmetaNode
             )
           }

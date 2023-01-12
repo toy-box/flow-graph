@@ -3,7 +3,12 @@ import { Connection, addEdge } from 'reactflow'
 import { FormDialog, FormItem, FormLayout, Select } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
 import { ReactFlowCanvas } from '@toy-box/flow-graph'
-import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
+import {
+  FlowMetaNode,
+  FlowMetaType,
+  FreeFlow,
+  OpearteTypeEnum,
+} from '@toy-box/autoflow-core'
 import { uid } from '@toy-box/toybox-shared'
 import { TextWidget } from '../widgets'
 
@@ -62,6 +67,7 @@ export const decisonConnectDialog = (
   targetNode: string,
   connection: Connection,
   canvas: ReactFlowCanvas,
+  freeFlow: FreeFlow,
   loadData?: any,
   sourceFlowmetaNode?: any
 ) => {
@@ -104,13 +110,15 @@ export const decisonConnectDialog = (
     })
     .forConfirm((payload, next) => {
       setTimeout(() => {
+        const edgeId = uid()
+        const flowMetaNodeMap = { ...freeFlow.flowMetaNodeMap }
         const { label, ruleId } = loadData.find(
           (data) => data.value === payload.values.decisionResult
         )
         const newEdge = {
           ...connection,
           label: label,
-          id: uid(),
+          id: edgeId,
         }
         canvas.edges = [newEdge, ...canvas.edges]
         if (!ruleId) {
@@ -136,6 +144,17 @@ export const decisonConnectDialog = (
             edgeId: newEdge.id,
           })
         }
+        freeFlow?.history?.push({
+          type: OpearteTypeEnum.ADD_EDGE,
+          edges: [
+            {
+              ...newEdge,
+              id: edgeId,
+            },
+          ],
+          updateMetaNodeMap: { ...freeFlow.flowMetaNodeMap },
+          flowMetaNodeMap,
+        })
         next(payload)
       }, 500)
     })
@@ -151,6 +170,7 @@ export const loopConnectDialog = (
   targetNode: string,
   connection: Connection,
   canvas: ReactFlowCanvas,
+  freeFlow: FreeFlow,
   sourceFlowmetaNode: any
 ) => {
   const { target, source } = connection
@@ -185,9 +205,11 @@ export const loopConnectDialog = (
     })
     .forConfirm((payload, next) => {
       setTimeout(() => {
+        const edgeId = uid()
+        const flowMetaNodeMap = { ...freeFlow.flowMetaNodeMap }
         const newEdge = {
           ...connection,
-          id: uid(),
+          id: edgeId,
           label: payload.values.loopResult,
         }
         payload.values.loopResult === 'For Each Item'
@@ -201,6 +223,17 @@ export const loopConnectDialog = (
             edgeId: newEdge.id,
           },
         ])
+        freeFlow?.history?.push({
+          type: OpearteTypeEnum.ADD_EDGE,
+          edges: [
+            {
+              ...newEdge,
+              id: edgeId,
+            },
+          ],
+          updateMetaNodeMap: { ...freeFlow.flowMetaNodeMap },
+          flowMetaNodeMap,
+        })
         canvas.edges = [newEdge, ...canvas.edges]
         next(payload)
       }, 500)

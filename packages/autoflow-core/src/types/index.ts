@@ -246,6 +246,11 @@ export interface IFieldMetaFlow extends IFieldMeta {
   flowMetaType?: FlowMetaType
 }
 
+export type IUpdateFieldMetaVariable = Pick<
+  IFieldMeta,
+  'name' | 'defaultValue' | 'description'
+>
+
 export type FlowType =
   | 'AUTO_START_UP'
   | 'PLAN_TRIGGER'
@@ -282,4 +287,14 @@ export enum FlowTypeCodeEnum {
 
 export enum opTypeEnum {
   INPUT = 'INPUT',
+}
+
+export interface IResourceParam {
+  type: FlowResourceType
+  name?: string
+  children: IFieldMeta[]
+}
+
+export interface IFieldMetaResource extends IFieldMeta {
+  webType: FlowResourceType
 }

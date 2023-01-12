@@ -1,6 +1,8 @@
 import { isArr, uid } from '@toy-box/toybox-shared'
 import { define, observable, action, batch } from '@formily/reactive'
 import { Flow, LayoutModeEnum } from '@toy-box/flow-graph'
+import { IFieldMeta, MetaValueType } from '@toy-box/meta-schema'
+import { NodeChange } from 'reactflow'
 import {
   FlowMetaType,
   FlowMetaParam,
@@ -10,8 +12,11 @@ import {
   FlowMetaUpdate,
   StartFlowMetaUpdate,
   FlowMetaParamWithSize,
+  IFlowMetaResource,
+  IResourceParam,
+  FlowResourceType,
+  IFieldMetaResource,
 } from '../types'
-import { NodeChange } from 'reactflow'
 import {
   FlowStart,
   FlowDecision,
@@ -28,6 +33,7 @@ import {
 } from './flow-nodes'
 
 import { History, HistoryItem, OpearteTypeEnum } from './History'
+import { FlowVariable } from './flow-variables'
 
 enum MetaFieldType {
   EDIT = 'EDIT',
@@ -49,8 +55,14 @@ export class FreeFlow {
   disposers: (() => void)[] = []
   flowMeta: IFlowMeta
   metaFlowDatas: FlowMetaParam[] = []
+  metaResourceDatas: IResourceParam[] = []
   flow: Flow
   flowMetaNodeMap: Record<string, FlowMetaNode> = {}
+  flowResourceMap: Record<string, IFieldMeta> = {}
+  // flowConstantMap: Record<string, IFieldMeta> = {}
+  // flowFormulaMap: Record<string, IFieldMeta> = {}
+  // flowTemplateMap: Record<string, IFieldMeta> = {}
+  // flowVariableMap: Record<string, IFieldMeta> = {}
 
   // flowConstants: IFieldMeta[] = []
   // flowFormulas: IFieldMeta[] = []
@@ -72,6 +84,36 @@ export class FreeFlow {
     this.layoutMode = layoutMode || LayoutModeEnum.FREE_LAYOUT
     this.mode = mode || this.mode
     this.flow = flow ?? new Flow(this.layoutMode)
+    this.metaResourceDatas = [
+      {
+        type: FlowResourceType.VARIABLE,
+        children: [],
+      },
+      {
+        type: FlowResourceType.VARIABLE_ARRAY,
+        children: [],
+      },
+      {
+        type: FlowResourceType.VARIABLE_RECORD,
+        children: [],
+      },
+      {
+        type: FlowResourceType.VARIABLE_ARRAY_RECORD,
+        children: [],
+      },
+      {
+        type: FlowResourceType.CONSTANT,
+        children: [],
+      },
+      {
+        type: FlowResourceType.FORMULA,
+        children: [],
+      },
+      {
+        type: FlowResourceType.TEMPLATE,
+        children: [],
+      },
+    ]
     this.history = new History(undefined, {
       onRedo: (item) => {
         console.log(item, 'onRedo')
@@ -217,6 +259,7 @@ export class FreeFlow {
   protected makeObservable() {
     define(this, {
       flowMetaNodeMap: observable.deep,
+      flowResourceMap: observable.deep,
       history: observable.deep,
       flowMetaNodes: observable.computed,
       flow: observable.ref,
@@ -267,6 +310,7 @@ export class FreeFlow {
     this.flowType = flowType
     // this.layoutMode = layoutMode
     this.onInit()
+    this.onInitResource()
   }
 
   onInit() {
@@ -279,6 +323,57 @@ export class FreeFlow {
     })
     console.log(this.flowMetaNodeMap, 'sssssssssssssssssss')
     // this.flow.addFlowFreeNodes(this.flowNodes)
+  }
+
+  onInitResource() {
+    const resourcePrarms = this.parseResource(this.flowMeta.resources)
+    resourcePrarms.forEach((resource) => {
+      const currentResource = new FlowVariable(resource)
+      this.flowResourceMap[currentResource.key] = currentResource
+      if (resource.webType === FlowResourceType.VARIABLE) {
+        if (resource?.type === MetaValueType.ARRAY) {
+          if (
+            resource?.items?.type === MetaValueType.OBJECT ||
+            resource?.items?.type === MetaValueType.OBJECT_ID
+          ) {
+            this.setResourceChildren(
+              FlowResourceType.VARIABLE_ARRAY_RECORD,
+              currentResource
+            )
+          } else {
+            this.setResourceChildren(
+              FlowResourceType.VARIABLE_ARRAY,
+              currentResource
+            )
+          }
+        } else if (
+          resource?.type === MetaValueType.OBJECT ||
+          resource?.type === MetaValueType.OBJECT_ID
+        ) {
+          this.setResourceChildren(
+            FlowResourceType.VARIABLE_RECORD,
+            currentResource
+          )
+        } else {
+          this.setResourceChildren(FlowResourceType.VARIABLE, currentResource)
+        }
+      } else {
+        this.setResourceChildren(resource.webType, currentResource)
+      }
+    })
+  }
+
+  setResourceChildren(type: FlowResourceType, resource: FlowVariable) {
+    const idx = this.metaResourceDatas.findIndex((meta) => meta.type === type)
+    if (idx > -1) this.metaResourceDatas[idx].children.push(resource)
+  }
+
+  parseResource(resources: IFlowMetaResource) {
+    const resourcePrarms: IFieldMetaResource[] = []
+    for (const key in resources) {
+      resourcePrarms.push({ ...resources[key], webType: key })
+    }
+    return resourcePrarms
   }
 
   getFlowMetaNodeMap(nodeMap: Record<string, FlowMetaNode> = {}) {
