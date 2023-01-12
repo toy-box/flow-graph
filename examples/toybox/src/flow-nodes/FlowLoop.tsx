@@ -12,12 +12,22 @@ import {
   Radio,
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
+import * as ICONS from '@ant-design/icons'
 import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
-import { TextWidget } from '../widgets'
+import { TextWidget, takeMessage } from '../widgets'
+
+const LoopDescrip = () => {
+  return (
+    <div>
+      <TextWidget>flowDesigner.flow.form.loop.loopDescrip</TextWidget>
+    </div>
+  )
+}
 
 const SchemaField = createSchemaField({
   components: {
+    LoopDescrip,
     ArrayTabs,
     ArrayItems,
     FormItem,
@@ -27,11 +37,25 @@ const SchemaField = createSchemaField({
     Radio,
     Divider,
   },
+  scope: {
+    icon(name) {
+      return React.createElement(ICONS[name])
+    },
+  },
 })
 
 const loopPanelSchema = {
   type: 'object',
   properties: {
+    loopDescrip: {
+      type: 'string',
+      title: '',
+      'x-decorator': 'FormItem',
+      'x-component': 'LoopDescrip',
+      'x-decorator-props': {
+        feedbackLayout: 'terse',
+      },
+    },
     grid: {
       type: 'void',
       'x-component': 'FormGrid',
@@ -46,23 +70,34 @@ const loopPanelSchema = {
           ),
           required: true,
           'x-decorator': 'FormItem',
+          'x-decorator-props': {
+            layout: 'vertical',
+            colon: false,
+          },
           'x-component': 'Input',
         },
         id: {
           type: 'string',
           title: <TextWidget>flowDesigner.flow.form.comm.value</TextWidget>,
-          required: true,
+          required: false,
           'x-validator': [
             {
               triggerType: 'onBlur',
-              required: true,
+              // required: true,
               message: (
                 <TextWidget>flowDesigner.flow.form.validator.value</TextWidget>
               ),
             },
           ],
           'x-decorator': 'FormItem',
+          'x-decorator-props': {
+            layout: 'vertical',
+            colon: false,
+          },
           'x-component': 'Input',
+          'x-component-props': {
+            disabled: true,
+          },
         },
         description: {
           type: 'string',
@@ -72,7 +107,10 @@ const loopPanelSchema = {
           'x-decorator': 'FormItem',
           'x-component': 'Input.TextArea',
           'x-decorator-props': {
+            layout: 'vertical',
+            colon: false,
             gridSpan: 2,
+            feedbackLayout: 'terse',
           },
         },
       },
@@ -80,11 +118,16 @@ const loopPanelSchema = {
     titleCollection: {
       type: 'void',
       'x-decorator': 'FormItem',
+      'x-decorator-props': {
+        feedbackLayout: 'terse',
+      },
       'x-component': () => {
         return (
           <>
-            <Divider />
-            <TextWidget token="flowDesigner.flow.form.loop.titleCollection" />
+            <Divider className="margin-0" />
+            <div className="connectDialog-title marginTB-5">
+              <TextWidget token="flowDesigner.flow.form.loop.titleCollection" />
+            </div>
           </>
         )
       },
@@ -96,16 +139,31 @@ const loopPanelSchema = {
       ),
       required: true,
       'x-decorator': 'FormItem',
+      'x-decorator-props': {
+        layout: 'vertical',
+        colon: false,
+        wrapperWidth: 350,
+        feedbackLayout: 'terse',
+      },
       'x-component': 'Input',
+      'x-component-props': {
+        suffix: "{{icon('SearchOutlined')}}",
+        placeholder: takeMessage('flowDesigner.flow.form.comm.collectionPlace'),
+      },
     },
     titleDirection: {
       type: 'void',
       'x-decorator': 'FormItem',
+      'x-decorator-props': {
+        feedbackLayout: 'terse',
+      },
       'x-component': () => {
         return (
           <>
-            <Divider />
-            <TextWidget token="flowDesigner.flow.form.loop.titleDirection" />
+            <Divider className="margin-0" />
+            <div className="connectDialog-title marginTB-5">
+              <TextWidget token="flowDesigner.flow.form.loop.titleDirection" />
+            </div>
           </>
         )
       },
@@ -128,42 +186,61 @@ const loopPanelSchema = {
         },
       ],
       'x-decorator': 'FormItem',
+      'x-decorator-props': {
+        layout: 'vertical',
+        colon: false,
+        // wrapperWidth: 350,
+        feedbackLayout: 'terse',
+      },
+      required: true,
       'x-component': 'Radio.Group',
-    },
-    titleLoop: {
-      type: 'void',
-      'x-decorator': 'FormItem',
-      'x-component': () => {
-        return (
-          <>
-            <Divider />
-            <TextWidget token="flowDesigner.flow.form.loop.titleLoop" />
-          </>
-        )
+      'x-component-props': {
+        layout: 'vertical',
       },
     },
-    loopVariable: {
-      type: 'string',
-      title: <TextWidget token="flowDesigner.flow.form.loop.loopVariable" />,
-      required: true,
-      'x-decorator': 'FormItem',
-      'x-component': 'Input',
-    },
+    // titleLoop: {
+    //   type: 'void',
+    //   'x-decorator': 'FormItem',
+    //   'x-component': () => {
+    //     return (
+    //       <>
+    //         <Divider />
+    //         <TextWidget token="flowDesigner.flow.form.loop.titleLoop" />
+    //       </>
+    //     )
+    //   },
+    // },
+    // loopVariable: {
+    //   type: 'string',
+    //   title: <TextWidget token="flowDesigner.flow.form.loop.loopVariable" />,
+    //   required: true,
+    //   'x-decorator': 'FormItem',
+    //   'x-component': 'Input',
+    // },
   },
 }
 
-const loopRender = () => {
-  return FormDialog({ title: `Loop Node Properites`, width: '90vw' }, () => {
-    return (
-      <FormLayout labelCol={6} wrapperCol={10}>
-        <SchemaField schema={loopPanelSchema} />
-      </FormLayout>
-    )
-  })
+const loopRender = (isNew: boolean) => {
+  const getToken = isNew
+    ? 'flowDesigner.flow.form.loop.addTitle'
+    : 'flowDesigner.flow.form.loop.editTitle'
+  return FormDialog(
+    {
+      title: <TextWidget>{getToken}</TextWidget>,
+      width: '90vw',
+    },
+    () => {
+      return (
+        <FormLayout labelCol={6} wrapperCol={10}>
+          <SchemaField schema={loopPanelSchema} />
+        </FormLayout>
+      )
+    }
+  )
 }
 
 export const loopOnEdit = (node: any, at?: string, additionInfo?: any) => {
-  const dialog = loopRender()
+  const dialog = loopRender(node.make)
   dialog
     .forOpen((payload, next) => {
       setTimeout(() => {

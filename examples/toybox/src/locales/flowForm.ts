@@ -40,6 +40,7 @@ const zhCN = {
             operationPlace: '搜索资源',
             typePlace: '运算符',
             valuePlace: '输入值或搜索资源...',
+            collectionPlace: '搜索集合变量...',
           },
           validator: {
             filter: '筛选记录是必填项',
@@ -59,6 +60,8 @@ const zhCN = {
             typeAdd: '添加',
           },
           decision: {
+            addTitle: '新增决策',
+            editTitle: '编辑决策',
             tagTitle: '结果顺序',
             tipTitle: '结果',
             tip: '对于流可以使用的每个路径，创建结果。对于每个结果，指定必须满足的条件，以便流使用该路径。',
@@ -72,6 +75,8 @@ const zhCN = {
             operationTitle: '资源',
           },
           loop: {
+            addTitle: '新增循环',
+            editTitle: '编辑循环',
             titleCollection: '指定循环访问集合的方向',
             collectionReference: '集合变量',
             titleDirection: '指定循环访问集合的方向',
@@ -79,6 +84,8 @@ const zhCN = {
             iterationReverse: '最后一项到第一项',
             titleLoop: '选择循环变量',
             loopVariable: '循环变量',
+            loopDescrip:
+              '启动循环路径以循环访问集合变量中的项。对于每次迭代，流都会将项临时存储在循环变量中。',
           },
           deciConnect: {
             addTitle: '选择决策连接器的结果',
@@ -144,6 +151,7 @@ const enUS = {
             operationPlace: 'Search Resources',
             typePlace: 'operator',
             valuePlace: 'Enter value or search resources...',
+            collectionPlace: 'Search collection variables...',
           },
           validator: {
             filter: 'filtering record is required',
@@ -155,8 +163,8 @@ const enUS = {
             repeatName: 'API name repeat',
           },
           assignment: {
-            addTitle: 'Create Assignment',
-            editTitle: 'Update Assignment',
+            addTitle: 'New Assignment',
+            editTitle: 'Edit Assignment',
             removeTitle: 'delete assignment',
             setVariable: 'Set variable value',
             tip: 'Each variable is modified by a combination of operators and values.',
@@ -164,6 +172,8 @@ const enUS = {
             typeAdd: 'Add',
           },
           decision: {
+            addTitle: 'New Decision',
+            editTitle: 'Edit Decision',
             tagTitle: 'OUTCOME ORDER',
             tipTitle: 'Outcomes',
             tip: 'For each path the flow can take, create an outcome. For each outcome, specify the conditions that must be met for the flow to take that path.',
@@ -177,6 +187,8 @@ const enUS = {
             operationTitle: 'Resource',
           },
           loop: {
+            addTitle: 'New Loop',
+            editTitle: 'Edit Loop',
             titleCollection: 'Specify Direction for Iterating Over Collection',
             collectionReference: 'Collection Variable',
             titleDirection: 'Specify Direction for Iterating Over Collection',
@@ -184,6 +196,8 @@ const enUS = {
             iterationReverse: 'Last item to first item',
             titleLoop: 'Select Loop Variable',
             loopVariable: 'Loop Variable',
+            loopDescrip:
+              'Start a loop path for iterating over items in a collection variable. For each iteration, the flow temporarily stores the item in the loop variable.',
           },
           deciConnect: {
             addTitle: 'Select outcome for decision connector',
