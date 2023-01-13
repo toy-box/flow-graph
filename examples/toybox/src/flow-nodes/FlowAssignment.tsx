@@ -50,239 +50,241 @@ const SchemaField = createSchemaField({
   },
 })
 
-const assignPanelSchema = {
-  type: 'object',
-  properties: {
-    grid: {
-      type: 'void',
-      'x-component': 'FormGrid',
-      'x-component-props': {
-        maxColumns: 2,
-      },
-      properties: {
-        name: {
-          type: 'string',
-          title: (
-            <TextWidget token="flowDesigner.flow.form.comm.label"></TextWidget>
-          ),
-          required: true,
-          'x-decorator': 'FormItem',
-          'x-decorator-props': {
-            layout: 'vertical',
-            colon: false,
-          },
-          'x-component': 'Input',
+const assignRender = (isNew: boolean) => {
+  const assignPanelSchema = {
+    type: 'object',
+    properties: {
+      grid: {
+        type: 'void',
+        'x-component': 'FormGrid',
+        'x-component-props': {
+          maxColumns: 2,
         },
-        id: {
-          type: 'string',
-          title: <TextWidget>flowDesigner.flow.form.comm.value</TextWidget>,
-          // required: true,
-          'x-validator': [
-            {
-              triggerType: 'onBlur',
-              required: false,
-              message: (
-                <TextWidget>flowDesigner.flow.form.validator.value</TextWidget>
-              ),
+        properties: {
+          name: {
+            type: 'string',
+            title: (
+              <TextWidget token="flowDesigner.flow.form.comm.label"></TextWidget>
+            ),
+            required: true,
+            'x-decorator': 'FormItem',
+            'x-decorator-props': {
+              layout: 'vertical',
+              colon: false,
             },
-            //   {
-            //     triggerType: 'onBlur',
-            //     validator: (value: string) => {
-            //       if (!value) return null
-            //       const message = new RepeatErrorMessage(
-            //         flowGraph,
-            //         value,
-            //         assignmentData,
-            //         apiReg
-            //       )
-            //       return (
-            //         message.errorMessage && (
-            //           <TextWidget>{message.errorMessage}</TextWidget>
-            //         )
-            //       )
-            //     },
-            //   },
-          ],
-          'x-decorator': 'FormItem',
-          'x-decorator-props': {
-            layout: 'vertical',
-            colon: false,
+            'x-component': 'Input',
           },
-          'x-component': 'Input',
-          'x-component-props': {
-            disabled: true,
+          id: {
+            type: 'string',
+            title: <TextWidget>flowDesigner.flow.form.comm.value</TextWidget>,
+            required: true,
+            'x-disabled': !isNew,
+            'x-validator': [
+              {
+                triggerType: 'onBlur',
+                required: false,
+                message: (
+                  <TextWidget>
+                    flowDesigner.flow.form.validator.value
+                  </TextWidget>
+                ),
+              },
+              //   {
+              //     triggerType: 'onBlur',
+              //     validator: (value: string) => {
+              //       if (!value) return null
+              //       const message = new RepeatErrorMessage(
+              //         flowGraph,
+              //         value,
+              //         assignmentData,
+              //         apiReg
+              //       )
+              //       return (
+              //         message.errorMessage && (
+              //           <TextWidget>{message.errorMessage}</TextWidget>
+              //         )
+              //       )
+              //     },
+              //   },
+            ],
+            'x-decorator': 'FormItem',
+            'x-decorator-props': {
+              layout: 'vertical',
+              colon: false,
+            },
+            'x-component': 'Input',
           },
-        },
-        description: {
-          type: 'string',
-          title: (
-            <TextWidget token="flowDesigner.flow.form.comm.description"></TextWidget>
-          ),
-          'x-decorator': 'FormItem',
-          'x-component': 'Input.TextArea',
-          'x-decorator-props': {
-            layout: 'vertical',
-            colon: false,
-            gridSpan: 2,
-            feedbackLayout: 'terse',
+          description: {
+            type: 'string',
+            title: (
+              <TextWidget token="flowDesigner.flow.form.comm.description"></TextWidget>
+            ),
+            'x-decorator': 'FormItem',
+            'x-component': 'Input.TextArea',
+            'x-decorator-props': {
+              layout: 'vertical',
+              colon: false,
+              gridSpan: 2,
+              feedbackLayout: 'terse',
+            },
           },
-        },
-        desc: {
-          type: 'string',
-          title: '',
-          'x-decorator': 'FormItem',
-          'x-component': 'AssignmentDesc',
-          'x-decorator-props': {
-            gridSpan: 2,
-            feedbackLayout: 'terse',
+          desc: {
+            type: 'string',
+            title: '',
+            'x-decorator': 'FormItem',
+            'x-component': 'AssignmentDesc',
+            'x-decorator-props': {
+              gridSpan: 2,
+              feedbackLayout: 'terse',
+            },
           },
-        },
-        assignmentItems: {
-          type: 'array',
-          required: true,
-          title: '',
-          'x-decorator': 'FormItem',
-          'x-decorator-props': {
-            gridSpan: 2,
-          },
-          'x-component': 'ArrayItems',
-          items: {
-            type: 'object',
+          assignmentItems: {
+            type: 'array',
+            required: true,
+            title: '',
             'x-decorator': 'FormItem',
             'x-decorator-props': {
               gridSpan: 2,
-              fullness: true,
-              // feedbackLayout: 'terse',
             },
-            'x-component': 'ArrayItems.Item',
-            'x-component-props': {
-              style: {
-                border: 'none',
-                padding: 0,
+            'x-component': 'ArrayItems',
+            items: {
+              type: 'object',
+              'x-decorator': 'FormItem',
+              'x-decorator-props': {
+                gridSpan: 2,
+                fullness: true,
+                // feedbackLayout: 'terse',
+              },
+              'x-component': 'ArrayItems.Item',
+              'x-component-props': {
+                style: {
+                  border: 'none',
+                  padding: 0,
+                },
+              },
+              properties: {
+                grid: {
+                  type: 'void',
+                  'x-component': 'FormGrid',
+                  'x-component-props': {
+                    maxColumns: 17,
+                    minColumns: 17,
+                    style: {
+                      width: '100%',
+                    },
+                  },
+                  properties: {
+                    operation: {
+                      type: 'string',
+                      title: (
+                        <TextWidget>
+                          flowDesigner.flow.form.comm.operationTitle
+                        </TextWidget>
+                      ),
+                      required: true,
+                      'x-decorator': 'FormItem',
+                      'x-decorator-props': {
+                        layout: 'vertical',
+                        colon: false,
+                        gridSpan: 6,
+                        labelWidth: '100px',
+                      },
+                      'x-component': 'Input',
+                      'x-component-props': {
+                        suffix: "{{icon('SearchOutlined')}}",
+                        placeholder: takeMessage(
+                          'flowDesigner.flow.form.comm.operationPlace'
+                        ),
+                      },
+                    },
+                    type: {
+                      type: 'string',
+                      title: (
+                        <TextWidget>
+                          flowDesigner.flow.form.comm.typeTitle
+                        </TextWidget>
+                      ),
+                      required: true,
+                      enum: [
+                        {
+                          label: (
+                            <TextWidget>
+                              flowDesigner.flow.form.assignment.typeEquals
+                            </TextWidget>
+                          ),
+                          value: 'Equals',
+                        },
+                        {
+                          label: (
+                            <TextWidget>
+                              flowDesigner.flow.form.assignment.typeAdd
+                            </TextWidget>
+                          ),
+                          value: 'Add',
+                        },
+                      ],
+                      'x-decorator': 'FormItem',
+                      'x-decorator-props': {
+                        layout: 'vertical',
+                        colon: false,
+                        gridSpan: 4,
+                        labelWidth: '100px',
+                      },
+                      'x-component': 'Select',
+                      'x-component-props': {
+                        placeholder: takeMessage(
+                          'flowDesigner.flow.form.comm.typePlace'
+                        ),
+                      },
+                    },
+                    value: {
+                      type: 'string',
+                      title: (
+                        <TextWidget>
+                          flowDesigner.flow.form.comm.valueTitle
+                        </TextWidget>
+                      ),
+                      required: true,
+                      'x-decorator': 'FormItem',
+                      'x-decorator-props': {
+                        layout: 'vertical',
+                        colon: false,
+                        gridSpan: 6,
+                        labelWidth: '100px',
+                      },
+                      'x-component': 'Input',
+                      'x-component-props': {
+                        suffix: "{{icon('SearchOutlined')}}",
+                        placeholder: takeMessage(
+                          'flowDesigner.flow.form.comm.valuePlace'
+                        ),
+                      },
+                    },
+                    remove: {
+                      type: 'void',
+                      'x-decorator': 'FormItem',
+                      'x-decorator-props': {
+                        style: {
+                          alignItems: 'center',
+                          marginTop: '22px',
+                        },
+                        gridSpan: 1,
+                      },
+                      'x-component': 'ArrayItems.Remove',
+                    },
+                  },
+                },
               },
             },
             properties: {
-              grid: {
+              addition: {
                 type: 'void',
-                'x-component': 'FormGrid',
+                title: 'Add Assignment',
+                'x-component': 'ArrayItems.Addition',
                 'x-component-props': {
-                  maxColumns: 17,
-                  minColumns: 17,
                   style: {
-                    width: '100%',
+                    width: '30%',
                   },
-                },
-                properties: {
-                  operation: {
-                    type: 'string',
-                    title: (
-                      <TextWidget>
-                        flowDesigner.flow.form.comm.operationTitle
-                      </TextWidget>
-                    ),
-                    required: true,
-                    'x-decorator': 'FormItem',
-                    'x-decorator-props': {
-                      layout: 'vertical',
-                      colon: false,
-                      gridSpan: 6,
-                      labelWidth: '100px',
-                    },
-                    'x-component': 'Input',
-                    'x-component-props': {
-                      suffix: "{{icon('SearchOutlined')}}",
-                      placeholder: takeMessage(
-                        'flowDesigner.flow.form.comm.operationPlace'
-                      ),
-                    },
-                  },
-                  type: {
-                    type: 'string',
-                    title: (
-                      <TextWidget>
-                        flowDesigner.flow.form.comm.typeTitle
-                      </TextWidget>
-                    ),
-                    required: true,
-                    enum: [
-                      {
-                        label: (
-                          <TextWidget>
-                            flowDesigner.flow.form.assignment.typeEquals
-                          </TextWidget>
-                        ),
-                        value: 'Equals',
-                      },
-                      {
-                        label: (
-                          <TextWidget>
-                            flowDesigner.flow.form.assignment.typeAdd
-                          </TextWidget>
-                        ),
-                        value: 'Add',
-                      },
-                    ],
-                    'x-decorator': 'FormItem',
-                    'x-decorator-props': {
-                      layout: 'vertical',
-                      colon: false,
-                      gridSpan: 4,
-                      labelWidth: '100px',
-                    },
-                    'x-component': 'Select',
-                    'x-component-props': {
-                      placeholder: takeMessage(
-                        'flowDesigner.flow.form.comm.typePlace'
-                      ),
-                    },
-                  },
-                  value: {
-                    type: 'string',
-                    title: (
-                      <TextWidget>
-                        flowDesigner.flow.form.comm.valueTitle
-                      </TextWidget>
-                    ),
-                    required: true,
-                    'x-decorator': 'FormItem',
-                    'x-decorator-props': {
-                      layout: 'vertical',
-                      colon: false,
-                      gridSpan: 6,
-                      labelWidth: '100px',
-                    },
-                    'x-component': 'Input',
-                    'x-component-props': {
-                      suffix: "{{icon('SearchOutlined')}}",
-                      placeholder: takeMessage(
-                        'flowDesigner.flow.form.comm.valuePlace'
-                      ),
-                    },
-                  },
-                  remove: {
-                    type: 'void',
-                    'x-decorator': 'FormItem',
-                    'x-decorator-props': {
-                      style: {
-                        alignItems: 'center',
-                        marginTop: '22px',
-                      },
-                      gridSpan: 1,
-                    },
-                    'x-component': 'ArrayItems.Remove',
-                  },
-                },
-              },
-            },
-          },
-          properties: {
-            addition: {
-              type: 'void',
-              title: 'Add Assignment',
-              'x-component': 'ArrayItems.Addition',
-              'x-component-props': {
-                style: {
-                  width: '30%',
                 },
               },
             },
@@ -290,10 +292,7 @@ const assignPanelSchema = {
         },
       },
     },
-  },
-}
-
-const assignRender = (isNew: boolean) => {
+  }
   const getToken = isNew
     ? 'flowDesigner.flow.form.assignment.addTitle'
     : 'flowDesigner.flow.form.assignment.editTitle'

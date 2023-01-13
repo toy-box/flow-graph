@@ -309,8 +309,8 @@ export class FreeFlow {
     this.flowMeta = flowMeta
     this.flowType = flowType
     // this.layoutMode = layoutMode
-    this.onInit()
     this.onInitResource()
+    this.onInit()
   }
 
   onInit() {
