@@ -1,5 +1,5 @@
 import { uid } from '@toy-box/toybox-shared'
-import { onPanelEdit } from './index'
+import { onPanelEdit } from './FlowComm'
 
 export const addFreeLayoutNode = (
   x: number,

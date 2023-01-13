@@ -216,18 +216,18 @@ const waitPanelSchema = {
   },
 }
 
-const assignRender = () => {
-  return FormDialog(
-    { title: `AssignMent Node Properites`, width: '60vw' },
-    () => {
-      return (
-        <FormLayout labelCol={6} wrapperCol={10}>
-          <SchemaField schema={assignPanelSchema} />
-        </FormLayout>
-      )
-    }
-  )
-}
+// const assignRender = () => {
+//   return FormDialog(
+//     { title: `AssignMent Node Properites`, width: '60vw' },
+//     () => {
+//       return (
+//         <FormLayout labelCol={6} wrapperCol={10}>
+//           <SchemaField schema={assignPanelSchema} />
+//         </FormLayout>
+//       )
+//     }
+//   )
+// }
 
 const waitRender = () => {
   return FormDialog({ title: `Pause Node Properites`, width: '90vw' }, () => {
