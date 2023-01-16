@@ -87,6 +87,17 @@ const decidePanelSchema = {
             <TextWidget token="flowDesigner.flow.form.comm.label"></TextWidget>
           ),
           required: true,
+          'x-validator': [
+            {
+              triggerType: 'onBlur',
+              required: false,
+              message: (
+                <TextWidget>
+                  flowDesigner.flow.form.validator.required
+                </TextWidget>
+              ),
+            },
+          ],
           'x-decorator': 'FormItem',
           'x-decorator-props': {
             layout: 'vertical',
@@ -103,7 +114,9 @@ const decidePanelSchema = {
               triggerType: 'onBlur',
               // required: true,
               message: (
-                <TextWidget>flowDesigner.flow.form.validator.value</TextWidget>
+                <TextWidget>
+                  flowDesigner.flow.form.validator.required
+                </TextWidget>
               ),
             },
           ],
@@ -174,6 +187,17 @@ const decidePanelSchema = {
                       <TextWidget token="flowDesigner.flow.form.decision.ruleLabel"></TextWidget>
                     ),
                     required: true,
+                    'x-validator': [
+                      {
+                        triggerType: 'onBlur',
+                        required: false,
+                        message: (
+                          <TextWidget>
+                            flowDesigner.flow.form.validator.required
+                          </TextWidget>
+                        ),
+                      },
+                    ],
                     'x-component': 'Input',
                   },
                   id: {
@@ -187,6 +211,17 @@ const decidePanelSchema = {
                       <TextWidget token="flowDesigner.flow.form.decision.ruleId"></TextWidget>
                     ),
                     required: true,
+                    'x-validator': [
+                      {
+                        triggerType: 'onBlur',
+                        required: false,
+                        message: (
+                          <TextWidget>
+                            flowDesigner.flow.form.validator.required
+                          </TextWidget>
+                        ),
+                      },
+                    ],
                     'x-component': 'Input',
                   },
                 },
@@ -200,6 +235,17 @@ const decidePanelSchema = {
                       <TextWidget token="flowDesigner.flow.form.decision.logicTitle"></TextWidget>
                     ),
                     required: true,
+                    'x-validator': [
+                      {
+                        triggerType: 'onBlur',
+                        required: false,
+                        message: (
+                          <TextWidget>
+                            flowDesigner.flow.form.validator.required
+                          </TextWidget>
+                        ),
+                      },
+                    ],
                     enum: [
                       {
                         label: (
@@ -242,6 +288,17 @@ const decidePanelSchema = {
                   conditions: {
                     type: 'array',
                     required: true,
+                    'x-validator': [
+                      {
+                        triggerType: 'onBlur',
+                        required: false,
+                        message: (
+                          <TextWidget>
+                            flowDesigner.flow.form.validator.required
+                          </TextWidget>
+                        ),
+                      },
+                    ],
                     title: '',
                     'x-decorator': 'FormItem',
                     'x-component': 'ArrayItems',
@@ -291,6 +348,17 @@ const decidePanelSchema = {
                                 </TextWidget>
                               ),
                               required: true,
+                              'x-validator': [
+                                {
+                                  triggerType: 'onBlur',
+                                  required: false,
+                                  message: (
+                                    <TextWidget>
+                                      flowDesigner.flow.form.validator.required
+                                    </TextWidget>
+                                  ),
+                                },
+                              ],
                               'x-decorator': 'FormItem',
                               'x-decorator-props': {
                                 layout: 'vertical',
@@ -314,6 +382,17 @@ const decidePanelSchema = {
                                 </TextWidget>
                               ),
                               required: true,
+                              'x-validator': [
+                                {
+                                  triggerType: 'onBlur',
+                                  required: false,
+                                  message: (
+                                    <TextWidget>
+                                      flowDesigner.flow.form.validator.required
+                                    </TextWidget>
+                                  ),
+                                },
+                              ],
                               'x-decorator': 'FormItem',
                               'x-decorator-props': {
                                 layout: 'vertical',
@@ -336,6 +415,17 @@ const decidePanelSchema = {
                                 </TextWidget>
                               ),
                               required: true,
+                              'x-validator': [
+                                {
+                                  triggerType: 'onBlur',
+                                  required: false,
+                                  message: (
+                                    <TextWidget>
+                                      flowDesigner.flow.form.validator.required
+                                    </TextWidget>
+                                  ),
+                                },
+                              ],
                               'x-decorator': 'FormItem',
                               'x-decorator-props': {
                                 layout: 'vertical',

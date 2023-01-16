@@ -49,6 +49,7 @@ const zhCN = {
             apiLength: 'API名称长度不能超过32位',
             resourceRegRuleMessage: 'API名称仅可以包含下划线和字母数字字符',
             repeatName: 'API名称重复',
+            required: '该字段是必填字段',
           },
           assignment: {
             addTitle: '新建分配',
@@ -161,6 +162,7 @@ const enUS = {
             resourceRegRuleMessage:
               'API name can only contain underscore and alphanumeric characters',
             repeatName: 'API name repeat',
+            required: 'This field is required',
           },
           assignment: {
             addTitle: 'New Assignment',

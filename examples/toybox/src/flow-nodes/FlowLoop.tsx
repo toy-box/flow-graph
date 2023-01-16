@@ -69,6 +69,17 @@ const loopPanelSchema = {
             <TextWidget token="flowDesigner.flow.form.comm.label"></TextWidget>
           ),
           required: true,
+          'x-validator': [
+            {
+              triggerType: 'onBlur',
+              required: false,
+              message: (
+                <TextWidget>
+                  flowDesigner.flow.form.validator.required
+                </TextWidget>
+              ),
+            },
+          ],
           'x-decorator': 'FormItem',
           'x-decorator-props': {
             layout: 'vertical',
@@ -138,6 +149,15 @@ const loopPanelSchema = {
         <TextWidget token="flowDesigner.flow.form.loop.collectionReference" />
       ),
       required: true,
+      'x-validator': [
+        {
+          triggerType: 'onBlur',
+          required: false,
+          message: (
+            <TextWidget>flowDesigner.flow.form.validator.required</TextWidget>
+          ),
+        },
+      ],
       'x-decorator': 'FormItem',
       'x-decorator-props': {
         layout: 'vertical',
@@ -193,6 +213,15 @@ const loopPanelSchema = {
         feedbackLayout: 'terse',
       },
       required: true,
+      'x-validator': [
+        {
+          triggerType: 'onBlur',
+          required: false,
+          message: (
+            <TextWidget>flowDesigner.flow.form.validator.required</TextWidget>
+          ),
+        },
+      ],
       'x-component': 'Radio.Group',
       'x-component-props': {
         layout: 'vertical',
