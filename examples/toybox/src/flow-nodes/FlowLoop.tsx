@@ -44,212 +44,216 @@ const SchemaField = createSchemaField({
   },
 })
 
-const loopPanelSchema = {
-  type: 'object',
-  properties: {
-    loopDescrip: {
-      type: 'string',
-      title: '',
-      'x-decorator': 'FormItem',
-      'x-component': 'LoopDescrip',
-      'x-decorator-props': {
-        feedbackLayout: 'terse',
-      },
-    },
-    grid: {
-      type: 'void',
-      'x-component': 'FormGrid',
-      'x-component-props': {
-        maxColumns: 2,
-      },
-      properties: {
-        name: {
-          type: 'string',
-          title: (
-            <TextWidget token="flowDesigner.flow.form.comm.label"></TextWidget>
-          ),
-          required: true,
-          'x-validator': [
-            {
-              triggerType: 'onBlur',
-              required: false,
-              message: (
-                <TextWidget>
-                  flowDesigner.flow.form.validator.required
-                </TextWidget>
-              ),
-            },
-          ],
-          'x-decorator': 'FormItem',
-          'x-decorator-props': {
-            layout: 'vertical',
-            colon: false,
-          },
-          'x-component': 'Input',
-        },
-        id: {
-          type: 'string',
-          title: <TextWidget>flowDesigner.flow.form.comm.value</TextWidget>,
-          required: false,
-          'x-validator': [
-            {
-              triggerType: 'onBlur',
-              // required: true,
-              message: (
-                <TextWidget>flowDesigner.flow.form.validator.value</TextWidget>
-              ),
-            },
-          ],
-          'x-decorator': 'FormItem',
-          'x-decorator-props': {
-            layout: 'vertical',
-            colon: false,
-          },
-          'x-component': 'Input',
-          'x-component-props': {
-            disabled: true,
-          },
-        },
-        description: {
-          type: 'string',
-          title: (
-            <TextWidget token="flowDesigner.flow.form.comm.description"></TextWidget>
-          ),
-          'x-decorator': 'FormItem',
-          'x-component': 'Input.TextArea',
-          'x-decorator-props': {
-            layout: 'vertical',
-            colon: false,
-            gridSpan: 2,
-            feedbackLayout: 'terse',
-          },
-        },
-      },
-    },
-    titleCollection: {
-      type: 'void',
-      'x-decorator': 'FormItem',
-      'x-decorator-props': {
-        feedbackLayout: 'terse',
-      },
-      'x-component': () => {
-        return (
-          <>
-            <Divider className="margin-0" />
-            <div className="connectDialog-title marginTB-5">
-              <TextWidget token="flowDesigner.flow.form.loop.titleCollection" />
-            </div>
-          </>
-        )
-      },
-    },
-    collectionReference: {
-      type: 'string',
-      title: (
-        <TextWidget token="flowDesigner.flow.form.loop.collectionReference" />
-      ),
-      required: true,
-      'x-validator': [
-        {
-          triggerType: 'onBlur',
-          required: false,
-          message: (
-            <TextWidget>flowDesigner.flow.form.validator.required</TextWidget>
-          ),
-        },
-      ],
-      'x-decorator': 'FormItem',
-      'x-decorator-props': {
-        layout: 'vertical',
-        colon: false,
-        wrapperWidth: 350,
-        feedbackLayout: 'terse',
-      },
-      'x-component': 'Input',
-      'x-component-props': {
-        suffix: "{{icon('SearchOutlined')}}",
-        placeholder: takeMessage('flowDesigner.flow.form.comm.collectionPlace'),
-      },
-    },
-    titleDirection: {
-      type: 'void',
-      'x-decorator': 'FormItem',
-      'x-decorator-props': {
-        feedbackLayout: 'terse',
-      },
-      'x-component': () => {
-        return (
-          <>
-            <Divider className="margin-0" />
-            <div className="connectDialog-title marginTB-5">
-              <TextWidget token="flowDesigner.flow.form.loop.titleDirection" />
-            </div>
-          </>
-        )
-      },
-    },
-    iterationOrder: {
-      type: 'number',
-      title: 'Direction',
-      enum: [
-        {
-          label: (
-            <TextWidget token="flowDesigner.flow.form.loop.iterationPositive" />
-          ),
-          value: 1,
-        },
-        {
-          label: (
-            <TextWidget token="flowDesigner.flow.form.loop.iterationReverse" />
-          ),
-          value: 2,
-        },
-      ],
-      'x-decorator': 'FormItem',
-      'x-decorator-props': {
-        layout: 'vertical',
-        colon: false,
-        // wrapperWidth: 350,
-        feedbackLayout: 'terse',
-      },
-      required: true,
-      'x-validator': [
-        {
-          triggerType: 'onBlur',
-          required: false,
-          message: (
-            <TextWidget>flowDesigner.flow.form.validator.required</TextWidget>
-          ),
-        },
-      ],
-      'x-component': 'Radio.Group',
-      'x-component-props': {
-        layout: 'vertical',
-      },
-    },
-    // titleLoop: {
-    //   type: 'void',
-    //   'x-decorator': 'FormItem',
-    //   'x-component': () => {
-    //     return (
-    //       <>
-    //         <Divider />
-    //         <TextWidget token="flowDesigner.flow.form.loop.titleLoop" />
-    //       </>
-    //     )
-    //   },
-    // },
-    // loopVariable: {
-    //   type: 'string',
-    //   title: <TextWidget token="flowDesigner.flow.form.loop.loopVariable" />,
-    //   required: true,
-    //   'x-decorator': 'FormItem',
-    //   'x-component': 'Input',
-    // },
-  },
-}
-
 const loopRender = (isNew: boolean) => {
+  const loopPanelSchema = {
+    type: 'object',
+    properties: {
+      loopDescrip: {
+        type: 'string',
+        title: '',
+        'x-decorator': 'FormItem',
+        'x-component': 'LoopDescrip',
+        'x-decorator-props': {
+          feedbackLayout: 'terse',
+        },
+      },
+      grid: {
+        type: 'void',
+        'x-component': 'FormGrid',
+        'x-component-props': {
+          maxColumns: 2,
+        },
+        properties: {
+          name: {
+            type: 'string',
+            title: (
+              <TextWidget token="flowDesigner.flow.form.comm.label"></TextWidget>
+            ),
+            required: true,
+            'x-validator': [
+              {
+                triggerType: 'onBlur',
+                required: false,
+                message: (
+                  <TextWidget>
+                    flowDesigner.flow.form.validator.required
+                  </TextWidget>
+                ),
+              },
+            ],
+            'x-decorator': 'FormItem',
+            'x-decorator-props': {
+              layout: 'vertical',
+              colon: false,
+            },
+            'x-component': 'Input',
+          },
+          id: {
+            type: 'string',
+            title: <TextWidget>flowDesigner.flow.form.comm.value</TextWidget>,
+            required: false,
+            'x-disabled': !isNew,
+            'x-validator': [
+              {
+                triggerType: 'onBlur',
+                required: false,
+                message: (
+                  <TextWidget>
+                    flowDesigner.flow.form.validator.value
+                  </TextWidget>
+                ),
+              },
+            ],
+            'x-decorator': 'FormItem',
+            'x-decorator-props': {
+              layout: 'vertical',
+              colon: false,
+            },
+            'x-component': 'Input',
+            'x-component-props': {
+              disabled: true,
+            },
+          },
+          description: {
+            type: 'string',
+            title: (
+              <TextWidget token="flowDesigner.flow.form.comm.description"></TextWidget>
+            ),
+            'x-decorator': 'FormItem',
+            'x-component': 'Input.TextArea',
+            'x-decorator-props': {
+              layout: 'vertical',
+              colon: false,
+              gridSpan: 2,
+              feedbackLayout: 'terse',
+            },
+          },
+        },
+      },
+      titleCollection: {
+        type: 'void',
+        'x-decorator': 'FormItem',
+        'x-decorator-props': {
+          feedbackLayout: 'terse',
+        },
+        'x-component': () => {
+          return (
+            <>
+              <Divider className="margin-0" />
+              <div className="connectDialog-title marginTB-5">
+                <TextWidget token="flowDesigner.flow.form.loop.titleCollection" />
+              </div>
+            </>
+          )
+        },
+      },
+      collectionReference: {
+        type: 'string',
+        title: (
+          <TextWidget token="flowDesigner.flow.form.loop.collectionReference" />
+        ),
+        required: true,
+        'x-validator': [
+          {
+            triggerType: 'onBlur',
+            required: false,
+            message: (
+              <TextWidget>flowDesigner.flow.form.validator.required</TextWidget>
+            ),
+          },
+        ],
+        'x-decorator': 'FormItem',
+        'x-decorator-props': {
+          layout: 'vertical',
+          colon: false,
+          wrapperWidth: 350,
+          feedbackLayout: 'terse',
+        },
+        'x-component': 'Input',
+        'x-component-props': {
+          suffix: "{{icon('SearchOutlined')}}",
+          placeholder: takeMessage(
+            'flowDesigner.flow.form.comm.collectionPlace'
+          ),
+        },
+      },
+      titleDirection: {
+        type: 'void',
+        'x-decorator': 'FormItem',
+        'x-decorator-props': {
+          feedbackLayout: 'terse',
+        },
+        'x-component': () => {
+          return (
+            <>
+              <Divider className="margin-0" />
+              <div className="connectDialog-title marginTB-5">
+                <TextWidget token="flowDesigner.flow.form.loop.titleDirection" />
+              </div>
+            </>
+          )
+        },
+      },
+      iterationOrder: {
+        type: 'number',
+        title: 'Direction',
+        enum: [
+          {
+            label: (
+              <TextWidget token="flowDesigner.flow.form.loop.iterationPositive" />
+            ),
+            value: 1,
+          },
+          {
+            label: (
+              <TextWidget token="flowDesigner.flow.form.loop.iterationReverse" />
+            ),
+            value: 2,
+          },
+        ],
+        'x-decorator': 'FormItem',
+        'x-decorator-props': {
+          layout: 'vertical',
+          colon: false,
+          // wrapperWidth: 350,
+          feedbackLayout: 'terse',
+        },
+        required: true,
+        'x-validator': [
+          {
+            triggerType: 'onBlur',
+            required: false,
+            message: (
+              <TextWidget>flowDesigner.flow.form.validator.required</TextWidget>
+            ),
+          },
+        ],
+        'x-component': 'Radio.Group',
+        'x-component-props': {
+          layout: 'vertical',
+        },
+      },
+      // titleLoop: {
+      //   type: 'void',
+      //   'x-decorator': 'FormItem',
+      //   'x-component': () => {
+      //     return (
+      //       <>
+      //         <Divider />
+      //         <TextWidget token="flowDesigner.flow.form.loop.titleLoop" />
+      //       </>
+      //     )
+      //   },
+      // },
+      // loopVariable: {
+      //   type: 'string',
+      //   title: <TextWidget token="flowDesigner.flow.form.loop.loopVariable" />,
+      //   required: true,
+      //   'x-decorator': 'FormItem',
+      //   'x-component': 'Input',
+      // },
+    },
+  }
   const getToken = isNew
     ? 'flowDesigner.flow.form.loop.addTitle'
     : 'flowDesigner.flow.form.loop.editTitle'
