@@ -19,7 +19,6 @@ export const ResourceItemWidget: React.FC<IResourceItemWidgetProps> = observer(
   (props) => {
     const prefix = usePrefix('resource-item')
     const [expand, setExpand] = useState(props.defaultExpand)
-    debugger
     return (
       <div
         className={cls(prefix, props.className, {
