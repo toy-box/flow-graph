@@ -329,7 +329,6 @@ export class FreeFlow {
     const resourcePrarms = this.parseResource(this.flowMeta.resources)
     resourcePrarms.forEach((resource) => {
       const currentResource = new FlowVariable(resource)
-      this.flowResourceMap[currentResource.key] = currentResource
       if (resource.webType === FlowResourceType.VARIABLE) {
         if (resource?.type === MetaValueType.ARRAY) {
           if (
@@ -364,8 +363,17 @@ export class FreeFlow {
   }
 
   setResourceChildren(type: FlowResourceType, resource: FlowVariable) {
+    this.flowResourceMap[resource.key] = resource
     const idx = this.metaResourceDatas.findIndex((meta) => meta.type === type)
     if (idx > -1) this.metaResourceDatas[idx].children.push(resource)
+  }
+
+  createResource(type: FlowResourceType, resource: IFieldMetaResource) {
+    const currentResource = new FlowVariable(resource)
+    this.flowResourceMap[resource.key] = currentResource
+    const idx = this.metaResourceDatas.findIndex((meta) => meta.type === type)
+    debugger
+    if (idx > -1) this.metaResourceDatas[idx].children.push(currentResource)
   }
 
   parseResource(resources: IFlowMetaResource) {

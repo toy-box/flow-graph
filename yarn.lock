@@ -7,6 +7,33 @@
   "resolved" "https://registry.npmjs.org/@adobe/css-tools/-/css-tools-4.0.1.tgz"
   "version" "4.0.1"
 
+"@ahooksjs/antd-table@^0.2.14":
+  "integrity" "sha512-NY1OOV/0rufxOoSMzTJ7BEiz3OGYn4pWSeqgib1r0QJ31NKfG+Q4a9Nc4hJbuLMqt+e/Lpmsv8YlH29We3Uziw=="
+  "resolved" "https://registry.npmjs.org/@ahooksjs/antd-table/-/antd-table-0.2.14.tgz"
+  "version" "0.2.14"
+  dependencies:
+    "@ahooksjs/use-table" "^0.2.14"
+
+"@ahooksjs/use-query-display@^0.2.14":
+  "integrity" "sha512-1t0XQrJCRlvhHtVJ2ddDIL7t5t9Rt58qMkZdvXWkaYqy1e5OP3FoAIu3iBn4vv1Q82ibgIDTWt4TLllcpHfnFg=="
+  "resolved" "https://registry.npmjs.org/@ahooksjs/use-query-display/-/use-query-display-0.2.14.tgz"
+  "version" "0.2.14"
+
+"@ahooksjs/use-request@^2.8.13":
+  "integrity" "sha512-xhVaM4fyIiAMdVFuuU5i3CFUdFa/IblF+fvITVMFaUEO3w/V5tVCAF6WIA3T03n1/RPuzRkA7Ao1PFtSGtGelw=="
+  "resolved" "https://registry.npmjs.org/@ahooksjs/use-request/-/use-request-2.8.15.tgz"
+  "version" "2.8.15"
+  dependencies:
+    "lodash.debounce" "^4.0.8"
+    "lodash.throttle" "^4.1.1"
+
+"@ahooksjs/use-table@^0.2.14":
+  "integrity" "sha512-JNJ5YcInUclZzvRQex2FQoXBKsRYp5DD3nlqnBM7TaQYVvKTt5bdInRJ0Nk/pL81RjHl7EJn6MxOuEGqiIdVSA=="
+  "resolved" "https://registry.npmjs.org/@ahooksjs/use-table/-/use-table-0.2.14.tgz"
+  "version" "0.2.14"
+  dependencies:
+    "@ahooksjs/use-query-display" "^0.2.14"
+
 "@airclass/icons-svg@^4.1.2":
   "integrity" "sha512-N5CHjK3W3/8omIv+lGFxhZmd5LcMVPUlKX8jRtwfc7+CqfNqGtRElhWQ0hCALjQzsHFooSKAqiZAM3b2iIq3kw=="
   "resolved" "https://registry.npmjs.org/@airclass/icons-svg/-/icons-svg-4.1.2.tgz"
@@ -2509,6 +2536,11 @@
     "classcat" "^5.0.3"
     "zustand" "^4.1.1"
 
+"@remix-run/router@1.2.1":
+  "integrity" "sha512-XiY0IsyHR+DXYS5vBxpoBe/8veTeoRpMHP+vDosLZxL5bnpetzI0igkxkLZS235ldLzyfkxF+2divEwWHP3vMQ=="
+  "resolved" "https://registry.npmjs.org/@remix-run/router/-/router-1.2.1.tgz"
+  "version" "1.2.1"
+
 "@rollup/plugin-commonjs@^17.0.0":
   "integrity" "sha512-PoMdXCw0ZyvjpCMT5aV4nkL0QywxP29sODQsSGeDpr/oI49Qq9tRtAsb/LbYbDzFlOydVEqHmmZWFtXJEAX9ew=="
   "resolved" "https://registry.npmjs.org/@rollup/plugin-commonjs/-/plugin-commonjs-17.1.0.tgz"
@@ -2663,6 +2695,7 @@
     "@toy-box/studio-base" "^1.0.3-alpha.23"
     "@toy-box/toybox-ui" "^3.0.21"
     "ahooks" "^3.7.4"
+    "classnames" "^2.3.2"
     "reactflow" "^11.1.1"
 
 "@toy-box/flow-graph@^2.0.0", "@toy-box/flow-graph@2.0.0", "@toy-box/flow-graph@file:D:\\hrm\\flow-graph\\packages\\flow-graph":
@@ -2681,10 +2714,32 @@
     "@types/lodash.uniq" "^4.5.7"
     "lodash.uniq" "^4.5.0"
 
-"@toy-box/meta-schema@^3.0.20":
-  "integrity" "sha512-m8i0XyqSRN3bv3K8LRTTa4DJukhAVMzhpP3WSx9UY2tAcMzFm0nH9GMoXoCsW4JxXntEzL/kAopZLm/wgEQGTw=="
-  "resolved" "https://registry.npmjs.org/@toy-box/meta-schema/-/meta-schema-3.0.20.tgz"
-  "version" "3.0.20"
+"@toy-box/meta-components@^3.0.21":
+  "integrity" "sha512-IkjwqxTdztBEjVz3UYZRsekIw1JkLVEPXj0USN6KjMpYc3ly8zj6pEhfMw++EOtp4oImJTFRohDauN7DezC6Ng=="
+  "resolved" "https://registry.npmjs.org/@toy-box/meta-components/-/meta-components-3.0.21.tgz"
+  "version" "3.0.21"
+  dependencies:
+    "@ahooksjs/antd-table" "^0.2.14"
+    "@ahooksjs/use-request" "^2.8.13"
+    "@airclass/icons" "^4.3.4"
+    "@toy-box/meta-schema" "3.0.21"
+    "@toy-box/toybox-shared" "3.0.21"
+    "@toy-box/toybox-ui" "3.0.21"
+    "ahooks" "^3.5.2"
+    "classnames" "^2.3.1"
+    "hoist-non-react-statics" "^3.3.1"
+    "immutability-helper" "^3.1.1"
+    "lodash.debounce" "^4.0.8"
+    "lodash.get" "^4.4.2"
+    "lodash.intersection" "^4.4.0"
+    "qs" "^6.10.1"
+    "react-resizable" "^3.0.4"
+    "react-router-dom" "^6.3.0"
+
+"@toy-box/meta-schema@^3.0.20", "@toy-box/meta-schema@3.0.21":
+  "integrity" "sha512-mn5JRliDlxjNTP1/Gfll6HSQLGzMMj2NWE/SHYIpkQcMvwYxTOyK8WZjwOufMpPFiJWbt8e2SHOFU+OacNHvPQ=="
+  "resolved" "https://registry.npmjs.org/@toy-box/meta-schema/-/meta-schema-3.0.21.tgz"
+  "version" "3.0.21"
 
 "@toy-box/studio-base@^1.0.3-alpha.23":
   "integrity" "sha512-mQolpBgDKDnA0jBaypsjIAJzSmD43vY0gYlXrAWW0sZDGFZF2YosRvCAXWyXybhYMtZUVj7GfPQ6jpFyC6DW0A=="
@@ -2701,7 +2756,7 @@
   "resolved" "https://registry.npmjs.org/@toy-box/toybox-shared/-/toybox-shared-3.0.21.tgz"
   "version" "3.0.21"
 
-"@toy-box/toybox-ui@^3.0.21":
+"@toy-box/toybox-ui@^3.0.21", "@toy-box/toybox-ui@3.0.21":
   "integrity" "sha512-GT4o33klkFtYGYjCiPtkAsKLfwkg7yJ9903m/XGqCoG94ckRMZkAGKkQlkXI+47iTsQ1+D/bBZJK3im4CvgJwA=="
   "resolved" "https://registry.npmjs.org/@toy-box/toybox-ui/-/toybox-ui-3.0.21.tgz"
   "version" "3.0.21"
@@ -3929,7 +3984,7 @@
   "resolved" "https://registry.npmjs.org/ahooks-v3-count/-/ahooks-v3-count-1.0.0.tgz"
   "version" "1.0.0"
 
-"ahooks@^3.7.4":
+"ahooks@^3.5.2", "ahooks@^3.7.4":
   "integrity" "sha512-hvgdqzPUKXn95mK3cGlDCi/ZZqv+FRibCUCFT8zW3hCwLGvixVfnHrIW2/2lgzPdLo8mLjp/XOdIJvcPvE2lgQ=="
   "resolved" "https://registry.npmjs.org/ahooks/-/ahooks-3.7.4.tgz"
   "version" "3.7.4"
@@ -9302,7 +9357,7 @@
     "minimalistic-assert" "^1.0.0"
     "minimalistic-crypto-utils" "^1.0.1"
 
-"hoist-non-react-statics@^3.0.0", "hoist-non-react-statics@^3.1.0", "hoist-non-react-statics@^3.3.0", "hoist-non-react-statics@^3.3.2":
+"hoist-non-react-statics@^3.0.0", "hoist-non-react-statics@^3.1.0", "hoist-non-react-statics@^3.3.0", "hoist-non-react-statics@^3.3.1", "hoist-non-react-statics@^3.3.2":
   "integrity" "sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw=="
   "resolved" "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz"
   "version" "3.3.2"
@@ -11798,6 +11853,11 @@
   "integrity" "sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow=="
   "resolved" "https://registry.npmjs.org/lodash.debounce/-/lodash.debounce-4.0.8.tgz"
   "version" "4.0.8"
+
+"lodash.get@^4.4.2":
+  "integrity" "sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ=="
+  "resolved" "https://registry.npmjs.org/lodash.get/-/lodash.get-4.4.2.tgz"
+  "version" "4.4.2"
 
 "lodash.intersection@^4.4.0":
   "integrity" "sha512-N+L0cCfnqMv6mxXtSPeKt+IavbOBBSiAEkKyLasZ8BVcP9YXQgxLO12oPR8OyURwKV8l5vJKiE1M8aS70heuMg=="
@@ -15287,7 +15347,7 @@
   "resolved" "https://registry.npmjs.org/q/-/q-1.5.1.tgz"
   "version" "1.5.1"
 
-"qs@^6.9.4", "qs@6.11.0":
+"qs@^6.10.1", "qs@^6.9.4", "qs@6.11.0":
   "integrity" "sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q=="
   "resolved" "https://registry.npmjs.org/qs/-/qs-6.11.0.tgz"
   "version" "6.11.0"
@@ -15954,6 +16014,14 @@
   dependencies:
     "@babel/runtime" "^7.1.2"
 
+"react-router-dom@^6.3.0":
+  "integrity" "sha512-6SCDXxRQqW5af8ImOqKza7icmQ47/EMbz572uFjzvcArg3lZ+04PxSPp8qGs+p2Y+q+b+S/AjXv8m8dyLndIIA=="
+  "resolved" "https://registry.npmjs.org/react-router-dom/-/react-router-dom-6.6.2.tgz"
+  "version" "6.6.2"
+  dependencies:
+    "@remix-run/router" "1.2.1"
+    "react-router" "6.6.2"
+
 "react-router-dom@5.2.0":
   "integrity" "sha512-gxAmfylo2QUjcwxI63RhQ5G85Qqt4voZpUXSEqCwykV0baaOTQDR1f0PmY8AELqIyVc0NEZUj0Gov5lNGcXgsA=="
   "resolved" "https://registry.npmjs.org/react-router-dom/-/react-router-dom-5.2.0.tgz"
@@ -15982,6 +16050,13 @@
     "react-is" "^16.6.0"
     "tiny-invariant" "^1.0.2"
     "tiny-warning" "^1.0.0"
+
+"react-router@6.6.2":
+  "integrity" "sha512-uJPG55Pek3orClbURDvfljhqFvMgJRo59Pktywkk8hUUkTY2aRfza8Yhl/vZQXs+TNQyr6tu+uqz/fLxPICOGQ=="
+  "resolved" "https://registry.npmjs.org/react-router/-/react-router-6.6.2.tgz"
+  "version" "6.6.2"
+  dependencies:
+    "@remix-run/router" "1.2.1"
 
 "react-sortable-hoc@^1.11.0":
   "integrity" "sha512-v1CDCvdfoR3zLGNp6qsBa4J1BWMEVH25+UKxF/RvQRh+mrB+emqtVHMgZ+WreUiKJoEaiwYoScaueIKhMVBHUg=="

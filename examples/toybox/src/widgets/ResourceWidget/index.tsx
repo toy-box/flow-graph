@@ -1,99 +1,43 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { isFn } from '@designable/shared'
+import { Button } from 'antd'
 import { observer } from '@formily/reactive-react'
-import { IconWidget, TextWidget, usePrefix } from '@toy-box/studio-base'
+import { TextWidget, usePrefix } from '@toy-box/studio-base'
+import { FreeFlow, IResourceParam } from '@toy-box/autoflow-core'
 import cls from 'classnames'
-import { ItemMapType } from '../../data/itemMap'
 import './styles.less'
-
-export type SourceMapper = (resource: ItemMapType) => React.ReactChild
-
+import { ResourceItemWidget } from './ResourceItem'
+import { resourceEdit } from '../../flow-nodes'
 export interface IResourceWidgetProps {
   title: React.ReactNode
-  sources?: ItemMapType[]
+  sources?: IResourceParam[]
   className?: string
-  defaultExpand?: boolean
-  children?: SourceMapper | React.ReactElement
-}
-
-const dragStart = (key, e) => {
-  e.dataTransfer.setData('text/plain', key)
+  metaFlow: FreeFlow
+  // children?: SourceMapper | React.ReactElement
 }
 
 export const ResourceWidget: React.FC<IResourceWidgetProps> = observer(
   (props) => {
     const prefix = usePrefix('resource')
-    const [expand, setExpand] = useState(props.defaultExpand)
-    const renderNode = (source: ItemMapType) => {
-      const { icon, title, span, id, thumb } = source
-      return (
-        <div
-          className={prefix + '-item'}
-          style={{ gridColumnStart: `span ${span || 1}` }}
-          key={id}
-          draggable
-          data-designer-source-id={id}
-          onDragStart={(e) => dragStart(id, e)}
-        >
-          {thumb && <img className={prefix + '-item-thumb'} src={thumb} />}
-          {icon && React.isValidElement(icon) ? (
-            <>{icon}</>
-          ) : (
-            <IconWidget
-              className={prefix + '-item-icon'}
-              infer={icon}
-              style={{ width: 150, height: 40 }}
-            />
-          )}
-          <span className={prefix + '-item-text'}>
-            {<TextWidget>{title}</TextWidget>}
-          </span>
-        </div>
-      )
-    }
-    const remainItems =
-      props.sources.reduce((length, source) => {
-        return length + (source.span ?? 1)
-      }, 0) % 3
+    const { sources } = props
+
+    const createResource = useCallback(() => {
+      resourceEdit(props.metaFlow, false)
+    }, [])
     return (
-      <div
-        className={cls(prefix, props.className, {
-          expand,
-        })}
-      >
-        <div
-          className={prefix + '-header'}
-          onClick={(e) => {
-            e.stopPropagation()
-            e.preventDefault()
-            setExpand(!expand)
-          }}
-        >
-          <div className={prefix + '-header-expand'}>
-            <IconWidget infer="Expand" size={10} />
-          </div>
-          <div className={prefix + '-header-content'}>
-            <TextWidget>{props.title}</TextWidget>
-          </div>
+      <div className={cls(prefix, props.className)}>
+        <Button onClick={createResource} className={`${prefix}-btn`}>
+          <TextWidget>flowDesigner.resource.create</TextWidget>
+        </Button>
+        <div className={prefix + '-header-content'}>
+          <TextWidget>{props?.title}</TextWidget>
         </div>
-        <div className={prefix + '-content-wrapper'}>
-          <div className={prefix + '-content'}>
-            {props.sources.map(
-              isFn(props.children) ? props.children : renderNode
-            )}
-            {remainItems ? (
-              <div
-                className={prefix + '-item-remain'}
-                style={{ gridColumnStart: `span ${3 - remainItems}` }}
-              ></div>
-            ) : null}
+        {sources.map((source, idx) => (
+          <div key={idx}>
+            <ResourceItemWidget source={source} />
           </div>
-        </div>
+        ))}
       </div>
     )
   }
 )
-
-ResourceWidget.defaultProps = {
-  defaultExpand: true,
-}

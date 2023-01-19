@@ -10,6 +10,13 @@ const zhCN = {
         warn: '警告',
         error: '错误',
       },
+      resource: {
+        create: '新建资源',
+      },
+      comm: {
+        cancel: '取消',
+        submit: '确定',
+      },
       flow: {
         extend: {
           title: '添加流程节点',
@@ -22,6 +29,26 @@ const zhCN = {
           recordUpdate: '更新记录',
           recordLookup: '查询记录',
           recordDelete: '删除记录',
+        },
+        autoFlow: {
+          variable: '变量',
+          variableRecord: '记录（单个）变量',
+          variableArray: '集合变量',
+          variableArrayRecord: '集合记录变量',
+          constant: '常量',
+          formula: '公式',
+          template: '模板',
+        },
+        metaType: {
+          text: '大段文本',
+          str: '文本',
+          num: '数字',
+          objectId: '记录',
+          bool: '布尔值',
+          date: '日期',
+          dateTime: '时间',
+          singleOption: '单选列表',
+          multiOption: '多选列表',
         },
         form: {
           comm: {
@@ -42,6 +69,23 @@ const zhCN = {
             valuePlace: '输入值或搜索资源...',
             collectionPlace: '搜索集合变量...',
           },
+          resourceCreate: {
+            flowType: '资源类型',
+            name: '资源名称',
+            description: '描述',
+            type: '数据类型',
+            valueType: '集合',
+            valueTypeOption: {
+              array: '允许多个值（集合）',
+            },
+            refObjectId: '对象',
+            defaultValue: '默认值',
+            text: '模板',
+            expression: '公式',
+            paramLabel: '在流外部可用',
+            isInput: '可供输入',
+            isOutPut: '可供输出',
+          },
           validator: {
             filter: '筛选记录是必填项',
             label: '标题是必填项',
@@ -49,6 +93,8 @@ const zhCN = {
             apiLength: 'API名称长度不能超过32位',
             resourceRegRuleMessage: 'API名称仅可以包含下划线和字母数字字符',
             repeatName: 'API名称重复',
+            flowType: '资源类型是必填项',
+            type: '数据类型是必填项',
           },
           assignment: {
             addTitle: '新建分配',
@@ -119,6 +165,13 @@ const enUS = {
           logical: 'Logical node',
         },
       },
+      resource: {
+        create: 'create resource',
+      },
+      comm: {
+        cancel: 'cancel',
+        submit: 'submit',
+      },
       flow: {
         extend: {
           title: 'title',
@@ -133,6 +186,26 @@ const enUS = {
           recordLookup: 'recordLookup',
           recordDelete: 'recordDelete',
           end: 'end',
+        },
+        autoFlow: {
+          variable: 'variable',
+          variableRecord: 'variableRecord',
+          variableArray: 'variableArray',
+          variableArrayRecord: 'variableArrayRecord',
+          constant: 'constant',
+          formula: 'formula',
+          template: 'template',
+        },
+        metaType: {
+          text: 'text',
+          str: 'string',
+          num: 'number',
+          objectId: 'record',
+          bool: 'boolean',
+          date: 'date',
+          dateTime: 'dateTime',
+          singleOption: 'singleOption',
+          multiOption: 'multiOption',
         },
         form: {
           comm: {
@@ -153,6 +226,23 @@ const enUS = {
             valuePlace: 'Enter value or search resources...',
             collectionPlace: 'Search collection variables...',
           },
+          resourceCreate: {
+            flowType: 'Resource Type',
+            name: 'Resource Name',
+            description: 'Description',
+            type: 'Data Type',
+            valueType: 'Collection',
+            valueTypeOption: {
+              array: 'Allow Multiple Values (Collection)',
+            },
+            refObjectId: 'Object',
+            defaultValue: 'Default Value',
+            text: 'Template',
+            expression: 'Expression',
+            paramLabel: 'Available Outside The Flow',
+            isInput: 'Available Input',
+            isOutPut: 'Available OutPut',
+          },
           validator: {
             filter: 'filtering record is required',
             label: 'title is required',
@@ -161,6 +251,8 @@ const enUS = {
             resourceRegRuleMessage:
               'API name can only contain underscore and alphanumeric characters',
             repeatName: 'API name repeat',
+            flowType: 'Resource Type is required',
+            type: 'Data Type is required',
           },
           assignment: {
             addTitle: 'New Assignment',
