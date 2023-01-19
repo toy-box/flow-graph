@@ -95,6 +95,7 @@ const zhCN = {
             repeatName: 'API名称重复',
             flowType: '资源类型是必填项',
             type: '数据类型是必填项',
+            required: '该字段是必填字段',
           },
           assignment: {
             addTitle: '新建分配',
@@ -253,6 +254,7 @@ const enUS = {
             repeatName: 'API name repeat',
             flowType: 'Resource Type is required',
             type: 'Data Type is required',
+            required: 'This field is required',
           },
           assignment: {
             addTitle: 'New Assignment',

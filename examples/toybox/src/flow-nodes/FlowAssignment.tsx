@@ -73,6 +73,17 @@ const assignRender = (isNew: boolean) => {
               colon: false,
             },
             'x-component': 'Input',
+            'x-validator': [
+              {
+                triggerType: 'onBlur',
+                required: false,
+                message: (
+                  <TextWidget>
+                    flowDesigner.flow.form.validator.required
+                  </TextWidget>
+                ),
+              },
+            ],
           },
           id: {
             type: 'string',
@@ -182,6 +193,17 @@ const assignRender = (isNew: boolean) => {
                         </TextWidget>
                       ),
                       required: true,
+                      'x-validator': [
+                        {
+                          triggerType: 'onBlur',
+                          required: false,
+                          message: (
+                            <TextWidget>
+                              flowDesigner.flow.form.validator.required
+                            </TextWidget>
+                          ),
+                        },
+                      ],
                       'x-decorator': 'FormItem',
                       'x-decorator-props': {
                         layout: 'vertical',
@@ -205,6 +227,17 @@ const assignRender = (isNew: boolean) => {
                         </TextWidget>
                       ),
                       required: true,
+                      'x-validator': [
+                        {
+                          triggerType: 'onBlur',
+                          required: false,
+                          message: (
+                            <TextWidget>
+                              flowDesigner.flow.form.validator.required
+                            </TextWidget>
+                          ),
+                        },
+                      ],
                       enum: [
                         {
                           label: (
@@ -245,6 +278,17 @@ const assignRender = (isNew: boolean) => {
                         </TextWidget>
                       ),
                       required: true,
+                      'x-validator': [
+                        {
+                          triggerType: 'onBlur',
+                          required: false,
+                          message: (
+                            <TextWidget>
+                              flowDesigner.flow.form.validator.required
+                            </TextWidget>
+                          ),
+                        },
+                      ],
                       'x-decorator': 'FormItem',
                       'x-decorator-props': {
                         layout: 'vertical',
