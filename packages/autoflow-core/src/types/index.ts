@@ -195,7 +195,7 @@ export interface ConnectorProps {
 }
 
 export interface Criteria {
-  conditions: ICriteriaCondition[]
+  conditions: Partial<ICriteriaCondition>[]
   logic: string
 }
 

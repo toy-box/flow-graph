@@ -307,7 +307,7 @@ export class ReactFlowCanvas implements ICanvas {
             ...connecObj.connection,
             label: loadData[0].label,
           }
-          edgeId = connecObj?.edge.id ?? uid()
+          edgeId = connecObj?.edge?.id ?? uid()
           this.addEdge(newEdge, edgeId)
           if (!loadData[0].ruleId) {
             connecObj.sourceFlowmetaNode.updateConnector(
@@ -403,7 +403,7 @@ export class ReactFlowCanvas implements ICanvas {
         break
       default:
         if (nodeMapTargets.length === 0) {
-          edgeId = connecObj?.edge.id ?? uid()
+          edgeId = connecObj?.edge?.id ?? uid()
           this.flowGraph.setTarget(source, [
             ...nodeMapTargets,
             { id: target, edgeId },
@@ -421,7 +421,7 @@ export class ReactFlowCanvas implements ICanvas {
               ? EdgeTypeEnum.FAULT_EDGE
               : EdgeTypeEnum.FREE_EDGE,
           }
-          edgeId = connecObj?.edge.id ?? uid()
+          edgeId = connecObj?.edge?.id ?? uid()
           connecObj.sourceFlowmetaNode.updateConnector(target, isFaultConnector)
           this.flowGraph.setTarget(source, [
             ...nodeMapTargets,

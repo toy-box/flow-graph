@@ -261,6 +261,7 @@ export class FreeFlow {
       flowMetaNodeMap: observable.deep,
       flowResourceMap: observable.deep,
       history: observable.deep,
+      metaResourceDatas: observable.deep,
       flowMetaNodes: observable.computed,
       flow: observable.ref,
       // flowFree: observable.ref,
@@ -372,7 +373,6 @@ export class FreeFlow {
     const currentResource = new FlowVariable(resource)
     this.flowResourceMap[resource.key] = currentResource
     const idx = this.metaResourceDatas.findIndex((meta) => meta.type === type)
-    debugger
     if (idx > -1) this.metaResourceDatas[idx].children.push(currentResource)
   }
 

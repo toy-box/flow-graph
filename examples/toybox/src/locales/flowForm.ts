@@ -16,6 +16,7 @@ const zhCN = {
       comm: {
         cancel: '取消',
         submit: '确定',
+        remove: '删除',
       },
       flow: {
         extend: {
@@ -120,6 +121,8 @@ const zhCN = {
             logicOr: '满足任何条件 (OR)',
             logicCustom: '满足自定义条件逻辑',
             operationTitle: '资源',
+            removeResult: '删除结果',
+            defaultConnectorName: '默认结果',
           },
           loop: {
             addTitle: '新增循环',
@@ -172,6 +175,7 @@ const enUS = {
       comm: {
         cancel: 'cancel',
         submit: 'submit',
+        remove: 'remove',
       },
       flow: {
         extend: {
@@ -279,6 +283,8 @@ const enUS = {
             logicOr: 'Any Condition Is Met (OR)',
             logicCustom: 'Custom Condition Logic Is Met',
             operationTitle: 'Resource',
+            removeResult: 'Remove Result',
+            defaultConnectorName: 'defaultName',
           },
           loop: {
             addTitle: 'New Loop',

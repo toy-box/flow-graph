@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { isFn } from '@designable/shared'
 import { Button } from 'antd'
 import { observer } from '@formily/reactive-react'
@@ -20,7 +20,6 @@ export const ResourceWidget: React.FC<IResourceWidgetProps> = observer(
   (props) => {
     const prefix = usePrefix('resource')
     const { sources } = props
-
     const createResource = useCallback(() => {
       resourceEdit(props.metaFlow, false)
     }, [])

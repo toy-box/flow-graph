@@ -20,32 +20,38 @@ export const ResourceItemWidget: React.FC<IResourceItemWidgetProps> = observer(
     const prefix = usePrefix('resource-item')
     const [expand, setExpand] = useState(props.defaultExpand)
     return (
-      <div
-        className={cls(prefix, props.className, {
-          expand,
-        })}
-      >
-        <div
-          className={prefix + '-header'}
-          onClick={(e) => {
-            e.stopPropagation()
-            e.preventDefault()
-            setExpand(!expand)
-          }}
-        >
-          <div className={prefix + '-header-expand'}>
-            <IconWidget infer="Expand" size={20} />
+      <>
+        {props.source.children.length > 0 && (
+          <div
+            className={cls(prefix, props.className, {
+              expand,
+            })}
+          >
+            <div
+              className={prefix + '-header'}
+              onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+                setExpand(!expand)
+              }}
+            >
+              <div className={prefix + '-header-expand'}>
+                <IconWidget infer="Expand" size={20} />
+              </div>
+              <div className={prefix + '-header-content'}>
+                <TextWidget>{props.source?.type}</TextWidget>
+              </div>
+            </div>
+            <div className={prefix + '-content-wrapper'}>
+              <div className={prefix + '-content'}>
+                {props.source.children.map((child, idx) => (
+                  <div key={idx}>{child.name}</div>
+                ))}
+              </div>
+            </div>
           </div>
-          <div className={prefix + '-header-content'}>
-            <TextWidget>{props.source?.type}</TextWidget>
-          </div>
-        </div>
-        <div className={prefix + '-content-wrapper'}>
-          {props.source.children.map((child, idx) => (
-            <div key={idx}>{child.name}</div>
-          ))}
-        </div>
-      </div>
+        )}
+      </>
     )
   }
 )
