@@ -372,7 +372,7 @@ export class ReactFlowCanvas implements ICanvas {
               ? defaultConnectorName
               : nextValueConnectorName,
           }
-          edgeId = connecObj?.edge.id ?? uid()
+          edgeId = connecObj?.edge?.id ?? uid()
           this.addEdge(newEdge, edgeId)
           connecObj.sourceFlowmetaNode.updateConnector(
             target,

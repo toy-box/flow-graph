@@ -109,10 +109,11 @@ const decideRender = (isNew: boolean) => {
             type: 'string',
             title: <TextWidget>flowDesigner.flow.form.comm.value</TextWidget>,
             required: false,
+            'x-disabled': !isNew,
             'x-validator': [
               {
                 triggerType: 'onBlur',
-                // required: true,
+                required: false,
                 message: (
                   <TextWidget>
                     flowDesigner.flow.form.validator.required
