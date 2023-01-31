@@ -7,6 +7,7 @@ import ReactFlow, {
   ConnectionLineType,
   Edge,
   Node,
+  NodeChange,
 } from 'reactflow'
 import { observer } from '@formily/reactive-react'
 import {
@@ -19,6 +20,7 @@ import {
   connectionLineStyle,
   LayoutModeEnum,
 } from '@toy-box/flow-graph'
+import { FormDialog, FormItem, FormLayout, Select } from '@formily/antd'
 import { useMetaFlow, useFreeFlow } from '@toy-box/flow-node'
 import { FreeFlow } from '@toy-box/autoflow-core'
 import {
@@ -40,8 +42,10 @@ import {
   addFreeLayoutNode,
   decisonConnectDialog,
   loopConnectDialog,
+  deleteDialog,
 } from '../../flow-nodes'
 import { freeInitMeta } from '../../data/flowData'
+import { TextWidget } from '../../widgets'
 
 export const FlowCanvas = observer(() => {
   const ref: any = useRef()
@@ -322,6 +326,40 @@ export const FlowCanvas = observer(() => {
     onPanelEdit(freeFlow.flowMetaNodeMap[node.id], node.id)
   }
 
+  let showDialog = false
+  let edgesChange
+  const onNodesChange = (changes: NodeChange[]) => {
+    showDialog = false
+    const deleteNodeList = changes.filter((item) => item.type === 'remove')
+    if (deleteNodeList.length) {
+      console.log('deleteNodeList', deleteNodeList)
+      deleteDialog
+        .forOpen((payload, next) => {
+          setTimeout(() => {
+            next({})
+          }, 500)
+        })
+        .forConfirm((payload, next) => {
+          showDialog = true
+          freeFlow.changeNodes(changes)
+          edgesChange ?? freeFlow.updateEdges(edgesChange)
+          next(payload)
+        })
+        .open()
+    } else {
+      freeFlow.changeNodes(changes)
+      edgesChange ?? freeFlow.updateEdges(edgesChange)
+    }
+  }
+
+  const onEdgesChange = (changes: any) => {
+    const selectNode = dragFlow.canvas?.nodes?.find((node) => node.selected)
+    edgesChange = changes
+    if (!selectNode) {
+      freeFlow.updateEdges(edgesChange)
+    }
+  }
+
   return (
     <div id="flow-canvas" style={style} ref={ref}>
       <svg style={{ position: 'absolute', top: 0, left: 0 }}>
@@ -447,9 +485,9 @@ export const FlowCanvas = observer(() => {
           defaultEdgeOptions={freeEdgeOptions}
           connectionLineStyle={connectionLineStyle}
           connectionLineType={ConnectionLineType.SmoothStep}
-          onNodesChange={freeFlow.changeNodes}
+          onNodesChange={onNodesChange}
           onNodeDoubleClick={doubleClickNode}
-          onEdgesChange={freeFlow.updateEdges}
+          onEdgesChange={onEdgesChange}
           onConnect={freeFlow.addEdge}
           nodeTypes={dragFlow.canvas?.components}
           edgeTypes={dragFlow.canvas?.edgeComponents}

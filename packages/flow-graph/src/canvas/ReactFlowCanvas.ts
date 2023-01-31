@@ -17,6 +17,7 @@ import {
 } from 'reactflow'
 import { action, batch, define, observable } from '@formily/reactive'
 import { FlowMetaType, FreeFlow, OpearteTypeEnum } from '@toy-box/autoflow-core'
+import { FormDialog, FormItem, FormLayout } from '@formily/antd'
 import { uid } from '@toy-box/toybox-shared'
 import { ICanvas } from './Canvas'
 import { INode, IEdge, LayoutModeEnum, EdgeTypeEnum } from '../types'
@@ -192,39 +193,46 @@ export class ReactFlowCanvas implements ICanvas {
   onEdgesChange(edgesChange: IEdgesChangeProps) {
     const removeEdges = []
     const flowMetaNodeMap = { ...edgesChange.freeFlow?.flowMetaNodeMap }
-    edgesChange.changes.map((change) => {
-      if (change.type === 'remove') {
-        const edges = this.edges
-        const edge: any = edges?.find((edge) => edge.id === change.id)
-        if (edge) {
-          removeEdges.push(edge)
-          const { source, target } = edge
-          const nodeTarget = this.flowGraph?.nodeMap?.[source]?.targets
-            .map((target, index) => {
-              if (target?.edgeId === change.id || target.ruleId === change.id) {
-                return { ...target, index }
-              }
-            })
-            .filter(Boolean)[0]
-          this.flowGraph?.nodeMap[source]?.targets.splice(
-            nodeTarget ? nodeTarget.index : 0,
-            1
-          )
-          edgesChange.freeFlow?.flowMetaNodeMap[source]?.deleteConnector(
-            target,
-            nodeTarget
-          )
-          console.log(edgesChange.freeFlow, edgesChange.changes, 'freeFlow')
-          // this.onNodesChange({
-          //   changes: [{ id: source, type: 'select', selected: true }],
-          // })
+    edgesChange.changes &&
+      edgesChange.changes.map((change) => {
+        if (change.type === 'remove') {
+          const edges = this.edges
+          const edge: any = edges?.find((edge) => edge.id === change.id)
+          if (edge) {
+            removeEdges.push(edge)
+            const { source, target } = edge
+            const nodeTarget = this.flowGraph?.nodeMap?.[source]?.targets
+              .map((target, index) => {
+                if (
+                  target?.edgeId === change.id ||
+                  target.ruleId === change.id
+                ) {
+                  return { ...target, index }
+                }
+              })
+              .filter(Boolean)[0]
+            this.flowGraph?.nodeMap[source]?.targets.splice(
+              nodeTarget ? nodeTarget.index : 0,
+              1
+            )
+            edgesChange.freeFlow?.flowMetaNodeMap[source]?.deleteConnector(
+              target,
+              nodeTarget
+            )
+            // this.onNodesChange({
+            //   changes: [{ id: source, type: 'select', selected: true }],
+            // })
+          }
         }
-      }
-    })
-    const hasRemoveChanges = edgesChange.changes.filter(
-      (change) => change.type === 'remove'
-    )
-    if (hasRemoveChanges.length > 0 && !edgesChange.isHistory) {
+      })
+    const hasRemoveChanges =
+      edgesChange.changes &&
+      edgesChange.changes.filter((change) => change.type === 'remove')
+    if (
+      hasRemoveChanges &&
+      hasRemoveChanges.length > 0 &&
+      !edgesChange.isHistory
+    ) {
       const selectNode = this.nodes?.find((node) => node.selected)
       edgesChange.freeFlow?.history?.push({
         type: OpearteTypeEnum.REMOVE_EDGE,

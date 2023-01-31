@@ -245,3 +245,16 @@ export const loopConnectDialog = (
     })
     .open()
 }
+
+export const deleteDialog = FormDialog(
+  {
+    title: (
+      <TextWidget token="flowDesigner.flow.form.comm.deleteTitle"></TextWidget>
+    ),
+  },
+  () => {
+    return (
+      <TextWidget token="flowDesigner.flow.form.comm.deleteDesc"></TextWidget>
+    )
+  }
+)

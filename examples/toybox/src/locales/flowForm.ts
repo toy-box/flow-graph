@@ -69,6 +69,8 @@ const zhCN = {
             typePlace: '运算符',
             valuePlace: '输入值或搜索资源...',
             collectionPlace: '搜索集合变量...',
+            deleteTitle: '删除',
+            deleteDesc: '是否删除该元素节点?',
           },
           resourceCreate: {
             flowType: '资源类型',
@@ -230,6 +232,8 @@ const enUS = {
             typePlace: 'operator',
             valuePlace: 'Enter value or search resources...',
             collectionPlace: 'Search collection variables...',
+            deleteTitle: 'Delete',
+            deleteDesc: 'Whether to delete the element node?',
           },
           resourceCreate: {
             flowType: 'Resource Type',
@@ -272,10 +276,10 @@ const enUS = {
           decision: {
             addTitle: 'New Decision',
             editTitle: 'Edit Decision',
-            tagTitle: 'OUTCOME ORDER',
+            tagTitle: 'Outcome Order',
             tipTitle: 'Outcomes',
             tip: 'For each path the flow can take, create an outcome. For each outcome, specify the conditions that must be met for the flow to take that path.',
-            ruleTitle: 'OUTCOME ORDER',
+            ruleTitle: 'Outcome Order',
             ruleLabel: 'Label',
             ruleId: 'Outcome API Name',
             logicTitle: 'Condition Requirements to Execute Outcome',

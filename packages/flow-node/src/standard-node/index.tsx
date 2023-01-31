@@ -14,6 +14,7 @@ import {
   useMetaFlow,
 } from '../hooks'
 import { NodePanel } from '../node-panel'
+import { deleteDialog } from '../../../../examples/toybox/src/flow-nodes'
 
 import './styles'
 
@@ -57,25 +58,35 @@ export const StandardNode: React.FC<
   }
 
   const deleteNode = () => {
-    if (node) {
-      const deleteEdges = freeFlow.flow.canvas.edges
-        .map(({ id: edgeId, source, target }) => {
-          if (id === source || id === target) {
-            const target: EdgeRemoveChange = { id: edgeId, type: 'remove' }
-            return target
-          }
-        })
-        .filter(Boolean)
-      deleteEdges &&
-        metaFlow.flow.canvas.onEdgesChange({
-          changes: deleteEdges,
+    return deleteDialog
+      .forOpen((payload, next) => {
+        setTimeout(() => {
+          next({})
+        }, 500)
+      })
+      .forConfirm((payload, next) => {
+        if (node) {
+          const deleteEdges = freeFlow.flow.canvas.edges
+            .map(({ id: edgeId, source, target }) => {
+              if (id === source || id === target) {
+                const target: EdgeRemoveChange = { id: edgeId, type: 'remove' }
+                return target
+              }
+            })
+            .filter(Boolean)
+          deleteEdges &&
+            metaFlow.flow.canvas.onEdgesChange({
+              changes: deleteEdges,
+              freeFlow: freeFlow as FreeFlow,
+            })
+        }
+        metaFlow.flow.canvas.onNodesChange({
+          changes: [{ id, type: 'remove' }],
           freeFlow: freeFlow as FreeFlow,
         })
-    }
-    metaFlow.flow.canvas.onNodesChange({
-      changes: [{ id, type: 'remove' }],
-      freeFlow: freeFlow as FreeFlow,
-    })
+        next(payload)
+      })
+      .open()
   }
 
   return (
