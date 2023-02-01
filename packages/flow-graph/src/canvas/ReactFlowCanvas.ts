@@ -242,6 +242,7 @@ export class ReactFlowCanvas implements ICanvas {
         flowMetaNodeMap,
       })
     }
+    debugger
     this.edges = applyEdgeChanges(edgesChange.changes, this.edges)
   }
 

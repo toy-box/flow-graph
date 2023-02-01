@@ -11,6 +11,7 @@ export interface IFlowContextProps<T> {
   templates: INodeTemplate<T>[]
   icons: Record<string, ReactNode>
   eventEngine: EventEngine
+  connectDialog: any
 }
 
 export const FlowContext = React.createContext<

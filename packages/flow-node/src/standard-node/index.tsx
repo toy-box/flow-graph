@@ -12,9 +12,9 @@ import {
   useFlowMetaNodeContext,
   useFreeFlow,
   useMetaFlow,
+  useFlowContext,
 } from '../hooks'
 import { NodePanel } from '../node-panel'
-import { deleteDialog } from '../../../../examples/toybox/src/flow-nodes'
 
 import './styles'
 
@@ -31,6 +31,7 @@ export const StandardNode: React.FC<
   const eventEngine = useEvent()
   const freeFlow = useFreeFlow()
   const metaFlow = useMetaFlow()
+  const { connectDialog } = useFlowContext()
   const {
     // flowMetaNode: { metaFlow },
     flowMetaNode,
@@ -58,7 +59,8 @@ export const StandardNode: React.FC<
   }
 
   const deleteNode = () => {
-    return deleteDialog
+    const dialog = connectDialog.deleteDialog()
+    dialog
       .forOpen((payload, next) => {
         setTimeout(() => {
           next({})
@@ -84,6 +86,9 @@ export const StandardNode: React.FC<
           changes: [{ id, type: 'remove' }],
           freeFlow: freeFlow as FreeFlow,
         })
+        next(payload)
+      })
+      .forCancel((payload, next) => {
         next(payload)
       })
       .open()

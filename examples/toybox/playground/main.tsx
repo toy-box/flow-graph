@@ -6,6 +6,7 @@ import { icons } from '@toy-box/studio-base'
 import { GlobalRegistry } from '@toy-box/designable-core'
 import { Panel } from '../src'
 import { freeInitMeta, freeMeta } from '../src/data/flowData'
+import { deleteDialog } from '../src/flow-nodes'
 import { nodeTemplatesProvider } from './nodes'
 import '../src/styles/theme.less'
 
@@ -28,6 +29,9 @@ export const App: React.FC = () => {
           templates: nodeTemplatesProvider(metaFlow, freeFlow),
           icons: {},
           eventEngine,
+          connectDialog: {
+            deleteDialog,
+          },
         }}
       >
         <Panel />

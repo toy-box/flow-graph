@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ReactFlow, {
   Background,
   Controls,
@@ -54,7 +54,8 @@ export const FlowCanvas = observer(() => {
   const dragFlow = useDragFlow()
   const eventEngine = useEvent()
   const metaflow = useMetaFlow()
-  const freeFlow = useFreeFlow()
+  const freeFlow = useFreeFlow() as FreeFlow
+  const [edgeChanges, setEdgeChanges] = useState<any>()
   const style = {
     width: '100%',
     height: '100%',
@@ -326,37 +327,39 @@ export const FlowCanvas = observer(() => {
     onPanelEdit(freeFlow.flowMetaNodeMap[node.id], node.id)
   }
 
-  let showDialog = false
-  let edgesChange
-  const onNodesChange = (changes: NodeChange[]) => {
-    showDialog = false
-    const deleteNodeList = changes.filter((item) => item.type === 'remove')
-    if (deleteNodeList.length) {
-      console.log('deleteNodeList', deleteNodeList)
-      deleteDialog
-        .forOpen((payload, next) => {
-          setTimeout(() => {
-            next({})
-          }, 500)
-        })
-        .forConfirm((payload, next) => {
-          showDialog = true
-          freeFlow.changeNodes(changes)
-          edgesChange ?? freeFlow.updateEdges(edgesChange)
-          next(payload)
-        })
-        .open()
-    } else {
-      freeFlow.changeNodes(changes)
-      edgesChange ?? freeFlow.updateEdges(edgesChange)
-    }
-  }
+  const onNodesChange = useCallback(
+    (changes: NodeChange[]) => {
+      const deleteNodeList = changes.filter((item) => item.type === 'remove')
+      if (deleteNodeList.length) {
+        const dialog = deleteDialog()
+        dialog
+          .forOpen((payload, next) => {
+            setTimeout(() => {
+              next({})
+            }, 500)
+          })
+          .forConfirm((payload, next) => {
+            if (edgeChanges) freeFlow.updateEdges(edgeChanges)
+            freeFlow.changeNodes(changes)
+            next(payload)
+          })
+          .forCancel((payload, next) => {
+            next(payload)
+          })
+          .open()
+      } else {
+        freeFlow.changeNodes(changes)
+      }
+    },
+    [edgeChanges]
+  )
 
   const onEdgesChange = (changes: any) => {
     const selectNode = dragFlow.canvas?.nodes?.find((node) => node.selected)
-    edgesChange = changes
-    if (!selectNode) {
-      freeFlow.updateEdges(edgesChange)
+    if (selectNode) {
+      setEdgeChanges(changes)
+    } else {
+      freeFlow.updateEdges(changes)
     }
   }
 
@@ -485,9 +488,12 @@ export const FlowCanvas = observer(() => {
           defaultEdgeOptions={freeEdgeOptions}
           connectionLineStyle={connectionLineStyle}
           connectionLineType={ConnectionLineType.SmoothStep}
-          onNodesChange={onNodesChange}
+          onNodesChange={(changes) => onNodesChange(changes)}
           onNodeDoubleClick={doubleClickNode}
-          onEdgesChange={onEdgesChange}
+          onEdgesChange={(changes) => onEdgesChange(changes)}
+          // onNodesChange={freeFlow.changeNodes}
+          // onNodeDoubleClick={doubleClickNode}
+          // onEdgesChange={freeFlow.updateEdges}
           onConnect={freeFlow.addEdge}
           nodeTypes={dragFlow.canvas?.components}
           edgeTypes={dragFlow.canvas?.edgeComponents}
