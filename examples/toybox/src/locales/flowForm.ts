@@ -73,6 +73,8 @@ const zhCN = {
             deleteDesc: '是否删除该元素节点?',
           },
           resourceCreate: {
+            createTitle: '创建资源',
+            editTitle: '编辑资源',
             flowType: '资源类型',
             name: '资源名称',
             description: '描述',
@@ -236,6 +238,8 @@ const enUS = {
             deleteDesc: 'Whether to delete the element node?',
           },
           resourceCreate: {
+            createTitle: 'Create Resource',
+            editTitle: 'Edit Resource',
             flowType: 'Resource Type',
             name: 'Resource Name',
             description: 'Description',

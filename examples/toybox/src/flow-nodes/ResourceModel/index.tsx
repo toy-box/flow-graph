@@ -121,7 +121,7 @@ const labelNames: any = {
   ),
 }
 
-const handleOk = (values, metaflow: FreeFlow) => {
+const handleOk = (values, metaflow: FreeFlow, isEdit: boolean) => {
   const obj: any = values
   const resourceData: any = {
     description: obj.description,
@@ -167,7 +167,11 @@ const handleOk = (values, metaflow: FreeFlow) => {
     resourceData.isInput = obj.paramLabel?.includes('isInput') ?? true
     resourceData.isOutPut = obj.paramLabel?.includes('isOutPut') ?? true
   }
-  metaflow.createResource(flowDataType, resourceData)
+  if (isEdit) {
+    metaflow.editResource(flowDataType, resourceData)
+  } else {
+    metaflow.createResource(flowDataType, resourceData)
+  }
 }
 
 export const resourceEdit = (
@@ -176,39 +180,22 @@ export const resourceEdit = (
   value?: IFieldMetaFlow,
   fieldType?: string
 ) => {
-  let flowDataVal = null
   let formDialog = null
-  if (value) {
-    flowDataVal = clone(value)
-    switch (fieldType) {
-      case FlowResourceType.VARIABLE_ARRAY:
-      case FlowResourceType.VARIABLE_ARRAY_RECORD:
-        flowDataVal.flowType = FlowResourceType.VARIABLE
-        flowDataVal.valueType = 'array'
-        flowDataVal.type = value?.items?.type
-        break
-      case FlowResourceType.VARIABLE_RECORD:
-        flowDataVal.flowType = FlowResourceType.VARIABLE
-        break
-      default:
-        flowDataVal.flowType = fieldType
-        break
-    }
-    const arr = []
-    if (flowDataVal?.isInput) arr?.push('isInput')
-    if (flowDataVal?.isOutPut) arr?.push('isOutPut')
-    flowDataVal.paramLabel = arr
-  }
   const onCancel = () => {
     formDialog.close()
   }
   const onSubmit = (from) => {
-    handleOk(from.values, metaflow)
+    handleOk(from.values, metaflow, isEdit)
     formDialog.close()
   }
+  const title = !isEdit ? (
+    <TextWidget>flowDesigner.flow.form.resourceCreate.createTitle</TextWidget>
+  ) : (
+    <TextWidget>flowDesigner.flow.form.resourceCreate.editTitle</TextWidget>
+  )
   formDialog = FormDialog(
     {
-      title: '11111111111',
+      title: title,
       footer: null,
       //   visible: visible,
       open: false,
@@ -218,6 +205,7 @@ export const resourceEdit = (
     <ResourceCreate
       isEdit={isEdit}
       fieldType={fieldType}
+      value={value}
       onCancel={onCancel}
       onSubmit={onSubmit}
     />
@@ -240,9 +228,7 @@ export const resourceEdit = (
   // .then(console.log)
   formDialog
     .forOpen((payload, next) => {
-      next({
-        initialValues: value,
-      })
+      next({})
     })
     .open()
 }
@@ -252,7 +238,7 @@ interface ResourceCreateProps {
   //   flowGraph: AutoFlow
   isEdit?: boolean
   //   title?: string | JSX.Element
-  //   value?: IFieldMetaFlow
+  value?: IFieldMetaFlow
   fieldType?: string
   onCancel: () => void
   onSubmit: (from) => void
@@ -262,7 +248,7 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
   //   fieldMetas = [],
   //   flowGraph,
   isEdit,
-  //   value,
+  value,
   fieldType,
   onCancel,
   onSubmit,
@@ -356,6 +342,29 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
     },
   })
 
+  if (value) {
+    const flowDataVal = clone(value)
+    switch (fieldType) {
+      case FlowResourceType.VARIABLE_ARRAY:
+      case FlowResourceType.VARIABLE_ARRAY_RECORD:
+        flowDataVal.flowType = FlowResourceType.VARIABLE
+        flowDataVal.valueType = 'array'
+        flowDataVal.type = value?.items?.type
+        break
+      case FlowResourceType.VARIABLE_RECORD:
+        flowDataVal.flowType = FlowResourceType.VARIABLE
+        break
+      default:
+        flowDataVal.flowType = fieldType
+        break
+    }
+    const arr = []
+    if (flowDataVal?.isInput) arr?.push('isInput')
+    if (flowDataVal?.isOutPut) arr?.push('isOutPut')
+    flowDataVal.paramLabel = arr
+    formData.setValues(flowDataVal)
+  }
+
   const schema = {
     type: 'object',
     properties: {
@@ -404,11 +413,11 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
               //   },
             ],
             'x-component-props': {
-              placeholder: (
-                <TextWidget>
-                  flowDesigner.flow.form.placeholder.flowType
-                </TextWidget>
-              ),
+              // placeholder: (
+              //   <TextWidget>
+              //     flowDesigner.flow.form.placeholder.flowType
+              //   </TextWidget>
+              // ),
             },
             'x-decorator-props': {
               gridSpan: 2,
@@ -419,6 +428,7 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
             title: <TextWidget>flowDesigner.flow.form.comm.value</TextWidget>,
             required: true,
             // 'x-disabled': !!value,
+            'x-disabled': isEdit,
             'x-validator': [
               {
                 triggerType: 'onBlur',
@@ -450,7 +460,7 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
             'x-decorator': 'FormItem',
             'x-component': 'Input',
             'x-component-props': {
-              placeholder: useLocale('flowDesigner.flow.form.placeholder.name'),
+              // placeholder: useLocale('flowDesigner.flow.form.placeholder.name'),
             },
             'x-decorator-props': {
               gridSpan: 2,
@@ -466,9 +476,9 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
             'x-decorator': 'FormItem',
             'x-component': 'Input.TextArea',
             'x-component-props': {
-              placeholder: useLocale(
-                'flowDesigner.flow.form.placeholder.description'
-              ),
+              // placeholder: useLocale(
+              //   'flowDesigner.flow.form.placeholder.description'
+              // ),
             },
             'x-decorator-props': {
               gridSpan: 2,
@@ -492,9 +502,9 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
             'x-decorator': 'FormItem',
             'x-component': 'Select',
             'x-component-props': {
-              placeholder: (
-                <TextWidget>flowDesigner.flow.form.placeholder.type</TextWidget>
-              ),
+              // placeholder: (
+              //   <TextWidget>flowDesigner.flow.form.placeholder.type</TextWidget>
+              // ),
             },
           },
           valueType: {
@@ -545,11 +555,11 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
             'x-decorator': 'FormItem',
             'x-component': 'GatherInput',
             'x-component-props': {
-              placeholder: (
-                <TextWidget>
-                  flowDesigner.flow.form.placeholder.refObjectId
-                </TextWidget>
-              ),
+              // placeholder: (
+              //   <TextWidget>
+              //     flowDesigner.flow.form.placeholder.refObjectId
+              //   </TextWidget>
+              // ),
               //   flowGraph,
               disabled: isEdit,
             },

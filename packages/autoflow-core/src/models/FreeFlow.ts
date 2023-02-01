@@ -1,7 +1,7 @@
 import { isArr, uid } from '@toy-box/toybox-shared'
 import { define, observable, action, batch } from '@formily/reactive'
 import { Flow, LayoutModeEnum } from '@toy-box/flow-graph'
-import { IFieldMeta, MetaValueType } from '@toy-box/meta-schema'
+import { MetaValueType } from '@toy-box/meta-schema'
 import { NodeChange } from 'reactflow'
 import {
   FlowMetaType,
@@ -58,7 +58,7 @@ export class FreeFlow {
   metaResourceDatas: IResourceParam[] = []
   flow: Flow
   flowMetaNodeMap: Record<string, FlowMetaNode> = {}
-  flowResourceMap: Record<string, IFieldMeta> = {}
+  flowResourceMap: Record<string, FlowVariable> = {}
   // flowConstantMap: Record<string, IFieldMeta> = {}
   // flowFormulaMap: Record<string, IFieldMeta> = {}
   // flowTemplateMap: Record<string, IFieldMeta> = {}
@@ -374,6 +374,20 @@ export class FreeFlow {
     this.flowResourceMap[resource.key] = currentResource
     const idx = this.metaResourceDatas.findIndex((meta) => meta.type === type)
     if (idx > -1) this.metaResourceDatas[idx].children.push(currentResource)
+  }
+
+  editResource(type: FlowResourceType, resource: IFieldMetaResource) {
+    const currentResource = this.flowResourceMap[resource.key]
+    currentResource.update(resource)
+  }
+
+  deleteResource(type: FlowResourceType, key: string) {
+    delete this.flowResourceMap[key]
+    const idx = this.metaResourceDatas.findIndex((meta) => meta.type === type)
+    if (idx > -1)
+      this.metaResourceDatas[idx].children = this.metaResourceDatas[
+        idx
+      ].children.filter((child) => child.key !== key)
   }
 
   parseResource(resources: IFlowMetaResource) {

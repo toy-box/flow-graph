@@ -33,7 +33,7 @@ export const ResourceWidget: React.FC<IResourceWidgetProps> = observer(
         </div>
         {sources.map((source, idx) => (
           <div key={idx}>
-            <ResourceItemWidget source={source} />
+            <ResourceItemWidget source={source} metaFlow={props.metaFlow} />
           </div>
         ))}
       </div>
