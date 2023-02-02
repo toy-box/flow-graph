@@ -213,8 +213,8 @@ export const loopConnectDialog = (
           label: payload.values.loopResult,
         }
         payload.values.loopResult === 'For Each Item'
-          ? sourceFlowmetaNode.updateConnector(target, 'nextValueConnector')
-          : sourceFlowmetaNode.updateConnector(target, 'defaultConnector')
+          ? sourceFlowmetaNode.updateConnector(target, false)
+          : sourceFlowmetaNode.updateConnector(target, true)
         canvas.flowGraph.setTarget(source, [
           ...canvas.flowGraph.nodeMap[source].targets,
           {
