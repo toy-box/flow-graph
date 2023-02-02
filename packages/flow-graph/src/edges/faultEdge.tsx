@@ -12,7 +12,7 @@ export const FaultEdge = ({
   id,
   source,
   target,
-  markerEnd = 'myArrowClosed',
+  markerEnd = 'faultHoverArrow',
   style = { strokeWidth: 5, stroke: 'rgb(145, 146, 151)' },
   label,
   labelStyle = { fontWeight: 'bolder' },
@@ -70,7 +70,6 @@ export const FaultEdge = ({
         labelBgPadding={labelBgPadding}
         labelBgBorderRadius={labelBgBorderRadius}
         style={faultEdgeStyle}
-        markerEnd={markerEnd}
       />
     </>
   )
