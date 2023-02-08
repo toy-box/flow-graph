@@ -127,9 +127,6 @@ const decideRender = (isNew: boolean) => {
               colon: false,
             },
             'x-component': 'Input',
-            'x-component-props': {
-              disabled: true,
-            },
           },
           description: {
             type: 'string',
