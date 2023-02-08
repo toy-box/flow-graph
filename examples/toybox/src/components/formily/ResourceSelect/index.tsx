@@ -187,6 +187,7 @@ export const ResourceSelect: FC = observer((props: any) => {
     // const newTags = selectKeys.filter((tag) => tag !== removedTag)
     setInputValue('')
     onChange('')
+    setVariable(true)
     setSelectKeys([])
   }
 
@@ -213,7 +214,7 @@ export const ResourceSelect: FC = observer((props: any) => {
     <div ref={ref}>
       <Dropdown
         open={visible}
-        onOpenChange={() => setVariable(!visible)}
+        onOpenChange={() => setVariable(!disabled ? !visible : false)}
         menu={{
           items,
           onClick,
