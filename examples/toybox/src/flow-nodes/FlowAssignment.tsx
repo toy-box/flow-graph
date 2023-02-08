@@ -11,9 +11,10 @@ import {
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
 import * as ICONS from '@ant-design/icons'
-import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
+import { FlowMetaNode, FlowMetaType, FreeFlow } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { useLocale } from '../hooks'
+import { ResourceSelect, OperationSelect } from '../components/formily'
 import { TextWidget, takeMessage } from '../widgets'
 
 import './flowNodes.less'
@@ -42,6 +43,8 @@ const SchemaField = createSchemaField({
     Input,
     Select,
     AssignmentDesc,
+    ResourceSelect,
+    OperationSelect,
   },
   scope: {
     icon(name) {
@@ -50,7 +53,7 @@ const SchemaField = createSchemaField({
   },
 })
 
-const assignRender = (isNew: boolean) => {
+const assignRender = (isNew: boolean, metaFlow: FreeFlow) => {
   const assignPanelSchema = {
     type: 'object',
     properties: {
@@ -211,9 +214,10 @@ const assignRender = (isNew: boolean) => {
                         gridSpan: 6,
                         labelWidth: '100px',
                       },
-                      'x-component': 'Input',
+                      'x-component': 'ResourceSelect',
                       'x-component-props': {
                         suffix: "{{icon('SearchOutlined')}}",
+                        metaFlow: metaFlow,
                         placeholder: takeMessage(
                           'flowDesigner.flow.form.comm.operationPlace'
                         ),
@@ -238,24 +242,24 @@ const assignRender = (isNew: boolean) => {
                           ),
                         },
                       ],
-                      enum: [
-                        {
-                          label: (
-                            <TextWidget>
-                              flowDesigner.flow.form.assignment.typeEquals
-                            </TextWidget>
-                          ),
-                          value: 'Equals',
-                        },
-                        {
-                          label: (
-                            <TextWidget>
-                              flowDesigner.flow.form.assignment.typeAdd
-                            </TextWidget>
-                          ),
-                          value: 'Add',
-                        },
-                      ],
+                      // enum: [
+                      //   {
+                      //     label: (
+                      //       <TextWidget>
+                      //         flowDesigner.flow.form.assignment.typeEquals
+                      //       </TextWidget>
+                      //     ),
+                      //     value: 'Equals',
+                      //   },
+                      //   {
+                      //     label: (
+                      //       <TextWidget>
+                      //         flowDesigner.flow.form.assignment.typeAdd
+                      //       </TextWidget>
+                      //     ),
+                      //     value: 'Add',
+                      //   },
+                      // ],
                       'x-decorator': 'FormItem',
                       'x-decorator-props': {
                         layout: 'vertical',
@@ -263,11 +267,15 @@ const assignRender = (isNew: boolean) => {
                         gridSpan: 4,
                         labelWidth: '100px',
                       },
-                      'x-component': 'Select',
+                      'x-component': 'OperationSelect',
                       'x-component-props': {
                         placeholder: takeMessage(
                           'flowDesigner.flow.form.comm.typePlace'
                         ),
+                        reactionObj: {
+                          key: 'assignmentItems',
+                          value: 'operation',
+                        },
                       },
                     },
                     value: {
@@ -296,12 +304,16 @@ const assignRender = (isNew: boolean) => {
                         gridSpan: 6,
                         labelWidth: '100px',
                       },
-                      'x-component': 'Input',
+                      'x-component': 'ResourceSelect',
                       'x-component-props': {
                         suffix: "{{icon('SearchOutlined')}}",
                         placeholder: takeMessage(
                           'flowDesigner.flow.form.comm.valuePlace'
                         ),
+                        reactionObj: {
+                          key: 'assignmentItems',
+                          value: 'operation',
+                        },
                       },
                     },
                     remove: {
@@ -356,7 +368,7 @@ const assignRender = (isNew: boolean) => {
 }
 
 export const assignOnEdit = (node: any, at?: string, additionInfo?: any) => {
-  const dialog = assignRender(node.make)
+  const dialog = assignRender(node.make, node.metaFlow)
   dialog
     .forOpen((payload, next) => {
       setTimeout(() => {

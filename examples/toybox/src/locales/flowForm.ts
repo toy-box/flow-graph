@@ -51,6 +51,14 @@ const zhCN = {
           singleOption: '单选列表',
           multiOption: '多选列表',
         },
+        metaValueType: {
+          add: '添加',
+          subtract: '减少',
+          assign: '等于',
+          addAtStart: '添加到第一个',
+          removeFirst: '移除第一个',
+          removeAll: '移除所有',
+        },
         form: {
           comm: {
             label: '标题',
@@ -215,6 +223,14 @@ const enUS = {
           dateTime: 'dateTime',
           singleOption: 'singleOption',
           multiOption: 'multiOption',
+        },
+        metaValueType: {
+          add: 'Add',
+          subtract: 'Reduce',
+          assign: ' Equal',
+          addAtStart: 'Add To First',
+          removeFirst: 'Remove First',
+          removeAll: 'Remove All',
         },
         form: {
           comm: {
