@@ -1,4 +1,11 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Dropdown, Input, Tag } from 'antd'
@@ -16,6 +23,7 @@ export const ResourceSelect: FC = observer((props: any) => {
   const [visible, setVariable] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [selectKeys, setSelectKeys] = useState([])
+  const ref = useRef()
   const [items, setItems] = useState<MenuProps['items']>([
     {
       key: '1',
@@ -36,7 +44,7 @@ export const ResourceSelect: FC = observer((props: any) => {
       key: '2',
       label: 'sub menu',
       onTitleClick: (e) => {
-        setVariable(true)
+        // setVariable(true)
         e.domEvent.stopPropagation()
       },
       children: [
@@ -44,7 +52,7 @@ export const ResourceSelect: FC = observer((props: any) => {
           key: '2-1',
           label: '3rd menu item',
           onTitleClick: (e) => {
-            setVariable(true)
+            // setVariable(true)
             e.domEvent.stopPropagation()
           },
           children: [
@@ -87,7 +95,9 @@ export const ResourceSelect: FC = observer((props: any) => {
       form.values?.[props?.reactionObj?.key]?.[index]?.[
         props?.reactionObj?.value
       ]
-    if (props?.reactionObj) return !reactionValue
+    if (props?.reactionObj) {
+      return !reactionValue
+    }
     return false
   }, [
     form.values?.[props?.reactionObj?.key]?.[index]?.[
@@ -118,7 +128,7 @@ export const ResourceSelect: FC = observer((props: any) => {
     })
     setItems(arr)
     setHistoryItems(arr)
-  }, [props.metaFlow])
+  }, [])
 
   const createResource = useCallback(() => {
     resourceEdit(props.metaFlow, false)
@@ -128,6 +138,7 @@ export const ResourceSelect: FC = observer((props: any) => {
     (e) => {
       const val: string = e.target.value
       const lowerVal = val.toLowerCase()
+      setVariable(true)
       setInputValue(val)
       const list = clone(historyItems)
       const arrs = list.filter((item: any) => {
@@ -171,9 +182,6 @@ export const ResourceSelect: FC = observer((props: any) => {
       onChange(target?.innerText)
     }
   }
-  window.onclick = (e) => {
-    setVariable(false)
-  }
 
   const handleClose = () => {
     // const newTags = selectKeys.filter((tag) => tag !== removedTag)
@@ -202,9 +210,10 @@ export const ResourceSelect: FC = observer((props: any) => {
   }
 
   return (
-    <>
+    <div ref={ref}>
       <Dropdown
         open={visible}
+        onOpenChange={() => setVariable(!visible)}
         menu={{
           items,
           onClick,
@@ -213,10 +222,11 @@ export const ResourceSelect: FC = observer((props: any) => {
           defaultSelectedKeys: selectKeys,
         }}
         trigger={['click']}
+        destroyPopupOnHide={true}
       >
         <a
           onClick={(e) => {
-            if (!disabled) setVariable(true)
+            // if (!disabled) setVariable(true)
             e.stopPropagation()
           }}
         >
@@ -237,6 +247,6 @@ export const ResourceSelect: FC = observer((props: any) => {
           </div>
         </a>
       </Dropdown>
-    </>
+    </div>
   )
 })
