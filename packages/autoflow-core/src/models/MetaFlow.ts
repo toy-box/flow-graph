@@ -88,6 +88,7 @@ export class MetaFlow {
       appendNode: batch,
       addNode: batch,
       mountNodes: batch,
+      changeMode: action,
     })
   }
   get flowGraph() {
@@ -294,5 +295,9 @@ export class MetaFlow {
       default:
         return
     }
+  }
+
+  changeMode() {
+    console.log('changeMode')
   }
 }

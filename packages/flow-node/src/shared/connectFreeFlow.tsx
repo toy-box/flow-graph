@@ -1,7 +1,7 @@
 import React, { FC, ReactNode } from 'react'
 import { Handle, HandleProps, useStore, Connection } from 'reactflow'
 import { FlowMetaNode } from '@toy-box/autoflow-core'
-import { ReactFlowCanvas } from '@toy-box/flow-graph'
+import { ReactFlowCanvas, FlowModeEnum } from '@toy-box/flow-graph'
 import { useFreeFlow, useMetaFlow } from '../hooks'
 import { IStandardNodeProps } from '../standard-node'
 import { FlowMetaNodeContext } from './context'
@@ -80,7 +80,8 @@ export function connectFreeFlow({
         }
       }
     }
-
+    const isEditMode = freeFlow.mode === FlowModeEnum.EDIT
+    console.log('isEditMode', isEditMode)
     return (
       <React.Fragment>
         {handles?.map((handleProps, idx) => (
@@ -99,7 +100,8 @@ export function connectFreeFlow({
               {...handleProps}
               style={{
                 zIndex: 2,
-                visibility: isTargetHandle() ? 'inherit' : 'hidden',
+                visibility:
+                  isTargetHandle() && isEditMode ? 'inherit' : 'hidden',
               }}
             />
           </>

@@ -20,7 +20,13 @@ import { FlowMetaType, FreeFlow, OpearteTypeEnum } from '@toy-box/autoflow-core'
 import { FormDialog, FormItem, FormLayout } from '@formily/antd'
 import { uid } from '@toy-box/toybox-shared'
 import { ICanvas } from './Canvas'
-import { INode, IEdge, LayoutModeEnum, EdgeTypeEnum } from '../types'
+import {
+  INode,
+  IEdge,
+  LayoutModeEnum,
+  EdgeTypeEnum,
+  FlowModeEnum,
+} from '../types'
 import { FlowGraph } from '../models'
 
 import 'reactflow/dist/style.css'
@@ -34,6 +40,7 @@ export interface ReactFlowCanvasProps {
   components?: Record<string, ElementType<NodeProps>>
   edgeComponents?: Record<string, ElementType<EdgeProps>>
   layoutMode?: LayoutModeEnum
+  mode?: FlowModeEnum
   flowGraph: FlowGraph
 }
 declare type templateSource = {
@@ -74,6 +81,7 @@ export class ReactFlowCanvas implements ICanvas {
   nodes: (Node & templateSource)[]
   edges: Edge[]
   layoutMode?: LayoutModeEnum
+  mode?: FlowModeEnum
 
   constructor(props: ReactFlowCanvasProps) {
     this.flowGraph = props.flowGraph
@@ -82,6 +90,7 @@ export class ReactFlowCanvas implements ICanvas {
     this.nodes = []
     this.edges = []
     this.layoutMode = props.layoutMode || LayoutModeEnum.FREE_LAYOUT
+    this.mode = props.mode || FlowModeEnum.EDIT
     this.makeObservable()
   }
 

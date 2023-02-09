@@ -9,6 +9,7 @@ const zhCN = {
         data: '数据',
         warn: '警告',
         error: '错误',
+        debug: '调试',
       },
       resource: {
         create: '新建资源',
@@ -180,6 +181,7 @@ const enUS = {
         sources: {
           logical: 'Logical node',
         },
+        debug: 'Debug',
       },
       resource: {
         create: 'create resource',

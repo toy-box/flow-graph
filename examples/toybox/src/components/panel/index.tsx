@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { useMetaFlow, useFreeFlow } from '@toy-box/flow-node'
 import { flowData1, flowData2, flowMeta, freeMeta } from '../../data/flowData'
-import { LayoutModeEnum } from '@toy-box/flow-graph'
+import { LayoutModeEnum, FlowModeEnum } from '@toy-box/flow-graph'
 import {
   icons,
   CompositePanel,
@@ -51,15 +51,22 @@ export const Panel: React.FC<any> = () => {
   const [leftVisible, setLeftVisible] = React.useState(false)
   const [leftActiveKey, setLeftActiveKey] = React.useState()
   const [rightVisible, setRightVisible] = React.useState(false)
+  const [debugVisible, setDebugVisible] = React.useState(false)
   const [rightActiveKey, setRightActiveKey] = React.useState()
   const [errorData, setErrorData] = React.useState([])
   const [warnData, setWarnData] = React.useState([])
 
   const back = useCallback(() => {
-    freeFlow.history.undo()
+    freeFlow.mode === FlowModeEnum.EDIT && freeFlow.history.undo()
   }, [])
   const next = useCallback(() => {
-    freeFlow.history.redo()
+    freeFlow.mode === FlowModeEnum.EDIT && freeFlow.history.redo()
+  }, [])
+  const isEditMode = freeFlow.mode === FlowModeEnum.EDIT
+  const debug = useCallback(() => {
+    freeFlow.changeMode()
+    isEditMode && setLeftVisible(false)
+    isEditMode && setLeftActiveKey(null)
   }, [])
 
   return (
@@ -78,7 +85,7 @@ export const Panel: React.FC<any> = () => {
               visible={leftVisible}
               setVisible={setLeftVisible}
               activeKey={leftActiveKey}
-              setActiveKey={setLeftActiveKey as any}
+              setActiveKey={isEditMode && (setLeftActiveKey as any)}
             >
               <CompositePanel.Item
                 title="flowDesigner.panels.element"
@@ -110,6 +117,20 @@ export const Panel: React.FC<any> = () => {
             </CompositePanel>
           </TopbarPanel.Region>
           <TopbarPanel.Region position="right">
+            <CompositePanel
+              direction="right"
+              visible={debugVisible}
+              setVisible={setDebugVisible}
+              activeKey={rightActiveKey}
+              setActiveKey={setRightActiveKey as any}
+            >
+              <CompositePanel.Item
+                title="flowDesigner.panels.debug"
+                icon="Profile"
+                activeKey="debug"
+                onClick={debug}
+              />
+            </CompositePanel>
             <CompositePanel
               direction="right"
               visible={rightVisible}

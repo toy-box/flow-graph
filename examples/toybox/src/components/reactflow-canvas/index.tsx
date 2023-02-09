@@ -19,6 +19,7 @@ import {
   freeEdgeOptions,
   connectionLineStyle,
   LayoutModeEnum,
+  FlowModeEnum,
 } from '@toy-box/flow-graph'
 import { FormDialog, FormItem, FormLayout, Select } from '@formily/antd'
 import { useMetaFlow, useFreeFlow } from '@toy-box/flow-node'
@@ -151,6 +152,7 @@ export const FlowCanvas = observer(() => {
   const freeFlowCanvas = new ReactFlowCanvas({
     flowGraph: dragFlow.flowGraph,
     layoutMode: LayoutModeEnum.FREE_LAYOUT,
+    mode: freeFlow.mode,
     edgeComponents: {
       fixEdge: FixStepEdge,
       forkEdge: ForkEdge,
@@ -362,6 +364,7 @@ export const FlowCanvas = observer(() => {
       freeFlow.updateEdges(changes)
     }
   }
+  const isEditMode = freeFlow.mode === FlowModeEnum.EDIT
 
   return (
     <div id="flow-canvas" style={style} ref={ref}>
@@ -508,7 +511,7 @@ export const FlowCanvas = observer(() => {
           connectionLineStyle={connectionLineStyle}
           connectionLineType={ConnectionLineType.SmoothStep}
           onNodesChange={(changes) => onNodesChange(changes)}
-          onNodeDoubleClick={doubleClickNode}
+          onNodeDoubleClick={isEditMode && doubleClickNode}
           onEdgesChange={(changes) => onEdgesChange(changes)}
           // onNodesChange={freeFlow.changeNodes}
           // onNodeDoubleClick={doubleClickNode}
@@ -520,6 +523,7 @@ export const FlowCanvas = observer(() => {
           onNodeClick={dispatchClickNode}
           onEdgeClick={dispatchClickEdge}
           onMoveStart={dispatchMoveStart}
+          zoomOnDoubleClick={isEditMode}
           proOptions={{ hideAttribution: true }}
           zoomOnScroll={false}
         >
