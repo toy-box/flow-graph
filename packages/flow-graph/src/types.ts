@@ -52,4 +52,9 @@ export enum EdgeTypeEnum {
   FIX_EDGE = 'fixEdge',
 }
 
+export enum FlowModeEnum {
+  EDIT = 'edit',
+  READ = 'read',
+}
+
 export type INodeProps = Node

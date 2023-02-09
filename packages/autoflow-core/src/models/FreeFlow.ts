@@ -1,6 +1,6 @@
 import { isArr, uid } from '@toy-box/toybox-shared'
 import { define, observable, action, batch } from '@formily/reactive'
-import { Flow, LayoutModeEnum } from '@toy-box/flow-graph'
+import { Flow, LayoutModeEnum, FlowModeEnum } from '@toy-box/flow-graph'
 import { MetaValueType } from '@toy-box/meta-schema'
 import { NodeChange } from 'reactflow'
 import {
@@ -40,11 +40,6 @@ enum MetaFieldType {
   ADD = 'ADD',
   REMOVE = 'REMOVE',
   INIT = 'INIT',
-}
-
-enum FlowModeEnum {
-  EDIT = 'edit',
-  READ = 'read',
 }
 
 type FlowModeType = FlowModeEnum.EDIT | FlowModeEnum.READ
@@ -278,6 +273,7 @@ export class FreeFlow {
       addEdge: action,
       updateEdges: action,
       changeNodes: action,
+      changeMode: action,
     })
   }
   get flowGraph() {
@@ -620,5 +616,17 @@ export class FreeFlow {
   changeNodes(changes: NodeChange[]) {
     if (this.flow?.canvas)
       this.flow?.canvas?.onNodesChange({ changes, freeFlow: this })
+  }
+
+  changeMode() {
+    const goEditFlag = this.mode === FlowModeEnum.READ
+    this.mode = goEditFlag ? FlowModeEnum.EDIT : FlowModeEnum.READ
+    this.flow.canvas.nodes.map((node) => {
+      node.deletable = goEditFlag
+      node.draggable = goEditFlag
+    })
+    this.flow.canvas.edges.map((edge) => {
+      edge.deletable = goEditFlag
+    })
   }
 }

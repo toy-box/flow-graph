@@ -4,7 +4,7 @@ import { Popover } from 'antd'
 import { EdgeRemoveChange } from 'reactflow'
 import { DeleteFilled } from '@ant-design/icons'
 import { observer } from '@formily/reactive-react'
-import { FlowNode, LayoutModeEnum } from '@toy-box/flow-graph'
+import { FlowNode, LayoutModeEnum, FlowModeEnum } from '@toy-box/flow-graph'
 import { FreeFlow } from '@toy-box/autoflow-core'
 import { ICustomEvent } from '../shared'
 import {
@@ -37,6 +37,7 @@ export const StandardNode: React.FC<
     flowMetaNode,
   } = useFlowMetaNodeContext()
   const isAutoLayout = metaFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT
+  const isEditMode = metaFlow.mode === FlowModeEnum.EDIT
   const node = freeFlow.flow.canvas.nodes.find((node) => node.id === id)
   const isNodeSelected =
     node && node.selected === true && node.type !== 'StartNode'
@@ -104,7 +105,7 @@ export const StandardNode: React.FC<
         content={<NodePanel closeExtend={closeExtend} nodeId={id} />}
         overlayClassName="no-padding"
       >
-        {!isAutoLayout && isNodeSelected && (
+        {!isAutoLayout && isNodeSelected && isEditMode && (
           <DeleteFilled className={`${prefixCls}__icon`} onClick={deleteNode} />
         )}
         <div
