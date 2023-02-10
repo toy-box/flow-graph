@@ -53,6 +53,7 @@ export const Panel: React.FC<any> = () => {
   const [rightVisible, setRightVisible] = React.useState(false)
   const [debugVisible, setDebugVisible] = React.useState(false)
   const [rightActiveKey, setRightActiveKey] = React.useState()
+  const [debugActiveKey, setDebugActiveKey] = React.useState()
   const [errorData, setErrorData] = React.useState([])
   const [warnData, setWarnData] = React.useState([])
 
@@ -122,8 +123,8 @@ export const Panel: React.FC<any> = () => {
               direction="right"
               visible={debugVisible}
               setVisible={setDebugVisible}
-              activeKey={rightActiveKey}
-              setActiveKey={setRightActiveKey as any}
+              activeKey={debugActiveKey}
+              setActiveKey={setDebugActiveKey as any}
             >
               <CompositePanel.Item
                 title="flowDesigner.panels.debug"
