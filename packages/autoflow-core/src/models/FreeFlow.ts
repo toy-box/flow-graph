@@ -273,6 +273,8 @@ export class FreeFlow {
       addEdge: action,
       updateEdges: action,
       changeNodes: action,
+      createResource: action,
+      editResource: action,
       changeMode: action,
     })
   }
@@ -332,11 +334,13 @@ export class FreeFlow {
             resource?.items?.type === MetaValueType.OBJECT ||
             resource?.items?.type === MetaValueType.OBJECT_ID
           ) {
+            currentResource.webType = FlowResourceType.VARIABLE_ARRAY_RECORD
             this.setResourceChildren(
               FlowResourceType.VARIABLE_ARRAY_RECORD,
               currentResource
             )
           } else {
+            currentResource.webType = FlowResourceType.VARIABLE_ARRAY
             this.setResourceChildren(
               FlowResourceType.VARIABLE_ARRAY,
               currentResource
@@ -346,14 +350,17 @@ export class FreeFlow {
           resource?.type === MetaValueType.OBJECT ||
           resource?.type === MetaValueType.OBJECT_ID
         ) {
+          currentResource.webType = FlowResourceType.VARIABLE_RECORD
           this.setResourceChildren(
             FlowResourceType.VARIABLE_RECORD,
             currentResource
           )
         } else {
+          currentResource.webType = FlowResourceType.VARIABLE
           this.setResourceChildren(FlowResourceType.VARIABLE, currentResource)
         }
       } else {
+        currentResource.webType = resource.webType
         this.setResourceChildren(resource.webType, currentResource)
       }
     })
@@ -366,9 +373,29 @@ export class FreeFlow {
   }
 
   createResource(type: FlowResourceType, resource: IFieldMetaResource) {
-    const currentResource = new FlowVariable(resource)
+    const obj: any = { ...resource }
+    if (resource?.type === MetaValueType.ARRAY) {
+      if (
+        resource?.items?.type === MetaValueType.OBJECT ||
+        resource?.items?.type === MetaValueType.OBJECT_ID
+      ) {
+        obj.webType = FlowResourceType.VARIABLE_ARRAY_RECORD
+      } else {
+        obj.webType = FlowResourceType.VARIABLE_ARRAY
+      }
+    } else if (
+      resource?.type === MetaValueType.OBJECT ||
+      resource?.type === MetaValueType.OBJECT_ID
+    ) {
+      obj.webType = FlowResourceType.VARIABLE_RECORD
+    } else {
+      obj.webType = FlowResourceType.VARIABLE
+    }
+    const currentResource = new FlowVariable(obj)
     this.flowResourceMap[resource.key] = currentResource
-    const idx = this.metaResourceDatas.findIndex((meta) => meta.type === type)
+    const idx = this.metaResourceDatas.findIndex(
+      (meta) => meta.type === obj.webType
+    )
     if (idx > -1) this.metaResourceDatas[idx].children.push(currentResource)
   }
 

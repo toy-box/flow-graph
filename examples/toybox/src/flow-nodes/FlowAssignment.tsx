@@ -310,6 +310,7 @@ const assignRender = (isNew: boolean, metaFlow: FreeFlow) => {
                         placeholder: takeMessage(
                           'flowDesigner.flow.form.comm.valuePlace'
                         ),
+                        metaFlow: metaFlow,
                         reactionObj: {
                           key: 'assignmentItems',
                           value: 'operation',

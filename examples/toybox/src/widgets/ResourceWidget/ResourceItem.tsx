@@ -1,7 +1,13 @@
 import React, { useCallback, useState } from 'react'
 import { observer } from '@formily/reactive-react'
-import { IconWidget, TextWidget, usePrefix } from '@toy-box/studio-base'
 import {
+  IconWidget,
+  TextWidget,
+  useLocale,
+  usePrefix,
+} from '@toy-box/studio-base'
+import {
+  FlowResourceType,
   FreeFlow,
   IFieldMetaFlow,
   IResourceParam,
@@ -25,6 +31,29 @@ export const ResourceItemWidget: React.FC<IResourceItemWidgetProps> = observer(
   (props) => {
     const prefix = usePrefix('resource-item')
     const [expand, setExpand] = useState(props.defaultExpand)
+    const templateObj: any = {
+      [FlowResourceType.VARIABLE]: useLocale(
+        'flowDesigner.flow.autoFlow.variable'
+      ),
+      [FlowResourceType.VARIABLE_RECORD]: useLocale(
+        'flowDesigner.flow.autoFlow.variableRecord'
+      ),
+      [FlowResourceType.VARIABLE_ARRAY]: useLocale(
+        'flowDesigner.flow.autoFlow.variableArray'
+      ),
+      [FlowResourceType.VARIABLE_ARRAY_RECORD]: useLocale(
+        'flowDesigner.flow.autoFlow.variableArrayRecord'
+      ),
+      [FlowResourceType.CONSTANT]: useLocale(
+        'flowDesigner.flow.autoFlow.constant'
+      ),
+      [FlowResourceType.FORMULA]: useLocale(
+        'flowDesigner.flow.autoFlow.formula'
+      ),
+      [FlowResourceType.TEMPLATE]: useLocale(
+        'flowDesigner.flow.autoFlow.template'
+      ),
+    }
     const editResource = useCallback((child: IFieldMetaFlow) => {
       resourceEdit(props.metaFlow, true, child, props.source?.type)
     }, [])
@@ -51,7 +80,7 @@ export const ResourceItemWidget: React.FC<IResourceItemWidgetProps> = observer(
                 <IconWidget infer="Expand" size={20} />
               </div>
               <div className={prefix + '-header-content'}>
-                <TextWidget>{props.source?.type}</TextWidget>
+                <TextWidget>{templateObj[props.source?.type]}</TextWidget>
               </div>
             </div>
             <div className={prefix + '-content-wrapper'}>

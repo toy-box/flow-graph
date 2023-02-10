@@ -10,10 +10,11 @@ import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Dropdown, Input, Tag } from 'antd'
 import { observer } from '@formily/reactive-react'
-import { clone } from '@formily/shared'
+import { clone, isObj } from '@formily/shared'
 import { useField, useForm } from '@formily/react'
-import { useFreeFlow } from '@toy-box/flow-node'
-import { FreeFlow } from '@toy-box/autoflow-core'
+import { IFieldMeta } from '@toy-box/meta-schema'
+import { useLocale } from '@toy-box/studio-base'
+import { FlowResourceType } from '@toy-box/autoflow-core'
 import { resourceEdit } from '../../../flow-nodes'
 import './index.less'
 
@@ -22,61 +23,35 @@ export const ResourceSelect: FC = observer((props: any) => {
   const formilyField = useField() as any
   const [visible, setVariable] = useState(false)
   const [inputValue, setInputValue] = useState('')
-  const [selectKeys, setSelectKeys] = useState([])
+  const [selectKeys, setSelectKeys] = useState(formilyField.value || [])
   const ref = useRef()
-  const [items, setItems] = useState<MenuProps['items']>([
-    {
-      key: '1',
-      type: 'group',
-      label: 'Group title',
-      children: [
-        {
-          key: '1-1',
-          label: '1st menu item',
-        },
-        {
-          key: '1-2',
-          label: '2nd menu item',
-        },
-      ],
-    },
-    {
-      key: '2',
-      label: 'sub menu',
-      onTitleClick: (e) => {
-        // setVariable(true)
-        e.domEvent.stopPropagation()
-      },
-      children: [
-        {
-          key: '2-1',
-          label: '3rd menu item',
-          onTitleClick: (e) => {
-            // setVariable(true)
-            e.domEvent.stopPropagation()
-          },
-          children: [
-            {
-              key: '2-1-1',
-              label: 'rd menu item',
-            },
-            {
-              key: '2-1-2',
-              label: '42-1th menu item',
-            },
-          ],
-        },
-        {
-          key: '2-2',
-          label: '4th menu item',
-        },
-      ],
-    },
-  ])
+  const [items, setItems] = useState<MenuProps['items']>([])
   const [historyItems, setHistoryItems] = useState([])
 
+  const templateObj: any = {
+    [FlowResourceType.VARIABLE]: useLocale(
+      'flowDesigner.flow.autoFlow.variable'
+    ),
+    [FlowResourceType.VARIABLE_RECORD]: useLocale(
+      'flowDesigner.flow.autoFlow.variableRecord'
+    ),
+    [FlowResourceType.VARIABLE_ARRAY]: useLocale(
+      'flowDesigner.flow.autoFlow.variableArray'
+    ),
+    [FlowResourceType.VARIABLE_ARRAY_RECORD]: useLocale(
+      'flowDesigner.flow.autoFlow.variableArrayRecord'
+    ),
+    [FlowResourceType.CONSTANT]: useLocale(
+      'flowDesigner.flow.autoFlow.constant'
+    ),
+    [FlowResourceType.FORMULA]: useLocale('flowDesigner.flow.autoFlow.formula'),
+    [FlowResourceType.TEMPLATE]: useLocale(
+      'flowDesigner.flow.autoFlow.template'
+    ),
+  }
+
   const onChange = useCallback(
-    (value: string) => {
+    (value: string[]) => {
       form.setFieldState(formilyField?.path?.entire, (state) => {
         state.value = value
         formilyField.validate()
@@ -106,29 +81,60 @@ export const ResourceSelect: FC = observer((props: any) => {
   ])
 
   useEffect(() => {
-    const arr = items
-    // const metaResourceDatas = props?.metaFlow?.metaResourceDatas
-    // metaResourceDatas.filter(source => {
-    //     if (source.children.length > 0) return true
-    // }).map(meta => {
-    //     meta.children.map(() => {
-
-    //     })
-    //     return {
-    //         label: meta.type,
-    //         key: meta.type,
-    //         type: 'group',
-    //         children:
-    //     }
-    // })
-    arr.unshift({
-      key: '0',
-      label: '新建 资源',
-      icon: <PlusOutlined />,
-    })
+    const metaResourceDatas = clone(props?.metaFlow?.metaResourceDatas)
+    const arr = [
+      {
+        key: '0',
+        label: useLocale('flowDesigner.flow.form.resourceCreate.createTitle'),
+        icon: <PlusOutlined />,
+      },
+    ]
+    if (metaResourceDatas) {
+      const metaArr = metaResourceDatas
+        .filter((source) => {
+          if (source.children.length > 0) return true
+        })
+        .map((meta) => {
+          const children = meta.children.map((child) => {
+            const obj = {
+              label: child.name,
+              key: child.key,
+              // children: [],
+            }
+            const changeObj = setMetaChildren(obj, child)
+            return changeObj
+          })
+          return {
+            label: templateObj[meta.type],
+            key: meta.type,
+            type: 'group',
+            children,
+          }
+        })
+      arr.push(...metaArr)
+    }
     setItems(arr)
     setHistoryItems(arr)
-  }, [])
+  }, [props?.metaFlow?.metaResourceDatas])
+
+  const setMetaChildren = (obj: any, meta: IFieldMeta) => {
+    if (meta.properties && isObj(meta.properties)) {
+      for (const proKey in meta.properties) {
+        if (meta.properties.hasOwnProperty(proKey)) {
+          const p = meta.properties[proKey]
+          const child = {
+            label: p.name,
+            key: p.key,
+            children: [],
+          }
+          setMetaChildren(child, p)
+          obj.children.push(child)
+        }
+      }
+    } else {
+      return obj
+    }
+  }
 
   const createResource = useCallback(() => {
     resourceEdit(props.metaFlow, false)
@@ -166,7 +172,7 @@ export const ResourceSelect: FC = observer((props: any) => {
   const changeBlur = useCallback(() => {
     if (selectKeys.length === 0) {
       setInputValue('')
-      onChange('')
+      onChange(undefined)
     }
   }, [selectKeys])
 
@@ -179,19 +185,19 @@ export const ResourceSelect: FC = observer((props: any) => {
       const target: any = e.domEvent.target
       setSelectKeys(e.keyPath)
       setInputValue(target?.innerText ?? '')
-      onChange(target?.innerText)
+      onChange(e.keyPath)
     }
   }
 
   const handleClose = () => {
     // const newTags = selectKeys.filter((tag) => tag !== removedTag)
     setInputValue('')
-    onChange('')
+    onChange(undefined)
     setVariable(true)
     setSelectKeys([])
   }
 
-  const tagChild = () => {
+  const tagChild = useCallback(() => {
     const tagElem = (
       <Tag
         closable={!disabled}
@@ -208,13 +214,48 @@ export const ResourceSelect: FC = observer((props: any) => {
         {tagElem}
       </span>
     )
-  }
+  }, [inputValue, disabled])
+
+  useEffect(() => {
+    const length = selectKeys.length
+    if (length > 0) {
+      const selectKey = selectKeys[0]
+      historyItems.some((item) => {
+        if (item.key === selectKey) return setInputValue(item.label)
+        if (item?.children?.length > 0) {
+          return setInputValue(findName(item?.children, selectKey, length))
+        }
+      })
+    }
+  }, [historyItems, selectKeys])
+
+  const findName = useCallback(
+    (children: any[], selectKey: string, length: number) => {
+      const num = length - 1
+      let name = ''
+      children.some((child) => {
+        if (num === 0) {
+          if (child.key === selectKey) {
+            name = child.label
+            return true
+          }
+        } else if (child?.children?.length > 0) {
+          findName(child?.children, selectKey, num)
+        }
+      })
+      return name
+    },
+    []
+  )
 
   return (
     <div ref={ref}>
       <Dropdown
         open={visible}
-        onOpenChange={() => setVariable(!disabled ? !visible : false)}
+        onOpenChange={() => {
+          setVariable(!disabled ? !visible : false)
+          // if (!visible) openSelect()
+        }}
         menu={{
           items,
           onClick,

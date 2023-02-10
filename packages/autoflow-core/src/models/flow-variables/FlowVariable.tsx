@@ -5,7 +5,11 @@ import {
   IFieldOption,
   MetaValueType,
 } from '@toy-box/meta-schema'
-import { IUpdateFieldMetaVariable } from '../../types'
+import { FlowResourceType, IUpdateFieldMetaVariable } from '../../types'
+
+export interface IFieldMetaWithWeb extends IFieldMeta {
+  webType: FlowResourceType
+}
 
 export class FlowVariable {
   key: string
@@ -39,8 +43,9 @@ export class FlowVariable {
   titleKey?: string
   defaultValue?: any
   properties?: Record<string, IFieldMeta>
+  webType: FlowResourceType
 
-  constructor(flowVariable: IFieldMeta) {
+  constructor(flowVariable: IFieldMetaWithWeb) {
     this.key = flowVariable.key
     this.name = flowVariable.name
     this.defaultValue = flowVariable.defaultValue
@@ -59,6 +64,7 @@ export class FlowVariable {
     this.type = flowVariable.type
     this.titleKey = flowVariable.titleKey
     this.multipleOf = flowVariable.multipleOf
+    this.webType = flowVariable.webType
     this.makeObservable()
   }
 

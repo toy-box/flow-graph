@@ -145,6 +145,7 @@ const handleOk = (values, metaflow: FreeFlow, isEdit: boolean) => {
     text: obj.text,
     calcType: obj.formula ? 'formula' : undefined,
     formula: obj.formula,
+    webType: obj.flowType,
   }
   // const register = flowGraph.registers.find(
   //   (reg) => reg.id === obj.refObjectId
@@ -152,7 +153,14 @@ const handleOk = (values, metaflow: FreeFlow, isEdit: boolean) => {
   // if (obj.refObjectId && obj.type === MetaValueType.OBJECT) {
   //   resourceData.refRegisterId = register?.id
   // }
-  // const valueTypeLen = obj.valueType ? obj.valueType.length : undefined
+  const valueTypeLen = obj.valueType ? obj.valueType.length : undefined
+  if (valueTypeLen) {
+    resourceData.type = MetaValueType.ARRAY
+    resourceData.items = {
+      type: obj.type,
+      properties: undefined,
+    }
+  }
   // if (valueTypeLen) {
   //   resourceData.type = MetaValueType.ARRAY
   //   resourceData.items = {
