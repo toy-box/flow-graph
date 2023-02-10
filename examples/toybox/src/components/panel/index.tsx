@@ -64,6 +64,7 @@ export const Panel: React.FC<any> = () => {
   }, [])
   const isEditMode = freeFlow.mode === FlowModeEnum.EDIT
   const debug = useCallback(() => {
+    console.log('freeFlow', freeFlow)
     freeFlow.changeMode()
     isEditMode && setLeftVisible(false)
     isEditMode && setLeftActiveKey(null)

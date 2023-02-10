@@ -81,7 +81,6 @@ export function connectFreeFlow({
       }
     }
     const isEditMode = freeFlow.mode === FlowModeEnum.EDIT
-    console.log('isEditMode', isEditMode)
     return (
       <React.Fragment>
         {handles?.map((handleProps, idx) => (
