@@ -184,6 +184,7 @@ export class ReactFlowCanvas implements ICanvas {
             [change.id]: {},
             ...rest
           } = flowMetaNodeMap
+          delete this.flowGraph?.nodeMap[change.id]
           if (!nodesChange.isHistory) {
             nodesChange.freeFlow?.history.push({
               type: OpearteTypeEnum.REMOVE_NODE,
