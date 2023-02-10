@@ -624,9 +624,12 @@ export class FreeFlow {
     this.flow.canvas.nodes.map((node) => {
       node.deletable = goEditFlag
       node.draggable = goEditFlag
+      node.selected = false
     })
     this.flow.canvas.edges.map((edge) => {
       edge.deletable = goEditFlag
+      edge.selected === true &&
+        this.updateEdges([{ id: edge.id, type: 'select', selected: false }])
     })
   }
 }

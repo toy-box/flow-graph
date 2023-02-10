@@ -510,9 +510,9 @@ export const FlowCanvas = observer(() => {
           defaultEdgeOptions={freeEdgeOptions}
           connectionLineStyle={connectionLineStyle}
           connectionLineType={ConnectionLineType.SmoothStep}
-          onNodesChange={(changes) => onNodesChange(changes)}
+          onNodesChange={(changes) => isEditMode && onNodesChange(changes)}
           onNodeDoubleClick={isEditMode && doubleClickNode}
-          onEdgesChange={(changes) => onEdgesChange(changes)}
+          onEdgesChange={(changes) => isEditMode && onEdgesChange(changes)}
           // onNodesChange={freeFlow.changeNodes}
           // onNodeDoubleClick={doubleClickNode}
           // onEdgesChange={freeFlow.updateEdges}
