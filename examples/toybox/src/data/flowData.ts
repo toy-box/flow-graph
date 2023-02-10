@@ -310,7 +310,7 @@ export const freeMeta: IFlowMeta = {
         type: FlowMetaType.DECISION,
         defaultConnector: { targetReference: 'assignment1' },
         defaultConnectorName: 'default123232',
-        x: 300,
+        x: 400,
         y: 150,
         rules: [
           {
