@@ -30,7 +30,7 @@ export interface IHistoryProps {
 export class History {
   context?: HistoryItem
   props?: IHistoryProps
-  current = 0
+  current = -1
   history: HistoryItem[] = []
   updateTimer = null
   maxSize = 100
@@ -62,7 +62,9 @@ export class History {
     // if (this.current < this.history.length - 1) {
     //   this.history = this.history.slice(0, this.current + 1)
     // }
-    this.current = this.history.length
+    // const currentIdx = this.current
+    // this.current = this.history.length
+    this.current += 1
     const timestamp = new Date().getTime()
     // const isRemoveNode = this.context?.edges.some((edge) => {
     //   const sourceData = context.updateMetaNodeMap[edge.source]
@@ -89,7 +91,9 @@ export class History {
         ...context,
         timestamp,
       }
-      this.history.push(this.context)
+      // this.history.push(this.context)
+      debugger
+      this.history.splice(this.current, 0, this.context)
     }
     console.log(this.history, 'this.history')
     // const overSizeCount = this.history.length - this.maxSize
@@ -112,6 +116,7 @@ export class History {
       const item = this.history[this.current + 1]
       this.context = item
       this.current++
+      debugger
       if (this.props?.onRedo) {
         this.props.onRedo(item)
       }
@@ -123,6 +128,7 @@ export class History {
       const item = this.history[this.current]
       this.context = item
       this.current--
+      debugger
       if (this.props?.onUndo) {
         this.props.onUndo(item)
       }
