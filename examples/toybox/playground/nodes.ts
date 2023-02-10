@@ -21,6 +21,7 @@ export const nodeTemplatesProvider = (
       description: 'Assignment node',
       type: FlowMetaType.ASSIGNMENT,
       group: 'flow',
+      metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
         editInfo.x = editInfo.x - 200
         console.log(editInfo)
@@ -40,6 +41,7 @@ export const nodeTemplatesProvider = (
       description: 'Loop node',
       type: FlowMetaType.LOOP,
       group: 'flow',
+      metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
         const flowData = {
           id: uid(),
@@ -57,6 +59,7 @@ export const nodeTemplatesProvider = (
       description: 'Decision node',
       type: FlowMetaType.DECISION,
       group: 'flow',
+      metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
         const flowData = {
           id: uid(),
@@ -85,6 +88,7 @@ export const nodeTemplatesProvider = (
       description: 'Wait',
       type: FlowMetaType.WAIT,
       group: 'flow',
+      metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
         const flowData = {
           id: uid(),
@@ -102,6 +106,7 @@ export const nodeTemplatesProvider = (
       description: 'Collection Sort',
       type: FlowMetaType.SORT_COLLECTION_PROCESSOR,
       group: 'flow',
+      metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
         const flowData = {
           id: uid(),

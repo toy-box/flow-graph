@@ -272,10 +272,7 @@ const assignRender = (isNew: boolean, metaFlow: FreeFlow) => {
                         placeholder: takeMessage(
                           'flowDesigner.flow.form.comm.typePlace'
                         ),
-                        reactionObj: {
-                          key: 'assignmentItems',
-                          value: 'operation',
-                        },
+                        reactionKey: 'operation',
                       },
                     },
                     value: {
@@ -311,10 +308,7 @@ const assignRender = (isNew: boolean, metaFlow: FreeFlow) => {
                           'flowDesigner.flow.form.comm.valuePlace'
                         ),
                         metaFlow: metaFlow,
-                        reactionObj: {
-                          key: 'assignmentItems',
-                          value: 'operation',
-                        },
+                        reactionKey: 'operation',
                       },
                     },
                     remove: {

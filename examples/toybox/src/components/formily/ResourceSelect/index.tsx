@@ -15,6 +15,7 @@ import { useField, useForm } from '@formily/react'
 import { IFieldMeta } from '@toy-box/meta-schema'
 import { useLocale } from '@toy-box/studio-base'
 import { FlowResourceType } from '@toy-box/autoflow-core'
+import get from 'lodash.get'
 import { resourceEdit } from '../../../flow-nodes'
 import './index.less'
 
@@ -23,7 +24,7 @@ export const ResourceSelect: FC = observer((props: any) => {
   const formilyField = useField() as any
   const [visible, setVariable] = useState(false)
   const [inputValue, setInputValue] = useState('')
-  const [selectKeys, setSelectKeys] = useState(formilyField.value || [])
+  const [selectKeys, setSelectKeys] = useState([])
   const ref = useRef()
   const [items, setItems] = useState<MenuProps['items']>([])
   const [historyItems, setHistoryItems] = useState([])
@@ -50,35 +51,36 @@ export const ResourceSelect: FC = observer((props: any) => {
     ),
   }
 
+  useEffect(() => {
+    setSelectKeys(formilyField?.value?.split('.')?.reverse() || [])
+  }, [formilyField?.value])
+
   const onChange = useCallback(
     (value: string[]) => {
       form.setFieldState(formilyField?.path?.entire, (state) => {
-        state.value = value
+        const val = value?.reverse()?.join('.')
+        state.value = val
         formilyField.validate()
       })
     },
     [form, formilyField]
   )
 
-  const index = useMemo(() => {
-    const entire = formilyField?.path?.entire.split('.')
-    return entire?.[1]
-  }, [formilyField?.path?.entire])
+  const reactionPath = useMemo(() => {
+    const segments = formilyField?.path?.segments
+    const length = segments?.length
+    const arr = segments.slice(0, length - 1)
+    arr.push(props?.reactionKey)
+    return arr
+  }, [formilyField?.path?.segments, props?.reactionKey])
 
   const disabled = useMemo(() => {
-    const reactionValue =
-      form.values?.[props?.reactionObj?.key]?.[index]?.[
-        props?.reactionObj?.value
-      ]
-    if (props?.reactionObj) {
+    const reactionValue = get(form.values, reactionPath)
+    if (props?.reactionKey) {
       return !reactionValue
     }
     return false
-  }, [
-    form.values?.[props?.reactionObj?.key]?.[index]?.[
-      props?.reactionObj?.value
-    ],
-  ])
+  }, [get(form.values, reactionPath)])
 
   useEffect(() => {
     const metaResourceDatas = clone(props?.metaFlow?.metaResourceDatas)
@@ -274,7 +276,13 @@ export const ResourceSelect: FC = observer((props: any) => {
         >
           <div style={{ width: '100%' }}>
             {selectKeys.length > 0 ? (
-              <div className="resource-select-custom-input">{tagChild()}</div>
+              <div
+                className={`resource-select-custom-input ${
+                  disabled ? 'disabled' : ''
+                }`}
+              >
+                {tagChild()}
+              </div>
             ) : (
               <Input
                 allowClear

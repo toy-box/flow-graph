@@ -16,8 +16,9 @@ import { createSchemaField } from '@formily/react'
 import * as ICONS from '@ant-design/icons'
 import { createForm } from '@formily/core'
 import { observable } from '@formily/reactive'
-import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
+import { FlowMetaNode, FlowMetaType, FreeFlow } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
+import { ResourceSelect, OperationSelect } from '../components/formily'
 import { TextWidget, takeMessage } from '../widgets'
 
 import { BranchArrays } from '../components/formily'
@@ -48,6 +49,8 @@ const SchemaField = createSchemaField({
     Radio,
     descTipHtml,
     BranchArrays,
+    ResourceSelect,
+    OperationSelect,
   },
   scope: {
     icon(name) {
@@ -70,7 +73,7 @@ const SchemaField = createSchemaField({
 //   logic: '',
 // })
 
-const decideRender = (isNew: boolean) => {
+const decideRender = (isNew: boolean, metaFlow: FreeFlow) => {
   const decidePanelSchema = {
     type: 'object',
     properties: {
@@ -403,9 +406,10 @@ const decideRender = (isNew: boolean) => {
                                   gridSpan: 6,
                                   labelWidth: '100px',
                                 },
-                                'x-component': 'Input',
+                                'x-component': 'ResourceSelect',
                                 'x-component-props': {
                                   suffix: "{{icon('SearchOutlined')}}",
+                                  metaFlow: metaFlow,
                                   placeholder: takeMessage(
                                     'flowDesigner.flow.form.comm.operationPlace'
                                   ),
@@ -437,11 +441,12 @@ const decideRender = (isNew: boolean) => {
                                   gridSpan: 4,
                                   labelWidth: '100px',
                                 },
-                                'x-component': 'Input',
+                                'x-component': 'OperationSelect',
                                 'x-component-props': {
                                   placeholder: takeMessage(
                                     'flowDesigner.flow.form.comm.typePlace'
                                   ),
+                                  reactionKey: 'operation',
                                 },
                               },
                               value: {
@@ -470,12 +475,14 @@ const decideRender = (isNew: boolean) => {
                                   gridSpan: 6,
                                   labelWidth: '100px',
                                 },
-                                'x-component': 'Input',
+                                'x-component': 'ResourceSelect',
                                 'x-component-props': {
                                   suffix: "{{icon('SearchOutlined')}}",
                                   placeholder: takeMessage(
                                     'flowDesigner.flow.form.comm.valuePlace'
                                   ),
+                                  metaFlow: metaFlow,
+                                  reactionKey: 'operation',
                                 },
                               },
                               remove: {
@@ -539,7 +546,7 @@ const decideRender = (isNew: boolean) => {
 
 export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
   console.log('node', node)
-  const dialog = decideRender(node.make)
+  const dialog = decideRender(node.make, node.metaFlow)
   dialog
     .forOpen((payload, next) => {
       setTimeout(() => {
