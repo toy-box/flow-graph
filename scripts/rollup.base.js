@@ -16,6 +16,7 @@ const presets = () => {
     '@toy-box/autoflow-core': 'Toybox.AutoflowCore',
     '@toy-box/flow-graph': 'Toybox.FlowGraph',
     '@toy-box/flow-node': 'Toybox.FlowNode',
+    '@toy-box/action-template': 'Toybox.ActionTemplate',
   }
   return [
     typescript({
