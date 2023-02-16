@@ -206,7 +206,10 @@ export const Panel: React.FC<any> = () => {
       >
         <WarnWidget dataList={warnData} />
       </CompositePanelContent.Item> */}
-            <CompositePanelContent.Item title="flowDesigner.panels.error">
+            <CompositePanelContent.Item
+              activeKey="error"
+              title="flowDesigner.panels.error"
+            >
               <ErrorWidget dataList={errorData} />
             </CompositePanelContent.Item>
           </CompositePanelContent>

@@ -1,14 +1,14 @@
 import React, { FC } from 'react'
-import { useFlowPrefix } from '../../hooks'
+import { usePrefix } from '@toy-box/studio-base'
 import { TextWidget } from '../TextWidget'
-// import './style'
+import './style.less'
 
 export interface ErrorWidgetProps {
   dataList: any[]
 }
 
 export const ErrorWidget: FC<ErrorWidgetProps> = ({ dataList = [] }) => {
-  const prefix = useFlowPrefix('-error-widget')
+  const prefix = usePrefix('error-widget')
   const error = dataList.filter((error) => error.level === 'error')
   const warn = dataList.filter((error) => error.level === 'warn')
 
@@ -17,9 +17,8 @@ export const ErrorWidget: FC<ErrorWidgetProps> = ({ dataList = [] }) => {
       {error.length > 0 && (
         <div>
           <div className={prefix + '-title'}>
-            <TextWidget token="studioApp.errorMessage.name"></TextWidget>{' '}
             {error.length}{' '}
-            <TextWidget token="studioApp.errorMessage.error"></TextWidget>
+            <TextWidget token="flowDesigner.errorMessage.error"></TextWidget>
           </div>
           <ul className={prefix + '-ul'}>
             {error.map((item, index) => (
@@ -33,9 +32,8 @@ export const ErrorWidget: FC<ErrorWidgetProps> = ({ dataList = [] }) => {
       {warn.length > 0 && (
         <div>
           <div className={prefix + '-title'}>
-            <TextWidget token="studioApp.errorMessage.name"></TextWidget>{' '}
             {warn.length}{' '}
-            <TextWidget token="studioApp.errorMessage.warn"></TextWidget>
+            <TextWidget token="flowDesigner.errorMessage.warn"></TextWidget>
           </div>
           <ul className={prefix + '-ul'}>
             {warn.map((item, index) => (

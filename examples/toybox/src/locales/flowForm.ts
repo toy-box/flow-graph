@@ -19,6 +19,10 @@ const zhCN = {
         submit: '确定',
         remove: '删除',
       },
+      errorMessage: {
+        error: '个错误信息。',
+        warn: '个警告信息。',
+      },
       flow: {
         extend: {
           title: '添加流程节点',
@@ -190,6 +194,10 @@ const enUS = {
         cancel: 'cancel',
         submit: 'submit',
         remove: 'remove',
+      },
+      errorMessage: {
+        error: 'Error Message',
+        warn: 'Warn Message',
       },
       flow: {
         extend: {
