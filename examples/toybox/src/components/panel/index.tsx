@@ -1,7 +1,11 @@
 import React, { useCallback, useRef } from 'react'
 import { useMetaFlow, useFreeFlow } from '@toy-box/flow-node'
 import { flowData1, flowData2, flowMeta, freeMeta } from '../../data/flowData'
-import { ActionForm } from '@toy-box/action-template'
+import {
+  ActionForm,
+  isJSON,
+  convertJSONSchemaToFormily,
+} from '@toy-box/action-template'
 import { LayoutModeEnum, FlowModeEnum } from '@toy-box/flow-graph'
 import {
   icons,
@@ -67,16 +71,12 @@ export const Panel: React.FC<any> = () => {
   const isEditMode = freeFlow.mode === FlowModeEnum.EDIT
   const debug = useCallback(() => {
     console.log('freeFlow', freeFlow)
-    const data = {
-      properties: {
-        smaller: {
-          type: 'number',
-          maximum: { $data: '1/larger' },
-        },
-        larger: { type: 'number' },
-      },
-    }
-    console.log('ActionForm', new ActionForm(data).isDataValid)
+    const data = `{
+      "name": "George Washington",
+      "birthday": "February 22, 1732",
+      "address": "Mount Vernon, Virginia, United States"
+    }`
+    console.log('ActionForm', convertJSONSchemaToFormily(data))
     freeFlow.changeMode()
     isEditMode && setLeftVisible(false)
     isEditMode && setLeftActiveKey(null)
