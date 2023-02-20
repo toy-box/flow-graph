@@ -92,7 +92,6 @@ export class History {
         timestamp,
       }
       // this.history.push(this.context)
-      debugger
       this.history.splice(this.current, 0, this.context)
     }
     console.log(this.history, 'this.history')
@@ -116,7 +115,6 @@ export class History {
       const item = this.history[this.current + 1]
       this.context = item
       this.current++
-      debugger
       if (this.props?.onRedo) {
         this.props.onRedo(item)
       }
@@ -128,7 +126,6 @@ export class History {
       const item = this.history[this.current]
       this.context = item
       this.current--
-      debugger
       if (this.props?.onUndo) {
         this.props.onUndo(item)
       }

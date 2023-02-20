@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react'
 import { useMetaFlow, useFreeFlow } from '@toy-box/flow-node'
-import { flowData1, flowData2, flowMeta, freeMeta } from '../../data/flowData'
 import { LayoutModeEnum, FlowModeEnum } from '@toy-box/flow-graph'
+import { Button } from 'antd'
 import {
   icons,
   CompositePanel,
@@ -19,6 +19,7 @@ import {
 } from '../../../src'
 import { itemMap } from '../../../src/data/itemMap'
 import { DesignerFlowContext } from '../../context'
+import { flowData1, flowData2, flowMeta, freeMeta } from '../../data/flowData'
 export const Panel: React.FC<any> = () => {
   const metaFlow = useMetaFlow()
   const freeFlow = useFreeFlow()
@@ -149,6 +150,11 @@ export const Panel: React.FC<any> = () => {
                 title="flowDesigner.panels.error"
                 icon="Profile"
                 activeKey="error"
+              />
+              <CompositePanel.Item
+                title={<Button>submit</Button>}
+                shape="button"
+                onClick={handleExport}
               />
             </CompositePanel>
           </TopbarPanel.Region>
