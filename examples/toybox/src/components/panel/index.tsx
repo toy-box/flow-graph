@@ -71,12 +71,24 @@ export const Panel: React.FC<any> = () => {
   const isEditMode = freeFlow.mode === FlowModeEnum.EDIT
   const debug = useCallback(() => {
     console.log('freeFlow', freeFlow)
-    const data = `{
-      "name": "George Washington",
-      "birthday": "February 22, 1732",
-      "address": "Mount Vernon, Virginia, United States"
-    }`
-    console.log('ActionForm', convertJSONSchemaToFormily(data))
+    const data = {
+      name: 'George Washington',
+      birthday: '{{birthday}}',
+      address: '{{address}}',
+      $variable: {
+        type: 'object',
+        properties: {
+          birthday: {
+            type: 'string',
+          },
+          address: {
+            type: 'string',
+          },
+        },
+        required: ['birthday', 'address'],
+      },
+    }
+    console.log('ActionForm', convertJSONSchemaToFormily(data.$variable))
     freeFlow.changeMode()
     isEditMode && setLeftVisible(false)
     isEditMode && setLeftActiveKey(null)

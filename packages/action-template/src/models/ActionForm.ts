@@ -414,6 +414,7 @@ export function isJSON(props) {
 
 export function convertJSONSchemaToFormily(schema) {
   const formilySchema = schema
+  console.log('schema[123]', schema)
   // const { type, properties, items, ...rest } = schema;
   // const formilySchema = {
   //   ...rest,
@@ -426,10 +427,23 @@ export function convertJSONSchemaToFormily(schema) {
   } else if (formilySchema.type === 'string') {
     formilySchema['x-component'] = 'Input'
   }
+  // else if(formilySchema.type === 'object') {
+
+  // }
 
   // 添加 Formily 扩展属性和校验规则
   formilySchema['x-decorator'] = 'FormItem'
   formilySchema['x-rules'] = []
+
+  // 处理必填情况
+  if (
+    formilySchema.required &&
+    ['array', 'object'].includes(formilySchema.type)
+  ) {
+    formilySchema.required.map((item) => {
+      formilySchema.properties[item]['required'] = true
+    })
+  }
 
   // 处理枚举值
   if (formilySchema.enum) {
@@ -467,8 +481,11 @@ export function convertJSONSchemaToFormily(schema) {
 
   // 处理所有属性的子节点
   if (formilySchema.properties) {
-    formilySchema.properties = Object.keys(formilySchema).reduce(
+    // formilySchema.properties
+    formilySchema.properties = Object.keys(formilySchema.properties).reduce(
       (result, key) => {
+        // 处理Formily title填写
+        formilySchema.properties[key].title = key
         result[key] = convertJSONSchemaToFormily(formilySchema.properties[key])
         return result
       },
