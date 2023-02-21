@@ -495,3 +495,147 @@ export function convertJSONSchemaToFormily(schema) {
 
   return formilySchema
 }
+
+function metaToSchema(metaList: IFieldMeta[]) {
+  const formWidget = {}
+  metaList.map((meta) => {
+    const {
+      type,
+      name,
+      required,
+      options,
+      minLength,
+      maxLength,
+      minimum,
+      maximum,
+      properties,
+      items,
+      ...rest
+    } = meta
+    formWidget[name] = {
+      type,
+      //可走国际化用 <TextWidget />
+      title: name,
+      'x-validator': [],
+      'x-decorator': 'FormItem',
+      'x-decorator-props': {
+        layout: 'vertical',
+        colon: false,
+      },
+      ...rest,
+    }
+
+    // 处理必填情况和极值
+    if (required) {
+      formWidget[name]['x-validator'].push({
+        triggerType: 'onBlur',
+        required: true,
+        // message: (
+        //   <TextWidget>
+        //     flowDesigner.flow.form.validator.required
+        //   </TextWidget>
+        // ),
+      })
+    }
+
+    ;[minLength, maxLength, minimum, maximum].map((item) => {
+      item &&
+        formWidget[name]['x-validator'].push({
+          triggerType: 'onBlur',
+          required: true,
+          // message: (
+          //   <TextWidget>
+          //     必须大于 + {variable}
+          //   </TextWidget>
+          // ),
+        })
+      // formWidget[name][item] = item
+    })
+
+    // 处理数据类型和表单元素的映射
+    const setComponentAction = {
+      number: 'NumberPicker',
+      string: () => {
+        if (name === 'description') {
+          return 'Input.TextArea'
+        } else return 'Input'
+      },
+    }
+
+    if (options) {
+      formWidget[name]['x-component'] = 'Select'
+      formWidget[name].enum = options
+    } else {
+      formWidget[name]['x-component'] = setComponentAction[type]
+    }
+
+    // 处理所有属性的子节点
+    // ['items','properties'].map((key)=>{
+    //   let targetMeta = key ==='properties'? formWidget[name].properties : formWidget[name].items.properties
+    //   targetMeta = Object.keys(targetMeta).reduce(
+    //     (result, key) => {
+    //       // 处理Formily title填写
+    //       targetMeta[key].title = key
+    //       result[key] = metaToSchema(targetMeta[key])
+    //       return result
+    //     },
+    //     {}
+    //   )
+    // })
+
+    if (properties) {
+      formWidget[name].properties = formWidget[name].properties ?? {}
+      formWidget[name].properties = Object.keys(properties).reduce(
+        (result, key) => {
+          result[key] = metaToSchema(formWidget[name].properties[key])
+          return result
+        },
+        {}
+      )
+    }
+
+    if (items) {
+      formWidget[name].items = Object.keys(items.properties).reduce(
+        (result, key) => {
+          // formWidget[name].properties[key].title = key
+          //todo
+          // result[key] = metaToSchema(items.properties[key])
+          return result
+        },
+        {}
+      )
+    }
+
+    // if (items) {
+    //   formWidget[name].items = items.map(item => {
+    //     return metaToSchema(item)
+    //   })
+    // }
+  })
+  return formWidget
+}
+
+export function convertMetaToFormily(metaList: IFieldMeta[]) {
+  const formilySchema = {
+    type: 'object',
+    properties: {
+      grid: {
+        type: 'void',
+        'x-component': 'FormGrid',
+        // 'x-component-props': {
+        //   maxColumns: 2,
+        // },
+        properties: metaToSchema(metaList),
+      },
+    },
+  }
+  metaToSchema(metaList)
+
+  // 处理数据类型和表单元素的映射
+  if (formilySchema.type === 'number') {
+    formilySchema.type = 'string'
+    formilySchema['x-component'] = 'NumberPicker'
+  } else if (formilySchema.type === 'string') {
+    formilySchema['x-component'] = 'Input'
+  }
+}
