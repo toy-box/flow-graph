@@ -502,6 +502,7 @@ function metaToSchema(metaList: IFieldMeta[]) {
     const {
       type,
       name,
+      key,
       required,
       options,
       minLength,
@@ -512,7 +513,7 @@ function metaToSchema(metaList: IFieldMeta[]) {
       items,
       ...rest
     } = meta
-    formWidget[name] = {
+    formWidget[key] = {
       type,
       //可走国际化用 <TextWidget />
       title: name,
@@ -522,12 +523,12 @@ function metaToSchema(metaList: IFieldMeta[]) {
         layout: 'vertical',
         colon: false,
       },
-      ...rest,
+      // ...rest,
     }
 
     // 处理必填情况和极值
     if (required) {
-      formWidget[name]['x-validator'].push({
+      formWidget[key]['x-validator'].push({
         triggerType: 'onBlur',
         required: true,
         // message: (
@@ -540,7 +541,7 @@ function metaToSchema(metaList: IFieldMeta[]) {
 
     ;[minLength, maxLength, minimum, maximum].map((item) => {
       item &&
-        formWidget[name]['x-validator'].push({
+        formWidget[key]['x-validator'].push({
           triggerType: 'onBlur',
           required: true,
           // message: (
@@ -555,62 +556,37 @@ function metaToSchema(metaList: IFieldMeta[]) {
     // 处理数据类型和表单元素的映射
     const setComponentAction = {
       number: 'NumberPicker',
-      string: () => {
-        if (name === 'description') {
+      // string:
+      string: (() => {
+        if (key === 'description') {
           return 'Input.TextArea'
         } else return 'Input'
-      },
+      })(),
     }
 
     if (options) {
-      formWidget[name]['x-component'] = 'Select'
-      formWidget[name].enum = options
+      formWidget[key]['x-component'] = 'Select'
+      formWidget[key].enum = options
     } else {
-      formWidget[name]['x-component'] = setComponentAction[type]
+      formWidget[key]['x-component'] = setComponentAction[type]
+      console.log('formWidget ---', type, setComponentAction[type])
     }
 
     // 处理所有属性的子节点
-    // ['items','properties'].map((key)=>{
-    //   let targetMeta = key ==='properties'? formWidget[name].properties : formWidget[name].items.properties
-    //   targetMeta = Object.keys(targetMeta).reduce(
-    //     (result, key) => {
-    //       // 处理Formily title填写
-    //       targetMeta[key].title = key
-    //       result[key] = metaToSchema(targetMeta[key])
-    //       return result
-    //     },
-    //     {}
-    //   )
-    // })
-
     if (properties) {
-      formWidget[name].properties = formWidget[name].properties ?? {}
-      formWidget[name].properties = Object.keys(properties).reduce(
-        (result, key) => {
-          result[key] = metaToSchema(formWidget[name].properties[key])
-          return result
-        },
-        {}
+      formWidget[key].properties = metaToSchema(
+        Object.keys(properties).map((key) => properties[key])
       )
     }
 
     if (items) {
-      formWidget[name].items = Object.keys(items.properties).reduce(
-        (result, key) => {
-          // formWidget[name].properties[key].title = key
-          //todo
-          // result[key] = metaToSchema(items.properties[key])
-          return result
-        },
-        {}
-      )
+      formWidget[key].items = {
+        type: 'object',
+        properties: metaToSchema(
+          Object.keys(items.properties).map((key) => items.properties[key])
+        ),
+      }
     }
-
-    // if (items) {
-    //   formWidget[name].items = items.map(item => {
-    //     return metaToSchema(item)
-    //   })
-    // }
   })
   return formWidget
 }
@@ -630,12 +606,13 @@ export function convertMetaToFormily(metaList: IFieldMeta[]) {
     },
   }
   metaToSchema(metaList)
+  return formilySchema
 
-  // 处理数据类型和表单元素的映射
-  if (formilySchema.type === 'number') {
-    formilySchema.type = 'string'
-    formilySchema['x-component'] = 'NumberPicker'
-  } else if (formilySchema.type === 'string') {
-    formilySchema['x-component'] = 'Input'
-  }
+  // // 处理数据类型和表单元素的映射
+  // if (formilySchema.type === 'number') {
+  //   formilySchema.type = 'string'
+  //   formilySchema['x-component'] = 'NumberPicker'
+  // } else if (formilySchema.type === 'string') {
+  //   formilySchema['x-component'] = 'Input'
+  // }
 }
