@@ -34,6 +34,7 @@ import {
 
 import { History, HistoryItem, OpearteTypeEnum } from './History'
 import { FlowVariable } from './flow-variables'
+import { AutoFlow } from './AutoFlow'
 
 enum MetaFieldType {
   EDIT = 'EDIT',
@@ -46,7 +47,7 @@ type FlowModeType = FlowModeEnum.EDIT | FlowModeEnum.READ
 
 type FlowMetaParamOfType = FlowMetaParam
 
-export class FreeFlow {
+export class FreeFlow extends AutoFlow {
   disposers: (() => void)[] = []
   flowMeta: IFlowMeta
   metaFlowDatas: FlowMetaParam[] = []
@@ -76,6 +77,7 @@ export class FreeFlow {
   }
 
   constructor(mode: FlowModeType, flow?: Flow, layoutMode?: LayoutModeEnum) {
+    super()
     this.layoutMode = layoutMode || LayoutModeEnum.FREE_LAYOUT
     this.mode = mode || this.mode
     this.flow = flow ?? new Flow(this.layoutMode)
@@ -300,6 +302,25 @@ export class FreeFlow {
     })
   }
 
+  get toVarJsonList() {
+    // return this.metaResourceDatas.map((node) => {
+    //   return {
+    //     children: node.children.map((child: any) => {
+    //       return { ...child.toJson() }
+    //     }),
+    //     ...node
+    //   }
+    // })
+    const varNodes = []
+    for (const key in this.flowResourceMap) {
+      if (Object.prototype.hasOwnProperty.call(this.flowResourceMap, key)) {
+        const data = this.flowResourceMap[key]
+        varNodes.push(data.toJson())
+      }
+    }
+    return varNodes
+  }
+
   setMetaFlow(
     flowMeta: IFlowMeta,
     flowType: FlowType,
@@ -389,7 +410,7 @@ export class FreeFlow {
     ) {
       obj.webType = FlowResourceType.VARIABLE_RECORD
     } else {
-      obj.webType = FlowResourceType.VARIABLE
+      obj.webType = obj.webType || FlowResourceType.VARIABLE
     }
     const currentResource = new FlowVariable(obj)
     this.flowResourceMap[resource.key] = currentResource

@@ -18,6 +18,7 @@ import { FlowResourceType } from '@toy-box/autoflow-core'
 import get from 'lodash.get'
 import { resourceEdit } from '../../../flow-nodes'
 import './index.less'
+import { isArr } from '@designable/shared'
 
 export const ResourceSelect: FC = observer((props: any) => {
   const form = useForm()
@@ -83,41 +84,59 @@ export const ResourceSelect: FC = observer((props: any) => {
   }, [get(form.values, reactionPath)])
 
   useEffect(() => {
-    const metaResourceDatas = clone(props?.metaFlow?.metaResourceDatas)
-    const arr = [
-      {
-        key: '0',
-        label: useLocale('flowDesigner.flow.form.resourceCreate.createTitle'),
-        icon: <PlusOutlined />,
-      },
-    ]
-    if (metaResourceDatas) {
-      const metaArr = metaResourceDatas
-        .filter((source) => {
-          if (source.children.length > 0) return true
-        })
-        .map((meta) => {
-          const children = meta.children.map((child) => {
-            const obj = {
-              label: child.name,
-              key: child.key,
-              // children: [],
+    if (props?.sourceMode === 'objectService') {
+      setItems([])
+      setHistoryItems([])
+    } else {
+      const metaResourceDatas = clone(props?.metaFlow?.metaResourceDatas)
+      const arr = [
+        {
+          key: '0',
+          label: useLocale('flowDesigner.flow.form.resourceCreate.createTitle'),
+          icon: <PlusOutlined />,
+        },
+      ]
+      if (metaResourceDatas) {
+        const metaArr = metaResourceDatas
+          .filter((source) => {
+            if (isArr(props?.flowJsonTypes)) {
+              if (source.children.length > 0) {
+                const bol = props?.flowJsonTypes.some(
+                  (flowType) => flowType.value === source.type
+                )
+                return bol
+              }
+            } else {
+              if (source.children.length > 0) return true
             }
-            const changeObj = setMetaChildren(obj, child)
-            return changeObj
           })
-          return {
-            label: templateObj[meta.type],
-            key: meta.type,
-            type: 'group',
-            children,
-          }
-        })
-      arr.push(...metaArr)
+          .map((meta) => {
+            const children = meta.children.map((child) => {
+              const obj = {
+                label: child.name,
+                key: child.key,
+                // children: [],
+              }
+              const changeObj = setMetaChildren(obj, child)
+              return changeObj
+            })
+            return {
+              label: templateObj[meta.type],
+              key: meta.type,
+              type: 'group',
+              children,
+            }
+          })
+        arr.push(...metaArr)
+      }
+      setItems(arr)
+      setHistoryItems(arr)
     }
-    setItems(arr)
-    setHistoryItems(arr)
-  }, [props?.metaFlow?.metaResourceDatas])
+  }, [
+    props?.metaFlow?.metaResourceDatas,
+    props?.sourceMode,
+    props?.flowJsonTypes,
+  ])
 
   const setMetaChildren = (obj: any, meta: IFieldMeta) => {
     if (meta.properties && isObj(meta.properties)) {
@@ -140,7 +159,7 @@ export const ResourceSelect: FC = observer((props: any) => {
 
   const createResource = useCallback(() => {
     resourceEdit(props.metaFlow, false)
-  }, [])
+  }, [props.metaFlow])
 
   const changeValue = useCallback(
     (e) => {
@@ -172,7 +191,7 @@ export const ResourceSelect: FC = observer((props: any) => {
   )
 
   const changeBlur = useCallback(() => {
-    if (selectKeys.length === 0) {
+    if (selectKeys.length === 0 && !props.isInput) {
       setInputValue('')
       onChange(undefined)
     }

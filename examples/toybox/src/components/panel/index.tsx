@@ -9,6 +9,7 @@ import {
   CompositePanelContent,
   StudioPanel,
   WorkspacePanel,
+  useLocale,
 } from '@toy-box/studio-base'
 import { FreeFlow } from '@toy-box/autoflow-core'
 import {
@@ -22,7 +23,7 @@ import { DesignerFlowContext } from '../../context'
 import { flowData1, flowData2, flowMeta, freeMeta } from '../../data/flowData'
 export const Panel: React.FC<any> = () => {
   const metaFlow = useMetaFlow()
-  const freeFlow = useFreeFlow()
+  const freeFlow = useFreeFlow() as FreeFlow
   // const init = useCallback(() => {
   //   metaFlow.flow.setFlowNodes(flowData1)
   // }, [])
@@ -37,6 +38,7 @@ export const Panel: React.FC<any> = () => {
   const handleExport = useCallback(() => {
     console.log('freeFlow', freeFlow.history.list())
     console.log('freeFlowdata数据json化', freeFlow.toJsonList)
+    console.log('变了数据json化', freeFlow.toVarJsonList)
   }, [])
   // const handleFreeLayout = useCallback(() => {
   //   // metaFlow.flow.setGraphNodes([])
@@ -152,7 +154,7 @@ export const Panel: React.FC<any> = () => {
                 activeKey="error"
               />
               <CompositePanel.Item
-                title={<Button>submit</Button>}
+                title={<Button>{useLocale('flowDesigner.comm.submit')}</Button>}
                 shape="button"
                 onClick={handleExport}
               />

@@ -19,6 +19,7 @@ import {
   FlowEnd,
 } from './flow-nodes'
 import { History, OpearteTypeEnum } from './History'
+import { AutoFlow } from './AutoFlow'
 
 export enum MetaFieldType {
   EDIT = 'EDIT',
@@ -36,7 +37,7 @@ export type FlowModeType = FlowModeEnum.EDIT | FlowModeEnum.READ
 
 export type FlowMetaParamOfType = FlowMetaParam
 
-export class MetaFlow {
+export class MetaFlow extends AutoFlow {
   disposers: (() => void)[] = []
   flowMeta: IFlowMeta
   metaFlowDatas: FlowMetaParam[] = []
@@ -59,6 +60,7 @@ export class MetaFlow {
   }
 
   constructor(mode: FlowModeType, flow?: Flow, layoutMode?: LayoutModeEnum) {
+    super()
     this.layoutMode = layoutMode || LayoutModeEnum.AUTO_LAYOUT
     this.mode = mode || this.mode
     this.flow = flow ?? new Flow(this.layoutMode)

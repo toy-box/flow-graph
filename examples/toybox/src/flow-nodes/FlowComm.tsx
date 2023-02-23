@@ -17,6 +17,7 @@ import { TextWidget } from '../widgets'
 import { assignOnEdit } from './FlowAssignment'
 import { decideOnEdit } from './FlowDecision'
 import { loopOnEdit } from './FlowLoop'
+import { recordCreateOnEdit } from './FlowRecordCreate'
 
 export * from './addNode'
 export * from './connectDialog'
@@ -278,38 +279,38 @@ export const waitOnEdit = (node: any, at?: string, additionInfo?: any) => {
     .open()
 }
 
-export const recordCreateOnEdit = (
-  node: any,
-  at?: string,
-  additionInfo?: any
-) => {
-  const dialog = recordCreateRender()
-  dialog
-    .forOpen((payload, next) => {
-      setTimeout(() => {
-        next({
-          initialValues: {
-            name: node.name,
-            description: node.description,
-          },
-        })
-      }, 500)
-    })
-    .forConfirm((payload, next) => {
-      setTimeout(() => {
-        node.make
-          ? node.make(at, { ...payload.values, ...additionInfo })
-          : node.update(payload.values)
-        next(payload)
-      }, 500)
-    })
-    .forCancel((payload, next) => {
-      setTimeout(() => {
-        next(payload)
-      }, 500)
-    })
-    .open()
-}
+// export const recordCreateOnEdit = (
+//   node: any,
+//   at?: string,
+//   additionInfo?: any
+// ) => {
+//   const dialog = recordCreateRender()
+//   dialog
+//     .forOpen((payload, next) => {
+//       setTimeout(() => {
+//         next({
+//           initialValues: {
+//             name: node.name,
+//             description: node.description,
+//           },
+//         })
+//       }, 500)
+//     })
+//     .forConfirm((payload, next) => {
+//       setTimeout(() => {
+//         node.make
+//           ? node.make(at, { ...payload.values, ...additionInfo })
+//           : node.update(payload.values)
+//         next(payload)
+//       }, 500)
+//     })
+//     .forCancel((payload, next) => {
+//       setTimeout(() => {
+//         next(payload)
+//       }, 500)
+//     })
+//     .open()
+// }
 
 export const onPanelEdit = (
   node: INodeTemplate<NodeMake> | FlowMetaNode,

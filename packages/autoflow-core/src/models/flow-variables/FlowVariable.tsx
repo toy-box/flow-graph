@@ -98,7 +98,7 @@ export class FlowVariable {
     this.defaultValue = updateData.defaultValue
   }
 
-  toJson = (): IFieldMeta => {
+  toJson = (): IFieldMetaWithWeb => {
     return {
       key: this.key,
       name: this.name,
@@ -118,6 +118,7 @@ export class FlowVariable {
       type: this.type,
       titleKey: this.titleKey,
       multipleOf: this.multipleOf,
+      webType: this.webType,
     }
   }
 }
