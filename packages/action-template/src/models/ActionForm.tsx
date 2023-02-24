@@ -3,6 +3,7 @@ import { validate } from 'jsonschema'
 // import metaSchema from "json-schema-draft-2020-12/schema";
 import { action, batch, define, observable } from '@formily/reactive'
 import { IFieldMeta } from '@toy-box/meta-schema'
+import { networkJson, networkJsonSchema } from './schemaValidate'
 
 const bundle = {
   $id: 'https://json-schema.org/draft/2020-12/schema',
@@ -398,7 +399,7 @@ export class ActionForm {
     //   const metaSchema = await Bundler.get(`https://json-schema.org/draft/2020-12/schema`);
     //   const bundle = await Bundler.bundle(metaSchema);
     //   console.log(JSON.stringify(bundle, null, "  "));
-    return validate(this.panelJson, bundle).valid
+    return validate(networkJson, networkJsonSchema).valid
     // }());
   }
 }

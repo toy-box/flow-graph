@@ -619,7 +619,8 @@ export const Panel: React.FC<any> = () => {
         isSystem: false,
       },
     ]
-    console.log('ActionForm', convertMetaToFormily(data2))
+    // console.log('ActionForm', convertMetaToFormily(data2))
+    console.log('valid', new ActionForm(data).isDataValid)
     freeFlow.changeMode()
     isEditMode && setLeftVisible(false)
     isEditMode && setLeftActiveKey(null)
