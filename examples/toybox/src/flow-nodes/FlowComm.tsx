@@ -13,11 +13,13 @@ import {
 import { createSchemaField } from '@formily/react'
 import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
-import { TextWidget } from '../widgets'
 import { assignOnEdit } from './FlowAssignment'
 import { decideOnEdit } from './FlowDecision'
 import { loopOnEdit } from './FlowLoop'
 import { recordCreateOnEdit } from './FlowRecordCreate'
+import { recordDeleteOnEdit } from './FlowRecordDelete'
+import { recordUpdateOnEdit } from './FlowRecordUpdate'
+import { recordLookUpOnEdit } from './FlowRecordLookUp'
 
 export * from './addNode'
 export * from './connectDialog'
@@ -329,6 +331,12 @@ export const onPanelEdit = (
         return waitOnEdit(node, at, additionInfo)
       case FlowMetaType.RECORD_CREATE:
         return recordCreateOnEdit(node, at, additionInfo)
+      case FlowMetaType.RECORD_DELETE:
+        return recordDeleteOnEdit(node, at, additionInfo)
+      case FlowMetaType.RECORD_UPDATE:
+        return recordUpdateOnEdit(node, at, additionInfo)
+      case FlowMetaType.RECORD_LOOKUP:
+        return recordLookUpOnEdit(node, at, additionInfo)
       default:
         return recordCreateOnEdit(node, at, additionInfo)
     }

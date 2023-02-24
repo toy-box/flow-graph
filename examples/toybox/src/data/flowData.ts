@@ -386,6 +386,51 @@ export const freeMeta: IFlowMeta = {
         y: 50,
       },
     ],
+    recordLookups: [
+      {
+        id: 'lookUp',
+        name: 'lookUp test',
+        type: FlowMetaType.RECORD_LOOKUP,
+        criteria: {
+          conditions: [],
+          logic: '$and',
+        },
+        connector: { targetReference: '' },
+        faultConnector: { targetReference: '' },
+        x: 600,
+        y: 300,
+      },
+    ],
+    // recordDeletes: [
+    //   {
+    //     id: 'update',
+    //     name: 'update test',
+    //     type: FlowMetaType.RECORD_UPDATE,
+    //     criteria: {
+    //       conditions: [],
+    //       logic: '$and',
+    //     },
+    //     connector: { targetReference: '' },
+    //     faultConnector: { targetReference: '' },
+    //     x: 600,
+    //     y: 300,
+    //   },
+    // ],
+    // recordDeletes: [
+    //   {
+    //     id: 'recordDelete1',
+    //     name: 'recordDelete test',
+    //     type: FlowMetaType.RECORD_DELETE,
+    //     criteria: {
+    //       conditions: [],
+    //       logic: '$and',
+    //     },
+    //     connector: { targetReference: '' },
+    //     faultConnector: { targetReference: '' },
+    //     x: 500,
+    //     y: 300,
+    //   },
+    // ],
   },
 }
 

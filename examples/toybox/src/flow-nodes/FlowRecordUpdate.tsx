@@ -8,14 +8,13 @@ import {
   FormGrid,
   Space,
   ArrayItems,
-  Switch,
   Submit,
 } from '@formily/antd'
 import { createSchemaField, FormProvider } from '@formily/react'
 import {
   FlowMetaParam,
-  FlowResourceType,
   FreeFlow,
+  ICriteriaCondition,
   IInputAssignment,
   MetaFlow,
   opTypeEnum,
@@ -25,7 +24,7 @@ import { Button } from 'antd'
 import { useLocale, TextWidget } from '@toy-box/studio-base'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { clone } from '@designable/shared'
-import { ResourceSelect } from '../components/formily'
+import { ResourceSelect, OperationSelect } from '../components/formily'
 
 import './flowNodes.less'
 
@@ -41,14 +40,24 @@ const SchemaField = createSchemaField({
     FormGrid,
     Input,
     Select,
-    Switch,
     ResourceSelect,
+    OperationSelect,
     ArrowLeftOutlinedIcon,
   },
 })
 
 const submitParamData = (values) => {
   const value = values
+  const conditions = value?.criteria?.conditions.map(
+    (data: ICriteriaCondition) => {
+      return {
+        fieldPattern: data.fieldPattern,
+        operation: data.operation,
+        type: data.type || opTypeEnum.INPUT,
+        value: data.value,
+      }
+    }
+  )
   const inputAssignments = value.inputAssignments.map(
     (data: IInputAssignment) => {
       return {
@@ -62,14 +71,16 @@ const submitParamData = (values) => {
     id: value.id,
     name: value.name,
     registerId: value.registerId,
-    inputAssignments: inputAssignments,
-    storeOutputAutomatically: value.storeOutputAutomatically,
-    assignRecordIdToReference: value.assignRecordIdToReference,
+    criteria: {
+      conditions,
+      logic: value.criteria.logic || '$and',
+    },
+    inputAssignments,
   }
   return paramData
 }
 
-export const recordCreateOnEdit = (
+export const recordUpdateOnEdit = (
   node: any,
   at?: string,
   additionInfo?: any
@@ -90,9 +101,9 @@ export const recordCreateOnEdit = (
     formDialog.close()
   }
   const title = !isEdit ? (
-    <TextWidget>flowDesigner.flow.form.recordCreate.addTitle</TextWidget>
+    <TextWidget>flowDesigner.flow.form.recordUpdate.addTitle</TextWidget>
   ) : (
-    <TextWidget>flowDesigner.flow.form.recordCreate.editTitle</TextWidget>
+    <TextWidget>flowDesigner.flow.form.recordUpdate.editTitle</TextWidget>
   )
   formDialog = FormDialog(
     {
@@ -101,7 +112,7 @@ export const recordCreateOnEdit = (
       open: false,
       width: '60vw',
     },
-    <RecordCreate
+    <RecordUpdate
       value={node}
       isEdit={isEdit}
       metaFlow={metaFlow}
@@ -116,7 +127,7 @@ export const recordCreateOnEdit = (
     .open()
 }
 
-export interface RecordCreateModelPorps {
+export interface RecordUpdateModelPorps {
   value?: FlowMetaParam
   metaFlow: FreeFlow | MetaFlow
   onCancel: () => void
@@ -124,16 +135,17 @@ export interface RecordCreateModelPorps {
   isEdit: boolean
 }
 
-export const RecordCreate: FC<RecordCreateModelPorps> = ({
+export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
   value,
   onCancel,
   onSubmit,
   metaFlow,
   isEdit,
 }) => {
-  const setName = useLocale('flowDesigner.flow.form.recordCreate.setting')
-  const setField = useLocale('flowDesigner.flow.form.recordCreate.setField')
-  const saveId = useLocale('flowDesigner.flow.form.recordCreate.saveId')
+  const filterName = useLocale('flowDesigner.flow.form.recordUpdate.filter')
+  const record = useLocale('flowDesigner.flow.form.recordUpdate.record')
+  const setName = useLocale('flowDesigner.flow.form.recordUpdate.setting')
+  const setField = useLocale('flowDesigner.flow.form.recordUpdate.setField')
 
   const form = createForm({
     effects: () => {
@@ -141,12 +153,13 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
         const registers = metaFlow.registers
         const register = registers.find((rg) => rg.id === field.value)
         if (register) {
+          form.setFieldState('criteria.conditions', (state) => {
+            state.title = `${filterName} ${register.name} ${record}`
+            state.value = []
+          })
           form.setFieldState('inputAssignments', (state) => {
             state.title = `${setName} ${register.name} ${setField}`
             state.value = []
-          })
-          form.setFieldState('assignRecordIdToReference', (state) => {
-            state.title = `${saveId} ${register.name} ID`
           })
         }
       })
@@ -159,9 +172,8 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
       id: flowData.id,
       name: flowData.name,
       registerId: flowData.registerId,
+      criteria: flowData.criteria,
       inputAssignments: flowData.inputAssignments,
-      storeOutputAutomatically: flowData.storeOutputAutomatically,
-      assignRecordIdToReference: flowData.assignRecordIdToReference,
     }
   }
 
@@ -248,7 +260,7 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
             type: 'string',
             title: (
               <TextWidget>
-                flowDesigner.flow.form.recordCreate.registerId
+                flowDesigner.flow.form.recordUpdate.registerId
               </TextWidget>
             ),
             required: true,
@@ -272,6 +284,263 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
             title: '',
             'x-decorator': 'FormItem',
           },
+          criteria: {
+            type: 'object',
+            'x-reactions': {
+              dependencies: ['registerId'],
+              fulfill: {
+                schema: {
+                  'x-display': "{{$deps != '' ? 'visible' : 'none'}}",
+                },
+              },
+            },
+            properties: {
+              logic: {
+                type: 'string',
+                title: (
+                  <TextWidget token="flowDesigner.flow.form.recordUpdate.filterTitle"></TextWidget>
+                ),
+                required: true,
+                'x-validator': [
+                  {
+                    triggerType: 'onBlur',
+                    required: false,
+                    message: (
+                      <TextWidget>
+                        flowDesigner.flow.form.validator.required
+                      </TextWidget>
+                    ),
+                  },
+                ],
+                enum: [
+                  {
+                    label: (
+                      <TextWidget token="flowDesigner.flow.form.decision.logicAnd"></TextWidget>
+                    ),
+                    value: '$and',
+                  },
+                  //   {
+                  //     label: (
+                  //       <TextWidget token="flowDesigner.flow.form.decision.logicOr"></TextWidget>
+                  //     ),
+                  //     value: '$or',
+                  //   },
+                  //   {
+                  //     label: (
+                  //       <TextWidget token="flowDesigner.flow.form.decision.logicCustom"></TextWidget>
+                  //     ),
+                  //     value: '$custom',
+                  //   },
+                ],
+                'x-decorator': 'FormItem',
+                'x-decorator-props': {
+                  gridSpan: 2,
+                  wrapperWidth: 350,
+                },
+                'x-component-props': {},
+                'x-component': 'Select',
+                'x-reactions': {
+                  target: 'grid.criteria.conditions.*.grid.case',
+                  fulfill: {
+                    state: {
+                      title:
+                        '{{$target.index !== 0 && $self.value.substring(1).toUpperCase()}}',
+                    },
+                  },
+                },
+              },
+              conditions: {
+                type: 'array',
+                required: true,
+                'x-validator': [
+                  {
+                    triggerType: 'onBlur',
+                    required: false,
+                    message: (
+                      <TextWidget>
+                        flowDesigner.flow.form.validator.required
+                      </TextWidget>
+                    ),
+                  },
+                ],
+                title: '',
+                'x-decorator-props': {
+                  gridSpan: 2,
+                },
+                'x-decorator': 'FormItem',
+                'x-component': 'ArrayItems',
+                items: {
+                  type: 'object',
+                  'x-component': 'ArrayItems.Item',
+                  'x-component-props': {
+                    style: {
+                      border: 'none',
+                      padding: 0,
+                    },
+                  },
+                  properties: {
+                    grid: {
+                      type: 'void',
+                      'x-component': 'FormGrid',
+                      'x-component-props': {
+                        maxColumns: 18,
+                        minColumns: 18,
+                        style: {
+                          width: '100%',
+                        },
+                      },
+                      properties: {
+                        case: {
+                          type: 'void',
+                          'x-decorator': 'FormItem',
+                          'x-decorator-props': {
+                            colon: false,
+                            style: {
+                              alignItems: 'center',
+                              marginTop: '22px',
+                              fontWeight: 700,
+                            },
+                            gridSpan: 1,
+                          },
+                        },
+                        fieldPattern: {
+                          type: 'string',
+                          title: (
+                            <TextWidget>
+                              flowDesigner.flow.form.recordUpdate.field
+                            </TextWidget>
+                          ),
+                          required: true,
+                          'x-validator': [
+                            {
+                              triggerType: 'onBlur',
+                              required: false,
+                              message: (
+                                <TextWidget>
+                                  flowDesigner.flow.form.validator.required
+                                </TextWidget>
+                              ),
+                            },
+                          ],
+                          'x-decorator': 'FormItem',
+                          'x-decorator-props': {
+                            layout: 'vertical',
+                            colon: false,
+                            gridSpan: 6,
+                            labelWidth: '100px',
+                          },
+                          'x-component': 'ResourceSelect',
+                          'x-component-props': {
+                            metaFlow: metaFlow,
+                            placeholder: useLocale(
+                              'flowDesigner.flow.form.comm.operationPlace'
+                            ),
+                          },
+                        },
+                        operation: {
+                          type: 'string',
+                          title: (
+                            <TextWidget>
+                              flowDesigner.flow.form.comm.typeTitle
+                            </TextWidget>
+                          ),
+                          required: true,
+                          'x-validator': [
+                            {
+                              triggerType: 'onBlur',
+                              required: false,
+                              message: (
+                                <TextWidget>
+                                  flowDesigner.flow.form.validator.required
+                                </TextWidget>
+                              ),
+                            },
+                          ],
+                          'x-decorator': 'FormItem',
+                          'x-decorator-props': {
+                            layout: 'vertical',
+                            colon: false,
+                            gridSpan: 4,
+                            labelWidth: '100px',
+                          },
+                          'x-component': 'OperationSelect',
+                          'x-component-props': {
+                            placeholder: useLocale(
+                              'flowDesigner.flow.form.comm.typePlace'
+                            ),
+                            reactionKey: 'fieldPattern',
+                          },
+                        },
+                        value: {
+                          type: 'string',
+                          title: (
+                            <TextWidget>
+                              flowDesigner.flow.form.comm.valueTitle
+                            </TextWidget>
+                          ),
+                          required: true,
+                          'x-validator': [
+                            {
+                              triggerType: 'onBlur',
+                              required: false,
+                              message: (
+                                <TextWidget>
+                                  flowDesigner.flow.form.validator.required
+                                </TextWidget>
+                              ),
+                            },
+                          ],
+                          'x-decorator': 'FormItem',
+                          'x-decorator-props': {
+                            layout: 'vertical',
+                            colon: false,
+                            gridSpan: 6,
+                            labelWidth: '100px',
+                          },
+                          'x-component': 'ResourceSelect',
+                          'x-component-props': {
+                            placeholder: useLocale(
+                              'flowDesigner.flow.form.comm.valuePlace'
+                            ),
+                            metaFlow: metaFlow,
+                            reactionKey: 'fieldPattern',
+                          },
+                        },
+                        remove: {
+                          type: 'void',
+                          'x-decorator': 'FormItem',
+                          'x-decorator-props': {
+                            style: {
+                              alignItems: 'center',
+                              marginTop: '22px',
+                            },
+                            gridSpan: 1,
+                          },
+                          'x-component': 'ArrayItems.Remove',
+                        },
+                      },
+                    },
+                  },
+                },
+                properties: {
+                  addition: {
+                    type: 'void',
+                    title: (
+                      <TextWidget>
+                        flowDesigner.flow.form.recordUpdate.addBtn
+                      </TextWidget>
+                    ),
+                    'x-component': 'ArrayItems.Addition',
+                    'x-component-props': {
+                      style: {
+                        width: '200px',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
           inputAssignments: {
             type: 'array',
             required: true,
@@ -282,14 +551,14 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
                 required: false,
                 message: (
                   <TextWidget>
-                    flowDesigner.flow.form.recordCreate.inputAssignments
+                    flowDesigner.flow.form.recordUpdate.inputAssignments
                   </TextWidget>
                 ),
               },
             ],
             title: (
               <TextWidget>
-                flowDesigner.flow.form.recordCreate.inputAssignments
+                flowDesigner.flow.form.recordUpdate.inputAssignments
               </TextWidget>
             ),
             'x-decorator': 'FormItem',
@@ -322,7 +591,7 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
                       type: 'string',
                       title: (
                         <TextWidget>
-                          flowDesigner.flow.form.decision.operationTitle
+                          flowDesigner.flow.form.recordUpdate.field
                         </TextWidget>
                       ),
                       required: true,
@@ -428,60 +697,6 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
                   style: {
                     width: '30%',
                   },
-                },
-              },
-            },
-          },
-          storeOutputAutomatically: {
-            type: 'boolean',
-            title: (
-              <TextWidget>
-                flowDesigner.flow.form.recordCreate.storeOutputAutomatically
-              </TextWidget>
-            ),
-            'x-decorator': 'FormItem',
-            'x-component': 'Switch',
-            'x-decorator-props': {
-              gridSpan: 2,
-            },
-            'x-reactions': {
-              dependencies: ['registerId'],
-              fulfill: {
-                schema: {
-                  'x-display': "{{$deps != '' ? 'visible' : 'none'}}",
-                },
-              },
-            },
-          },
-          assignRecordIdToReference: {
-            type: 'string',
-            title: (
-              <TextWidget>
-                flowDesigner.flow.form.recordCreate.assignRecordIdToReference
-              </TextWidget>
-            ),
-            'x-decorator': 'FormItem',
-            'x-component': 'ResourceSelect',
-            'x-component-props': {
-              placeholder: useLocale(
-                'flowDesigner.flow.form.placeholder.assignRecordIdToReference'
-              ),
-              metaFlow,
-              flowJsonTypes: [
-                {
-                  value: FlowResourceType.VARIABLE,
-                },
-                {
-                  value: FlowResourceType.VARIABLE_RECORD,
-                },
-              ],
-              // flowGraph,
-            },
-            'x-reactions': {
-              dependencies: ['storeOutputAutomatically'],
-              fulfill: {
-                schema: {
-                  'x-display': "{{$deps == 'true' ? 'visible' : 'none'}}",
                 },
               },
             },
