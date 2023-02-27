@@ -114,6 +114,9 @@ const zhCN = {
             flowType: '资源类型是必填项',
             type: '数据类型是必填项',
             required: '该字段是必填字段',
+            registerId: '对象记录是必填项',
+            field: '字段是必填项',
+            recordIdValue: '记录是必填项',
           },
           placeholder: {
             assignRecordIdToReference: '请选择变量',
@@ -378,6 +381,9 @@ const enUS = {
             flowType: 'Resource Type is required',
             type: 'Data Type is required',
             required: 'This field is required',
+            registerId: 'Object Record is required',
+            field: 'This field is required',
+            recordIdValue: 'Record is required',
           },
           placeholder: {
             assignRecordIdToReference: 'Select Variable',

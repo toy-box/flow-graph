@@ -234,7 +234,7 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
             'x-decorator': 'FormItem',
             'x-component': 'ResourceSelect',
             'x-component-props': {
-              //   sourceMode: 'objectService',
+              sourceMode: 'objectService',
               metaFlow,
             },
           },
@@ -390,7 +390,9 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
                           },
                           'x-component': 'ResourceSelect',
                           'x-component-props': {
+                            sourceMode: 'objectService',
                             metaFlow: metaFlow,
+                            objectKey: 'registerId',
                             placeholder: useLocale(
                               'flowDesigner.flow.form.comm.operationPlace'
                             ),

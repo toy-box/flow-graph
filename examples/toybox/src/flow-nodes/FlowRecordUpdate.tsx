@@ -275,7 +275,7 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
             'x-decorator': 'FormItem',
             'x-component': 'ResourceSelect',
             'x-component-props': {
-              //   sourceMode: 'objectService',
+              sourceMode: 'objectService',
               metaFlow,
             },
           },
@@ -431,6 +431,8 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
                           },
                           'x-component': 'ResourceSelect',
                           'x-component-props': {
+                            sourceMode: 'objectService',
+                            objectKey: 'registerId',
                             metaFlow: metaFlow,
                             placeholder: useLocale(
                               'flowDesigner.flow.form.comm.operationPlace'
@@ -616,6 +618,8 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
                       'x-component': 'ResourceSelect',
                       'x-component-props': {
                         // suffix: "{{icon('SearchOutlined')}}",
+                        sourceMode: 'objectService',
+                        objectKey: 'registerId',
                         metaFlow: metaFlow,
                         placeholder: useLocale(
                           'flowDesigner.flow.form.comm.operationPlace'

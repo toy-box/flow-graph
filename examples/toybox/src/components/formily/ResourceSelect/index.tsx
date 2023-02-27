@@ -85,8 +85,47 @@ export const ResourceSelect: FC = observer((props: any) => {
 
   useEffect(() => {
     if (props?.sourceMode === 'objectService') {
-      setItems([])
-      setHistoryItems([])
+      let registerOps = []
+      if (props.objectKey) {
+        const objectKey = form.values[props.objectKey]
+        props.metaFlow.registers?.some(
+          (re: {
+            id: any
+            properties: {
+              [x: string]: any
+              hasOwnProperty: (arg0: string) => any
+            }
+          }) => {
+            if (re.id === objectKey) {
+              for (const key in re.properties) {
+                if (re.properties.hasOwnProperty(key)) {
+                  const obj = re.properties[key]
+                  const option = {
+                    label: obj.name,
+                    key: obj.key,
+                  }
+                  const changeObj = setMetaChildren(option, obj)
+                  registerOps.push(changeObj)
+                }
+              }
+              return true
+            }
+            return false
+          }
+        )
+      } else {
+        registerOps =
+          props.metaFlow.registers?.map((r: any) => {
+            const obj = {
+              label: r.name,
+              key: r.id,
+            }
+            const changeObj = setMetaChildren(obj, r)
+            return changeObj
+          }) || []
+      }
+      setItems(registerOps)
+      setHistoryItems(registerOps)
     } else {
       const metaResourceDatas = clone(props?.metaFlow?.metaResourceDatas)
       const arr = [
@@ -134,8 +173,10 @@ export const ResourceSelect: FC = observer((props: any) => {
     }
   }, [
     props?.metaFlow?.metaResourceDatas,
+    props?.metaFlow?.registers,
     props?.sourceMode,
     props?.flowJsonTypes,
+    props.objectKey,
   ])
 
   const setMetaChildren = (obj: any, meta: IFieldMeta) => {

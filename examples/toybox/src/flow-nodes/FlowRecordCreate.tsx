@@ -263,7 +263,7 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
             'x-decorator': 'FormItem',
             'x-component': 'ResourceSelect',
             'x-component-props': {
-              //   sourceMode: 'objectService',
+              sourceMode: 'objectService',
               metaFlow,
             },
           },
@@ -347,7 +347,9 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
                       'x-component': 'ResourceSelect',
                       'x-component-props': {
                         // suffix: "{{icon('SearchOutlined')}}",
-                        metaFlow: metaFlow,
+                        sourceMode: 'objectService',
+                        metaFlow,
+                        objectKey: 'registerId',
                         placeholder: useLocale(
                           'flowDesigner.flow.form.comm.operationPlace'
                         ),

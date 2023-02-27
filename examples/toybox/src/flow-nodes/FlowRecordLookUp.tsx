@@ -504,7 +504,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
             'x-decorator': 'FormItem',
             'x-component': 'ResourceSelect',
             'x-component-props': {
-              //   sourceMode: 'objectService',
+              sourceMode: 'objectService',
               metaFlow,
             },
           },
@@ -660,6 +660,8 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
                           },
                           'x-component': 'ResourceSelect',
                           'x-component-props': {
+                            sourceMode: 'objectService',
+                            objectKey: 'registerId',
                             metaFlow: metaFlow,
                             placeholder: useLocale(
                               'flowDesigner.flow.form.comm.operationPlace'
@@ -854,7 +856,8 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
             'x-component': 'ResourceSelect',
             'x-reactions': myReaction.bind(this, 'sortField'),
             'x-component-props': {
-              //   sourceMode: 'objectService',
+              sourceMode: 'objectService',
+              objectKey: 'registerId',
               metaFlow,
             },
           },
@@ -1199,7 +1202,8 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
                       },
                       'x-component': 'ResourceSelect',
                       'x-component-props': {
-                        // suffix: "{{icon('SearchOutlined')}}",
+                        sourceMode: 'objectService',
+                        objectKey: 'registerId',
                         metaFlow: metaFlow,
                         placeholder: useLocale(
                           'flowDesigner.flow.form.comm.operationPlace'
