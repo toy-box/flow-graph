@@ -186,5 +186,23 @@ export const nodeTemplatesProvider = (
     //     appendOrAddNode(at, flowData)
     //   },
     // },
+    {
+      icon: 'flow',
+      title: 'HttpCalls',
+      description: 'HttpCalls',
+      type: FlowMetaType.HTTP_CALLS,
+      group: 'flow',
+      metaFlow: freeFlow,
+      make: (at: string, editInfo: INodeEdit) => {
+        const flowData = {
+          id: uid(),
+          name: 'HttpCalls',
+          type: FlowMetaType.HTTP_CALLS,
+          connector: { targetReference: '' },
+          ...editInfo,
+        }
+        appendOrAddNode(at, flowData)
+      },
+    },
   ]
 }

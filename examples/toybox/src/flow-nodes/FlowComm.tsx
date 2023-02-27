@@ -17,6 +17,7 @@ import { TextWidget } from '../widgets'
 import { assignOnEdit } from './FlowAssignment'
 import { decideOnEdit } from './FlowDecision'
 import { loopOnEdit } from './FlowLoop'
+import { httpCallsOnEdit } from './FlowHttpCalls'
 
 export * from './addNode'
 export * from './connectDialog'
@@ -328,6 +329,8 @@ export const onPanelEdit = (
         return waitOnEdit(node, at, additionInfo)
       case FlowMetaType.RECORD_CREATE:
         return recordCreateOnEdit(node, at, additionInfo)
+      case FlowMetaType.HTTP_CALLS:
+        return httpCallsOnEdit(node, at, additionInfo)
       default:
         return recordCreateOnEdit(node, at, additionInfo)
     }

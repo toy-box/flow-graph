@@ -63,6 +63,7 @@ export interface IFlowMetaNodes {
   waits?: FlowMetaParam[]
   loops?: FlowMetaParam[]
   recordCreates?: FlowMetaParam[]
+  httpCalls?: FlowMetaParam[]
 }
 export interface IFlowMeta {
   resources: IFlowMetaResource
@@ -80,6 +81,7 @@ export enum FlowMetaType {
   RECORD_UPDATE = 'recordUpdates',
   RECORD_DELETE = 'recordDeletes',
   RECORD_LOOKUP = 'recordLookups',
+  HTTP_CALLS = 'httpCalls',
   END = 'end',
 }
 

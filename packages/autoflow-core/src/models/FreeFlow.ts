@@ -30,6 +30,7 @@ import {
   FlowRecordUpdate,
   FlowRecordLookup,
   FlowRecordDelete,
+  FlowHttpCalls,
 } from './flow-nodes'
 
 import { History, HistoryItem, OpearteTypeEnum } from './History'
@@ -622,6 +623,8 @@ export class FreeFlow {
         return new FlowRecordLookup(node, this)
       case FlowMetaType.RECORD_DELETE:
         return new FlowRecordDelete(node, this)
+      case FlowMetaType.HTTP_CALLS:
+        return new FlowHttpCalls(node, this)
       default:
         return
     }

@@ -31,6 +31,7 @@ const zhCN = {
           recordUpdate: '更新记录',
           recordLookup: '查询记录',
           recordDelete: '删除记录',
+          httpCalls: '网络调用',
         },
         autoFlow: {
           variable: '变量',
@@ -162,6 +163,11 @@ const zhCN = {
             eachResult: '对于集合中的每个项目',
             lastResult: '对于集合中的最后一项',
           },
+          httpCalls: {
+            addTitle: '新建网络请求',
+            editTitle: '编辑网络请求',
+            urlTitle: '请求地址',
+          },
         },
       },
     },
@@ -180,6 +186,7 @@ const enUS = {
         error: 'Error',
         sources: {
           logical: 'Logical node',
+          action: 'Action node',
         },
         debug: 'Debug',
       },
@@ -204,6 +211,7 @@ const enUS = {
           recordUpdate: 'recordUpdate',
           recordLookup: 'recordLookup',
           recordDelete: 'recordDelete',
+          httpCalls: 'httpCalls',
           end: 'end',
         },
         autoFlow: {
@@ -336,6 +344,13 @@ const enUS = {
             lastConnectTip: ' element.',
             eachResult: 'For each item in the collection',
             lastResult: 'After Last item in the collection',
+          },
+          httpCalls: {
+            addTitle: 'New HttpCalls',
+            editTitle: 'Edit HttpCalls',
+            urlTitle: 'Url',
+            methodTitle: 'Method',
+            contentTypeTitle: 'contentType',
           },
         },
       },

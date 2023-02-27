@@ -23,8 +23,9 @@ import {
   ElementNodeWidget,
   ResourceWidget,
 } from '../../../src'
-import { itemMap } from '../../../src/data/itemMap'
+import { itemMap, itemMapAction } from '../../../src/data/itemMap'
 import { DesignerFlowContext } from '../../context'
+import { variableOnEdit } from '../../flow-nodes/FlowVariable'
 export const Panel: React.FC<any> = () => {
   const metaFlow = useMetaFlow()
   const freeFlow = useFreeFlow()
@@ -345,7 +346,7 @@ export const Panel: React.FC<any> = () => {
         id: 'h-test5',
         key: 'h-test51',
         database: 'studio',
-        type: 'mongodb',
+        type: 'object',
         state: '1',
         tenantId: '04e3b1bdb26944e78295711f86fe3d9a',
         createdAt: '2022-04-24T12:09:02.000+08:00',
@@ -609,7 +610,7 @@ export const Panel: React.FC<any> = () => {
         id: 'h-test5',
         key: 'h-test52',
         database: 'studio',
-        type: 'mongodb',
+        type: 'object',
         state: '1',
         tenantId: '04e3b1bdb26944e78295711f86fe3d9a',
         createdAt: '2022-04-24T12:09:02.000+08:00',
@@ -620,7 +621,8 @@ export const Panel: React.FC<any> = () => {
       },
     ]
     // console.log('ActionForm', convertMetaToFormily(data2))
-    console.log('valid', new ActionForm(data).isDataValid)
+    console.log('valid', new ActionForm(data2).isDataValid)
+    variableOnEdit(convertMetaToFormily(data2))
     freeFlow.changeMode()
     isEditMode && setLeftVisible(false)
     isEditMode && setLeftActiveKey(null)
@@ -729,6 +731,10 @@ export const Panel: React.FC<any> = () => {
               <ElementNodeWidget
                 title="flowDesigner.panels.sources.logical"
                 sources={itemMap}
+              />
+              <ElementNodeWidget
+                title="flowDesigner.panels.sources.action"
+                sources={itemMapAction}
               />
             </CompositePanelContent.Item>
             <CompositePanelContent.Item

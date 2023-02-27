@@ -265,6 +265,14 @@ export const FlowCanvas = observer(() => {
           { type: 'source', position: Position.Bottom },
         ],
       }),
+      HttpCallsNode: connectFreeFlow({
+        component: StandardNode,
+        content: <h3>action</h3>,
+        handles: [
+          { type: 'target', position: Position.Top },
+          { type: 'source', position: Position.Bottom },
+        ],
+      }),
     },
   })
   useEffect(() => {
