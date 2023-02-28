@@ -9,6 +9,10 @@ import {
   FormGrid,
   ArrayItems,
   FormTab,
+  Space,
+  ArrayTable,
+  Password,
+  Radio,
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
 import * as ICONS from '@ant-design/icons'
@@ -36,6 +40,8 @@ const AssignmentDesc = () => {
   )
 }
 
+const formTab = FormTab.createFormTab()
+
 const SchemaField = createSchemaField({
   components: {
     FormItem,
@@ -44,6 +50,10 @@ const SchemaField = createSchemaField({
     Input,
     Select,
     FormTab,
+    Space,
+    ArrayTable,
+    Password,
+    Radio,
     AssignmentDesc,
     ResourceSelect,
     OperationSelect,
@@ -157,115 +167,713 @@ const httpCallsRender = (isNew: boolean, metaFlow: FreeFlow) => {
           callArguments: {
             type: 'object',
             properties: {
-              url: {
-                type: 'string',
-                title: (
-                  <TextWidget token="flowDesigner.flow.form.httpCalls.urlTitle"></TextWidget>
-                ),
-                required: true,
+              grid: {
+                type: 'void',
                 'x-decorator': 'FormItem',
                 'x-decorator-props': {
-                  layout: 'vertical',
-                  colon: false,
+                  gridSpan: 2,
+                  feedbackLayout: 'terse',
+                },
+                'x-component': 'FormGrid',
+                'x-component-props': {
+                  maxColumns: 6,
+                },
+                properties: {
+                  method: {
+                    type: 'string',
+                    title: (
+                      <TextWidget token="flowDesigner.flow.form.httpCalls.methodTitle"></TextWidget>
+                    ),
+                    required: true,
+                    'x-decorator': 'FormItem',
+                    'x-decorator-props': {
+                      layout: 'vertical',
+                      colon: false,
+                      feedbackLayout: 'terse',
+                    },
+                    'x-component': 'Select',
+                    'x-component-props': {
+                      style: {
+                        // width: 100,
+                      },
+                    },
+                    enum: [
+                      {
+                        label: 'GET',
+                        value: 'GET',
+                      },
+                      {
+                        label: 'POST',
+                        value: 'POST',
+                      },
+                      {
+                        label: 'PUT',
+                        value: 'PUT',
+                      },
+                      {
+                        label: 'DELETE',
+                        value: 'DELETE',
+                      },
+                      {
+                        label: 'HEAD',
+                        value: 'HEAD',
+                      },
+                      {
+                        label: 'OPTIONS',
+                        value: 'OPTIONS',
+                      },
+                      {
+                        label: 'PATCH',
+                        value: 'PATCH',
+                      },
+                      {
+                        label: 'CONNECT',
+                        value: 'CONNECT',
+                      },
+                      {
+                        label: 'TRACE',
+                        value: 'TRACE',
+                      },
+                    ],
+                  },
+                  url: {
+                    type: 'string',
+                    title: (
+                      <TextWidget token="flowDesigner.flow.form.httpCalls.urlTitle"></TextWidget>
+                    ),
+                    required: true,
+                    'x-decorator': 'FormItem',
+                    'x-decorator-props': {
+                      layout: 'vertical',
+                      colon: false,
+                      gridSpan: 5,
+                      feedbackLayout: 'terse',
+                    },
+                    'x-component': 'Input',
+                    'x-validator': [
+                      {
+                        triggerType: 'onBlur',
+                        required: false,
+                        message: (
+                          <TextWidget>
+                            flowDesigner.flow.form.validator.required
+                          </TextWidget>
+                        ),
+                      },
+                    ],
+                  },
+                },
+              },
+              httpFormTab: {
+                type: 'void',
+                'x-component': 'FormTab',
+                'x-component-props': {
+                  formTab: '{{formTab}}',
+                },
+                'x-decorator': 'FormItem',
+                'x-decorator-props': {
                   gridSpan: 2,
                 },
+                properties: {
+                  tab1: {
+                    type: 'void',
+                    'x-component': 'FormTab.TabPane',
+                    'x-component-props': {
+                      tab: 'Params',
+                    },
+                    properties: {
+                      parameters: {
+                        type: 'array',
+                        'x-decorator': 'FormItem',
+                        'x-component': 'ArrayTable',
+                        'x-component-props': {
+                          pagination: { pageSize: 10 },
+                          scroll: { x: '100%' },
+                        },
+                        items: {
+                          type: 'object',
+                          properties: {
+                            column1: {
+                              type: 'void',
+                              'x-component': 'ArrayTable.Column',
+                              'x-component-props': {
+                                width: 50,
+                                title: 'Sort',
+                                align: 'center',
+                              },
+                              properties: {
+                                sort: {
+                                  type: 'void',
+                                  'x-component': 'ArrayTable.SortHandle',
+                                },
+                              },
+                            },
+                            column2: {
+                              type: 'void',
+                              'x-component': 'ArrayTable.Column',
+                              'x-component-props': {
+                                width: 100,
+                                title: 'TYPE',
+                                align: 'center',
+                              },
+                              properties: {
+                                type: {
+                                  type: 'string',
+                                  'x-decorator': 'FormItem',
+                                  'x-component': 'Select',
+                                  required: true,
+                                  enum: [
+                                    {
+                                      label: 'Query',
+                                      value: 'Query',
+                                    },
+                                    {
+                                      label: 'Path',
+                                      value: 'Path',
+                                    },
+                                  ],
+                                },
+                              },
+                            },
+                            column3: {
+                              type: 'void',
+                              'x-component': 'ArrayTable.Column',
+                              'x-component-props': { width: 200, title: 'KEY' },
+                              required: true,
+                              properties: {
+                                key: {
+                                  type: 'string',
+                                  'x-decorator': 'FormItem',
+                                  'x-component': 'Input',
+                                },
+                              },
+                            },
+                            column4: {
+                              type: 'void',
+                              'x-component': 'ArrayTable.Column',
+                              'x-component-props': {
+                                width: 200,
+                                title: 'VALUE',
+                              },
+                              required: true,
+                              properties: {
+                                value: {
+                                  type: 'string',
+                                  'x-decorator': 'FormItem',
+                                  'x-component': 'Input',
+                                },
+                              },
+                            },
+                            column5: {
+                              type: 'void',
+                              'x-component': 'ArrayTable.Column',
+                              'x-component-props': {
+                                title: 'Operations',
+                                dataIndex: 'operations',
+                                width: 200,
+                                fixed: 'right',
+                              },
+                              properties: {
+                                item: {
+                                  type: 'void',
+                                  'x-component': 'FormItem',
+                                  properties: {
+                                    remove: {
+                                      type: 'void',
+                                      'x-component': 'ArrayTable.Remove',
+                                    },
+                                    moveDown: {
+                                      type: 'void',
+                                      'x-component': 'ArrayTable.MoveDown',
+                                    },
+                                    moveUp: {
+                                      type: 'void',
+                                      'x-component': 'ArrayTable.MoveUp',
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                        properties: {
+                          add: {
+                            type: 'void',
+                            'x-component': 'ArrayTable.Addition',
+                            title: '添加条目',
+                          },
+                        },
+                      },
+                    },
+                  },
+                  tab2: {
+                    type: 'void',
+                    'x-component': 'FormTab.TabPane',
+                    'x-component-props': {
+                      tab: 'Authorization',
+                    },
+                    properties: {
+                      authorization: {
+                        type: 'object',
+                        'x-decorator': 'FormItem',
+                        'x-component': 'FormGrid',
+                        'x-component-props': {
+                          maxColumns: 4,
+                        },
+                        properties: {
+                          type: {
+                            type: 'string',
+                            title: 'Type',
+                            'x-decorator': 'FormItem',
+                            'x-decorator-props': {
+                              layout: 'vertical',
+                              colon: false,
+                              gridSpan: 1,
+                            },
+                            'x-component': 'Select',
+                            'x-component-props': {
+                              gridSpan: 1,
+                            },
+                            required: true,
+                            enum: [
+                              {
+                                label: 'No Auth',
+                                value: 'No Auth',
+                              },
+                              {
+                                label: 'Bearer Token',
+                                value: 'Bearer Token',
+                              },
+                              {
+                                label: 'Basic Auth',
+                                value: 'Basic Auth',
+                              },
+                            ],
+                          },
+                          object: {
+                            type: 'object',
+                            'x-decorator': 'FormItem',
+                            'x-decorator-props': {
+                              gridSpan: 3,
+                            },
+                            'x-component': 'FormGrid',
+                            'x-component-props': {
+                              maxColumns: 1,
+                            },
+                            properties: {
+                              token: {
+                                type: 'string',
+                                title: 'Token',
+                                'x-decorator': 'FormItem',
+                                'x-decorator-props': {
+                                  layout: 'vertical',
+                                  colon: false,
+                                },
+                                'x-component': 'Input',
+                                required: true,
+                              },
+                              username: {
+                                type: 'string',
+                                title: 'Username',
+                                'x-decorator': 'FormItem',
+                                'x-decorator-props': {
+                                  layout: 'vertical',
+                                  colon: false,
+                                },
+                                'x-component': 'Input',
+                                required: true,
+                              },
+                              password: {
+                                type: 'string',
+                                title: 'Password',
+                                'x-decorator': 'FormItem',
+                                'x-decorator-props': {
+                                  layout: 'vertical',
+                                  colon: false,
+                                },
+                                'x-component': 'Password',
+                                required: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                  tab3: {
+                    type: 'void',
+                    'x-component': 'FormTab.TabPane',
+                    'x-component-props': {
+                      tab: 'Headers',
+                    },
+                    properties: {
+                      headers: {
+                        type: 'array',
+                        'x-decorator': 'FormItem',
+                        'x-component': 'ArrayTable',
+                        'x-component-props': {
+                          pagination: { pageSize: 10 },
+                          scroll: { x: '100%' },
+                        },
+                        items: {
+                          type: 'object',
+                          properties: {
+                            column1: {
+                              type: 'void',
+                              'x-component': 'ArrayTable.Column',
+                              'x-component-props': {
+                                width: 50,
+                                title: 'Sort',
+                                align: 'center',
+                              },
+                              properties: {
+                                sort: {
+                                  type: 'void',
+                                  'x-component': 'ArrayTable.SortHandle',
+                                },
+                              },
+                            },
+                            column3: {
+                              type: 'void',
+                              'x-component': 'ArrayTable.Column',
+                              'x-component-props': { width: 200, title: 'KEY' },
+                              required: true,
+                              properties: {
+                                key: {
+                                  type: 'string',
+                                  'x-decorator': 'FormItem',
+                                  'x-component': 'Input',
+                                },
+                              },
+                            },
+                            column4: {
+                              type: 'void',
+                              'x-component': 'ArrayTable.Column',
+                              'x-component-props': {
+                                width: 200,
+                                title: 'VALUE',
+                              },
+                              required: true,
+                              properties: {
+                                value: {
+                                  type: 'string',
+                                  'x-decorator': 'FormItem',
+                                  'x-component': 'Input',
+                                },
+                              },
+                            },
+                            column5: {
+                              type: 'void',
+                              'x-component': 'ArrayTable.Column',
+                              'x-component-props': {
+                                title: 'Operations',
+                                dataIndex: 'operations',
+                                width: 200,
+                                fixed: 'right',
+                              },
+                              properties: {
+                                item: {
+                                  type: 'void',
+                                  'x-component': 'FormItem',
+                                  properties: {
+                                    remove: {
+                                      type: 'void',
+                                      'x-component': 'ArrayTable.Remove',
+                                    },
+                                    moveDown: {
+                                      type: 'void',
+                                      'x-component': 'ArrayTable.MoveDown',
+                                    },
+                                    moveUp: {
+                                      type: 'void',
+                                      'x-component': 'ArrayTable.MoveUp',
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                        properties: {
+                          add: {
+                            type: 'void',
+                            'x-component': 'ArrayTable.Addition',
+                            title: '添加条目',
+                          },
+                        },
+                      },
+                    },
+                  },
+                  tab4: {
+                    type: 'void',
+                    'x-component': 'FormTab.TabPane',
+                    'x-component-props': {
+                      tab: 'Body',
+                    },
+                    properties: {
+                      contentType: {
+                        type: 'string',
+                        'x-decorator': 'FormItem',
+                        required: true,
+                        'x-component': 'Radio.Group',
+                        enum: [
+                          {
+                            label: 'none',
+                            value: 'none',
+                          },
+                          {
+                            label: 'form-data',
+                            value: 'form-data',
+                          },
+                          {
+                            label: 'x-www-form-urlencoded',
+                            value: 'x-www-form-urlencoded',
+                          },
+                          {
+                            label: 'raw',
+                            value: 'raw',
+                          },
+                          {
+                            label: 'binary',
+                            value: 'binary',
+                          },
+                          {
+                            label: 'GraphQL',
+                            value: 'GraphQL',
+                          },
+                        ],
+                      },
+                      body: {
+                        type: 'array',
+                        'x-decorator': 'FormItem',
+                        'x-component': 'ArrayTable',
+                        'x-component-props': {
+                          pagination: { pageSize: 10 },
+                          scroll: { x: '100%' },
+                        },
+                        items: {
+                          type: 'object',
+                          properties: {
+                            column1: {
+                              type: 'void',
+                              'x-component': 'ArrayTable.Column',
+                              'x-component-props': {
+                                width: 50,
+                                title: 'Sort',
+                                align: 'center',
+                              },
+                              properties: {
+                                sort: {
+                                  type: 'void',
+                                  'x-component': 'ArrayTable.SortHandle',
+                                },
+                              },
+                            },
+                            column3: {
+                              type: 'void',
+                              'x-component': 'ArrayTable.Column',
+                              'x-component-props': { width: 200, title: 'KEY' },
+                              required: true,
+                              properties: {
+                                key: {
+                                  type: 'string',
+                                  'x-decorator': 'FormItem',
+                                  'x-component': 'Input',
+                                },
+                              },
+                            },
+                            column4: {
+                              type: 'void',
+                              'x-component': 'ArrayTable.Column',
+                              'x-component-props': {
+                                width: 200,
+                                title: 'VALUE',
+                              },
+                              required: true,
+                              properties: {
+                                value: {
+                                  type: 'string',
+                                  'x-decorator': 'FormItem',
+                                  'x-component': 'Input',
+                                },
+                              },
+                            },
+                            column5: {
+                              type: 'void',
+                              'x-component': 'ArrayTable.Column',
+                              'x-component-props': {
+                                title: 'Operations',
+                                dataIndex: 'operations',
+                                width: 200,
+                                fixed: 'right',
+                              },
+                              properties: {
+                                item: {
+                                  type: 'void',
+                                  'x-component': 'FormItem',
+                                  properties: {
+                                    remove: {
+                                      type: 'void',
+                                      'x-component': 'ArrayTable.Remove',
+                                    },
+                                    moveDown: {
+                                      type: 'void',
+                                      'x-component': 'ArrayTable.MoveDown',
+                                    },
+                                    moveUp: {
+                                      type: 'void',
+                                      'x-component': 'ArrayTable.MoveUp',
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                        properties: {
+                          add: {
+                            type: 'void',
+                            'x-component': 'ArrayTable.Addition',
+                            title: '添加条目',
+                          },
+                        },
+                      },
+                    },
+                  },
+                  tab5: {
+                    type: 'void',
+                    'x-component': 'FormTab.TabPane',
+                    'x-component-props': {
+                      tab: 'Cookies',
+                    },
+                    properties: {
+                      cookies: {
+                        type: 'array',
+                        'x-decorator': 'FormItem',
+                        'x-component': 'ArrayTable',
+                        'x-component-props': {
+                          pagination: { pageSize: 10 },
+                          scroll: { x: '100%' },
+                        },
+                        items: {
+                          type: 'object',
+                          properties: {
+                            column1: {
+                              type: 'void',
+                              'x-component': 'ArrayTable.Column',
+                              'x-component-props': {
+                                width: 50,
+                                title: 'Sort',
+                                align: 'center',
+                              },
+                              properties: {
+                                sort: {
+                                  type: 'void',
+                                  'x-component': 'ArrayTable.SortHandle',
+                                },
+                              },
+                            },
+                            column3: {
+                              type: 'void',
+                              'x-component': 'ArrayTable.Column',
+                              'x-component-props': {
+                                width: 200,
+                                title: 'NAME',
+                              },
+                              required: true,
+                              properties: {
+                                key: {
+                                  type: 'string',
+                                  'x-decorator': 'FormItem',
+                                  'x-component': 'Input',
+                                },
+                              },
+                            },
+                            column4: {
+                              type: 'void',
+                              'x-component': 'ArrayTable.Column',
+                              'x-component-props': {
+                                width: 200,
+                                title: 'DOMAIN',
+                              },
+                              required: true,
+                              properties: {
+                                domain: {
+                                  type: 'string',
+                                  'x-decorator': 'FormItem',
+                                  'x-component': 'Input',
+                                },
+                              },
+                            },
+                            column6: {
+                              type: 'void',
+                              'x-component': 'ArrayTable.Column',
+                              'x-component-props': {
+                                width: 200,
+                                title: 'VALUE',
+                              },
+                              required: true,
+                              properties: {
+                                value: {
+                                  type: 'string',
+                                  'x-decorator': 'FormItem',
+                                  'x-component': 'Input.TextArea',
+                                },
+                              },
+                            },
+                            column5: {
+                              type: 'void',
+                              'x-component': 'ArrayTable.Column',
+                              'x-component-props': {
+                                title: 'Operations',
+                                dataIndex: 'operations',
+                                width: 200,
+                                fixed: 'right',
+                              },
+                              properties: {
+                                item: {
+                                  type: 'void',
+                                  'x-component': 'FormItem',
+                                  properties: {
+                                    remove: {
+                                      type: 'void',
+                                      'x-component': 'ArrayTable.Remove',
+                                    },
+                                    moveDown: {
+                                      type: 'void',
+                                      'x-component': 'ArrayTable.MoveDown',
+                                    },
+                                    moveUp: {
+                                      type: 'void',
+                                      'x-component': 'ArrayTable.MoveUp',
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                        properties: {
+                          add: {
+                            type: 'void',
+                            'x-component': 'ArrayTable.Addition',
+                            title: '添加条目',
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              result: {
+                type: 'string',
+                title: 'result',
+                'x-decorator': 'FormItem',
+                'x-decorator-props': {
+                  layout: 'vertical',
+                  colon: false,
+                },
                 'x-component': 'Input',
-                'x-validator': [
-                  {
-                    triggerType: 'onBlur',
-                    required: false,
-                    message: (
-                      <TextWidget>
-                        flowDesigner.flow.form.validator.required
-                      </TextWidget>
-                    ),
-                  },
-                ],
-              },
-              method: {
-                type: 'string',
-                title: (
-                  <TextWidget token="flowDesigner.flow.form.httpCalls.methodTitle"></TextWidget>
-                ),
-                required: true,
-                'x-decorator': 'FormItem',
-                'x-decorator-props': {
-                  layout: 'vertical',
-                  colon: false,
-                },
-                'x-component': 'Select',
-                enum: [
-                  {
-                    label: 'GET',
-                    value: 'GET',
-                  },
-                  {
-                    label: 'POST',
-                    value: 'POST',
-                  },
-                  {
-                    label: 'PUT',
-                    value: 'PUT',
-                  },
-                  {
-                    label: 'DELETE',
-                    value: 'DELETE',
-                  },
-                  {
-                    label: 'HEAD',
-                    value: 'HEAD',
-                  },
-                  {
-                    label: 'OPTIONS',
-                    value: 'OPTIONS',
-                  },
-                  {
-                    label: 'PATCH',
-                    value: 'PATCH',
-                  },
-                  {
-                    label: 'CONNECT',
-                    value: 'CONNECT',
-                  },
-                  {
-                    label: 'TRACE',
-                    value: 'TRACE',
-                  },
-                ],
-              },
-              contentType: {
-                type: 'string',
-                title: (
-                  <TextWidget token="flowDesigner.flow.form.httpCalls.contentTypeTitle"></TextWidget>
-                ),
-                'x-decorator': 'FormItem',
-                'x-decorator-props': {
-                  layout: 'vertical',
-                  colon: false,
-                },
-                'x-component': 'Select',
-                enum: [
-                  {
-                    label: 'application/json',
-                    value: 'application/json',
-                  },
-                  {
-                    label: 'application/xml',
-                    value: 'application/xml',
-                  },
-                  {
-                    label: 'application/x-www-form-urlencoded',
-                    value: 'application/x-www-form-urlencoded',
-                  },
-                  {
-                    label: 'text/plain',
-                    value: 'text/plain',
-                  },
-                  {
-                    label: 'text/html',
-                    value: 'text/html',
-                  },
-                ],
               },
               pathParameters: {
                 type: 'string',
@@ -308,14 +916,6 @@ const httpCallsRender = (isNew: boolean, metaFlow: FreeFlow) => {
                   },
                 },
               },
-              result: {
-                anyOf: [
-                  { type: 'string' },
-                  { type: 'number' },
-                  { type: 'object' },
-                  { type: 'array' },
-                ],
-              },
             },
           },
         },
@@ -328,12 +928,12 @@ const httpCallsRender = (isNew: boolean, metaFlow: FreeFlow) => {
   return FormDialog(
     {
       title: <TextWidget>{getToken}</TextWidget>,
-      width: '60vw',
+      width: '90vw',
     },
     () => {
       return (
         <FormLayout labelCol={6} wrapperCol={10}>
-          <SchemaField schema={httpCallsSchema} />
+          <SchemaField schema={httpCallsSchema} scope={{ formTab }} />
         </FormLayout>
       )
     }
@@ -358,12 +958,13 @@ export const httpCallsOnEdit = (node: any, at?: string, additionInfo?: any) => {
       }, 500)
     })
     .forConfirm((payload, next) => {
-      setTimeout(() => {
-        node.make
-          ? node.make(at, { ...payload.values, ...additionInfo })
-          : node.update(payload.values)
-        next(payload)
-      }, 500)
+      console.log('payload', payload)
+      // setTimeout(() => {
+      //   node.make
+      //     ? node.make(at, { ...payload.values, ...additionInfo })
+      //     : node.update(payload.values)
+      //   next(payload)
+      // }, 500)
     })
     .forCancel((payload, next) => {
       setTimeout(() => {
