@@ -1,16 +1,12 @@
 import React from 'react'
-import { Connection, addEdge } from 'reactflow'
+import { Connection } from 'reactflow'
 import { FormDialog, FormItem, FormLayout, Select } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
 import { ReactFlowCanvas } from '@toy-box/flow-graph'
-import {
-  FlowMetaNode,
-  FlowMetaType,
-  FreeFlow,
-  OpearteTypeEnum,
-} from '@toy-box/autoflow-core'
+import { OpearteTypeEnum } from '@toy-box/autoflow-core'
 import { uid } from '@toy-box/toybox-shared'
-import { TextWidget } from '../widgets'
+import { AutoFlow } from '../interface'
+import { TextWidget } from '@toy-box/studio-base'
 
 const SchemaField = createSchemaField({
   components: {
@@ -67,7 +63,7 @@ export const decisonConnectDialog = (
   targetNode: string,
   connection: Connection,
   canvas: ReactFlowCanvas,
-  freeFlow: FreeFlow,
+  freeFlow: AutoFlow,
   loadData?: any,
   sourceFlowmetaNode?: any
 ) => {
@@ -132,7 +128,7 @@ export const decisonConnectDialog = (
             },
           ])
         } else {
-          const { rules, waitEvents } = sourceFlowmetaNode
+          const { rules } = sourceFlowmetaNode
           const Index = sourceFlowmetaNode[
             rules ? 'rules' : 'waitEvents'
           ].findIndex(({ id }) => id === payload.values.decisionResult)
@@ -170,7 +166,7 @@ export const loopConnectDialog = (
   targetNode: string,
   connection: Connection,
   canvas: ReactFlowCanvas,
-  freeFlow: FreeFlow,
+  freeFlow: AutoFlow,
   sourceFlowmetaNode: any
 ) => {
   const { target, source } = connection

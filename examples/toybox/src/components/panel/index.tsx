@@ -18,18 +18,18 @@ import {
   useLocale,
 } from '@toy-box/studio-base'
 import { FreeFlow } from '@toy-box/autoflow-core'
-import {
-  FlowCanvas,
-  ErrorWidget,
-  ElementNodeWidget,
-  ResourceWidget,
-} from '../../../src'
+import { ErrorWidget, ElementNodeWidget, ResourceWidget } from '../../../src'
 import { itemMap } from '../../../src/data/itemMap'
-import { DesignerFlowContext } from '../../context'
-import { flowData1, flowData2, flowMeta, freeMeta } from '../../data/flowData'
+import { Designer, FlowCanvas } from '@toy-box/flow-designable'
 export const Panel: React.FC<any> = () => {
   const metaFlow = useMetaFlow()
   const freeFlow = useFreeFlow() as FreeFlow
+
+  const metaService = {
+    getMetaObjectData: (value) => {
+      return null
+    },
+  }
   // const init = useCallback(() => {
   //   metaFlow.flow.setFlowNodes(flowData1)
   // }, [])
@@ -637,7 +637,11 @@ export const Panel: React.FC<any> = () => {
     //   <button onClick={handleFreeLayout}>freeLayout</button>
     //   <button onClick={handleExport}>export</button>
     // </div>
-    <DesignerFlowContext.Provider value={{ metaFlow: freeFlow }}>
+    <Designer
+      metaFlow={freeFlow}
+      layoutMode={LayoutModeEnum.FREE_LAYOUT}
+      metaService={metaService}
+    >
       <StudioPanel>
         <TopbarPanel>
           <TopbarPanel.Region position="left">
@@ -778,6 +782,6 @@ export const Panel: React.FC<any> = () => {
           </CompositePanelContent>
         </div>
       </StudioPanel>
-    </DesignerFlowContext.Provider>
+    </Designer>
   )
 }

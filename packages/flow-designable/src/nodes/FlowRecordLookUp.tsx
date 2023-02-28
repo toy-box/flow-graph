@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { FC, useCallback } from 'react'
 import {
   FormDialog,
@@ -16,10 +17,7 @@ import { createSchemaField, FormProvider, observer } from '@formily/react'
 import {
   FlowMetaParam,
   FlowResourceType,
-  FreeFlow,
   ICriteriaCondition,
-  IInputAssignment,
-  MetaFlow,
   opTypeEnum,
 } from '@toy-box/autoflow-core'
 import { IFieldOption } from '@toy-box/meta-schema'
@@ -32,6 +30,7 @@ import { isBool } from '@formily/shared'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 
 import './flowNodes.less'
+import { AutoFlow } from '../interface'
 
 const ArrowRightOutlinedIcon = () => {
   return <ArrowRightOutlined />
@@ -147,7 +146,7 @@ export const recordLookUpOnEdit = (
 
 export interface RecordLookUpModelPorps {
   value?: FlowMetaParam
-  metaFlow: FreeFlow | MetaFlow
+  metaFlow: AutoFlow
   onCancel: () => void
   onSubmit: (from) => void
   isEdit: boolean

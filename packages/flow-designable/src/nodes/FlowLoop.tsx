@@ -13,9 +13,7 @@ import {
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
 import * as ICONS from '@ant-design/icons'
-import { FlowMetaNode, FlowMetaType } from '@toy-box/autoflow-core'
-import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
-import { TextWidget, takeMessage } from '../widgets'
+import { TextWidget, useLocale } from '@toy-box/studio-base'
 
 const LoopDescrip = () => {
   return (
@@ -169,9 +167,7 @@ const loopRender = (isNew: boolean) => {
         'x-component': 'Input',
         'x-component-props': {
           suffix: "{{icon('SearchOutlined')}}",
-          placeholder: takeMessage(
-            'flowDesigner.flow.form.comm.collectionPlace'
-          ),
+          placeholder: useLocale('flowDesigner.flow.form.comm.collectionPlace'),
         },
       },
       titleDirection: {

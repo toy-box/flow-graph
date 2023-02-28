@@ -11,11 +11,9 @@ import {
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
 import * as ICONS from '@ant-design/icons'
-import { FlowMetaNode, FlowMetaType, FreeFlow } from '@toy-box/autoflow-core'
-import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
-import { useLocale } from '../hooks'
+import { TextWidget, useLocale } from '@toy-box/studio-base'
 import { ResourceSelect, OperationSelect } from '../components/formily'
-import { TextWidget, takeMessage } from '../widgets'
+import { AutoFlow } from '../interface'
 
 import './flowNodes.less'
 
@@ -53,7 +51,7 @@ const SchemaField = createSchemaField({
   },
 })
 
-const assignRender = (isNew: boolean, metaFlow: FreeFlow) => {
+const assignRender = (isNew: boolean, metaFlow: AutoFlow) => {
   const assignPanelSchema = {
     type: 'object',
     properties: {
@@ -218,7 +216,7 @@ const assignRender = (isNew: boolean, metaFlow: FreeFlow) => {
                       'x-component-props': {
                         suffix: "{{icon('SearchOutlined')}}",
                         metaFlow: metaFlow,
-                        placeholder: takeMessage(
+                        placeholder: useLocale(
                           'flowDesigner.flow.form.comm.operationPlace'
                         ),
                       },
@@ -269,7 +267,7 @@ const assignRender = (isNew: boolean, metaFlow: FreeFlow) => {
                       },
                       'x-component': 'OperationSelect',
                       'x-component-props': {
-                        placeholder: takeMessage(
+                        placeholder: useLocale(
                           'flowDesigner.flow.form.comm.typePlace'
                         ),
                         reactionKey: 'operation',
@@ -304,7 +302,7 @@ const assignRender = (isNew: boolean, metaFlow: FreeFlow) => {
                       'x-component': 'ResourceSelect',
                       'x-component-props': {
                         suffix: "{{icon('SearchOutlined')}}",
-                        placeholder: takeMessage(
+                        placeholder: useLocale(
                           'flowDesigner.flow.form.comm.valuePlace'
                         ),
                         metaFlow: metaFlow,

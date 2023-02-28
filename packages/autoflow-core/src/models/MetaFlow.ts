@@ -38,20 +38,20 @@ export type FlowModeType = FlowModeEnum.EDIT | FlowModeEnum.READ
 export type FlowMetaParamOfType = FlowMetaParam
 
 export class MetaFlow extends AutoFlow {
-  disposers: (() => void)[] = []
-  flowMeta: IFlowMeta
-  metaFlowDatas: FlowMetaParam[] = []
-  flow: Flow
-  flowMetaNodeMap: Record<string, FlowMetaNode> = {}
+  // disposers: (() => void)[] = []
+  // flowMeta: IFlowMeta
+  // metaFlowDatas: FlowMetaParam[] = []
+  // flow: Flow
+  // flowMetaNodeMap: Record<string, FlowMetaNode> = {}
 
   // flowConstants: IFieldMeta[] = []
   // flowFormulas: IFieldMeta[] = []
   // flowTemplates: IFieldMeta[] = []
   // flowVariables: IFieldMeta[] = []
-  mode: FlowModeType = FlowModeEnum.EDIT
-  flowType: FlowType
-  history: History
-  layoutMode?: LayoutModeEnum
+  // mode: FlowModeType = FlowModeEnum.EDIT
+  // flowType: FlowType
+  // history: History
+  // layoutMode?: LayoutModeEnum
 
   get flowMetaNodes() {
     return Object.keys(this.flowMetaNodeMap).map(
@@ -60,10 +60,10 @@ export class MetaFlow extends AutoFlow {
   }
 
   constructor(mode: FlowModeType, flow?: Flow, layoutMode?: LayoutModeEnum) {
-    super()
-    this.layoutMode = layoutMode || LayoutModeEnum.AUTO_LAYOUT
-    this.mode = mode || this.mode
-    this.flow = flow ?? new Flow(this.layoutMode)
+    super(mode, (layoutMode = layoutMode || LayoutModeEnum.AUTO_LAYOUT), flow)
+    // this.layoutMode = layoutMode || LayoutModeEnum.AUTO_LAYOUT
+    // this.mode = mode || this.mode
+    // this.flow = flow ?? new Flow(this.layoutMode)
     this.history = new History(undefined, {
       onRedo: (item) => {
         console.log(item, 'onRedo')

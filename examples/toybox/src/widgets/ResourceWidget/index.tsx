@@ -4,10 +4,10 @@ import { Button } from 'antd'
 import { observer } from '@formily/reactive-react'
 import { TextWidget, usePrefix } from '@toy-box/studio-base'
 import { FreeFlow, IResourceParam } from '@toy-box/autoflow-core'
+import { resourceEdit } from '@toy-box/flow-designable'
 import cls from 'classnames'
 import './styles.less'
 import { ResourceItemWidget } from './ResourceItem'
-import { resourceEdit } from '../../flow-nodes'
 export interface IResourceWidgetProps {
   title: React.ReactNode
   sources?: IResourceParam[]

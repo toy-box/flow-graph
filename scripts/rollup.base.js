@@ -17,6 +17,7 @@ const presets = () => {
     '@toy-box/flow-graph': 'Toybox.FlowGraph',
     '@toy-box/flow-node': 'Toybox.FlowNode',
     '@toy-box/action-template': 'Toybox.ActionTemplate',
+    '@toy-box/flow-designable': 'Toybox.FlowDesignable',
   }
   return [
     typescript({

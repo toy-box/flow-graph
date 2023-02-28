@@ -15,9 +15,7 @@ import { createSchemaField, FormProvider } from '@formily/react'
 import {
   FlowMetaParam,
   FlowResourceType,
-  FreeFlow,
   IInputAssignment,
-  MetaFlow,
   opTypeEnum,
 } from '@toy-box/autoflow-core'
 import { createForm, onFieldValueChange } from '@formily/core'
@@ -26,6 +24,7 @@ import { useLocale, TextWidget } from '@toy-box/studio-base'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { clone } from '@designable/shared'
 import { ResourceSelect } from '../components/formily'
+import { AutoFlow } from '../interface'
 
 import './flowNodes.less'
 
@@ -118,7 +117,7 @@ export const recordCreateOnEdit = (
 
 export interface RecordCreateModelPorps {
   value?: FlowMetaParam
-  metaFlow: FreeFlow | MetaFlow
+  metaFlow: AutoFlow
   onCancel: () => void
   onSubmit: (from) => void
   isEdit: boolean

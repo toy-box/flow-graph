@@ -6,6 +6,7 @@ import {
   useLocale,
   usePrefix,
 } from '@toy-box/studio-base'
+import { resourceEdit } from '@toy-box/flow-designable'
 import {
   FlowResourceType,
   FreeFlow,
@@ -13,8 +14,8 @@ import {
   IResourceParam,
 } from '@toy-box/autoflow-core'
 import cls from 'classnames'
+
 import { DeleteFilled } from '@ant-design/icons'
-import { resourceEdit } from '../../flow-nodes'
 import './styles.less'
 
 // export type SourceMapper = (resource: ItemMapType) => React.ReactChild

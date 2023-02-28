@@ -36,6 +36,7 @@ import {
 import { GatherInput } from '../../components/formily'
 // import { FormulaEditor, BraftEditorTemplate } from '../formily'
 import { useLocale, TextWidget } from '@toy-box/studio-base'
+import { AutoFlow } from '../../interface'
 // import { AutoFlow } from '../../flow/models/AutoFlow'
 // import { apiReg } from './interface'
 
@@ -121,7 +122,7 @@ const labelNames: any = {
   ),
 }
 
-const handleOk = (values, metaflow: FreeFlow, isEdit: boolean) => {
+const handleOk = (values, metaflow: AutoFlow, isEdit: boolean) => {
   const obj: any = values
   const resourceData: any = {
     description: obj.description,

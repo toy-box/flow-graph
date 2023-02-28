@@ -16,7 +16,7 @@ import { IFieldMeta } from '@toy-box/meta-schema'
 import { useLocale } from '@toy-box/studio-base'
 import { FlowResourceType } from '@toy-box/autoflow-core'
 import get from 'lodash.get'
-import { resourceEdit } from '../../../flow-nodes'
+import { resourceEdit } from '../../../nodes'
 import './index.less'
 import { isArr } from '@designable/shared'
 

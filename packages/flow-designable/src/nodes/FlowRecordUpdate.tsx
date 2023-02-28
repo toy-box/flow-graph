@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useCallback } from 'react'
 import {
   FormDialog,
   Input,
@@ -13,18 +13,23 @@ import {
 import { createSchemaField, FormProvider } from '@formily/react'
 import {
   FlowMetaParam,
-  FreeFlow,
   ICriteriaCondition,
-  MetaFlow,
+  IInputAssignment,
   opTypeEnum,
 } from '@toy-box/autoflow-core'
 import { createForm, onFieldValueChange } from '@formily/core'
 import { Button } from 'antd'
 import { useLocale, TextWidget } from '@toy-box/studio-base'
+import { ArrowLeftOutlined } from '@ant-design/icons'
 import { clone } from '@designable/shared'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 
 import './flowNodes.less'
+import { AutoFlow } from '../interface'
+
+const ArrowLeftOutlinedIcon = () => {
+  return <ArrowLeftOutlined />
+}
 
 const SchemaField = createSchemaField({
   components: {
@@ -36,6 +41,7 @@ const SchemaField = createSchemaField({
     Select,
     ResourceSelect,
     OperationSelect,
+    ArrowLeftOutlinedIcon,
   },
 })
 
@@ -51,6 +57,15 @@ const submitParamData = (values) => {
       }
     }
   )
+  const inputAssignments = value.inputAssignments.map(
+    (data: IInputAssignment) => {
+      return {
+        field: data.field,
+        type: data.type || opTypeEnum.INPUT,
+        value: data.value,
+      }
+    }
+  )
   const paramData = {
     id: value.id,
     name: value.name,
@@ -59,11 +74,12 @@ const submitParamData = (values) => {
       conditions,
       logic: value.criteria.logic || '$and',
     },
+    inputAssignments,
   }
   return paramData
 }
 
-export const recordDeleteOnEdit = (
+export const recordUpdateOnEdit = (
   node: any,
   at?: string,
   additionInfo?: any
@@ -84,9 +100,9 @@ export const recordDeleteOnEdit = (
     formDialog.close()
   }
   const title = !isEdit ? (
-    <TextWidget>flowDesigner.flow.form.recordRemove.addTitle</TextWidget>
+    <TextWidget>flowDesigner.flow.form.recordUpdate.addTitle</TextWidget>
   ) : (
-    <TextWidget>flowDesigner.flow.form.recordRemove.editTitle</TextWidget>
+    <TextWidget>flowDesigner.flow.form.recordUpdate.editTitle</TextWidget>
   )
   formDialog = FormDialog(
     {
@@ -95,7 +111,7 @@ export const recordDeleteOnEdit = (
       open: false,
       width: '60vw',
     },
-    <RecordDelete
+    <RecordUpdate
       value={node}
       isEdit={isEdit}
       metaFlow={metaFlow}
@@ -110,27 +126,41 @@ export const recordDeleteOnEdit = (
     .open()
 }
 
-export interface RecordDeleteModelPorps {
+export interface RecordUpdateModelPorps {
   value?: FlowMetaParam
-  metaFlow: FreeFlow | MetaFlow
+  metaFlow: AutoFlow
   onCancel: () => void
   onSubmit: (from) => void
   isEdit: boolean
 }
 
-export const RecordDelete: FC<RecordDeleteModelPorps> = ({
+export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
   value,
   onCancel,
   onSubmit,
   metaFlow,
   isEdit,
 }) => {
+  const filterName = useLocale('flowDesigner.flow.form.recordUpdate.filter')
+  const record = useLocale('flowDesigner.flow.form.recordUpdate.record')
+  const setName = useLocale('flowDesigner.flow.form.recordUpdate.setting')
+  const setField = useLocale('flowDesigner.flow.form.recordUpdate.setField')
+
   const form = createForm({
     effects: () => {
       onFieldValueChange('registerId', (field) => {
-        form.setFieldState('criteria.conditions', (state) => {
-          state.value = []
-        })
+        const registers = metaFlow.registers
+        const register = registers.find((rg) => rg.id === field.value)
+        if (register) {
+          form.setFieldState('criteria.conditions', (state) => {
+            state.title = `${filterName} ${register.name} ${record}`
+            state.value = []
+          })
+          form.setFieldState('inputAssignments', (state) => {
+            state.title = `${setName} ${register.name} ${setField}`
+            state.value = []
+          })
+        }
       })
     },
   })
@@ -142,8 +172,18 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
       name: flowData.name,
       registerId: flowData.registerId,
       criteria: flowData.criteria,
+      inputAssignments: flowData.inputAssignments,
     }
   }
+
+  const myReaction = useCallback(
+    (field: any) => {
+      const val = form.values
+      const registerId = val.registerId
+      field.display = registerId ? 'visible' : 'none'
+    },
+    [form.values]
+  )
 
   const schema = {
     type: 'object',
@@ -219,7 +259,7 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
             type: 'string',
             title: (
               <TextWidget>
-                flowDesigner.flow.form.recordRemove.registerId
+                flowDesigner.flow.form.recordUpdate.registerId
               </TextWidget>
             ),
             required: true,
@@ -257,7 +297,7 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
               logic: {
                 type: 'string',
                 title: (
-                  <TextWidget token="flowDesigner.flow.form.recordRemove.filterTitle"></TextWidget>
+                  <TextWidget token="flowDesigner.flow.form.recordUpdate.filterTitle"></TextWidget>
                 ),
                 required: true,
                 'x-validator': [
@@ -366,7 +406,7 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
                           type: 'string',
                           title: (
                             <TextWidget>
-                              flowDesigner.flow.form.recordRemove.field
+                              flowDesigner.flow.form.recordUpdate.field
                             </TextWidget>
                           ),
                           required: true,
@@ -391,8 +431,8 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
                           'x-component': 'ResourceSelect',
                           'x-component-props': {
                             sourceMode: 'objectService',
-                            metaFlow: metaFlow,
                             objectKey: 'registerId',
+                            metaFlow: metaFlow,
                             placeholder: useLocale(
                               'flowDesigner.flow.form.comm.operationPlace'
                             ),
@@ -488,7 +528,7 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
                     type: 'void',
                     title: (
                       <TextWidget>
-                        flowDesigner.flow.form.recordRemove.addBtn
+                        flowDesigner.flow.form.recordUpdate.addBtn
                       </TextWidget>
                     ),
                     'x-component': 'ArrayItems.Addition',
@@ -497,6 +537,168 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
                         width: '200px',
                       },
                     },
+                  },
+                },
+              },
+            },
+          },
+          inputAssignments: {
+            type: 'array',
+            required: true,
+            'x-reactions': myReaction,
+            'x-validator': [
+              {
+                triggerType: 'onBlur',
+                required: false,
+                message: (
+                  <TextWidget>
+                    flowDesigner.flow.form.recordUpdate.inputAssignments
+                  </TextWidget>
+                ),
+              },
+            ],
+            title: (
+              <TextWidget>
+                flowDesigner.flow.form.recordUpdate.inputAssignments
+              </TextWidget>
+            ),
+            'x-decorator': 'FormItem',
+            'x-component': 'ArrayItems',
+            'x-decorator-props': {
+              gridSpan: 2,
+            },
+            items: {
+              type: 'object',
+              'x-component': 'ArrayItems.Item',
+              'x-component-props': {
+                style: {
+                  border: 'none',
+                  padding: 0,
+                },
+              },
+              properties: {
+                grid: {
+                  type: 'void',
+                  'x-component': 'FormGrid',
+                  'x-component-props': {
+                    maxColumns: 20,
+                    minColumns: 20,
+                    style: {
+                      width: '100%',
+                    },
+                  },
+                  properties: {
+                    field: {
+                      type: 'string',
+                      title: (
+                        <TextWidget>
+                          flowDesigner.flow.form.recordUpdate.field
+                        </TextWidget>
+                      ),
+                      required: true,
+                      'x-validator': [
+                        {
+                          triggerType: 'onBlur',
+                          required: false,
+                          message: (
+                            <TextWidget>
+                              flowDesigner.flow.form.validator.required
+                            </TextWidget>
+                          ),
+                        },
+                      ],
+                      'x-decorator': 'FormItem',
+                      'x-decorator-props': {
+                        layout: 'vertical',
+                        colon: false,
+                        gridSpan: 9,
+                        labelWidth: '100px',
+                      },
+                      'x-component': 'ResourceSelect',
+                      'x-component-props': {
+                        // suffix: "{{icon('SearchOutlined')}}",
+                        sourceMode: 'objectService',
+                        objectKey: 'registerId',
+                        metaFlow: metaFlow,
+                        placeholder: useLocale(
+                          'flowDesigner.flow.form.comm.operationPlace'
+                        ),
+                      },
+                    },
+                    type: {
+                      type: 'string',
+                      title: '',
+                      'x-decorator': 'FormItem',
+                      'x-component': 'ArrowLeftOutlinedIcon',
+                      'x-decorator-props': {
+                        gridSpan: 1,
+                        style: {
+                          alignItems: 'center',
+                          marginTop: '22px',
+                          fontSize: '20px',
+                          textAlign: 'center',
+                        },
+                      },
+                    },
+                    value: {
+                      type: 'string',
+                      title: (
+                        <TextWidget>
+                          flowDesigner.flow.form.comm.valueTitle
+                        </TextWidget>
+                      ),
+                      required: true,
+                      'x-validator': [
+                        {
+                          triggerType: 'onBlur',
+                          required: false,
+                          message: (
+                            <TextWidget>
+                              flowDesigner.flow.form.validator.required
+                            </TextWidget>
+                          ),
+                        },
+                      ],
+                      'x-decorator': 'FormItem',
+                      'x-decorator-props': {
+                        layout: 'vertical',
+                        colon: false,
+                        gridSpan: 9,
+                        labelWidth: '100px',
+                      },
+                      'x-component': 'ResourceSelect',
+                      'x-component-props': {
+                        placeholder: useLocale(
+                          'flowDesigner.flow.form.comm.valuePlace'
+                        ),
+                        metaFlow: metaFlow,
+                        reactionKey: 'field',
+                      },
+                    },
+                    remove: {
+                      type: 'void',
+                      'x-decorator': 'FormItem',
+                      'x-decorator-props': {
+                        style: {
+                          alignItems: 'center',
+                          marginTop: '22px',
+                        },
+                        gridSpan: 1,
+                      },
+                      'x-component': 'ArrayItems.Remove',
+                    },
+                  },
+                },
+              },
+            },
+            properties: {
+              addition: {
+                type: 'void',
+                title: 'Add Condition',
+                'x-component': 'ArrayItems.Addition',
+                'x-component-props': {
+                  style: {
+                    width: '30%',
                   },
                 },
               },

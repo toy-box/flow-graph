@@ -14,15 +14,12 @@ import {
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
 import * as ICONS from '@ant-design/icons'
-import { createForm } from '@formily/core'
-import { observable } from '@formily/reactive'
-import { FlowMetaNode, FlowMetaType, FreeFlow } from '@toy-box/autoflow-core'
-import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { ResourceSelect, OperationSelect } from '../components/formily'
-import { TextWidget, takeMessage } from '../widgets'
 
 import { BranchArrays } from '../components/formily'
+import { AutoFlow } from '../interface'
 import './flowNodes.less'
+import { TextWidget, useLocale } from '@toy-box/studio-base'
 
 const descTipHtml = () => {
   return (
@@ -73,7 +70,7 @@ const SchemaField = createSchemaField({
 //   logic: '',
 // })
 
-const decideRender = (isNew: boolean, metaFlow: FreeFlow) => {
+const decideRender = (isNew: boolean, metaFlow: AutoFlow) => {
   const decidePanelSchema = {
     type: 'object',
     properties: {
@@ -410,7 +407,7 @@ const decideRender = (isNew: boolean, metaFlow: FreeFlow) => {
                                 'x-component-props': {
                                   suffix: "{{icon('SearchOutlined')}}",
                                   metaFlow: metaFlow,
-                                  placeholder: takeMessage(
+                                  placeholder: useLocale(
                                     'flowDesigner.flow.form.comm.operationPlace'
                                   ),
                                 },
@@ -443,7 +440,7 @@ const decideRender = (isNew: boolean, metaFlow: FreeFlow) => {
                                 },
                                 'x-component': 'OperationSelect',
                                 'x-component-props': {
-                                  placeholder: takeMessage(
+                                  placeholder: useLocale(
                                     'flowDesigner.flow.form.comm.typePlace'
                                   ),
                                   reactionKey: 'operation',
@@ -478,7 +475,7 @@ const decideRender = (isNew: boolean, metaFlow: FreeFlow) => {
                                 'x-component': 'ResourceSelect',
                                 'x-component-props': {
                                   suffix: "{{icon('SearchOutlined')}}",
-                                  placeholder: takeMessage(
+                                  placeholder: useLocale(
                                     'flowDesigner.flow.form.comm.valuePlace'
                                   ),
                                   metaFlow: metaFlow,
