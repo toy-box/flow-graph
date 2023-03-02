@@ -56,6 +56,10 @@ const zhCN = {
           singleOption: '单选列表',
           multiOption: '多选列表',
         },
+        formula: {
+          editTitle: '编辑公式',
+          formulaEditorTitle: 'meta公式型字段',
+        },
         metaValueType: {
           add: '添加',
           subtract: '减少',
@@ -120,6 +124,7 @@ const zhCN = {
           },
           placeholder: {
             assignRecordIdToReference: '请选择变量',
+            formula: '配置表达式',
           },
           assignment: {
             addTitle: '新建分配',
@@ -322,6 +327,10 @@ const enUS = {
           singleOption: 'singleOption',
           multiOption: 'multiOption',
         },
+        formula: {
+          editTitle: 'Editor Formula',
+          formulaEditorTitle: 'Meta Formula',
+        },
         metaValueType: {
           add: 'Add',
           subtract: 'Reduce',
@@ -387,6 +396,7 @@ const enUS = {
           },
           placeholder: {
             assignRecordIdToReference: 'Select Variable',
+            formula: 'Set Formula',
           },
           assignment: {
             addTitle: 'New Assignment',

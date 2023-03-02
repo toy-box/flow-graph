@@ -236,7 +236,7 @@ export const ResourceSelect: FC = observer((props: any) => {
       setInputValue('')
       onChange(undefined)
     }
-  }, [selectKeys])
+  }, [selectKeys, props.isInput])
 
   const onClick: MenuProps['onClick'] = (e) => {
     setVariable(false)

@@ -14,7 +14,7 @@ export const Designer: React.FC<
           layoutMode,
           metaService,
           GlobalRegistry,
-          prefixCls: 'flow-layout',
+          prefixCls: 'flow-designable',
         }}
       >
         {props.children}

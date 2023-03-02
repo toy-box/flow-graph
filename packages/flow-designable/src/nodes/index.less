@@ -1,0 +1,21 @@
+@import '../styles/theme.less';
+.@{prefix-cls}-powerfx-editor {
+  display: flex !important;
+  justify-content: space-between;
+  width: 100%;
+  &-code {
+    user-select: text;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: @text-color;
+  }
+  &-placeholder {
+    color: @text-color-secondary;
+  }
+  &-icon {
+    margin-right: 6px;
+    color: @text-color-secondary;
+    font-weight: bold;
+  }
+}

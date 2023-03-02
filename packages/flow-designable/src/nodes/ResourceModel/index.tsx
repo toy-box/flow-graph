@@ -27,18 +27,12 @@ import {
   IFieldMeta,
 } from '@toy-box/meta-schema'
 import { clone } from '@formily/shared'
-import {
-  FlowResourceType,
-  FreeFlow,
-  IFieldMetaFlow,
-} from '@toy-box/autoflow-core'
+import { FlowResourceType, IFieldMetaFlow } from '@toy-box/autoflow-core'
 // import { RepeatErrorMessage } from './RepeatErrorMessage'
-import { GatherInput } from '../../components/formily'
+import { GatherInput, FormulaEditor } from '../../components/formily'
 // import { FormulaEditor, BraftEditorTemplate } from '../formily'
 import { useLocale, TextWidget } from '@toy-box/studio-base'
 import { AutoFlow } from '../../interface'
-// import { AutoFlow } from '../../flow/models/AutoFlow'
-// import { apiReg } from './interface'
 
 const SchemaField = createSchemaField({
   components: {
@@ -46,7 +40,7 @@ const SchemaField = createSchemaField({
     Input,
     Select,
     GatherInput,
-    // FormulaEdit: FormulaEditor,
+    FormulaEditor,
     // BraftEditorTemplate,
     Checkbox,
     FormGrid,
@@ -184,7 +178,7 @@ const handleOk = (values, metaflow: AutoFlow, isEdit: boolean) => {
 }
 
 export const resourceEdit = (
-  metaflow: FreeFlow,
+  metaFlow: AutoFlow,
   isEdit: boolean,
   value?: IFieldMetaFlow,
   fieldType?: string
@@ -194,7 +188,7 @@ export const resourceEdit = (
     formDialog.close()
   }
   const onSubmit = (from) => {
-    handleOk(from.values, metaflow, isEdit)
+    handleOk(from.values, metaFlow, isEdit)
     formDialog.close()
   }
   const title = !isEdit ? (
@@ -213,6 +207,7 @@ export const resourceEdit = (
     },
     <ResourceCreate
       isEdit={isEdit}
+      metaFlow={metaFlow}
       fieldType={fieldType}
       value={value}
       onCancel={onCancel}
@@ -244,7 +239,7 @@ export const resourceEdit = (
 
 interface ResourceCreateProps {
   //   fieldMetas?: ICompareOperation[]
-  //   flowGraph: AutoFlow
+  metaFlow: AutoFlow
   isEdit?: boolean
   //   title?: string | JSX.Element
   value?: IFieldMetaFlow
@@ -255,7 +250,7 @@ interface ResourceCreateProps {
 
 export const ResourceCreate: FC<ResourceCreateProps> = ({
   //   fieldMetas = [],
-  //   flowGraph,
+  metaFlow,
   isEdit,
   value,
   fieldType,
@@ -412,10 +407,10 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
                 label: labelNames[FlowResourceType.CONSTANT],
                 value: FlowResourceType.CONSTANT,
               },
-              //   {
-              //     label: labelNames[FlowResourceType.FORMULA],
-              //     value: FlowResourceType.FORMULA,
-              //   },
+              {
+                label: labelNames[FlowResourceType.FORMULA],
+                value: FlowResourceType.FORMULA,
+              },
               //   {
               //     label: labelNames[FlowResourceType.TEMPLATE],
               //     value: FlowResourceType.TEMPLATE,
@@ -594,7 +589,7 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
             'x-decorator': 'FormItem',
             'x-component': 'GatherInput',
             'x-component-props': {
-              //   flowGraph,
+              metaFlow,
             },
             'x-decorator-props': {
               gridSpan: 2,
@@ -659,32 +654,32 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
               },
             },
           },
-          //   formula: {
-          //     type: 'string',
-          //     title: (
-          //       <TextWidget>
-          //         flowDesigner.flow.form.resourceCreate.expression
-          //       </TextWidget>
-          //     ),
-          //     required: true,
-          //     'x-validator': {
-          //       required: true,
-          //       message: (
-          //         <TextWidget>
-          //           flowDesigner.flow.form.validator.expression
-          //         </TextWidget>
-          //       ),
-          //     },
-          //     'x-visible': false,
-          //     'x-decorator': 'FormItem',
-          //     'x-component': 'FormulaEdit',
-          //     'x-component-props': {
-          //       flowGraph,
-          //     },
-          //     'x-decorator-props': {
-          //       gridSpan: 1,
-          //     },
-          //   },
+          formula: {
+            type: 'string',
+            title: (
+              <TextWidget>
+                flowDesigner.flow.form.resourceCreate.expression
+              </TextWidget>
+            ),
+            required: true,
+            'x-validator': {
+              required: true,
+              message: (
+                <TextWidget>
+                  flowDesigner.flow.form.validator.expression
+                </TextWidget>
+              ),
+            },
+            'x-visible': false,
+            'x-decorator': 'FormItem',
+            'x-component': 'FormulaEditor',
+            'x-component-props': {
+              metaFlow,
+            },
+            'x-decorator-props': {
+              gridSpan: 1,
+            },
+          },
         },
       },
     },

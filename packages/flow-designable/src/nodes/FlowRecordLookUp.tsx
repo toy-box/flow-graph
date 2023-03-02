@@ -734,6 +734,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
                             ),
                             metaFlow: metaFlow,
                             reactionKey: 'fieldPattern',
+                            isInput: true,
                           },
                         },
                         remove: {
@@ -1257,6 +1258,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
                         ),
                         metaFlow: metaFlow,
                         reactionKey: 'field',
+                        isInput: true,
                       },
                     },
                     remove: {

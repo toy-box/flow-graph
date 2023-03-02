@@ -38,20 +38,20 @@ export const GatherInput: FC = observer((props: any) => {
     [form]
   )
 
-  // const registerOptions = useMemo(() => {
-  //   if (isArr(props.flowGraph.registers)) {
-  //     const options = props.flowGraph.registers.map(
-  //       (r: { name: any; id: any }) => {
-  //         return {
-  //           label: r.name,
-  //           value: r.id,
-  //         }
-  //       }
-  //     )
-  //     return options
-  //   }
-  //   return []
-  // }, [props.flowGraph.registers])
+  const registerOptions = useMemo(() => {
+    if (isArr(props.metaFlow.registers)) {
+      const options = props.metaFlow.registers.map(
+        (r: { name: any; id: any }) => {
+          return {
+            label: r.name,
+            value: r.id,
+          }
+        }
+      )
+      return options
+    }
+    return []
+  }, [props.metaFlow.registers])
 
   const filterValueInput = useMemo(() => {
     switch (form.values.type) {
@@ -78,25 +78,25 @@ export const GatherInput: FC = observer((props: any) => {
             value={props.value}
           />
         )
-      // case MetaValueType.OBJECT:
-      //   return (
-      //     <FieldSelect
-      //       placeholder={useLocale(
-      //         'flowDesigner.flow.form.placeholder.formilyInput.select'
-      //       )}
-      //       options={registerOptions}
-      //       field={{
-      //         type: form.values.type,
-      //         key: form.values.type,
-      //         name: useLocale(
-      //           'flowDesigner.flow.form.placeholder.formilyInput.record'
-      //         ),
-      //       }}
-      //       disabled={props.disabled}
-      //       value={props.value}
-      //       onChange={handleSelectOptions}
-      //     />
-      //   )
+      case MetaValueType.OBJECT:
+        return (
+          <FieldSelect
+            placeholder={useLocale(
+              'flowDesigner.flow.form.placeholder.formilyInput.select'
+            )}
+            options={registerOptions}
+            field={{
+              type: form.values.type,
+              key: form.values.type,
+              name: useLocale(
+                'flowDesigner.flow.form.placeholder.formilyInput.record'
+              ),
+            }}
+            disabled={props.disabled}
+            value={props.value}
+            onChange={handleSelectOptions}
+          />
+        )
       case MetaValueType.DATE:
       case MetaValueType.DATETIME:
         return (
@@ -143,7 +143,7 @@ export const GatherInput: FC = observer((props: any) => {
     form.values.type,
     changeValue,
     props.value,
-    // registerOptions,
+    registerOptions,
     handleSelectOptions,
     changeDate,
   ])

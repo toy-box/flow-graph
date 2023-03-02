@@ -505,6 +505,7 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
                             ),
                             metaFlow: metaFlow,
                             reactionKey: 'fieldPattern',
+                            isInput: true,
                           },
                         },
                         remove: {
@@ -673,6 +674,7 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
                         ),
                         metaFlow: metaFlow,
                         reactionKey: 'field',
+                        isInput: true,
                       },
                     },
                     remove: {

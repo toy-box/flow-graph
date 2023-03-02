@@ -480,6 +480,7 @@ const decideRender = (isNew: boolean, metaFlow: AutoFlow) => {
                                   ),
                                   metaFlow: metaFlow,
                                   reactionKey: 'operation',
+                                  isInput: true,
                                 },
                               },
                               remove: {

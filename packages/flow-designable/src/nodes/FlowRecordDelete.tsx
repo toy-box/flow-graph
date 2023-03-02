@@ -464,6 +464,7 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
                             ),
                             metaFlow: metaFlow,
                             reactionKey: 'fieldPattern',
+                            isInput: true,
                           },
                         },
                         remove: {
