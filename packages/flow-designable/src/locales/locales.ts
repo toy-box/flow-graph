@@ -35,6 +35,7 @@ const zhCN = {
           recordUpdate: '更新记录',
           recordLookup: '查询记录',
           recordDelete: '删除记录',
+          httpCalls: '网络调用',
         },
         autoFlow: {
           variable: '变量',
@@ -259,6 +260,11 @@ const zhCN = {
             assignNullValuesIfNoRecordsFound:
               '在未返回记录时，将指定变量设置为空',
           },
+          httpCalls: {
+            addTitle: '新建网络请求',
+            editTitle: '编辑网络请求',
+            urlTitle: '请求地址',
+          },
         },
       },
     },
@@ -305,6 +311,7 @@ const enUS = {
           recordUpdate: 'recordUpdate',
           recordLookup: 'recordLookup',
           recordDelete: 'recordDelete',
+          httpCalls: 'httpCalls',
           end: 'end',
         },
         autoFlow: {
@@ -531,6 +538,13 @@ const enUS = {
               'If you only store the first record, filter by unique fields, such as ID.',
             assignNullValuesIfNoRecordsFound:
               'Set the specified variable to null when no record is returned',
+          },
+          httpCalls: {
+            addTitle: 'New HttpCalls',
+            editTitle: 'Edit HttpCalls',
+            urlTitle: 'Url',
+            methodTitle: 'Method',
+            contentTypeTitle: 'contentType',
           },
         },
       },

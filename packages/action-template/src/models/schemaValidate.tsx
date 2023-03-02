@@ -77,6 +77,7 @@ export const networkJsonSchema = {
             'multipart/form-data',
             'application/x-www-form-urlencoded',
             'text/plain',
+            'text/html',
             'image/jpeg',
             'image/png',
             'audio/mpeg',

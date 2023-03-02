@@ -598,7 +598,7 @@ export function convertMetaToFormily(metaList: IFieldMeta[]) {
     properties: {
       grid: {
         type: 'void',
-        'x-component': 'FormGrid',
+        // 'x-component': 'FormGrid',
         // 'x-component-props': {
         //   maxColumns: 2,
         // },

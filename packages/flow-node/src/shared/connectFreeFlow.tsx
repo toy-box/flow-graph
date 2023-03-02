@@ -74,6 +74,7 @@ export function connectFreeFlow({
           case 'RecordUpdateNode':
           case 'RecordDeleteNode':
           case 'RecordLookupNode':
+          case 'HttpCallsNode':
             return targets ? targets.length < 2 : true
           default:
             return true
