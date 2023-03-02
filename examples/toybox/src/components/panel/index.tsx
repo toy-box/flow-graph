@@ -19,7 +19,7 @@ import {
 } from '@toy-box/studio-base'
 import { FreeFlow } from '@toy-box/autoflow-core'
 import { ErrorWidget, ElementNodeWidget, ResourceWidget } from '../../../src'
-import { itemMap } from '../../../src/data/itemMap'
+import { itemMap, itemMapAction } from '../../../src/data/itemMap'
 import { Designer, FlowCanvas, variableOnEdit } from '@toy-box/flow-designable'
 export const Panel: React.FC<any> = () => {
   const metaFlow = useMetaFlow()
