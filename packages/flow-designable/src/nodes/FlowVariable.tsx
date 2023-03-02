@@ -20,7 +20,7 @@ import { observable } from '@formily/reactive'
 import { FlowMetaNode, FlowMetaType, FreeFlow } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { ResourceSelect, OperationSelect } from '../components/formily'
-import { TextWidget, takeMessage } from '../widgets'
+import { TextWidget, useLocale } from '@toy-box/studio-base'
 
 import { BranchArrays } from '../components/formily'
 

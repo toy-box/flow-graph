@@ -18,9 +18,8 @@ import { createSchemaField } from '@formily/react'
 import * as ICONS from '@ant-design/icons'
 import { FlowMetaNode, FlowMetaType, FreeFlow } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
-import { useLocale } from '../hooks'
 import { ResourceSelect, OperationSelect } from '../components/formily'
-import { TextWidget, takeMessage } from '../widgets'
+import { TextWidget, useLocale } from '@toy-box/studio-base'
 
 import './flowNodes.less'
 
