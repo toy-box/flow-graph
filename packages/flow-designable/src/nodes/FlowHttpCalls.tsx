@@ -344,6 +344,22 @@ const httpCallsRender = (isNew: boolean, metaFlow: FreeFlow) => {
                                   type: 'string',
                                   'x-decorator': 'FormItem',
                                   'x-component': 'Input',
+                                  'x-reactions': [
+                                    {
+                                      dependencies: ['.type'],
+                                      when: "{{$deps[0] === 'Path'}}",
+                                      fulfill: {
+                                        schema: {
+                                          'x-visible': false,
+                                        },
+                                      },
+                                      otherwise: {
+                                        schema: {
+                                          'x-visible': true,
+                                        },
+                                      },
+                                    },
+                                  ],
                                 },
                               },
                             },
@@ -459,6 +475,22 @@ const httpCallsRender = (isNew: boolean, metaFlow: FreeFlow) => {
                             'x-component-props': {
                               maxColumns: 1,
                             },
+                            'x-reactions': [
+                              {
+                                dependencies: ['.type'],
+                                when: "{{$deps[0] === 'No Auth'}}",
+                                fulfill: {
+                                  schema: {
+                                    'x-visible': false,
+                                  },
+                                },
+                                otherwise: {
+                                  schema: {
+                                    'x-visible': true,
+                                  },
+                                },
+                              },
+                            ],
                             properties: {
                               token: {
                                 type: 'string',
@@ -470,6 +502,22 @@ const httpCallsRender = (isNew: boolean, metaFlow: FreeFlow) => {
                                 },
                                 'x-component': 'Input',
                                 required: true,
+                                'x-reactions': [
+                                  {
+                                    dependencies: ['....authorization.type'],
+                                    when: "{{$deps[0] === 'Bearer Token'}}",
+                                    fulfill: {
+                                      schema: {
+                                        'x-visible': true,
+                                      },
+                                    },
+                                    otherwise: {
+                                      schema: {
+                                        'x-visible': false,
+                                      },
+                                    },
+                                  },
+                                ],
                               },
                               username: {
                                 type: 'string',
