@@ -78,13 +78,13 @@ export abstract class FlowMetaNode {
     }
   }
 
-  abstract connectDialog(
-    targetNode: string,
-    connection: Connection,
-    canvas: ReactFlowCanvas,
-    loadData?: any,
-    sourceFlowmetaNode?: FlowMetaNode
-  ): void
+  // abstract connectDialog(
+  //   targetNode: string,
+  //   connection: Connection,
+  //   canvas: ReactFlowCanvas,
+  //   loadData?: any,
+  //   sourceFlowmetaNode?: FlowMetaNode
+  // ): void
 
   abstract lowerLeverConnector?: TargetReference
 

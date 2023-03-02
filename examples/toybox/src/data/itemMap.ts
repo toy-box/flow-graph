@@ -75,3 +75,13 @@ export const itemMap: ItemMapType[] = [
   //   content: ComponentItem({ title: 'Lookup Records', icon: 'titleText' }),
   // },
 ]
+
+export const itemMapAction: ItemMapType[] = [
+  {
+    id: 'HttpCalls',
+    type: 'HttpCalls',
+    title: 'flowDesigner.flow.extend.httpCalls',
+    thumb:
+      'https://cdnmarket.sasago.com/microIcon/componentsIcon/titleText.png',
+  },
+]
