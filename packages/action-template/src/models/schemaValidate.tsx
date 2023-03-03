@@ -6,7 +6,7 @@ export const networkJson = {
     method: 'POST',
     url: 'http://localhost:5141/goods/edit',
     contentType: 'application/json',
-    pathParameters: ['/home', '/index1'],
+    pathParameters: {},
     queryParameters: {},
     cookies: {},
     headers: {},
