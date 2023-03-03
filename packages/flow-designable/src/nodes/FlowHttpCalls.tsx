@@ -20,6 +20,7 @@ import { FlowMetaNode, FlowMetaType, FreeFlow } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
+import { convertHttpFormilyToJson } from '@toy-box/action-template'
 
 import './flowNodes.less'
 
@@ -475,22 +476,22 @@ const httpCallsRender = (isNew: boolean, metaFlow: FreeFlow) => {
                             'x-component-props': {
                               maxColumns: 1,
                             },
-                            'x-reactions': [
-                              {
-                                dependencies: ['.type'],
-                                when: "{{$deps[0] === 'No Auth'}}",
-                                fulfill: {
-                                  schema: {
-                                    'x-visible': false,
-                                  },
-                                },
-                                otherwise: {
-                                  schema: {
-                                    'x-visible': true,
-                                  },
-                                },
-                              },
-                            ],
+                            // 'x-reactions': [
+                            //   {
+                            //     dependencies: ['.type'],
+                            //     when: "{{$deps[0] === 'No Auth'}}",
+                            //     fulfill: {
+                            //       schema: {
+                            //         'x-visible': false,
+                            //       },
+                            //     },
+                            //     otherwise: {
+                            //       schema: {
+                            //         'x-visible': true,
+                            //       },
+                            //     },
+                            //   },
+                            // ],
                             properties: {
                               token: {
                                 type: 'string',
@@ -529,6 +530,22 @@ const httpCallsRender = (isNew: boolean, metaFlow: FreeFlow) => {
                                 },
                                 'x-component': 'Input',
                                 required: true,
+                                'x-reactions': [
+                                  {
+                                    dependencies: ['....authorization.type'],
+                                    when: "{{$deps[0] === 'Basic Auth'}}",
+                                    fulfill: {
+                                      schema: {
+                                        'x-visible': true,
+                                      },
+                                    },
+                                    otherwise: {
+                                      schema: {
+                                        'x-visible': false,
+                                      },
+                                    },
+                                  },
+                                ],
                               },
                               password: {
                                 type: 'string',
@@ -540,6 +557,22 @@ const httpCallsRender = (isNew: boolean, metaFlow: FreeFlow) => {
                                 },
                                 'x-component': 'Password',
                                 required: true,
+                                'x-reactions': [
+                                  {
+                                    dependencies: ['....authorization.type'],
+                                    when: "{{$deps[0] === 'Basic Auth'}}",
+                                    fulfill: {
+                                      schema: {
+                                        'x-visible': true,
+                                      },
+                                    },
+                                    otherwise: {
+                                      schema: {
+                                        'x-visible': false,
+                                      },
+                                    },
+                                  },
+                                ],
                               },
                             },
                           },
@@ -698,6 +731,22 @@ const httpCallsRender = (isNew: boolean, metaFlow: FreeFlow) => {
                           pagination: { pageSize: 10 },
                           scroll: { x: '100%' },
                         },
+                        'x-reactions': [
+                          {
+                            dependencies: ['.contentType'],
+                            when: "{{['form-data','x-www-form-urlencoded'].includes($deps[0])}}",
+                            fulfill: {
+                              schema: {
+                                'x-visible': true,
+                              },
+                            },
+                            otherwise: {
+                              schema: {
+                                'x-visible': false,
+                              },
+                            },
+                          },
+                        ],
                         items: {
                           type: 'object',
                           properties: {
@@ -912,58 +961,17 @@ const httpCallsRender = (isNew: boolean, metaFlow: FreeFlow) => {
                   },
                 },
               },
-              result: {
-                type: 'string',
-                title: 'result',
-                'x-decorator': 'FormItem',
-                'x-decorator-props': {
-                  layout: 'vertical',
-                  colon: false,
-                },
-                'x-component': 'Input',
-              },
-              pathParameters: {
-                type: 'string',
-              },
-              queryParameters: {
-                type: 'object',
-              },
-              cookies: {
-                type: 'object',
-              },
-              headers: {
-                type: 'object',
-              },
-              form: {
-                type: 'object',
-              },
-              body: {
-                anyOf: [
-                  { type: 'string' },
-                  { type: 'number' },
-                  { type: 'object' },
-                ],
-              },
-              authorization: {
-                type: 'object',
-                default: {},
-                title: 'The Authorizetion Schema',
-                properties: {
-                  type: {
-                    type: 'string',
-                  },
-                  username: {
-                    type: 'string',
-                  },
-                  password: {
-                    type: 'string',
-                  },
-                  token: {
-                    type: 'string',
-                  },
-                },
-              },
             },
+          },
+          result: {
+            type: 'string',
+            title: 'result',
+            'x-decorator': 'FormItem',
+            'x-decorator-props': {
+              layout: 'vertical',
+              colon: false,
+            },
+            'x-component': 'Input',
           },
         },
       },
@@ -996,16 +1004,14 @@ export const httpCallsOnEdit = (node: any, at?: string, additionInfo?: any) => {
           initialValues: {
             name: node.type,
             description: node.description,
-            assignmentItems: node.assignmentItems ?? [
-              { operation: undefined, type: undefined, value: undefined },
-            ],
             id: node.id,
           },
         })
       }, 500)
     })
     .forConfirm((payload, next) => {
-      console.log('payload', payload)
+      // console.log('payload', payload.values)
+      convertHttpFormilyToJson(payload.values)
       // setTimeout(() => {
       //   node.make
       //     ? node.make(at, { ...payload.values, ...additionInfo })

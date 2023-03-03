@@ -6,7 +6,7 @@ export const networkJson = {
     method: 'POST',
     url: 'http://localhost:5141/goods/edit',
     contentType: 'application/json',
-    pathParameters: '',
+    pathParameters: ['/home', '/index1'],
     queryParameters: {},
     cookies: {},
     headers: {},
@@ -85,7 +85,7 @@ export const networkJsonSchema = {
           ],
         },
         pathParameters: {
-          type: 'string',
+          anyOf: [{ type: 'string' }, { type: 'number' }, { type: 'array' }],
         },
         queryParameters: {
           type: 'object',
