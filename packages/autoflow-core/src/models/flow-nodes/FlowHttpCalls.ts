@@ -11,7 +11,7 @@ import {
   FlowMetaParam,
   FlowMetaUpdate,
   TargetReference,
-  IInputAssignment,
+  ICallArgumentData,
   FlowMetaType,
   FlowMetaParamWithSize,
 } from '../../types'
@@ -22,10 +22,8 @@ import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 export class FlowHttpCalls extends FlowMetaNode {
   connector?: TargetReference
   faultConnector?: TargetReference
-  registerId?: string
-  inputAssignments?: IInputAssignment[]
-  storeOutputAutomatically?: boolean
-  assignRecordIdToReference?: string
+  callArguments: ICallArgumentData
+  result?: string
 
   static DefaultConnectorProps = {
     targetReference: '',
@@ -66,10 +64,8 @@ export class FlowHttpCalls extends FlowMetaNode {
       flowHttpCalls.connector ?? FlowHttpCalls.DefaultConnectorProps
     this.faultConnector =
       flowHttpCalls.faultConnector ?? FlowHttpCalls.DefaultConnectorProps
-    this.registerId = flowHttpCalls.registerId
-    this.inputAssignments = flowHttpCalls.inputAssignments
-    this.storeOutputAutomatically = flowHttpCalls.storeOutputAutomatically
-    this.assignRecordIdToReference = flowHttpCalls.assignRecordIdToReference
+    this.callArguments = flowHttpCalls.callArguments
+    this.result = flowHttpCalls.result
     this.makeObservable()
   }
 
@@ -77,10 +73,6 @@ export class FlowHttpCalls extends FlowMetaNode {
     define(this, {
       id: observable.ref,
       name: observable.ref,
-      registerId: observable.ref,
-      storeOutputAutomatically: observable.ref,
-      assignRecordIdToReference: observable.ref,
-      inputAssignments: observable.deep,
       connector: observable.deep,
       faultConnector: observable.deep,
       update: action,
@@ -191,10 +183,6 @@ export class FlowHttpCalls extends FlowMetaNode {
   update(flowRecordCreate: FlowMetaUpdate): void {
     this.name = flowRecordCreate.name
     this.description = flowRecordCreate.description
-    this.registerId = flowRecordCreate.registerId
-    this.inputAssignments = flowRecordCreate.inputAssignments
-    this.storeOutputAutomatically = flowRecordCreate.storeOutputAutomatically
-    this.assignRecordIdToReference = flowRecordCreate.assignRecordIdToReference
     this.toJson()
   }
 
@@ -226,10 +214,6 @@ export class FlowHttpCalls extends FlowMetaNode {
       type: this.type,
       connector: this.connector,
       faultConnector: this.faultConnector,
-      registerId: this.registerId,
-      inputAssignments: this.inputAssignments,
-      storeOutputAutomatically: this.storeOutputAutomatically,
-      assignRecordIdToReference: this.assignRecordIdToReference,
     }
   }
 }

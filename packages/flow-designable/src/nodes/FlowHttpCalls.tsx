@@ -1010,16 +1010,14 @@ export const httpCallsOnEdit = (node: any, at?: string, additionInfo?: any) => {
       }, 500)
     })
     .forConfirm((payload, next) => {
-      // console.log('payload', payload.values)
       convertHttpFormilyToJson(payload.values)
-      // debugger
       console.log('getResult', convertHttpFormilyToJson(payload.values))
-      // setTimeout(() => {
-      //   node.make
-      //     ? node.make(at, { ...payload.values, ...additionInfo })
-      //     : node.update(payload.values)
-      //   next(payload)
-      // }, 500)
+      setTimeout(() => {
+        node.make
+          ? node.make(at, { ...payload.values, ...additionInfo })
+          : node.update(payload.values)
+        next(payload)
+      }, 500)
     })
     .forCancel((payload, next) => {
       setTimeout(() => {
