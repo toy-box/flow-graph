@@ -162,3 +162,38 @@ export const networkJsonSchema = {
     },
   ],
 }
+
+const json = {
+  name: 'httpCalls',
+  description: 'HttpCalls',
+  id: 'httpCalls1',
+  result: 'result1',
+  callArguments: {
+    authorization: {
+      type: 'Basic Auth',
+      username: 'dsadsda',
+      password: 'pass1',
+    },
+    method: 'GET',
+    url: 'https://chat.openai.com',
+    contentType: 'form-data',
+    pathParameters: {
+      chat: 'chat',
+    },
+    queryParameters: {
+      userId: '123',
+      code: '112',
+    },
+    body: {
+      user: 'lee',
+      status: '1',
+    },
+    cookies: {
+      cookies: '123sda',
+    },
+    headers: {
+      headers1: '123',
+      headers2: '423',
+    },
+  },
+}

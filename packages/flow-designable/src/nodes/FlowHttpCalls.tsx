@@ -467,7 +467,7 @@ const httpCallsRender = (isNew: boolean, metaFlow: FreeFlow) => {
                             ],
                           },
                           object: {
-                            type: 'object',
+                            type: 'void',
                             'x-decorator': 'FormItem',
                             'x-decorator-props': {
                               gridSpan: 3,
@@ -885,22 +885,22 @@ const httpCallsRender = (isNew: boolean, metaFlow: FreeFlow) => {
                                 },
                               },
                             },
-                            column4: {
-                              type: 'void',
-                              'x-component': 'ArrayTable.Column',
-                              'x-component-props': {
-                                width: 200,
-                                title: 'DOMAIN',
-                              },
-                              required: true,
-                              properties: {
-                                domain: {
-                                  type: 'string',
-                                  'x-decorator': 'FormItem',
-                                  'x-component': 'Input',
-                                },
-                              },
-                            },
+                            // column4: {
+                            //   type: 'void',
+                            //   'x-component': 'ArrayTable.Column',
+                            //   'x-component-props': {
+                            //     width: 200,
+                            //     title: 'DOMAIN',
+                            //   },
+                            //   required: true,
+                            //   properties: {
+                            //     domain: {
+                            //       type: 'string',
+                            //       'x-decorator': 'FormItem',
+                            //       'x-component': 'Input',
+                            //     },
+                            //   },
+                            // },
                             column6: {
                               type: 'void',
                               'x-component': 'ArrayTable.Column',
@@ -1012,6 +1012,8 @@ export const httpCallsOnEdit = (node: any, at?: string, additionInfo?: any) => {
     .forConfirm((payload, next) => {
       // console.log('payload', payload.values)
       convertHttpFormilyToJson(payload.values)
+      // debugger
+      console.log('getResult', convertHttpFormilyToJson(payload.values))
       // setTimeout(() => {
       //   node.make
       //     ? node.make(at, { ...payload.values, ...additionInfo })

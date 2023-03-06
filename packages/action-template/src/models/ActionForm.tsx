@@ -241,6 +241,43 @@ export function convertMetaToFormily(metaList: IFieldMeta[]) {
   // }
 }
 
-export function convertHttpFormilyToJson(data) {
-  console.log('data', data)
+function objArrayToKeyValue(array) {
+  return array.reduce((acc, { key, value }) => {
+    acc[key] = value
+    return acc
+  }, {})
+}
+
+export function convertHttpFormilyToJson({ callArguments, ...rest }) {
+  const { body, cookies, headers, parameters, ...restArguments } = callArguments
+  const pathParameters = {},
+    queryParameters = {}
+  if (parameters) {
+    parameters.map((item) => {
+      const { key, value } = item
+      if (item.type === 'Path') {
+        pathParameters[value] = value
+      } else if (item.type === 'Query') {
+        queryParameters[key] = value
+      }
+    })
+  }
+  const objMap = { body, cookies, headers }
+  const params = {}
+  Object.keys(objMap).map((key) => {
+    if (objMap[key] && objMap[key].length) {
+      params[key] = objArrayToKeyValue(objMap[key])
+    }
+  })
+
+  const result = {
+    ...rest,
+    callArguments: {
+      ...restArguments,
+      pathParameters,
+      queryParameters,
+      ...params,
+    },
+  }
+  return result
 }
