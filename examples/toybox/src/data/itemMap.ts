@@ -14,21 +14,21 @@ export const itemMap: ItemMapType[] = [
   {
     id: 'Assignment',
     type: 'Assignment',
-    title: 'flowDesigner.flow.extend.assign',
+    title: 'toyboxStudio.flow.extend.assign',
     thumb:
       'https://cdnmarket.sasago.com/microIcon/componentsIcon/titleText.png',
   },
   {
     id: 'Decision',
     type: 'Decision',
-    title: 'flowDesigner.flow.extend.decision',
+    title: 'toyboxStudio.flow.extend.decision',
     thumb:
       'https://cdnmarket.sasago.com/microIcon/componentsIcon/titleText.png',
   },
   {
     id: 'Loop',
     type: 'Loop',
-    title: 'flowDesigner.flow.extend.loop',
+    title: 'toyboxStudio.flow.extend.loop',
     thumb:
       'https://cdnmarket.sasago.com/microIcon/componentsIcon/titleText.png',
   },
@@ -76,11 +76,42 @@ export const itemMap: ItemMapType[] = [
   // },
 ]
 
+export const itemMapDatas: ItemMapType[] = [
+  {
+    id: 'RecordCreate',
+    type: 'RecordCreate',
+    title: 'toyboxStudio.flow.extend.recordCreate',
+    thumb:
+      'https://cdnmarket.sasago.com/microIcon/componentsIcon/titleText.png',
+  },
+  {
+    id: 'RecordUpdate',
+    type: 'RecordUpdate',
+    title: 'toyboxStudio.flow.extend.recordUpdate',
+    thumb:
+      'https://cdnmarket.sasago.com/microIcon/componentsIcon/titleText.png',
+  },
+  {
+    id: 'RecordDelete',
+    type: 'RecordDelete',
+    title: 'toyboxStudio.flow.extend.recordDelete',
+    thumb:
+      'https://cdnmarket.sasago.com/microIcon/componentsIcon/titleText.png',
+  },
+  {
+    id: 'RecordLookup',
+    type: 'RecordLookup',
+    title: 'toyboxStudio.flow.extend.recordLookup',
+    thumb:
+      'https://cdnmarket.sasago.com/microIcon/componentsIcon/titleText.png',
+  },
+]
+
 export const itemMapAction: ItemMapType[] = [
   {
     id: 'HttpCalls',
     type: 'HttpCalls',
-    title: 'flowDesigner.flow.extend.httpCalls',
+    title: 'toyboxStudio.flow.extend.httpCalls',
     thumb:
       'https://cdnmarket.sasago.com/microIcon/componentsIcon/titleText.png',
   },

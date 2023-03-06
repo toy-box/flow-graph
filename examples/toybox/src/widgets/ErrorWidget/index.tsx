@@ -18,7 +18,7 @@ export const ErrorWidget: FC<ErrorWidgetProps> = ({ dataList = [] }) => {
         <div>
           <div className={prefix + '-title'}>
             {error.length}{' '}
-            <TextWidget token="flowDesigner.errorMessage.error"></TextWidget>
+            <TextWidget token="toyboxStudio.errorMessage.error"></TextWidget>
           </div>
           <ul className={prefix + '-ul'}>
             {error.map((item, index) => (
@@ -33,7 +33,7 @@ export const ErrorWidget: FC<ErrorWidgetProps> = ({ dataList = [] }) => {
         <div>
           <div className={prefix + '-title'}>
             {warn.length}{' '}
-            <TextWidget token="flowDesigner.errorMessage.warn"></TextWidget>
+            <TextWidget token="toyboxStudio.errorMessage.warn"></TextWidget>
           </div>
           <ul className={prefix + '-ul'}>
             {warn.map((item, index) => (

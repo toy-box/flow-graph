@@ -34,25 +34,25 @@ export const ResourceItemWidget: React.FC<IResourceItemWidgetProps> = observer(
     const [expand, setExpand] = useState(props.defaultExpand)
     const templateObj: any = {
       [FlowResourceType.VARIABLE]: useLocale(
-        'flowDesigner.flow.autoFlow.variable'
+        'toyboxStudio.flow.autoFlow.variable'
       ),
       [FlowResourceType.VARIABLE_RECORD]: useLocale(
-        'flowDesigner.flow.autoFlow.variableRecord'
+        'toyboxStudio.flow.autoFlow.variableRecord'
       ),
       [FlowResourceType.VARIABLE_ARRAY]: useLocale(
-        'flowDesigner.flow.autoFlow.variableArray'
+        'toyboxStudio.flow.autoFlow.variableArray'
       ),
       [FlowResourceType.VARIABLE_ARRAY_RECORD]: useLocale(
-        'flowDesigner.flow.autoFlow.variableArrayRecord'
+        'toyboxStudio.flow.autoFlow.variableArrayRecord'
       ),
       [FlowResourceType.CONSTANT]: useLocale(
-        'flowDesigner.flow.autoFlow.constant'
+        'toyboxStudio.flow.autoFlow.constant'
       ),
       [FlowResourceType.FORMULA]: useLocale(
-        'flowDesigner.flow.autoFlow.formula'
+        'toyboxStudio.flow.autoFlow.formula'
       ),
       [FlowResourceType.TEMPLATE]: useLocale(
-        'flowDesigner.flow.autoFlow.template'
+        'toyboxStudio.flow.autoFlow.template'
       ),
     }
     const editResource = useCallback((child: IFieldMetaFlow) => {

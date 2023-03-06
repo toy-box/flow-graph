@@ -235,7 +235,7 @@ export const FlowCanvas: FC<any> = observer(() => {
           }),
           RecordCreateNode: connectFreeFlow({
             component: StandardNode,
-            content: <h3>action</h3>,
+            content: <h3>Create</h3>,
             handles: [
               { type: 'target', position: Position.Top },
               { type: 'source', position: Position.Bottom },
@@ -243,7 +243,7 @@ export const FlowCanvas: FC<any> = observer(() => {
           }),
           RecordUpdateNode: connectFreeFlow({
             component: StandardNode,
-            content: <h3>action</h3>,
+            content: <h3>Update</h3>,
             handles: [
               { type: 'target', position: Position.Top },
               { type: 'source', position: Position.Bottom },
@@ -251,7 +251,7 @@ export const FlowCanvas: FC<any> = observer(() => {
           }),
           RecordDeleteNode: connectFreeFlow({
             component: StandardNode,
-            content: <h3>action</h3>,
+            content: <h3>Delete</h3>,
             handles: [
               { type: 'target', position: Position.Top },
               { type: 'source', position: Position.Bottom },
@@ -259,7 +259,7 @@ export const FlowCanvas: FC<any> = observer(() => {
           }),
           RecordLookupNode: connectFreeFlow({
             component: StandardNode,
-            content: <h3>action</h3>,
+            content: <h3>LookUp</h3>,
             handles: [
               { type: 'target', position: Position.Top },
               { type: 'source', position: Position.Bottom },

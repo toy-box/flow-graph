@@ -88,7 +88,7 @@ export const ResourceSelect: FC = observer((props: any) => {
       let registerOps = []
       if (props.objectKey) {
         const objectKey = form.values[props.objectKey]
-        props.metaFlow.registers?.some(
+        props.metaFlow?.registers?.some(
           (re: {
             id: any
             properties: {
@@ -115,7 +115,7 @@ export const ResourceSelect: FC = observer((props: any) => {
         )
       } else {
         registerOps =
-          props.metaFlow.registers?.map((r: any) => {
+          props.metaFlow?.registers?.map((r: any) => {
             const obj = {
               label: r.name,
               key: r.id,

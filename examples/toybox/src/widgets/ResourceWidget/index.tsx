@@ -26,7 +26,7 @@ export const ResourceWidget: React.FC<IResourceWidgetProps> = observer(
     return (
       <div className={cls(prefix, props.className)}>
         <Button onClick={createResource} className={`${prefix}-btn`}>
-          <TextWidget>flowDesigner.resource.create</TextWidget>
+          <TextWidget>toyboxStudio.resource.create</TextWidget>
         </Button>
         <div className={prefix + '-header-content'}>
           <TextWidget>{props?.title}</TextWidget>

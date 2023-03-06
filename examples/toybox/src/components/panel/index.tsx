@@ -19,7 +19,7 @@ import {
 } from '@toy-box/studio-base'
 import { FreeFlow } from '@toy-box/autoflow-core'
 import { ErrorWidget, ElementNodeWidget, ResourceWidget } from '../../../src'
-import { itemMap, itemMapAction } from '../../../src/data/itemMap'
+import { itemMap, itemMapDatas, itemMapAction } from '../../../src/data/itemMap'
 import { Designer, FlowCanvas, variableOnEdit } from '@toy-box/flow-designable'
 export const Panel: React.FC<any> = () => {
   const metaFlow = useMetaFlow()
@@ -653,12 +653,12 @@ export const Panel: React.FC<any> = () => {
               setActiveKey={isEditMode && (setLeftActiveKey as any)}
             >
               <CompositePanel.Item
-                title="flowDesigner.panels.element"
+                title="toyboxStudio.panels.element"
                 icon="Layout"
                 activeKey="1"
               />
               <CompositePanel.Item
-                title="flowDesigner.panels.resource"
+                title="toyboxStudio.panels.resource"
                 icon="Add"
                 activeKey="resource"
               />
@@ -690,7 +690,7 @@ export const Panel: React.FC<any> = () => {
               setActiveKey={setDebugActiveKey as any}
             >
               <CompositePanel.Item
-                title="flowDesigner.panels.debug"
+                title="toyboxStudio.panels.debug"
                 icon="Profile"
                 activeKey="debug"
                 onClick={debug}
@@ -704,17 +704,17 @@ export const Panel: React.FC<any> = () => {
               setActiveKey={setRightActiveKey as any}
             >
               {/* <CompositePanel.Item
-          title="flowDesigner.panels.warn"
+          title="toyboxStudio.panels.warn"
           icon="Profile"
           activeKey="warn"
         /> */}
               <CompositePanel.Item
-                title="flowDesigner.panels.error"
+                title="toyboxStudio.panels.error"
                 icon="Profile"
                 activeKey="error"
               />
               <CompositePanel.Item
-                title={<Button>{useLocale('flowDesigner.comm.submit')}</Button>}
+                title={<Button>{useLocale('toyboxStudio.comm.submit')}</Button>}
                 shape="button"
                 onClick={handleExport}
               />
@@ -734,28 +734,32 @@ export const Panel: React.FC<any> = () => {
             onClose={() => setLeftVisible(false)}
           >
             <CompositePanelContent.Item
-              title="flowDesigner.panels.element"
+              title="toyboxStudio.panels.element"
               activeKey="1"
             >
               {/* <ResourceWidget flowGraph={flowGraph} /> */}
               {/* <LeftPanel /> */}
               <ElementNodeWidget
-                title="flowDesigner.panels.sources.logical"
+                title="toyboxStudio.panels.sources.logical"
                 sources={itemMap}
               />
               <ElementNodeWidget
-                title="flowDesigner.panels.sources.action"
+                title="toyboxStudio.panels.sources.data"
+                sources={itemMapDatas}
+              />
+              <ElementNodeWidget
+                title="toyboxStudio.panels.sources.action"
                 sources={itemMapAction}
               />
             </CompositePanelContent.Item>
             <CompositePanelContent.Item
-              title="flowDesigner.panels.resource"
+              title="toyboxStudio.panels.resource"
               activeKey="resource"
             >
               {/* <ResourceWidget flowGraph={flowGraph} /> */}
               {/* <LeftPanel /> */}
               <ResourceWidget
-                title="flowDesigner.panels.resource"
+                title="toyboxStudio.panels.resource"
                 sources={
                   freeFlow instanceof FreeFlow && freeFlow?.metaResourceDatas
                 }
@@ -773,14 +777,14 @@ export const Panel: React.FC<any> = () => {
             onClose={() => setRightVisible(false)}
           >
             {/* <CompositePanelContent.Item
-        title="flowDesigner.panels.warn"
+        title="toyboxStudio.panels.warn"
         activeKey="warn"
       >
         <WarnWidget dataList={warnData} />
       </CompositePanelContent.Item> */}
             <CompositePanelContent.Item
               activeKey="error"
-              title="flowDesigner.panels.error"
+              title="toyboxStudio.panels.error"
             >
               <ErrorWidget dataList={errorData} />
             </CompositePanelContent.Item>
