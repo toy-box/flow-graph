@@ -75,6 +75,8 @@ export class FlowHttpCalls extends FlowMetaNode {
       name: observable.ref,
       connector: observable.deep,
       faultConnector: observable.deep,
+      callArguments: observable.deep,
+      result: observable.ref,
       update: action,
     })
   }
@@ -180,9 +182,11 @@ export class FlowHttpCalls extends FlowMetaNode {
     this.metaFlow.flow.addFlowFreeNode(flowNode)
   }
 
-  update(flowRecordCreate: FlowMetaUpdate): void {
-    this.name = flowRecordCreate.name
-    this.description = flowRecordCreate.description
+  update(payload: FlowMetaUpdate): void {
+    this.name = payload.name
+    this.description = payload.description
+    this.callArguments = payload.callArguments
+    this.result = payload.result
     this.toJson()
   }
 
@@ -214,6 +218,8 @@ export class FlowHttpCalls extends FlowMetaNode {
       type: this.type,
       connector: this.connector,
       faultConnector: this.faultConnector,
+      callArguments: this.callArguments,
+      result: this.result,
     }
   }
 }

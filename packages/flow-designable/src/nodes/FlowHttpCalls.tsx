@@ -16,11 +16,19 @@ import {
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
 import * as ICONS from '@ant-design/icons'
-import { FlowMetaNode, FlowMetaType, FreeFlow } from '@toy-box/autoflow-core'
+import {
+  FlowMetaNode,
+  FlowMetaType,
+  FreeFlow,
+  FlowMetaUpdate,
+} from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
-import { convertHttpFormilyToJson } from '@toy-box/action-template'
+import {
+  convertHttpFormilyToJson,
+  converHttpJsonToFormily,
+} from '@toy-box/action-template'
 
 import './flowNodes.less'
 
@@ -997,11 +1005,20 @@ const httpCallsRender = (isNew: boolean, metaFlow: FreeFlow) => {
 
 export const httpCallsOnEdit = (node: any, at?: string, additionInfo?: any) => {
   const dialog = httpCallsRender(node.make, node.metaFlow)
+  const data =
+    !node.make &&
+    converHttpJsonToFormily({
+      name: node.type,
+      description: node.description,
+      id: node.id,
+      callArguments: node.callArguments,
+      result: node.result,
+    })
   dialog
     .forOpen((payload, next) => {
       setTimeout(() => {
         next({
-          initialValues: {
+          initialValues: data || {
             name: node.type,
             description: node.description,
             id: node.id,
@@ -1010,12 +1027,14 @@ export const httpCallsOnEdit = (node: any, at?: string, additionInfo?: any) => {
       }, 500)
     })
     .forConfirm((payload, next) => {
-      convertHttpFormilyToJson(payload.values)
       console.log('getResult', convertHttpFormilyToJson(payload.values))
       setTimeout(() => {
         node.make
-          ? node.make(at, { ...payload.values, ...additionInfo })
-          : node.update(payload.values)
+          ? node.make(at, {
+              ...convertHttpFormilyToJson(payload.values),
+              ...additionInfo,
+            })
+          : node.update(convertHttpFormilyToJson(payload.values))
         next(payload)
       }, 500)
     })

@@ -2,6 +2,7 @@ import Ajv, { JSONSchemaType } from 'ajv'
 import { validate } from 'jsonschema'
 // import metaSchema from "json-schema-draft-2020-12/schema";
 import { action, batch, define, observable } from '@formily/reactive'
+import { ICallArgumentData } from '@toy-box/autoflow-core'
 import { IFieldMeta } from '@toy-box/meta-schema'
 import { networkJson, networkJsonSchema } from './schemaValidate'
 
@@ -280,4 +281,44 @@ export function convertHttpFormilyToJson({ callArguments, ...rest }) {
     },
   }
   return result
+}
+
+function keyValueToObjArray(
+  obj: Omit<
+    ICallArgumentData,
+    'method' | 'url' | 'contentType' | 'authorization'
+  >,
+  type?: 'Query' | 'Path'
+) {
+  return (
+    obj &&
+    Object.entries(obj).map(([key, value]) =>
+      type ? { key, value, type } : { key, value }
+    )
+  )
+}
+
+export function converHttpJsonToFormily({ callArguments, ...rest }) {
+  const {
+    body,
+    cookies,
+    headers,
+    pathParameters,
+    queryParameters,
+    ...restArguments
+  } = callArguments
+  const parameters = [
+    ...keyValueToObjArray(pathParameters, 'Path'),
+    ...keyValueToObjArray(pathParameters, 'Query'),
+  ]
+  return {
+    ...rest,
+    callArguments: {
+      ...restArguments,
+      parameters,
+      body: keyValueToObjArray(body),
+      cookies: keyValueToObjArray(cookies),
+      headers: keyValueToObjArray(headers),
+    },
+  }
 }

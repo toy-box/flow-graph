@@ -135,7 +135,7 @@ export interface FlowMetaParam {
   getFirstRecordOnly?: boolean
   waitEvents?: IwaitEvent[]
   result?: string
-  callArguments?: any
+  callArguments?: ICallArgumentData
   x?: number
   y?: number
 }
