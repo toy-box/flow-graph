@@ -249,11 +249,13 @@ export interface IOutputAssignment {
 export interface IFieldMetaFlow extends IFieldMeta {
   webType?: string
   flowMetaType?: FlowMetaType
+  isInput?: boolean
+  isOutPut?: boolean
 }
 
 export type IUpdateFieldMetaVariable = Pick<
-  IFieldMeta,
-  'name' | 'defaultValue' | 'description'
+  IFieldMetaFlow,
+  'name' | 'defaultValue' | 'description' | 'isInput' | 'isOutPut'
 >
 
 export type FlowType =

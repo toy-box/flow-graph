@@ -126,6 +126,15 @@ const zhCN = {
           placeholder: {
             assignRecordIdToReference: '请选择变量',
             formula: '配置表达式',
+            formilyInput: {
+              input: '请输入值',
+              select: '请选择值',
+              record: '记录',
+              fieldDate: '日期',
+              date: '请选择日期',
+              dateTime: '请选择日期/时间',
+              bool: 'bool值',
+            },
           },
           assignment: {
             addTitle: '新建分配',
@@ -404,6 +413,15 @@ const enUS = {
           placeholder: {
             assignRecordIdToReference: 'Select Variable',
             formula: 'Set Formula',
+            formilyInput: {
+              input: 'Input Value',
+              select: 'Select Value',
+              record: 'Record',
+              fieldDate: 'Date',
+              date: 'Select Date',
+              dateTime: 'Select Date/Time',
+              bool: 'Bool Value',
+            },
           },
           assignment: {
             addTitle: 'New Assignment',

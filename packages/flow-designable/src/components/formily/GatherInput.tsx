@@ -39,7 +39,7 @@ export const GatherInput: FC = observer((props: any) => {
   )
 
   const registerOptions = useMemo(() => {
-    if (isArr(props.metaFlow.registers)) {
+    if (isArr(props?.metaFlow?.registers)) {
       const options = props.metaFlow.registers.map(
         (r: { name: any; id: any }) => {
           return {
@@ -51,7 +51,7 @@ export const GatherInput: FC = observer((props: any) => {
       return options
     }
     return []
-  }, [props.metaFlow.registers])
+  }, [props?.metaFlow?.registers])
 
   const filterValueInput = useMemo(() => {
     switch (form.values.type) {

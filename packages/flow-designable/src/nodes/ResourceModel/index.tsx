@@ -566,9 +566,12 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
               // ),
               //   flowGraph,
               disabled: isEdit,
+              style: {
+                with: '220px',
+              },
             },
             'x-decorator-props': {
-              gridSpan: 1,
+              gridSpan: 2,
             },
             'x-reactions': {
               dependencies: ['type'],
