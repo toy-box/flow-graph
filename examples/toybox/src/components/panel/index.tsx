@@ -61,6 +61,8 @@ export const Panel: React.FC<any> = () => {
   const [leftActiveKey, setLeftActiveKey] = React.useState()
   const [rightVisible, setRightVisible] = React.useState(false)
   const [debugVisible, setDebugVisible] = React.useState(false)
+  const [shortcutVisible, setShortcutVisible] = React.useState(false)
+  const [scActiveKey, setScActiveKey] = React.useState()
   const [rightActiveKey, setRightActiveKey] = React.useState()
   const [debugActiveKey, setDebugActiveKey] = React.useState()
   const [errorData, setErrorData] = React.useState([])
@@ -682,6 +684,20 @@ export const Panel: React.FC<any> = () => {
             </CompositePanel>
           </TopbarPanel.Region>
           <TopbarPanel.Region position="right">
+            <CompositePanel
+              direction="right"
+              visible={shortcutVisible}
+              setVisible={setShortcutVisible}
+              activeKey={scActiveKey}
+              setActiveKey={setScActiveKey as any}
+            >
+              <CompositePanel.Item
+                title="创建快捷方式"
+                icon="Profile"
+                activeKey="debug"
+                onClick={debug}
+              />
+            </CompositePanel>
             <CompositePanel
               direction="right"
               visible={debugVisible}
