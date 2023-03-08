@@ -76,6 +76,11 @@ export const Panel: React.FC<any> = () => {
   }, [])
   const isEditMode = freeFlow.mode === FlowModeEnum.EDIT
   const debug = useCallback(() => {
+    freeFlow.changeMode()
+    isEditMode && setLeftVisible(false)
+    isEditMode && setLeftActiveKey(null)
+  }, [])
+  const shortcut = useCallback(() => {
     console.log('freeFlow', freeFlow)
     const data = {
       name: 'George Washington',
@@ -627,9 +632,6 @@ export const Panel: React.FC<any> = () => {
     // console.log('ActionForm', convertMetaToFormily(data2))
     console.log('valid', new ActionForm(data2).isDataValid)
     variableOnEdit(convertMetaToFormily(data2))
-    freeFlow.changeMode()
-    isEditMode && setLeftVisible(false)
-    isEditMode && setLeftActiveKey(null)
   }, [])
 
   return (
@@ -694,8 +696,8 @@ export const Panel: React.FC<any> = () => {
               <CompositePanel.Item
                 title="创建快捷方式"
                 icon="Profile"
-                activeKey="debug"
-                onClick={debug}
+                activeKey="shortcut"
+                onClick={shortcut}
               />
             </CompositePanel>
             <CompositePanel

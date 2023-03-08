@@ -243,10 +243,12 @@ export function convertMetaToFormily(metaList: IFieldMeta[]) {
 }
 
 function objArrayToKeyValue(array) {
-  return array.reduce((acc, { key, value }) => {
-    acc[key] = value
-    return acc
-  }, {})
+  if (array && array.length) {
+    return array.reduce((acc, { key, value }) => {
+      acc[key] = value
+      return acc
+    }, {})
+  }
 }
 
 export function convertHttpFormilyToJson({ callArguments, ...rest }) {
@@ -263,13 +265,13 @@ export function convertHttpFormilyToJson({ callArguments, ...rest }) {
       }
     })
   }
-  const objMap = { body, cookies, headers }
-  const params = {}
-  Object.keys(objMap).map((key) => {
-    if (objMap[key] && objMap[key].length) {
-      params[key] = objArrayToKeyValue(objMap[key])
-    }
-  })
+  // const objMap = { body, cookies, headers }
+  // const params = {}
+  // Object.keys(objMap).map((key) => {
+  //   if (objMap[key] && objMap[key].length) {
+  //     params[key] = objArrayToKeyValue(objMap[key])
+  //   }
+  // })
 
   const result = {
     ...rest,
@@ -277,7 +279,9 @@ export function convertHttpFormilyToJson({ callArguments, ...rest }) {
       ...restArguments,
       pathParameters,
       queryParameters,
-      ...params,
+      body: typeof body === 'string' ? body : objArrayToKeyValue(body),
+      cookies: objArrayToKeyValue(cookies),
+      headers: objArrayToKeyValue(headers),
     },
   }
   return result
@@ -316,7 +320,7 @@ export function converHttpJsonToFormily({ callArguments, ...rest }) {
     callArguments: {
       ...restArguments,
       parameters,
-      body: keyValueToObjArray(body),
+      body: typeof body === 'string' ? body : keyValueToObjArray(body),
       cookies: keyValueToObjArray(cookies),
       headers: keyValueToObjArray(headers),
     },
