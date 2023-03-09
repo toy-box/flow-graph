@@ -18,9 +18,11 @@ import {
   useLocale,
 } from '@toy-box/studio-base'
 import { FreeFlow } from '@toy-box/autoflow-core'
+import { Designer, FlowCanvas, variableOnEdit } from '@toy-box/flow-designable'
 import { ErrorWidget, ElementNodeWidget, ResourceWidget } from '../../../src'
 import { itemMap, itemMapAction } from '../../../src/data/itemMap'
-import { Designer, FlowCanvas, variableOnEdit } from '@toy-box/flow-designable'
+import { shortcutOnEdit } from '../shortcut'
+
 export const Panel: React.FC<any> = () => {
   const metaFlow = useMetaFlow()
   const freeFlow = useFreeFlow() as FreeFlow
@@ -630,8 +632,9 @@ export const Panel: React.FC<any> = () => {
       },
     ]
     // console.log('ActionForm', convertMetaToFormily(data2))
-    console.log('valid', new ActionForm(data2).isDataValid)
-    variableOnEdit(convertMetaToFormily(data2))
+    // console.log('valid', new ActionForm(data2).isDataValid)
+    // variableOnEdit(convertMetaToFormily(data2))
+    shortcutOnEdit()
   }, [])
 
   return (

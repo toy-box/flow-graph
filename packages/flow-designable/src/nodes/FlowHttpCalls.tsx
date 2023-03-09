@@ -44,7 +44,7 @@ import {
 import './flowNodes.less'
 import { AutoFlow } from '../interface'
 
-const AssignmentDesc = () => {
+export const AssignmentDesc = () => {
   return (
     <div>
       <Divider className="margin-0" />

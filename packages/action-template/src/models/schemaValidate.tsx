@@ -197,3 +197,16 @@ const json = {
     },
   },
 }
+
+const variable = [
+  {
+    key: 'user',
+    type: 'string',
+  },
+]
+
+const variable2 = {
+  user: {
+    type: 'string',
+  },
+}

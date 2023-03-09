@@ -262,6 +262,11 @@ const zhCN = {
           },
         },
       },
+      shortcut: {
+        addTitle: '新增快捷方式',
+        editTitle: '编辑快捷方式',
+        variable: '中间变量',
+      },
     },
   },
 }
@@ -537,6 +542,11 @@ const enUS = {
             contentTypeTitle: 'contentType',
           },
         },
+      },
+      shortcut: {
+        addTitle: 'Add ShortCut',
+        editTitle: 'Edit ShortCut',
+        variable: 'Variable',
       },
     },
   },
