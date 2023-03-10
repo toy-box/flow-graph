@@ -13,6 +13,7 @@ import { FlowMetaNode } from './flow-nodes'
 import { FlowVariable } from './flow-variables'
 import { FlowModeType } from './MetaFlow'
 import { History } from './History'
+import { Shortcut } from './Shortcut'
 
 export abstract class AutoFlow {
   disposers: (() => void)[] = []
@@ -27,6 +28,7 @@ export abstract class AutoFlow {
   layoutMode?: LayoutModeEnum
   flowType: FlowType
   history: History
+  shortcut: Shortcut
 
   constructor(mode: FlowModeType, layoutMode: LayoutModeEnum, flow: Flow) {
     this.mode = mode

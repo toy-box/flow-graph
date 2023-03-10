@@ -25,6 +25,7 @@ import {
   FlowMetaUpdate,
   IContentTypeEnum,
   FlowMetaParam,
+  MetaFlow,
 } from '@toy-box/autoflow-core'
 import { MetaValueType } from '@toy-box/meta-schema'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
@@ -201,7 +202,7 @@ const shortcutSchema = {
   },
 }
 
-export const shortcutOnEdit = (shortcutJson?: any) => {
+export const shortcutOnEdit = (metaflow: AutoFlow, shortcutJson?: any) => {
   const isEdit = false
   let formDialog = null
   const onCancel = () => {
@@ -209,14 +210,16 @@ export const shortcutOnEdit = (shortcutJson?: any) => {
   }
   const onSubmit = (form) => {
     console.log('onSubmit', form.values)
+    const paramData = convertHttpFormilyToJson(form.values)
+    console.log('paramData', paramData)
+
     if (isEdit) {
-      const paramData = convertHttpFormilyToJson(form.values)
-      console.log('paramData', paramData)
       //   node.update(paramData)
       // } else {
       //   node.make(at, { ...paramData, ...additionInfo })
     }
-    // formDialog.close()
+    metaflow.shortcut.push(paramData)
+    formDialog.close()
   }
   const title = !isEdit ? (
     <TextWidget>flowDesigner.shortcut.addTitle</TextWidget>
@@ -234,6 +237,7 @@ export const shortcutOnEdit = (shortcutJson?: any) => {
     },
     <Shortcut
       value={shortcutJson}
+      // metaflow={metaFlow}
       isEdit={isEdit}
       onCancel={onCancel}
       onSubmit={onSubmit}

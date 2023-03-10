@@ -56,6 +56,10 @@ export interface IFlowMetaResource {
   [FlowResourceType.TEMPLATE]?: IFieldMeta[]
 }
 
+export interface VariableParam {
+  type: 'string'
+}
+
 export interface IFlowMetaNodes {
   start?: FlowMetaParam
   end?: FlowMetaParam
@@ -86,6 +90,7 @@ export enum FlowMetaType {
   RECORD_DELETE = 'recordDeletes',
   RECORD_LOOKUP = 'recordLookups',
   HTTP_CALLS = 'httpCalls',
+  SHORTCUT = 'shortcut',
   END = 'end',
 }
 
@@ -136,6 +141,7 @@ export interface FlowMetaParam {
   waitEvents?: IwaitEvent[]
   result?: string
   callArguments?: ICallArgumentData
+  variable?: Record<string, VariableParam>
   x?: number
   y?: number
 }

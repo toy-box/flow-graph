@@ -30,6 +30,7 @@ import {
 
 import { History, OpearteTypeEnum } from './History'
 import { AutoFlow } from './AutoFlow'
+import { Shortcut } from './Shortcut'
 
 enum MetaFieldType {
   EDIT = 'EDIT',
@@ -210,6 +211,8 @@ export class FreeFlow extends AutoFlow {
         console.log(this.flowMetaNodeMap, 'this.flowMetaNodeMap')
       },
     })
+
+    this.shortcut = new Shortcut()
     this.makeObservable()
   }
 
@@ -218,6 +221,7 @@ export class FreeFlow extends AutoFlow {
       flowMetaNodeMap: observable.deep,
       flowResourceMap: observable.deep,
       history: observable.deep,
+      shortcut: observable.deep,
       metaResourceDatas: observable.deep,
       flowMetaNodes: observable.computed,
       flow: observable.ref,

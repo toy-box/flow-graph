@@ -12,6 +12,7 @@ export interface IFlowContextProps<T> {
   icons: Record<string, ReactNode>
   eventEngine: EventEngine
   connectDialog: any
+  shortcut: any
 }
 
 export const FlowContext = React.createContext<

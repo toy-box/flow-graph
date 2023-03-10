@@ -273,6 +273,14 @@ export const FlowCanvas: FC<any> = observer(() => {
               { type: 'source', position: Position.Bottom },
             ],
           }),
+          ShortcutNode: connectFreeFlow({
+            component: StandardNode,
+            content: <h3>shortcut</h3>,
+            handles: [
+              { type: 'target', position: Position.Top },
+              { type: 'source', position: Position.Bottom },
+            ],
+          }),
         },
       })
       dragFlow.setCanvas(freeFlowCanvas)

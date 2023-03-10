@@ -32,6 +32,19 @@ export const Panel: React.FC<any> = () => {
       return null
     },
   }
+
+  const itemMapShortcut =
+    freeFlow.shortcut &&
+    freeFlow.shortcut.list.map(({ id, name }) => {
+      return {
+        id: id ?? 'Shortcut',
+        type: 'Shortcut',
+        title: name ?? 'flowDesigner.flow.extend.shortcut',
+        thumb:
+          'https://cdnmarket.sasago.com/microIcon/componentsIcon/titleText.png',
+      }
+    })
+  console.log('panel执行')
   // const init = useCallback(() => {
   //   metaFlow.flow.setFlowNodes(flowData1)
   // }, [])
@@ -634,7 +647,7 @@ export const Panel: React.FC<any> = () => {
     // console.log('ActionForm', convertMetaToFormily(data2))
     // console.log('valid', new ActionForm(data2).isDataValid)
     // variableOnEdit(convertMetaToFormily(data2))
-    shortcutOnEdit()
+    shortcutOnEdit(freeFlow)
   }, [])
 
   return (
@@ -767,6 +780,10 @@ export const Panel: React.FC<any> = () => {
               <ElementNodeWidget
                 title="flowDesigner.panels.sources.action"
                 sources={itemMapAction}
+              />
+              <ElementNodeWidget
+                title="flowDesigner.panels.sources.shortcut"
+                sources={itemMapShortcut}
               />
             </CompositePanelContent.Item>
             <CompositePanelContent.Item

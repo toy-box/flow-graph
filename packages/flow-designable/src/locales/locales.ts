@@ -36,6 +36,7 @@ const zhCN = {
           recordLookup: '查询记录',
           recordDelete: '删除记录',
           httpCalls: '网络调用',
+          shortcut: '快捷方式',
         },
         autoFlow: {
           variable: '变量',
@@ -283,6 +284,7 @@ const enUS = {
         error: 'Error',
         sources: {
           logical: 'Logical node',
+          action: 'Action node',
         },
         debug: 'Debug',
       },
@@ -312,6 +314,7 @@ const enUS = {
           recordLookup: 'recordLookup',
           recordDelete: 'recordDelete',
           httpCalls: 'httpCalls',
+          shortcut: 'shortcut',
           end: 'end',
         },
         autoFlow: {

@@ -242,16 +242,21 @@ export function convertMetaToFormily(metaList: IFieldMeta[]) {
   // }
 }
 
-function objArrayToKeyValue(array) {
+function objArrayToKeyValue(array, type?: 'variable') {
   if (array && array.length) {
     return array.reduce((acc, { key, value }) => {
-      acc[key] = value
+      if (type === 'variable') {
+        acc[key] = { type: value }
+      } else {
+        acc[key] = value
+      }
+
       return acc
     }, {})
   }
 }
 
-export function convertHttpFormilyToJson({ callArguments, ...rest }) {
+export function convertHttpFormilyToJson({ callArguments, variable, ...rest }) {
   const { body, cookies, headers, parameters, ...restArguments } = callArguments
   const pathParameters = {},
     queryParameters = {}
@@ -275,6 +280,7 @@ export function convertHttpFormilyToJson({ callArguments, ...rest }) {
 
   const result = {
     ...rest,
+    variable: objArrayToKeyValue(variable, 'variable'),
     callArguments: {
       ...restArguments,
       pathParameters,
@@ -284,6 +290,7 @@ export function convertHttpFormilyToJson({ callArguments, ...rest }) {
       headers: objArrayToKeyValue(headers),
     },
   }
+  console.log('result', result)
   return result
 }
 
