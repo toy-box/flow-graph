@@ -1,5 +1,4 @@
 export * from './MetaFlow'
 export * from './FreeFlow'
 export * from './History'
-export * from './Shortcut'
 export * from './flow-nodes'

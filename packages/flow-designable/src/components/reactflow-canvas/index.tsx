@@ -70,8 +70,9 @@ export const FlowCanvas: FC<any> = observer(() => {
     graphEle.ondrop = (e) => {
       e.stopPropagation()
       const { clientX, clientY } = e
-      const nodeType = e.dataTransfer.getData('text/plain')
-      addFreeLayoutNode(clientX, clientY, nodeType, nodes)
+      const { key, id } = JSON.parse(e.dataTransfer.getData('text/plain'))
+      console.log('nodeType', key, id)
+      addFreeLayoutNode(clientX, clientY, key, nodes, id)
     }
   }
   useEffect(() => {

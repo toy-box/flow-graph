@@ -16,8 +16,8 @@ export interface IElementNodeWidgetProps {
   children?: SourceMapper | React.ReactElement
 }
 
-const dragStart = (key, e) => {
-  e.dataTransfer.setData('text/plain', key)
+const dragStart = (id, key, e) => {
+  e.dataTransfer.setData('text/plain', JSON.stringify({ key, id }))
 }
 
 export const ElementNodeWidget: React.FC<IElementNodeWidgetProps> = observer(
@@ -25,7 +25,7 @@ export const ElementNodeWidget: React.FC<IElementNodeWidgetProps> = observer(
     const prefix = usePrefix('element-node')
     const [expand, setExpand] = useState(props.defaultExpand)
     const renderNode = (source: ItemMapType) => {
-      const { icon, title, span, id, thumb } = source
+      const { icon, title, span, id, thumb, type } = source
       return (
         <div
           className={prefix + '-item'}
@@ -33,7 +33,7 @@ export const ElementNodeWidget: React.FC<IElementNodeWidgetProps> = observer(
           key={id}
           draggable
           data-designer-source-id={id}
-          onDragStart={(e) => dragStart(id, e)}
+          onDragStart={(e) => dragStart(id, type, e)}
         >
           {thumb && <img className={prefix + '-item-thumb'} src={thumb} />}
           {icon && React.isValidElement(icon) ? (

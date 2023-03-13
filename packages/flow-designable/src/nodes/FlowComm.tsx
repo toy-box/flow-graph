@@ -21,6 +21,7 @@ import { recordDeleteOnEdit } from './FlowRecordDelete'
 import { recordUpdateOnEdit } from './FlowRecordUpdate'
 import { recordLookUpOnEdit } from './FlowRecordLookUp'
 import { httpCallsOnEdit } from './FlowHttpCalls'
+import { variableOnEdit } from './FlowVariable'
 
 export * from './addNode'
 export * from './connectDialog'
@@ -340,6 +341,8 @@ export const onPanelEdit = (
         return recordLookUpOnEdit(node, at, additionInfo)
       case FlowMetaType.HTTP_CALLS:
         return httpCallsOnEdit(node, at, additionInfo)
+      case FlowMetaType.SHORTCUT:
+        return variableOnEdit(node, at, additionInfo)
       default:
         return recordCreateOnEdit(node, at, additionInfo)
     }

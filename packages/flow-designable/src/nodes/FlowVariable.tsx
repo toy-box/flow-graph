@@ -21,6 +21,7 @@ import { FlowMetaNode, FlowMetaType, FreeFlow } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
+import { convertJSONSchemaToFormily } from '@toy-box/action-template'
 
 import { BranchArrays } from '../components/formily'
 
@@ -54,7 +55,13 @@ const SchemaField = createSchemaField({
   },
 })
 
-export const variableOnEdit = (schema: any) => {
+export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
+  // console.log('schema', schema)
+  const { title, metaFlow } = node
+  const data = metaFlow.shortcutData.find(
+    (shortcut) => shortcut.id === title
+  ).variable
+  const schema = convertJSONSchemaToFormily(data)
   console.log('schema', schema)
   const dialog = FormDialog(
     {

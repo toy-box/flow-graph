@@ -21,12 +21,11 @@ export const nodeTemplatesProvider = (
   }
   const shortcutNodes =
     freeFlow &&
-    freeFlow.shortcut &&
-    freeFlow.shortcut.list.length &&
-    freeFlow.shortcut.list.map((item: FlowMetaParam) => {
+    freeFlow.shortcutData.length &&
+    freeFlow.shortcutData.map((item: FlowMetaParam) => {
       return {
         icon: 'flow',
-        title: item.type ?? 'ShortCut',
+        title: 'ShortCut',
         description: item.description ?? 'ShortCut',
         type: FlowMetaType.SHORTCUT,
         group: 'flow',
@@ -43,6 +42,7 @@ export const nodeTemplatesProvider = (
         },
       }
     })
+  console.log('shortcutNode', shortcutNodes)
   return [
     {
       icon: 'flow',
@@ -235,15 +235,15 @@ export const nodeTemplatesProvider = (
     },
     {
       icon: 'flow',
-      title: 'ShortCut',
-      description: 'ShortCut',
+      title: 'Shortcut',
+      description: 'Shortcut',
       type: FlowMetaType.SHORTCUT,
       group: 'flow',
       metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
         const flowData = {
           id: uid(),
-          name: 'ShortCut',
+          name: 'Shortcut',
           type: FlowMetaType.SHORTCUT,
           connector: { targetReference: '' },
           ...editInfo,
@@ -251,6 +251,24 @@ export const nodeTemplatesProvider = (
         appendOrAddNode(at, flowData)
       },
     },
-    ...shortcutNodes,
+    // ...shortcutNodes
+    // {
+    //   icon: 'flow',
+    //   title: 'ShortCut',
+    //   description: 'ShortCut',
+    //   type: FlowMetaType.SHORTCUT,
+    //   group: 'flow',
+    //   metaFlow: freeFlow,
+    //   make: (at: string, editInfo: INodeEdit) => {
+    //     const flowData = {
+    //       id: uid(),
+    //       name: 'ShortCut',
+    //       type: FlowMetaType.SHORTCUT,
+    //       connector: { targetReference: '' },
+    //       ...editInfo,
+    //     }
+    //     appendOrAddNode(at, flowData)
+    //   },
+    // }
   ]
 }

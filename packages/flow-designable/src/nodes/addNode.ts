@@ -5,9 +5,13 @@ export const addFreeLayoutNode = (
   x: number,
   y: number,
   nodeType: string,
-  nodes: any
+  nodes: any,
+  nodeId: string
 ) => {
-  const nodeTemplate = nodes.find((template) => template.title === nodeType)
+  const nodeTemplate = {
+    ...nodes.find((template) => template.title === nodeType),
+    title: nodeId,
+  }
   onPanelEdit &&
     onPanelEdit(nodeTemplate, 'freeLayout', {
       id: uid(),

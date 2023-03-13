@@ -34,8 +34,8 @@ export const Panel: React.FC<any> = () => {
   }
 
   const itemMapShortcut =
-    freeFlow.shortcut &&
-    freeFlow.shortcut.list.map(({ id, name }) => {
+    freeFlow.shortcutData &&
+    freeFlow.shortcutData.map(({ id, name }) => {
       return {
         id: id ?? 'Shortcut',
         type: 'Shortcut',

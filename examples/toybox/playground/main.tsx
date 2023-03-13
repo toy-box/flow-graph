@@ -32,7 +32,6 @@ export const App: React.FC = () => {
           connectDialog: {
             deleteDialog,
           },
-          shortcut: freeFlow.shortcut.list,
         }}
       >
         <Panel />

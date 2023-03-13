@@ -285,6 +285,7 @@ const enUS = {
         sources: {
           logical: 'Logical node',
           action: 'Action node',
+          shortcut: 'Shortcut node',
         },
         debug: 'Debug',
       },

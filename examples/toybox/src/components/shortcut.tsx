@@ -218,7 +218,7 @@ export const shortcutOnEdit = (metaflow: AutoFlow, shortcutJson?: any) => {
       // } else {
       //   node.make(at, { ...paramData, ...additionInfo })
     }
-    metaflow.shortcut.push(paramData)
+    metaflow.shortcutPush(paramData)
     formDialog.close()
   }
   const title = !isEdit ? (
