@@ -120,7 +120,7 @@ const shortcutSchema = {
                     //   },
                     // },
                   },
-                  value: {
+                  type: {
                     type: 'string',
                     title: 'type',
                     // enum: MetaValueType,

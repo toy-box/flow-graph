@@ -14,15 +14,18 @@ import {
   ICallArgumentData,
   FlowMetaType,
   FlowMetaParamWithSize,
+  VariableParam,
 } from '../../types'
 import { FreeFlow } from '../FreeFlow'
 import { MetaFlow } from '../MetaFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
+import { IFieldMeta } from '@toy-box/meta-schema'
 
 export class FlowShortcut extends FlowMetaNode {
   connector?: TargetReference
   faultConnector?: TargetReference
-  variable: { type: string }[]
+  variable: IFieldMeta[]
+  shortcutJson: any
 
   static DefaultConnectorProps = {
     targetReference: '',
@@ -52,7 +55,7 @@ export class FlowShortcut extends FlowMetaNode {
     return 'Fault'
   }
 
-  constructor(flowShortcut: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
+  constructor(flowShortcut: any, metaFlow: MetaFlow | FreeFlow) {
     super(
       metaFlow,
       flowShortcut.id,
@@ -64,6 +67,7 @@ export class FlowShortcut extends FlowMetaNode {
     this.faultConnector =
       flowShortcut.faultConnector ?? FlowShortcut.DefaultConnectorProps
     this.variable = flowShortcut.variable
+    this.shortcutJson = flowShortcut.shortcutJson
     this.makeObservable()
   }
 
@@ -74,6 +78,7 @@ export class FlowShortcut extends FlowMetaNode {
       connector: observable.deep,
       faultConnector: observable.deep,
       variable: observable.deep,
+      shortcutJson: observable.deep,
       update: action,
     })
   }
@@ -215,6 +220,7 @@ export class FlowShortcut extends FlowMetaNode {
       connector: this.connector,
       faultConnector: this.faultConnector,
       variable: this.variable,
+      shortcutJson: this.shortcutJson,
     }
   }
 }

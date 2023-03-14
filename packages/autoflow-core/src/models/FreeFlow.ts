@@ -30,6 +30,7 @@ import {
 
 import { History, OpearteTypeEnum } from './History'
 import { AutoFlow } from './AutoFlow'
+import { FlowShortcut } from './flow-nodes/FlowShortcut'
 
 enum MetaFieldType {
   EDIT = 'EDIT',
@@ -510,6 +511,8 @@ export class FreeFlow extends AutoFlow {
         return new FlowRecordDelete(node, this)
       case FlowMetaType.HTTP_CALLS:
         return new FlowHttpCalls(node, this)
+      case FlowMetaType.SHORTCUT:
+        return new FlowShortcut(node, this)
       default:
         return
     }

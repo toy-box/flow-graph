@@ -357,3 +357,8 @@ export interface ICallArgumentData {
   body?: Record<string, string | number>
   authorization?: IAuthorizationParams
 }
+
+export interface ICallArgumentFormily
+  extends Omit<ICallArgumentData, 'pathParameters' | 'queryParameters'> {
+  parameters?: Record<string, string | number>[]
+}

@@ -11,6 +11,7 @@ import {
   FormGrid,
   Radio,
   DatePicker,
+  NumberPicker,
   Form,
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
@@ -21,7 +22,7 @@ import { FlowMetaNode, FlowMetaType, FreeFlow } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
-import { convertJSONSchemaToFormily } from '@toy-box/action-template'
+import { convertMetaToFormily } from '@toy-box/action-template'
 
 import { BranchArrays } from '../components/formily'
 
@@ -43,6 +44,7 @@ const SchemaField = createSchemaField({
     ArrayTabs,
     ArrayItems,
     FormItem,
+    NumberPicker,
     FormGrid,
     Input,
     Select,
@@ -56,12 +58,11 @@ const SchemaField = createSchemaField({
 })
 
 export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
-  // console.log('schema', schema)
-  const { title, metaFlow } = node
-  const data = metaFlow.shortcutData.find(
-    (shortcut) => shortcut.id === title
-  ).variable
-  const schema = convertJSONSchemaToFormily(data)
+  const shortcutJson =
+    node?.shortcutJson ??
+    node.metaFlow.shortcutData.find((shortcut) => shortcut.id === node.title)
+  const variable = node?.variable ?? shortcutJson.variable
+  const schema = convertMetaToFormily(variable)
   console.log('schema', schema)
   const dialog = FormDialog(
     {
@@ -79,14 +80,28 @@ export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
   dialog
     .forOpen((payload, next) => {
       setTimeout(() => {
-        next()
+        next({
+          initialValues: node?.shortcutJson
+            ? {
+                ...shortcutJson.variable,
+              }
+            : {},
+        })
       }, 500)
     })
     .forConfirm((payload, next) => {
       setTimeout(() => {
-        // node.make
-        //   ? node.make(at, { ...payload.values, ...additionInfo })
-        //   : node.update(payload.values)
+        const paramData = {
+          variable,
+          shortcutJson: {
+            ...shortcutJson,
+            variable: payload.values,
+          },
+        }
+        console.log('payload.values', payload.values, paramData)
+        node.make
+          ? node.make(at, { ...paramData, ...additionInfo })
+          : node.update(paramData)
         next(payload)
       }, 500)
     })

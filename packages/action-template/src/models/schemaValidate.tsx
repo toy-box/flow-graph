@@ -146,19 +146,19 @@ export const networkJsonSchema = {
         cookies: null,
         headers: null,
         form: {
-          name: '$goodsDto.name',
-          goodsId: '$goodsDto.goodsId',
-          price: '$goodsDto.price',
+          name: '{{name}}',
+          goodsId: '213',
+          price: '111',
         },
-        body: '$goodsDtoStr',
-        Authorizetion: {
+        body: '{{body}}',
+        Authorization: {
           type: 'Basic',
           username: 'api',
           password: '',
           token: '',
         },
       },
-      result: '$call_response',
+      result: '{{call_response}}',
     },
   ],
 }
@@ -178,16 +178,13 @@ const json = {
     url: 'https://chat.openai.com',
     contentType: 'form-data',
     pathParameters: {
-      chat: 'chat',
+      chat: '{{chat}}',
     },
     queryParameters: {
       userId: '123',
       code: '112',
     },
-    body: {
-      user: 'lee',
-      status: '1',
-    },
+    body: '{{body}}',
     cookies: {
       cookies: '123sda',
     },
@@ -195,6 +192,10 @@ const json = {
       headers1: '123',
       headers2: '423',
     },
+  },
+  variable: {
+    body: { userId: '123', code: '112' },
+    chat: 'chat',
   },
 }
 

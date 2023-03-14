@@ -2,7 +2,11 @@ import Ajv, { JSONSchemaType } from 'ajv'
 import { validate } from 'jsonschema'
 // import metaSchema from "json-schema-draft-2020-12/schema";
 import { action, batch, define, observable } from '@formily/reactive'
-import { ICallArgumentData } from '@toy-box/autoflow-core'
+import {
+  FlowMetaParam,
+  ICallArgumentData,
+  ICallArgumentFormily,
+} from '@toy-box/autoflow-core'
 import { IFieldMeta } from '@toy-box/meta-schema'
 import { networkJson, networkJsonSchema } from './schemaValidate'
 
@@ -141,7 +145,7 @@ function metaToSchema(metaList: IFieldMeta[]) {
     formWidget[key] = {
       type,
       //可走国际化用 <TextWidget />
-      title: name,
+      title: name ?? key,
       'x-validator': [],
       'x-decorator': 'FormItem',
       'x-decorator-props': {
@@ -256,7 +260,15 @@ function objArrayToKeyValue(array, type?: 'variable') {
   }
 }
 
-export function convertHttpFormilyToJson({ callArguments, variable, ...rest }) {
+interface FlowMetaFormily extends Omit<FlowMetaParam, 'callArguments'> {
+  callArguments?: ICallArgumentFormily
+}
+
+export function convertHttpFormilyToJson({
+  callArguments,
+  variable,
+  ...rest
+}: FlowMetaFormily) {
   const { body, cookies, headers, parameters, ...restArguments } = callArguments
   const pathParameters = {},
     queryParameters = {}
@@ -280,7 +292,7 @@ export function convertHttpFormilyToJson({ callArguments, variable, ...rest }) {
 
   const result = {
     ...rest,
-    variable: objArrayToKeyValue(variable, 'variable'),
+    variable,
     callArguments: {
       ...restArguments,
       pathParameters,
