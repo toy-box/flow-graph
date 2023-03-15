@@ -7,7 +7,7 @@ import {
   ICallArgumentData,
   ICallArgumentFormily,
 } from '@toy-box/autoflow-core'
-import { IFieldMeta } from '@toy-box/meta-schema'
+import { IFieldMeta, MetaValueType } from '@toy-box/meta-schema'
 import { networkJson, networkJsonSchema } from './schemaValidate'
 
 export class ActionForm {
@@ -30,6 +30,102 @@ export class ActionForm {
     return validate(networkJson, networkJsonSchema).valid
     // }());
   }
+}
+
+export const keyValueArrayTableSechema = {
+  type: 'array',
+  'x-decorator': 'FormItem',
+  'x-component': 'ArrayTable',
+  'x-component-props': {
+    pagination: { pageSize: 10 },
+    scroll: { x: '100%' },
+  },
+  items: {
+    type: 'object',
+    properties: {
+      column1: {
+        type: 'void',
+        'x-component': 'ArrayTable.Column',
+        'x-component-props': {
+          width: 50,
+          title: 'Sort',
+          align: 'center',
+        },
+        properties: {
+          sort: {
+            type: 'void',
+            'x-component': 'ArrayTable.SortHandle',
+          },
+        },
+      },
+      column3: {
+        type: 'void',
+        'x-component': 'ArrayTable.Column',
+        'x-component-props': { width: 200, title: 'KEY' },
+        required: true,
+        properties: {
+          key: {
+            type: 'string',
+            'x-decorator': 'FormItem',
+            'x-component': 'Input',
+          },
+        },
+      },
+      column4: {
+        type: 'void',
+        'x-component': 'ArrayTable.Column',
+        'x-component-props': {
+          width: 200,
+          title: 'VALUE',
+        },
+        required: true,
+        properties: {
+          value: {
+            type: 'string',
+            'x-decorator': 'FormItem',
+            'x-component': 'Input',
+          },
+        },
+      },
+      column5: {
+        type: 'void',
+        'x-component': 'ArrayTable.Column',
+        'x-component-props': {
+          title: 'Operations',
+          dataIndex: 'operations',
+          width: 200,
+          fixed: 'right',
+        },
+        properties: {
+          item: {
+            type: 'void',
+            'x-component': 'FormItem',
+            properties: {
+              remove: {
+                type: 'void',
+                'x-component': 'ArrayTable.Remove',
+              },
+              moveDown: {
+                type: 'void',
+                'x-component': 'ArrayTable.MoveDown',
+              },
+              moveUp: {
+                type: 'void',
+                'x-component': 'ArrayTable.MoveUp',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  properties: {
+    add: {
+      type: 'void',
+      'x-component': 'ArrayTable.Addition',
+      title: '添加条目',
+    },
+  },
 }
 
 export function isJSON(props) {
@@ -183,22 +279,56 @@ function metaToSchema(metaList: IFieldMeta[]) {
     })
 
     // 处理数据类型和表单元素的映射
-    const setComponentAction = {
-      number: 'NumberPicker',
-      // string:
-      string: (() => {
-        if (key === 'description') {
-          return 'Input.TextArea'
-        } else return 'Input'
-      })(),
+    // const setComponentAction = {
+    //   [MetaValueType.NUMBER]: 'NumberPicker',
+    //   // string:
+    //   [MetaValueType.STRING]: (() => {
+    //     if (key === 'description') {
+    //       return 'Input.TextArea'
+    //     } else return 'Input'
+    //   })(),
+    //   [MetaValueType.DATE]: '1',
+    //   [MetaValueType.DATETIME]: '2',
+    //   [MetaValueType.BOOLEAN]: '3',
+    //   [MetaValueType.OBJECT]: '4',
+    // }
+    const setComponentAction = (type: MetaValueType | string) => {
+      switch (type) {
+        case MetaValueType.NUMBER:
+          return ['NumberPicker', 'string']
+        case MetaValueType.STRING:
+          return key === 'description' ? ['Input.TextArea'] : ['Input']
+        case MetaValueType.DATE:
+          return ['DatePicker', 'string']
+        case MetaValueType.DATETIME:
+          return ['DatePicker', 'string', { showTime: true }]
+        case MetaValueType.BOOLEAN:
+          return ['Checkbox']
+        case MetaValueType.OBJECT:
+          return [
+            'ArrayTable',
+            'array',
+            {
+              pagination: { pageSize: 10 },
+              scroll: { x: '100%' },
+            },
+          ]
+        default:
+          return ['456']
+      }
     }
-
     if (options) {
       formWidget[key]['x-component'] = 'Select'
       formWidget[key].enum = options
     } else {
-      formWidget[key]['x-component'] = setComponentAction[type]
-      console.log('formWidget ---', type, setComponentAction[type])
+      ;[
+        formWidget[key]['x-component'],
+        formWidget[key]['type'] = formWidget[key]['type'],
+        formWidget[key]['x-component-props'] = formWidget[key][
+          'x-component-props'
+        ] ?? {},
+      ] = setComponentAction(type)
+      console.log('formWidget ---', type, formWidget[key])
     }
 
     // 处理所有属性的子节点
@@ -214,6 +344,15 @@ function metaToSchema(metaList: IFieldMeta[]) {
         properties: metaToSchema(
           Object.keys(items.properties).map((key) => items.properties[key])
         ),
+      }
+    }
+
+    if (type === MetaValueType.OBJECT) {
+      const { items, properties } = keyValueArrayTableSechema
+      formWidget[key] = {
+        ...formWidget[key],
+        properties,
+        items,
       }
     }
   })
@@ -246,7 +385,7 @@ export function convertMetaToFormily(metaList: IFieldMeta[]) {
   // }
 }
 
-function objArrayToKeyValue(array, type?: 'variable') {
+export function objArrayToKeyValue(array, type?: 'variable') {
   if (array && array.length) {
     return array.reduce((acc, { key, value }) => {
       if (type === 'variable') {
@@ -306,7 +445,7 @@ export function convertHttpFormilyToJson({
   return result
 }
 
-function keyValueToObjArray(
+export function keyValueToObjArray(
   obj: Omit<
     ICallArgumentData,
     'method' | 'url' | 'contentType' | 'authorization'

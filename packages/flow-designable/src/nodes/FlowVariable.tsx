@@ -12,6 +12,8 @@ import {
   Radio,
   DatePicker,
   NumberPicker,
+  Checkbox,
+  ArrayTable,
   Form,
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
@@ -22,7 +24,13 @@ import { FlowMetaNode, FlowMetaType, FreeFlow } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
-import { convertMetaToFormily } from '@toy-box/action-template'
+import {
+  convertHttpFormilyToJson,
+  convertMetaToFormily,
+  keyValueToObjArray,
+  objArrayToKeyValue,
+} from '@toy-box/action-template'
+import { MetaValueType } from '@toy-box/meta-schema'
 
 import { BranchArrays } from '../components/formily'
 
@@ -54,6 +62,8 @@ const SchemaField = createSchemaField({
     ResourceSelect,
     OperationSelect,
     DatePicker,
+    Checkbox,
+    ArrayTable,
   },
 })
 
@@ -79,18 +89,27 @@ export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
   )
   dialog
     .forOpen((payload, next) => {
+      console.log('node?.shortcutJson', node?.shortcutJson)
+      // node?.shortcutJson &&
+      //   variable.filter(({ type }) => type === MetaValueType.OBJECT)
+      //     .map(({ key }) => {
+      //       shortcutJson.variable[key] = Object.entries(shortcutJson.variable[key]).map(([key, value]) => { return { key, value } }
+      //       )
+      //     })
+      // node?.shortcutJson && console.log('shortcutJson.variable', shortcutJson.variable)
       setTimeout(() => {
         next({
-          initialValues: node?.shortcutJson
-            ? {
-                ...shortcutJson.variable,
-              }
-            : {},
+          initialValues: node?.shortcutJson ? shortcutJson.variable : {},
         })
       }, 500)
     })
     .forConfirm((payload, next) => {
       setTimeout(() => {
+        console.log('for confirm', payload.values)
+        // variable.filter(({ type }) => type === MetaValueType.OBJECT)
+        //   .map(({ key }) => {
+        //     payload.values[key] = objArrayToKeyValue(payload.values[key])
+        //   })
         const paramData = {
           variable,
           shortcutJson: {
@@ -98,7 +117,7 @@ export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
             variable: payload.values,
           },
         }
-        console.log('payload.values', payload.values, paramData)
+        console.log('paramData', paramData)
         node.make
           ? node.make(at, { ...paramData, ...additionInfo })
           : node.update(paramData)
