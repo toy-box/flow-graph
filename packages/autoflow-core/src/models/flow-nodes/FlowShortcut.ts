@@ -188,6 +188,7 @@ export class FlowShortcut extends FlowMetaNode {
     this.name = payload.name
     this.description = payload.description
     this.variable = payload.variable
+    this.shortcutJson = payload.shortcutJson
     this.toJson()
   }
 

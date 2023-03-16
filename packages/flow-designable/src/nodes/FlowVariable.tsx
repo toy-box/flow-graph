@@ -89,14 +89,14 @@ export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
   )
   dialog
     .forOpen((payload, next) => {
-      console.log('node?.shortcutJson', node?.shortcutJson)
-      // node?.shortcutJson &&
-      //   variable.filter(({ type }) => type === MetaValueType.OBJECT)
-      //     .map(({ key }) => {
-      //       shortcutJson.variable[key] = Object.entries(shortcutJson.variable[key]).map(([key, value]) => { return { key, value } }
-      //       )
-      //     })
-      // node?.shortcutJson && console.log('shortcutJson.variable', shortcutJson.variable)
+      node?.shortcutJson &&
+        variable
+          .filter(({ type }) => type === MetaValueType.OBJECT)
+          .map(({ key }) => {
+            shortcutJson.variable[key] = keyValueToObjArray(
+              shortcutJson.variable[key]
+            )
+          })
       setTimeout(() => {
         next({
           initialValues: node?.shortcutJson ? shortcutJson.variable : {},
@@ -105,11 +105,11 @@ export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
     })
     .forConfirm((payload, next) => {
       setTimeout(() => {
-        console.log('for confirm', payload.values)
-        // variable.filter(({ type }) => type === MetaValueType.OBJECT)
-        //   .map(({ key }) => {
-        //     payload.values[key] = objArrayToKeyValue(payload.values[key])
-        //   })
+        variable
+          .filter(({ type }) => type === MetaValueType.OBJECT)
+          .map(({ key }) => {
+            payload.values[key] = objArrayToKeyValue(payload.values[key])
+          })
         const paramData = {
           variable,
           shortcutJson: {
