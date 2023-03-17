@@ -18,17 +18,17 @@ import {
   useLocale,
 } from '@toy-box/studio-base'
 import { FreeFlow, MetaFlow } from '@toy-box/autoflow-core'
+import { observer } from '@formily/reactive-react'
 import { Designer, FlowCanvas, variableOnEdit } from '@toy-box/flow-designable'
 import { ErrorWidget, ElementNodeWidget, ResourceWidget } from '../../../src'
 import { itemMap, itemMapDatas, itemMapAction } from '../../../src/data/itemMap'
 import { shortcutOnEdit } from '../shortcut'
-import { observer } from '@formily/reactive-react'
 
 export interface IPanelProps {
   metaFlow: MetaFlow | FreeFlow
 }
 
-export const Panel: React.FC<any> = ({ metaFlow }) => {
+export const Panel: React.FC<any> = observer(({ metaFlow }) => {
   const freeFlow = metaFlow as FreeFlow
 
   const metaService = {
@@ -285,4 +285,4 @@ export const Panel: React.FC<any> = ({ metaFlow }) => {
       </StudioPanel>
     </Designer>
   )
-}
+})
