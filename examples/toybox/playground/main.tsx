@@ -6,7 +6,7 @@ import { icons } from '@toy-box/studio-base'
 import { GlobalRegistry } from '@toy-box/designable-core'
 import { Panel, Shortcut, shortcutOnEdit } from '../src'
 import { freeInitMeta, freeMeta } from '../src/data/flowData'
-import { deleteDialog } from '@toy-box/flow-designable'
+import { deleteDialog, FlowCanvas } from '@toy-box/flow-designable'
 import { nodeTemplatesProvider } from './nodes'
 import '../src/styles/theme.less'
 
@@ -35,6 +35,7 @@ export const App: React.FC = () => {
         }}
       >
         <Panel />
+        {/* <FlowCanvas /> */}
         {/* <LeftPanel /> */}
       </FlowContext.Provider>
     </div>

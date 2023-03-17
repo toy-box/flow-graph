@@ -227,6 +227,7 @@ export class FreeFlow extends AutoFlow {
       mode: observable.ref,
       flowType: observable.ref,
       layoutMode: observable.ref,
+      shortcutData: observable.deep,
       setMetaFlow: batch,
       getFlowMetaNodeMap: batch,
       // removeNodeWithBind: batch,
