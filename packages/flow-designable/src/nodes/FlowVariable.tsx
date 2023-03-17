@@ -138,7 +138,7 @@ export const commSchema = {
         type: 'string',
         title: '',
         'x-decorator': 'FormItem',
-        'x-component': 'AssignmentDesc',
+        'x-component': 'descTipHtml',
         'x-decorator-props': {
           gridSpan: 2,
           feedbackLayout: 'terse',
