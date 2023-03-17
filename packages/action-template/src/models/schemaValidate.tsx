@@ -146,19 +146,68 @@ export const networkJsonSchema = {
         cookies: null,
         headers: null,
         form: {
-          name: '$goodsDto.name',
-          goodsId: '$goodsDto.goodsId',
-          price: '$goodsDto.price',
+          name: '{{name}}',
+          goodsId: '213',
+          price: '111',
         },
-        body: '$goodsDtoStr',
-        Authorizetion: {
+        body: '{{body}}',
+        Authorization: {
           type: 'Basic',
           username: 'api',
           password: '',
           token: '',
         },
       },
-      result: '$call_response',
+      result: '{{call_response}}',
     },
   ],
+}
+
+const json = {
+  name: 'httpCalls',
+  description: 'HttpCalls',
+  id: 'httpCalls1',
+  result: 'result1',
+  callArguments: {
+    authorization: {
+      type: 'Basic Auth',
+      username: 'dsadsda',
+      password: 'pass1',
+    },
+    method: 'GET',
+    url: 'https://chat.openai.com',
+    contentType: 'form-data',
+    pathParameters: {
+      chat: '{{chat}}',
+    },
+    queryParameters: {
+      userId: '123',
+      code: '112',
+    },
+    body: '{{body}}',
+    cookies: {
+      cookies: '123sda',
+    },
+    headers: {
+      headers1: '123',
+      headers2: '423',
+    },
+  },
+  variable: {
+    body: { userId: '123', code: '112' },
+    chat: 'chat',
+  },
+}
+
+const variable = [
+  {
+    key: 'user',
+    type: 'string',
+  },
+]
+
+const variable2 = {
+  user: {
+    type: 'string',
+  },
 }

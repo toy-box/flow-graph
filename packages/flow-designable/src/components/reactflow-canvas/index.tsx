@@ -70,8 +70,9 @@ export const FlowCanvas: FC<any> = observer(() => {
     graphEle.ondrop = (e) => {
       e.stopPropagation()
       const { clientX, clientY } = e
-      const nodeType = e.dataTransfer.getData('text/plain')
-      addFreeLayoutNode(clientX, clientY, nodeType, nodes)
+      const { key, id } = JSON.parse(e.dataTransfer.getData('text/plain'))
+      console.log('nodeType', key, id)
+      addFreeLayoutNode(clientX, clientY, key, nodes, id)
     }
   }
   useEffect(() => {
@@ -268,6 +269,14 @@ export const FlowCanvas: FC<any> = observer(() => {
           HttpCallsNode: connectFreeFlow({
             component: StandardNode,
             content: <h3>action</h3>,
+            handles: [
+              { type: 'target', position: Position.Top },
+              { type: 'source', position: Position.Bottom },
+            ],
+          }),
+          ShortcutNode: connectFreeFlow({
+            component: StandardNode,
+            content: <h3>shortcut</h3>,
             handles: [
               { type: 'target', position: Position.Top },
               { type: 'source', position: Position.Bottom },

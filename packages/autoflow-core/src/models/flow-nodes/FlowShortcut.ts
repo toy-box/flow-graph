@@ -14,16 +14,18 @@ import {
   ICallArgumentData,
   FlowMetaType,
   FlowMetaParamWithSize,
+  VariableParam,
 } from '../../types'
 import { FreeFlow } from '../FreeFlow'
 import { MetaFlow } from '../MetaFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
+import { IFieldMeta } from '@toy-box/meta-schema'
 
-export class FlowHttpCalls extends FlowMetaNode {
+export class FlowShortcut extends FlowMetaNode {
   connector?: TargetReference
   faultConnector?: TargetReference
-  callArguments: ICallArgumentData
-  result?: string
+  variable: IFieldMeta[]
+  shortcutJson: any
 
   static DefaultConnectorProps = {
     targetReference: '',
@@ -32,11 +34,11 @@ export class FlowHttpCalls extends FlowMetaNode {
   static DefaultNodeProps: IMakeFlowNodeProps = {
     width: 60,
     height: 60,
-    component: 'HttpCallsNode',
+    component: 'ShortcutNode',
   }
 
   get type() {
-    return FlowMetaType.HTTP_CALLS
+    return FlowMetaType.SHORTCUT
   }
 
   get nextNodes() {
@@ -53,19 +55,19 @@ export class FlowHttpCalls extends FlowMetaNode {
     return 'Fault'
   }
 
-  constructor(flowHttpCalls: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
+  constructor(flowShortcut: any, metaFlow: MetaFlow | FreeFlow) {
     super(
       metaFlow,
-      flowHttpCalls.id,
-      flowHttpCalls.name,
-      flowHttpCalls.description
+      flowShortcut.id,
+      flowShortcut.name,
+      flowShortcut.description
     )
     this.connector =
-      flowHttpCalls.connector ?? FlowHttpCalls.DefaultConnectorProps
+      flowShortcut.connector ?? FlowShortcut.DefaultConnectorProps
     this.faultConnector =
-      flowHttpCalls.faultConnector ?? FlowHttpCalls.DefaultConnectorProps
-    this.callArguments = flowHttpCalls.callArguments
-    this.result = flowHttpCalls.result
+      flowShortcut.faultConnector ?? FlowShortcut.DefaultConnectorProps
+    this.variable = flowShortcut.variable
+    this.shortcutJson = flowShortcut.shortcutJson
     this.makeObservable()
   }
 
@@ -75,8 +77,8 @@ export class FlowHttpCalls extends FlowMetaNode {
       name: observable.ref,
       connector: observable.deep,
       faultConnector: observable.deep,
-      callArguments: observable.deep,
-      result: observable.ref,
+      variable: observable.deep,
+      shortcutJson: observable.deep,
       update: action,
     })
   }
@@ -88,7 +90,7 @@ export class FlowHttpCalls extends FlowMetaNode {
       x,
       y,
       component,
-    }: IMakeFlowNodeProps = FlowHttpCalls.DefaultNodeProps
+    }: IMakeFlowNodeProps = FlowShortcut.DefaultNodeProps
   ): IFlowNodeProps {
     const targets = []
     const conId = this.connector.targetReference
@@ -124,7 +126,7 @@ export class FlowHttpCalls extends FlowMetaNode {
       x,
       y,
       component,
-    }: IMakeFlowNodeProps = FlowHttpCalls.DefaultNodeProps,
+    }: IMakeFlowNodeProps = FlowShortcut.DefaultNodeProps,
     targets: TargetProps[]
   ): IFlowNodeProps[] {
     const extendId = uid()
@@ -161,7 +163,7 @@ export class FlowHttpCalls extends FlowMetaNode {
         this.connector.targetReference = at.targets[0].id
       }
       const flowNodes = this.makeFlowNodeWithExtend(
-        FlowHttpCalls.DefaultNodeProps,
+        FlowShortcut.DefaultNodeProps,
         at.targets
       )
       this.metaFlow.flow.addFlowNodeAt(at.id, flowNodes[0])
@@ -174,9 +176,9 @@ export class FlowHttpCalls extends FlowMetaNode {
     const nodeProps = {
       x: flowData.x,
       y: flowData.y,
-      width: flowData.width || FlowHttpCalls.DefaultNodeProps.width,
-      height: flowData.height || FlowHttpCalls.DefaultNodeProps.height,
-      component: FlowHttpCalls.DefaultNodeProps.component,
+      width: flowData.width || FlowShortcut.DefaultNodeProps.width,
+      height: flowData.height || FlowShortcut.DefaultNodeProps.height,
+      component: FlowShortcut.DefaultNodeProps.component,
     }
     const flowNode = this.makeFlowNode(nodeProps)
     this.metaFlow.flow.addFlowFreeNode(flowNode)
@@ -185,8 +187,8 @@ export class FlowHttpCalls extends FlowMetaNode {
   update(payload: FlowMetaUpdate): void {
     this.name = payload.name
     this.description = payload.description
-    this.callArguments = payload.callArguments
-    this.result = payload.result
+    this.variable = payload.variable
+    this.shortcutJson = payload.shortcutJson
     this.toJson()
   }
 
@@ -218,8 +220,8 @@ export class FlowHttpCalls extends FlowMetaNode {
       type: this.type,
       connector: this.connector,
       faultConnector: this.faultConnector,
-      callArguments: this.callArguments,
-      result: this.result,
+      variable: this.variable,
+      shortcutJson: this.shortcutJson,
     }
   }
 }

@@ -1,5 +1,10 @@
 import { INodeTemplate, NodeMake, INodeEdit } from '@toy-box/flow-node'
-import { FlowMetaType, MetaFlow, FreeFlow } from '@toy-box/autoflow-core'
+import {
+  FlowMetaType,
+  MetaFlow,
+  FreeFlow,
+  FlowMetaParam,
+} from '@toy-box/autoflow-core'
 import { uid } from '@toy-box/toybox-shared'
 export const nodeTemplatesProvider = (
   metaFlow: MetaFlow,
@@ -14,6 +19,30 @@ export const nodeTemplatesProvider = (
       metaFlow.flow.layoutFlow()
     }
   }
+  const shortcutNodes =
+    freeFlow &&
+    freeFlow.shortcutData.length &&
+    freeFlow.shortcutData.map((item: FlowMetaParam) => {
+      return {
+        icon: 'flow',
+        title: 'ShortCut',
+        description: item.description ?? 'ShortCut',
+        type: FlowMetaType.SHORTCUT,
+        group: 'flow',
+        metaFlow: freeFlow,
+        make: (at: string, editInfo: INodeEdit) => {
+          const flowData = {
+            id: uid(),
+            name: item.name ?? 'ShortCut',
+            type: FlowMetaType.SHORTCUT,
+            connector: { targetReference: '' },
+            ...editInfo,
+          }
+          appendOrAddNode(at, flowData)
+        },
+      }
+    })
+  console.log('shortcutNode', shortcutNodes)
   return [
     {
       icon: 'flow',
@@ -204,5 +233,42 @@ export const nodeTemplatesProvider = (
         appendOrAddNode(at, flowData)
       },
     },
+    {
+      icon: 'flow',
+      title: 'Shortcut',
+      description: 'Shortcut',
+      type: FlowMetaType.SHORTCUT,
+      group: 'flow',
+      metaFlow: freeFlow,
+      make: (at: string, editInfo: INodeEdit) => {
+        const flowData = {
+          id: uid(),
+          name: 'Shortcut',
+          type: FlowMetaType.SHORTCUT,
+          connector: { targetReference: '' },
+          ...editInfo,
+        }
+        appendOrAddNode(at, flowData)
+      },
+    },
+    // ...shortcutNodes
+    // {
+    //   icon: 'flow',
+    //   title: 'ShortCut',
+    //   description: 'ShortCut',
+    //   type: FlowMetaType.SHORTCUT,
+    //   group: 'flow',
+    //   metaFlow: freeFlow,
+    //   make: (at: string, editInfo: INodeEdit) => {
+    //     const flowData = {
+    //       id: uid(),
+    //       name: 'ShortCut',
+    //       type: FlowMetaType.SHORTCUT,
+    //       connector: { targetReference: '' },
+    //       ...editInfo,
+    //     }
+    //     appendOrAddNode(at, flowData)
+    //   },
+    // }
   ]
 }

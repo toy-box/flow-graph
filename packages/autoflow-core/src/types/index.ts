@@ -1,3 +1,4 @@
+import { raw } from '@formily/reactive'
 import { IFieldMeta } from '@toy-box/meta-schema'
 
 export type AnyFunction = (...args: any[]) => any
@@ -55,6 +56,10 @@ export interface IFlowMetaResource {
   [FlowResourceType.TEMPLATE]?: IFieldMeta[]
 }
 
+export interface VariableParam {
+  type: 'string'
+}
+
 export interface IFlowMetaNodes {
   start?: FlowMetaParam
   end?: FlowMetaParam
@@ -85,6 +90,7 @@ export enum FlowMetaType {
   RECORD_DELETE = 'recordDeletes',
   RECORD_LOOKUP = 'recordLookups',
   HTTP_CALLS = 'httpCalls',
+  SHORTCUT = 'shortcut',
   END = 'end',
 }
 
@@ -133,6 +139,9 @@ export interface FlowMetaParam {
   sortField?: string
   getFirstRecordOnly?: boolean
   waitEvents?: IwaitEvent[]
+  result?: string
+  callArguments?: ICallArgumentData
+  variable?: Record<string, VariableParam>
   x?: number
   y?: number
 }
@@ -304,4 +313,54 @@ export interface IResourceParam {
 
 export interface IFieldMetaResource extends IFieldMeta {
   webType: FlowResourceType
+}
+
+export enum IAuthorizationEnum {
+  NO_AUTH = 'No Auth',
+  BEARER_TOKEN = 'Bearer Token',
+  BASIC_AUTH = 'Basic Auth',
+}
+
+export enum IHttpMethodEnum {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  DELETE = 'DELETE',
+  HEAD = 'HEAD',
+  OPTIONS = 'OPTIONS',
+  PATCH = 'PATCH',
+  CONNECT = 'CONNECT',
+  TRACE = 'TRACE',
+}
+
+export enum IContentTypeEnum {
+  NONE = 'none',
+  FORM_DATA = 'form-data',
+  X_WWW_FORM_URLENCODED = 'x-www-form-urlencoded',
+  raw = 'raw',
+  BINARY = 'binary',
+  GRAPH_QL = 'GraphQL',
+}
+export interface IAuthorizationParams {
+  type: IAuthorizationEnum
+  username?: string
+  password?: string
+  token?: string
+}
+
+export interface ICallArgumentData {
+  method: IHttpMethodEnum
+  url: string
+  contentType?: IContentTypeEnum
+  pathParameters?: Record<string, string | number>
+  queryParameters?: Record<string, string | number>
+  cookies?: Record<string, string | number>
+  headers?: Record<string, string | number>
+  body?: Record<string, string | number>
+  authorization?: IAuthorizationParams
+}
+
+export interface ICallArgumentFormily
+  extends Omit<ICallArgumentData, 'pathParameters' | 'queryParameters'> {
+  parameters?: Record<string, string | number>[]
 }

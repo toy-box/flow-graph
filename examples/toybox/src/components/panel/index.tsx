@@ -18,9 +18,11 @@ import {
   useLocale,
 } from '@toy-box/studio-base'
 import { FreeFlow } from '@toy-box/autoflow-core'
+import { Designer, FlowCanvas, variableOnEdit } from '@toy-box/flow-designable'
 import { ErrorWidget, ElementNodeWidget, ResourceWidget } from '../../../src'
 import { itemMap, itemMapDatas, itemMapAction } from '../../../src/data/itemMap'
-import { Designer, FlowCanvas, variableOnEdit } from '@toy-box/flow-designable'
+import { shortcutOnEdit } from '../shortcut'
+
 export const Panel: React.FC<any> = () => {
   const metaFlow = useMetaFlow()
   const freeFlow = useFreeFlow() as FreeFlow
@@ -30,6 +32,19 @@ export const Panel: React.FC<any> = () => {
       return null
     },
   }
+
+  const itemMapShortcut =
+    freeFlow.shortcutData &&
+    freeFlow.shortcutData.map(({ id, name }) => {
+      return {
+        id: id ?? 'Shortcut',
+        type: 'Shortcut',
+        title: name ?? 'flowDesigner.flow.extend.shortcut',
+        thumb:
+          'https://cdnmarket.sasago.com/microIcon/componentsIcon/titleText.png',
+      }
+    })
+  console.log('panel执行')
   // const init = useCallback(() => {
   //   metaFlow.flow.setFlowNodes(flowData1)
   // }, [])
@@ -61,6 +76,8 @@ export const Panel: React.FC<any> = () => {
   const [leftActiveKey, setLeftActiveKey] = React.useState()
   const [rightVisible, setRightVisible] = React.useState(false)
   const [debugVisible, setDebugVisible] = React.useState(false)
+  const [shortcutVisible, setShortcutVisible] = React.useState(false)
+  const [scActiveKey, setScActiveKey] = React.useState()
   const [rightActiveKey, setRightActiveKey] = React.useState()
   const [debugActiveKey, setDebugActiveKey] = React.useState()
   const [errorData, setErrorData] = React.useState([])
@@ -74,6 +91,11 @@ export const Panel: React.FC<any> = () => {
   }, [])
   const isEditMode = freeFlow.mode === FlowModeEnum.EDIT
   const debug = useCallback(() => {
+    freeFlow.changeMode()
+    isEditMode && setLeftVisible(false)
+    isEditMode && setLeftActiveKey(null)
+  }, [])
+  const shortcut = useCallback(() => {
     console.log('freeFlow', freeFlow)
     const data = {
       name: 'George Washington',
@@ -623,11 +645,9 @@ export const Panel: React.FC<any> = () => {
       },
     ]
     // console.log('ActionForm', convertMetaToFormily(data2))
-    console.log('valid', new ActionForm(data2).isDataValid)
-    variableOnEdit(convertMetaToFormily(data2))
-    freeFlow.changeMode()
-    isEditMode && setLeftVisible(false)
-    isEditMode && setLeftActiveKey(null)
+    // console.log('valid', new ActionForm(data2).isDataValid)
+    // variableOnEdit(convertMetaToFormily(data2))
+    shortcutOnEdit(freeFlow)
   }, [])
 
   return (
@@ -682,6 +702,20 @@ export const Panel: React.FC<any> = () => {
             </CompositePanel>
           </TopbarPanel.Region>
           <TopbarPanel.Region position="right">
+            <CompositePanel
+              direction="right"
+              visible={shortcutVisible}
+              setVisible={setShortcutVisible}
+              activeKey={scActiveKey}
+              setActiveKey={setScActiveKey as any}
+            >
+              <CompositePanel.Item
+                title="创建快捷方式"
+                icon="Profile"
+                activeKey="shortcut"
+                onClick={shortcut}
+              />
+            </CompositePanel>
             <CompositePanel
               direction="right"
               visible={debugVisible}
@@ -750,6 +784,10 @@ export const Panel: React.FC<any> = () => {
               <ElementNodeWidget
                 title="toyboxStudio.panels.sources.action"
                 sources={itemMapAction}
+              />
+              <ElementNodeWidget
+                title="flowDesigner.panels.sources.shortcut"
+                sources={itemMapShortcut}
               />
             </CompositePanelContent.Item>
             <CompositePanelContent.Item

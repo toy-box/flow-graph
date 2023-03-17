@@ -36,6 +36,7 @@ const zhCN = {
           recordLookup: '查询记录',
           recordDelete: '删除记录',
           httpCalls: '网络调用',
+          shortcut: '快捷方式',
         },
         autoFlow: {
           variable: '变量',
@@ -276,6 +277,11 @@ const zhCN = {
           },
         },
       },
+      shortcut: {
+        addTitle: '新增快捷方式',
+        editTitle: '编辑快捷方式',
+        variable: '中间变量',
+      },
     },
   },
 }
@@ -292,6 +298,8 @@ const enUS = {
         error: 'Error',
         sources: {
           logical: 'Logical node',
+          action: 'Action node',
+          shortcut: 'Shortcut node',
         },
         debug: 'Debug',
       },
@@ -321,6 +329,7 @@ const enUS = {
           recordLookup: 'recordLookup',
           recordDelete: 'recordDelete',
           httpCalls: 'httpCalls',
+          shortcut: 'shortcut',
           end: 'end',
         },
         autoFlow: {
@@ -565,6 +574,11 @@ const enUS = {
             contentTypeTitle: 'contentType',
           },
         },
+      },
+      shortcut: {
+        addTitle: 'Add ShortCut',
+        editTitle: 'Edit ShortCut',
+        variable: 'Variable',
       },
     },
   },
