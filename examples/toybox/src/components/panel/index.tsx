@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { useMetaFlow, useFreeFlow } from '@toy-box/flow-node'
 import {
   ActionForm,
@@ -17,15 +17,19 @@ import {
   WorkspacePanel,
   useLocale,
 } from '@toy-box/studio-base'
-import { FreeFlow } from '@toy-box/autoflow-core'
+import { FreeFlow, MetaFlow } from '@toy-box/autoflow-core'
 import { Designer, FlowCanvas, variableOnEdit } from '@toy-box/flow-designable'
 import { ErrorWidget, ElementNodeWidget, ResourceWidget } from '../../../src'
 import { itemMap, itemMapDatas, itemMapAction } from '../../../src/data/itemMap'
 import { shortcutOnEdit } from '../shortcut'
+import { observer } from '@formily/reactive-react'
 
-export const Panel: React.FC<any> = () => {
-  const metaFlow = useMetaFlow()
-  const freeFlow = useFreeFlow() as FreeFlow
+export interface IPanelProps {
+  metaFlow: MetaFlow | FreeFlow
+}
+
+export const Panel: React.FC<any> = ({ metaFlow }) => {
+  const freeFlow = metaFlow as FreeFlow
 
   const metaService = {
     getMetaObjectData: (value) => {
@@ -33,9 +37,8 @@ export const Panel: React.FC<any> = () => {
     },
   }
 
-  const itemMapShortcut =
-    freeFlow.shortcutData &&
-    freeFlow.shortcutData.map(({ id, name }) => {
+  const itemMapShortcut = useMemo(() => {
+    return freeFlow.shortcutData.map(({ id, name }) => {
       return {
         id: id ?? 'Shortcut',
         type: 'Shortcut',
@@ -44,6 +47,7 @@ export const Panel: React.FC<any> = () => {
           'https://cdnmarket.sasago.com/microIcon/componentsIcon/titleText.png',
       }
     })
+  }, [freeFlow.shortcutData])
   console.log('panel执行')
   // const init = useCallback(() => {
   //   metaFlow.flow.setFlowNodes(flowData1)

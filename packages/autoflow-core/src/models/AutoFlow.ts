@@ -1,5 +1,6 @@
 import { Flow, FlowModeEnum, LayoutModeEnum } from '@toy-box/flow-graph'
 import { MetaValueType } from '@toy-box/meta-schema'
+import { clone } from '@toy-box/toybox-shared'
 import {
   FlowMetaParam,
   FlowResourceType,
@@ -170,7 +171,10 @@ export abstract class AutoFlow {
     function checkUnique(id, list): boolean {
       return list.findIndex((item) => item.id === id) === -1
     }
-    checkUnique(shortcutItem.id, this.shortcutData) &&
-      this.shortcutData.push(shortcutItem)
+    if (checkUnique(shortcutItem.id, this.shortcutData)) {
+      const shortcutData = clone(this.shortcutData)
+      shortcutData.push(shortcutItem)
+      this.shortcutData = shortcutData
+    }
   }
 }

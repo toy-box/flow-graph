@@ -34,7 +34,7 @@ export const App: React.FC = () => {
           },
         }}
       >
-        <Panel />
+        <Panel metaFlow={freeFlow} />
         {/* <LeftPanel /> */}
       </FlowContext.Provider>
     </div>

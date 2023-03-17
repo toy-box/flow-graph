@@ -221,6 +221,7 @@ export class FreeFlow extends AutoFlow {
       flowResourceMap: observable.deep,
       history: observable.deep,
       metaResourceDatas: observable.deep,
+      shortcutData: observable.deep,
       flowMetaNodes: observable.computed,
       flow: observable.ref,
       // flowFree: observable.ref,
