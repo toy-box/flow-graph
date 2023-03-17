@@ -359,7 +359,10 @@ function metaToSchema(metaList: IFieldMeta[]) {
   return formWidget
 }
 
-export function convertMetaToFormily(metaList: IFieldMeta[]) {
+export function convertMetaToFormily(
+  metaList: IFieldMeta[],
+  additionSchema?: any
+) {
   const formilySchema = {
     type: 'object',
     properties: {
@@ -369,7 +372,7 @@ export function convertMetaToFormily(metaList: IFieldMeta[]) {
         // 'x-component-props': {
         //   maxColumns: 2,
         // },
-        properties: metaToSchema(metaList),
+        properties: { ...additionSchema, ...metaToSchema(metaList) },
       },
     },
   }

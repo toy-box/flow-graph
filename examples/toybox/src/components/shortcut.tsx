@@ -315,6 +315,8 @@ export const Shortcut: FC<ShortcutModelPorps> = ({
     },
   })
 
+  formTab.setActiveKey('tab1')
+
   if (value) {
     const flowData = clone(value)
     if (isEdit) {

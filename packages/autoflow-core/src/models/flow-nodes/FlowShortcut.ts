@@ -187,6 +187,7 @@ export class FlowShortcut extends FlowMetaNode {
   update(payload: FlowMetaUpdate): void {
     this.name = payload.name
     this.description = payload.description
+    this.id = payload.id
     this.variable = payload.variable
     this.shortcutJson = payload.shortcutJson
     this.toJson()

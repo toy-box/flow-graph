@@ -1115,6 +1115,8 @@ export const HttpCalls: FC<HttpCallsModelPorps> = ({
     }
   }
 
+  formTab.setActiveKey('tab1')
+
   switch (value.callArguments && value.callArguments.contentType) {
     case IContentTypeEnum.FORM_DATA:
     case IContentTypeEnum.X_WWW_FORM_URLENCODED:

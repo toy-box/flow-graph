@@ -31,6 +31,7 @@ import {
   objArrayToKeyValue,
 } from '@toy-box/action-template'
 import { MetaValueType } from '@toy-box/meta-schema'
+import { AssignmentDesc } from '@toy-box/flow-designable'
 
 import { BranchArrays } from '../components/formily'
 
@@ -64,19 +65,106 @@ const SchemaField = createSchemaField({
     DatePicker,
     Checkbox,
     ArrayTable,
+    AssignmentDesc,
   },
 })
 
+export const commSchema = {
+  grid: {
+    type: 'void',
+    'x-component': 'FormGrid',
+    'x-component-props': {
+      maxColumns: 2,
+    },
+    properties: {
+      name: {
+        type: 'string',
+        title: (
+          <TextWidget token="flowDesigner.flow.form.comm.label"></TextWidget>
+        ),
+        required: true,
+        'x-decorator': 'FormItem',
+        'x-decorator-props': {
+          layout: 'vertical',
+          colon: false,
+        },
+        'x-component': 'Input',
+        'x-validator': [
+          {
+            triggerType: 'onBlur',
+            required: false,
+            message: (
+              <TextWidget>flowDesigner.flow.form.validator.required</TextWidget>
+            ),
+          },
+        ],
+      },
+      id: {
+        type: 'string',
+        title: <TextWidget>flowDesigner.flow.form.comm.value</TextWidget>,
+        required: true,
+        'x-disabled': false,
+        'x-validator': [
+          {
+            triggerType: 'onBlur',
+            required: false,
+            message: (
+              <TextWidget>flowDesigner.flow.form.validator.value</TextWidget>
+            ),
+          },
+        ],
+        'x-decorator': 'FormItem',
+        'x-decorator-props': {
+          layout: 'vertical',
+          colon: false,
+        },
+        'x-component': 'Input',
+      },
+      description: {
+        type: 'string',
+        title: (
+          <TextWidget token="flowDesigner.flow.form.comm.description"></TextWidget>
+        ),
+        'x-decorator': 'FormItem',
+        'x-component': 'Input.TextArea',
+        'x-decorator-props': {
+          layout: 'vertical',
+          colon: false,
+          gridSpan: 2,
+          feedbackLayout: 'terse',
+        },
+      },
+      desc: {
+        type: 'string',
+        title: '',
+        'x-decorator': 'FormItem',
+        'x-component': 'AssignmentDesc',
+        'x-decorator-props': {
+          gridSpan: 2,
+          feedbackLayout: 'terse',
+        },
+      },
+    },
+  },
+}
+
 export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
+  const isEdit = !node.make
   const shortcutJson =
     node?.shortcutJson ??
     node.metaFlow.shortcutData.find((shortcut) => shortcut.id === node.title)
   const variable = node?.variable ?? shortcutJson.variable
-  const schema = convertMetaToFormily(variable)
+  const title = !isEdit ? (
+    <TextWidget>flowDesigner.flow.form.variable.addTitle</TextWidget>
+  ) : (
+    <TextWidget>flowDesigner.flow.form.variable.editTitle</TextWidget>
+  )
+  commSchema.grid.properties.id['x-disabled'] = isEdit
+  const schema = convertMetaToFormily(variable, commSchema)
   console.log('schema', schema)
   const dialog = FormDialog(
     {
-      title: 'test',
+      title: title,
       width: '90vw',
     },
     () => {

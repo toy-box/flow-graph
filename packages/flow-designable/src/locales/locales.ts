@@ -275,6 +275,10 @@ const zhCN = {
             editTitle: '编辑网络请求',
             urlTitle: '请求地址',
           },
+          variable: {
+            addTitle: '新建中间变量',
+            editTitle: '编辑中间变量',
+          },
         },
       },
       shortcut: {
@@ -572,6 +576,10 @@ const enUS = {
             urlTitle: 'Url',
             methodTitle: 'Method',
             contentTypeTitle: 'contentType',
+          },
+          variable: {
+            addTitle: 'New Variable',
+            editTitle: 'Edit Variable',
           },
         },
       },
