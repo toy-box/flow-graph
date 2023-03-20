@@ -14,6 +14,7 @@ import {
   NumberPicker,
   Checkbox,
   ArrayTable,
+  PreviewText,
   Form,
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
@@ -34,6 +35,8 @@ import { MetaValueType } from '@toy-box/meta-schema'
 import { AssignmentDesc } from '@toy-box/flow-designable'
 
 import { BranchArrays } from '../components/formily'
+
+import './flowNodes.less'
 
 const descTipHtml = () => {
   return (
@@ -65,6 +68,7 @@ const SchemaField = createSchemaField({
     DatePicker,
     Checkbox,
     ArrayTable,
+    PreviewText,
     AssignmentDesc,
   },
 })
@@ -77,6 +81,30 @@ export const commSchema = {
       maxColumns: 2,
     },
     properties: {
+      sourceTitle: {
+        type: 'string',
+        title: 'sourceTitle',
+        'x-decorator': 'FormItem',
+        'x-component': 'PreviewText.Input',
+        'x-decorator-props': {
+          // layout: 'vertical',
+          // colon: false,
+          // gridSpan: 2,
+          feedbackLayout: 'terse',
+        },
+      },
+      sourceId: {
+        type: 'string',
+        title: 'sourceId',
+        'x-decorator': 'FormItem',
+        'x-component': 'PreviewText.Input',
+        'x-decorator-props': {
+          // layout: 'vertical',
+          // colon: false,
+          // gridSpan: 2,
+          feedbackLayout: 'terse',
+        },
+      },
       name: {
         type: 'string',
         title: (
@@ -138,7 +166,9 @@ export const commSchema = {
         type: 'string',
         title: '',
         'x-decorator': 'FormItem',
-        'x-component': 'descTipHtml',
+        'x-component': () => {
+          return <Divider className="margin-0" />
+        },
         'x-decorator-props': {
           gridSpan: 2,
           feedbackLayout: 'terse',
@@ -150,9 +180,13 @@ export const commSchema = {
 
 export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
   const isEdit = !node.make
-  const shortcutJson =
-    node?.shortcutJson ??
-    node.metaFlow.shortcutData.find((shortcut) => shortcut.id === node.title)
+  const { name, id, description, title: sourceIdMake } = node
+  const sourceId = sourceIdMake ?? node.sourceId
+  const metaFlowShortcut = node.metaFlow.shortcutData.find(
+    (shortcut) => shortcut.id === sourceId
+  )
+  const sourceTitle = metaFlowShortcut.name
+  const shortcutJson = node?.shortcutJson ?? metaFlowShortcut
   const variable = node?.variable ?? shortcutJson.variable
   const title = !isEdit ? (
     <TextWidget>flowDesigner.flow.form.variable.addTitle</TextWidget>
@@ -185,24 +219,42 @@ export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
               shortcutJson.variable[key]
             )
           })
+      console.log('shortcutJson', node)
+
       setTimeout(() => {
         next({
-          initialValues: node?.shortcutJson ? shortcutJson.variable : {},
+          initialValues: node?.shortcutJson
+            ? {
+                sourceId,
+                sourceTitle,
+                name,
+                id,
+                description,
+                ...shortcutJson.variable,
+              }
+            : { sourceId, sourceTitle, name: 'shortcut node' },
         })
       }, 500)
     })
     .forConfirm((payload, next) => {
+      console.log('payload', payload.values)
+      const { name, id, description, sourceId, sourceTitle, ...rest } =
+        payload.values
       setTimeout(() => {
         variable
           .filter(({ type }) => type === MetaValueType.OBJECT)
           .map(({ key }) => {
-            payload.values[key] = objArrayToKeyValue(payload.values[key])
+            rest[key] = objArrayToKeyValue(rest[key])
           })
         const paramData = {
+          sourceId,
+          name,
+          id,
+          description,
           variable,
           shortcutJson: {
             ...shortcutJson,
-            variable: payload.values,
+            variable: rest,
           },
         }
         console.log('paramData', paramData)

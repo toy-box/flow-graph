@@ -202,10 +202,15 @@ const shortcutSchema = {
   },
 }
 
-export const shortcutOnEdit = (metaflow: AutoFlow, shortcutJson?: any) => {
+export const shortcutOnEdit = (
+  metaflow: AutoFlow,
+  shortcutJson?: any,
+  setActiveKey?: any
+) => {
   const isEdit = false
   let formDialog = null
   const onCancel = () => {
+    setActiveKey(false)
     formDialog.close()
   }
   const onSubmit = (form) => {
@@ -219,6 +224,7 @@ export const shortcutOnEdit = (metaflow: AutoFlow, shortcutJson?: any) => {
       //   node.make(at, { ...paramData, ...additionInfo })
     }
     metaflow.shortcutPush(paramData)
+    setActiveKey(false)
     formDialog.close()
   }
   const title = !isEdit ? (

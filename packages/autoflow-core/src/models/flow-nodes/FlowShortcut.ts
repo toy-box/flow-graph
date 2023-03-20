@@ -26,6 +26,7 @@ export class FlowShortcut extends FlowMetaNode {
   faultConnector?: TargetReference
   variable: IFieldMeta[]
   shortcutJson: any
+  sourceId: string
 
   static DefaultConnectorProps = {
     targetReference: '',
@@ -68,6 +69,7 @@ export class FlowShortcut extends FlowMetaNode {
       flowShortcut.faultConnector ?? FlowShortcut.DefaultConnectorProps
     this.variable = flowShortcut.variable
     this.shortcutJson = flowShortcut.shortcutJson
+    this.sourceId = flowShortcut.sourceId
     this.makeObservable()
   }
 
@@ -79,6 +81,7 @@ export class FlowShortcut extends FlowMetaNode {
       faultConnector: observable.deep,
       variable: observable.deep,
       shortcutJson: observable.deep,
+      sourceId: observable.ref,
       update: action,
     })
   }
@@ -190,6 +193,7 @@ export class FlowShortcut extends FlowMetaNode {
     this.id = payload.id
     this.variable = payload.variable
     this.shortcutJson = payload.shortcutJson
+    this.sourceId = payload.sourceId
     this.toJson()
   }
 

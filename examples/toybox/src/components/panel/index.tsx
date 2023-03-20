@@ -101,7 +101,7 @@ export const Panel: React.FC<any> = observer(({ metaFlow }) => {
   }, [])
   const shortcut = useCallback(() => {
     console.log('freeFlow', freeFlow)
-    shortcutOnEdit(freeFlow)
+    shortcutOnEdit(freeFlow, undefined, setScActiveKey)
   }, [])
 
   return (
