@@ -123,10 +123,14 @@ const zhCN = {
             registerId: '对象记录是必填项',
             field: '字段是必填项',
             recordIdValue: '记录是必填项',
+            queriedFields: '指定字段不能为空',
+            outputReference: '记录变量是必填项',
           },
           placeholder: {
             assignRecordIdToReference: '请选择变量',
             formula: '配置表达式',
+            outputReference: '选择记录变量',
+            outputReferenceArray: '选择记录集合变量',
             formilyInput: {
               input: '请输入值',
               select: '请选择值',
@@ -418,10 +422,15 @@ const enUS = {
             registerId: 'Object Record is required',
             field: 'This field is required',
             recordIdValue: 'Record is required',
+            queriedFields: 'This field is required',
+            outputReference: 'Record Variable is required',
+            outputAssignments: 'This field is required',
           },
           placeholder: {
             assignRecordIdToReference: 'Select Variable',
             formula: 'Set Formula',
+            outputReference: 'Select Record Variable',
+            outputReferenceArray: 'Select Record Variables',
             formilyInput: {
               input: 'Input Value',
               select: 'Select Value',

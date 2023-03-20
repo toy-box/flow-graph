@@ -6,6 +6,13 @@ import {
   FlowMetaParam,
 } from '@toy-box/autoflow-core'
 import { uid } from '@toy-box/toybox-shared'
+
+const createLocationInfo = (info) => {
+  return {
+    x: info.x - 220,
+    y: info.y - 47,
+  }
+}
 export const nodeTemplatesProvider = (
   metaFlow: MetaFlow,
   freeFlow: FreeFlow
@@ -31,12 +38,13 @@ export const nodeTemplatesProvider = (
         group: 'flow',
         metaFlow: freeFlow,
         make: (at: string, editInfo: INodeEdit) => {
+          const info = createLocationInfo(editInfo)
           const flowData = {
             id: uid(),
             name: item.name ?? 'ShortCut',
             type: FlowMetaType.SHORTCUT,
             connector: { targetReference: '' },
-            ...editInfo,
+            ...Object.assign(editInfo, info),
           }
           appendOrAddNode(at, flowData)
         },
@@ -52,14 +60,13 @@ export const nodeTemplatesProvider = (
       group: 'flow',
       metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
-        editInfo.x = editInfo.x - 200
-        console.log(editInfo)
+        const info = createLocationInfo(editInfo)
         const flowData = {
           id: uid(),
           name: 'Assignment',
           type: FlowMetaType.ASSIGNMENT,
           connector: {},
-          ...editInfo,
+          ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
       },
@@ -72,12 +79,13 @@ export const nodeTemplatesProvider = (
       group: 'flow',
       metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
+        const info = createLocationInfo(editInfo)
         const flowData = {
           id: uid(),
           name: 'Loop',
           type: FlowMetaType.LOOP,
           defaultConnector: { targetReference: '' },
-          ...editInfo,
+          ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
       },
@@ -90,6 +98,7 @@ export const nodeTemplatesProvider = (
       group: 'flow',
       metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
+        const info = createLocationInfo(editInfo)
         const flowData = {
           id: uid(),
           name: 'Decision',
@@ -106,7 +115,7 @@ export const nodeTemplatesProvider = (
               },
             },
           ],
-          ...editInfo,
+          ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
       },
@@ -119,12 +128,13 @@ export const nodeTemplatesProvider = (
       group: 'flow',
       metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
+        const info = createLocationInfo(editInfo)
         const flowData = {
           id: uid(),
           name: 'Wait',
           type: FlowMetaType.WAIT,
           connector: { targetReference: '' },
-          ...editInfo,
+          ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
       },
@@ -137,12 +147,13 @@ export const nodeTemplatesProvider = (
       group: 'flow',
       metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
+        const info = createLocationInfo(editInfo)
         const flowData = {
           id: uid(),
           name: 'Sort',
           type: FlowMetaType.SORT_COLLECTION_PROCESSOR,
           connector: { targetReference: '' },
-          ...editInfo,
+          ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
       },
@@ -153,13 +164,15 @@ export const nodeTemplatesProvider = (
       description: 'Create Records',
       type: FlowMetaType.RECORD_CREATE,
       group: 'flow',
+      metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
+        const info = createLocationInfo(editInfo)
         const flowData = {
           id: uid(),
           name: 'RecordCreate',
           type: FlowMetaType.RECORD_CREATE,
           connector: { targetReference: '' },
-          ...editInfo,
+          ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
       },
@@ -170,13 +183,15 @@ export const nodeTemplatesProvider = (
       description: 'Update Records',
       type: FlowMetaType.RECORD_UPDATE,
       group: 'flow',
+      metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
+        const info = createLocationInfo(editInfo)
         const flowData = {
           id: uid(),
           name: 'RecordUpdate',
           type: FlowMetaType.RECORD_UPDATE,
           connector: { targetReference: '' },
-          ...editInfo,
+          ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
       },
@@ -187,13 +202,15 @@ export const nodeTemplatesProvider = (
       description: 'Delete Records',
       type: FlowMetaType.RECORD_DELETE,
       group: 'flow',
+      metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
+        const info = createLocationInfo(editInfo)
         const flowData = {
           id: uid(),
           name: 'RecordDelete',
           type: FlowMetaType.RECORD_DELETE,
           connector: { targetReference: '' },
-          ...editInfo,
+          ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
       },
@@ -204,13 +221,15 @@ export const nodeTemplatesProvider = (
       description: 'Lookup Records',
       type: FlowMetaType.RECORD_LOOKUP,
       group: 'flow',
+      metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
+        const info = createLocationInfo(editInfo)
         const flowData = {
           id: uid(),
           name: 'RecordLookup',
           type: FlowMetaType.RECORD_LOOKUP,
           connector: { targetReference: '' },
-          ...editInfo,
+          ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
       },
@@ -223,12 +242,13 @@ export const nodeTemplatesProvider = (
       group: 'flow',
       metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
+        const info = createLocationInfo(editInfo)
         const flowData = {
           id: uid(),
           name: 'HttpCalls',
           type: FlowMetaType.HTTP_CALLS,
           connector: { targetReference: '' },
-          ...editInfo,
+          ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
       },
@@ -241,12 +261,13 @@ export const nodeTemplatesProvider = (
       group: 'flow',
       metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
+        const info = createLocationInfo(editInfo)
         const flowData = {
           id: uid(),
           name: 'Shortcut',
           type: FlowMetaType.SHORTCUT,
           connector: { targetReference: '' },
-          ...editInfo,
+          ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
       },
@@ -265,7 +286,7 @@ export const nodeTemplatesProvider = (
     //       name: 'ShortCut',
     //       type: FlowMetaType.SHORTCUT,
     //       connector: { targetReference: '' },
-    //       ...editInfo,
+    //       ...Object.assign(editInfo, info),,
     //     }
     //     appendOrAddNode(at, flowData)
     //   },

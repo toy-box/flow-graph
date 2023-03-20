@@ -566,6 +566,9 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
               // ),
               //   flowGraph,
               disabled: isEdit,
+              sourceMode: 'objectService',
+              rank: 'single',
+              metaFlow,
               style: {
                 with: '220px',
               },

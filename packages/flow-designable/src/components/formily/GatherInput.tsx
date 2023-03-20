@@ -54,6 +54,7 @@ export const GatherInput: FC = observer((props: any) => {
   }, [props?.metaFlow?.registers])
 
   const filterValueInput = useMemo(() => {
+    const time = new Date().getTime()
     switch (form.values.type) {
       case MetaValueType.TEXT:
         return (
@@ -68,6 +69,8 @@ export const GatherInput: FC = observer((props: any) => {
         )
       case MetaValueType.STRING:
       case MetaValueType.NUMBER:
+        const time1 = new Date().getTime()
+        console.log(time1 - time, 'time')
         return (
           <Input
             placeholder={useLocale(

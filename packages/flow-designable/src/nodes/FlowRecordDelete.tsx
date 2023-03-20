@@ -234,6 +234,7 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
             'x-component': 'ResourceSelect',
             'x-component-props': {
               sourceMode: 'objectService',
+              rank: 'single',
               metaFlow,
             },
           },
@@ -259,6 +260,7 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
                   <TextWidget token="flowDesigner.flow.form.recordRemove.filterTitle"></TextWidget>
                 ),
                 required: true,
+                default: '$and',
                 'x-validator': [
                   {
                     triggerType: 'onBlur',

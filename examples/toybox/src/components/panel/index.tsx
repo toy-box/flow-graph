@@ -23,6 +23,7 @@ import { Designer, FlowCanvas, variableOnEdit } from '@toy-box/flow-designable'
 import { ErrorWidget, ElementNodeWidget, ResourceWidget } from '../../../src'
 import { itemMap, itemMapDatas, itemMapAction } from '../../../src/data/itemMap'
 import { shortcutOnEdit } from '../shortcut'
+import { getAllBusinessObjects } from '../../services/businessObject.service'
 
 export interface IPanelProps {
   metaFlow: MetaFlow | FreeFlow
@@ -32,9 +33,7 @@ export const Panel: React.FC<any> = observer(({ metaFlow }) => {
   const freeFlow = metaFlow as FreeFlow
 
   const metaService = {
-    getMetaObjectData: (value) => {
-      return null
-    },
+    getMetaObjectData: () => getAllBusinessObjects(),
   }
 
   const itemMapShortcut = useMemo(() => {

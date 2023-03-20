@@ -90,19 +90,20 @@ export const ResourceSelect: FC = observer((props: any) => {
         const objectKey = form.values[props.objectKey]
         props.metaFlow?.registers?.some(
           (re: {
-            id: any
+            key: any
             properties: {
               [x: string]: any
               hasOwnProperty: (arg0: string) => any
             }
           }) => {
-            if (re.id === objectKey) {
+            if (re.key === objectKey) {
               for (const key in re.properties) {
                 if (re.properties.hasOwnProperty(key)) {
                   const obj = re.properties[key]
                   const option = {
                     label: obj.name,
                     key: obj.key,
+                    children: [],
                   }
                   const changeObj = setMetaChildren(option, obj)
                   registerOps.push(changeObj)
@@ -118,7 +119,8 @@ export const ResourceSelect: FC = observer((props: any) => {
           props.metaFlow?.registers?.map((r: any) => {
             const obj = {
               label: r.name,
-              key: r.id,
+              key: r.key,
+              children: [],
             }
             const changeObj = setMetaChildren(obj, r)
             return changeObj
@@ -154,7 +156,7 @@ export const ResourceSelect: FC = observer((props: any) => {
               const obj = {
                 label: child.name,
                 key: child.key,
-                // children: [],
+                children: [],
               }
               const changeObj = setMetaChildren(obj, child)
               return changeObj
@@ -179,24 +181,37 @@ export const ResourceSelect: FC = observer((props: any) => {
     props.objectKey,
   ])
 
-  const setMetaChildren = (obj: any, meta: IFieldMeta) => {
-    if (meta.properties && isObj(meta.properties)) {
-      for (const proKey in meta.properties) {
-        if (meta.properties.hasOwnProperty(proKey)) {
-          const p = meta.properties[proKey]
-          const child = {
-            label: p.name,
-            key: p.key,
-            children: [],
-          }
-          setMetaChildren(child, p)
-          obj.children.push(child)
-        }
+  const setMetaChildren = useCallback(
+    (obj: any, meta: IFieldMeta) => {
+      if (props.rank === 'single') {
+        delete obj?.children
+        return obj
       }
-    } else {
-      return obj
-    }
-  }
+      if (meta.properties && isObj(meta.properties)) {
+        for (const proKey in meta.properties) {
+          if (meta.properties.hasOwnProperty(proKey)) {
+            const p = meta.properties[proKey]
+            const child = {
+              label: p.name,
+              key: p.key,
+              children: [],
+            }
+            setMetaChildren(child, p)
+            if (child?.children?.length === 0) {
+              delete child?.children
+            }
+            obj?.children?.push(child)
+          }
+        }
+        if (obj?.children?.length === 0) delete obj?.children
+        return obj
+      } else {
+        if (obj?.children?.length === 0) delete obj?.children
+        return obj
+      }
+    },
+    [props.rank]
+  )
 
   const createResource = useCallback(() => {
     resourceEdit(props.metaFlow, false)
@@ -280,7 +295,7 @@ export const ResourceSelect: FC = observer((props: any) => {
 
   useEffect(() => {
     const length = selectKeys.length
-    if (length > 0) {
+    if (length > 0 && !inputValue) {
       const selectKey = selectKeys[0]
       historyItems.some((item) => {
         if (item.key === selectKey) return setInputValue(item.label)
@@ -289,7 +304,7 @@ export const ResourceSelect: FC = observer((props: any) => {
         }
       })
     }
-  }, [historyItems, selectKeys])
+  }, [historyItems, selectKeys, inputValue])
 
   const findName = useCallback(
     (children: any[], selectKey: string, length: number) => {
@@ -318,6 +333,7 @@ export const ResourceSelect: FC = observer((props: any) => {
           setVariable(!disabled ? !visible : false)
           // if (!visible) openSelect()
         }}
+        overlayClassName="resource-select-list"
         menu={{
           items,
           onClick,
