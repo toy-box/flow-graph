@@ -81,9 +81,9 @@ export const commSchema = {
       maxColumns: 2,
     },
     properties: {
-      sourceTitle: {
+      shorcutName: {
         type: 'string',
-        title: 'sourceTitle',
+        title: 'shorcutName',
         'x-decorator': 'FormItem',
         'x-component': 'PreviewText.Input',
         'x-decorator-props': {
@@ -93,9 +93,9 @@ export const commSchema = {
           feedbackLayout: 'terse',
         },
       },
-      sourceId: {
+      shortcutId: {
         type: 'string',
-        title: 'sourceId',
+        title: 'shortcutId',
         'x-decorator': 'FormItem',
         'x-component': 'PreviewText.Input',
         'x-decorator-props': {
@@ -180,12 +180,12 @@ export const commSchema = {
 
 export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
   const isEdit = !node.make
-  const { name, id, description, title: sourceIdMake } = node
-  const sourceId = sourceIdMake ?? node.sourceId
+  const { name, id, description, title: shortcutIdMake } = node
+  const shortcutId = shortcutIdMake ?? node.shortcutId
   const metaFlowShortcut = node.metaFlow.shortcutData.find(
-    (shortcut) => shortcut.id === sourceId
+    (shortcut) => shortcut.id === shortcutId
   )
-  const sourceTitle = metaFlowShortcut.name
+  const shorcutName = metaFlowShortcut.name
   const shortcutJson = node?.shortcutJson ?? metaFlowShortcut
   const variable = node?.variable ?? shortcutJson.variable
   const title = !isEdit ? (
@@ -225,20 +225,20 @@ export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
         next({
           initialValues: node?.shortcutJson
             ? {
-                sourceId,
-                sourceTitle,
+                shortcutId,
+                shorcutName,
                 name,
                 id,
                 description,
                 ...shortcutJson.variable,
               }
-            : { sourceId, sourceTitle, name: 'shortcut node' },
+            : { shortcutId, shorcutName, name: 'shortcut node' },
         })
       }, 500)
     })
     .forConfirm((payload, next) => {
       console.log('payload', payload.values)
-      const { name, id, description, sourceId, sourceTitle, ...rest } =
+      const { name, id, description, shortcutId, shorcutName, ...rest } =
         payload.values
       setTimeout(() => {
         variable
@@ -247,7 +247,7 @@ export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
             rest[key] = objArrayToKeyValue(rest[key])
           })
         const paramData = {
-          sourceId,
+          shortcutId,
           name,
           id,
           description,

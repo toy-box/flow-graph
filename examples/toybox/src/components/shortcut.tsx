@@ -210,7 +210,6 @@ export const shortcutOnEdit = (
   const isEdit = false
   let formDialog = null
   const onCancel = () => {
-    setActiveKey(false)
     formDialog.close()
   }
   const onSubmit = (form) => {
@@ -252,6 +251,17 @@ export const shortcutOnEdit = (
   formDialog
     .forOpen((payload, next) => {
       next({})
+    })
+    .forConfirm((payload, next) => {
+      setTimeout(() => {
+        next(payload)
+      }, 0)
+    })
+    .forCancel((payload, next) => {
+      setTimeout(() => {
+        setActiveKey(false)
+        next(payload)
+      }, 0)
     })
     .open()
 }
