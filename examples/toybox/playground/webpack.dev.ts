@@ -45,7 +45,18 @@ export default {
   ],
   devServer: {
     host: '127.0.0.1',
-    open: true,
+    hot: true,
     port: PORT,
+    open: true,
+    proxy: {
+      '/web': {
+        target: 'http://processengine-next.xhrm.airclass.top/',
+        secure: false,
+        changeOrigin: true,
+      },
+    },
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
   },
 }

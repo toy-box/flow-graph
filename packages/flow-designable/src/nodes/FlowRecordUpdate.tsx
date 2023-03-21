@@ -275,6 +275,7 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
             'x-component': 'ResourceSelect',
             'x-component-props': {
               sourceMode: 'objectService',
+              rank: 'single',
               metaFlow,
             },
           },

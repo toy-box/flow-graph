@@ -33,6 +33,7 @@ import {
   useTemplates,
   useEvent,
 } from '@toy-box/flow-node'
+import { isArr } from '@designable/shared'
 import {
   assignOnEdit,
   decideOnEdit,
@@ -43,7 +44,7 @@ import {
   loopConnectDialog,
   deleteDialog,
 } from '../../nodes'
-import { useDesigner } from '../../hooks'
+import { useDesigner, useService } from '../../hooks'
 
 export const FlowCanvas: FC<any> = observer(() => {
   const ref: any = useRef()
@@ -52,8 +53,14 @@ export const FlowCanvas: FC<any> = observer(() => {
   const dragFlow = useDragFlow()
   const eventEngine = useEvent()
   const designer = useDesigner()
+  const { getMetaObjectData } = useService()
   const freeFlow = designer.metaFlow as FreeFlow
   const metaflow = designer.metaFlow as MetaFlow
+  useEffect(() => {
+    getMetaObjectData().then(({ data }) => {
+      if (isArr(data)) designer.metaFlow.initRegisters(data)
+    })
+  }, [designer.metaFlow.initRegisters])
   const [edgeChanges, setEdgeChanges] = useState<any>()
   const style = {
     width: '100%',

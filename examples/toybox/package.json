@@ -43,8 +43,8 @@
   "peerDependencies": {
     "@types/react": ">=17.8.0 || >=18.0.0",
     "@types/react-dom": ">=17.8.0 || >=18.0.0",
-    "react": ">=17.8.0 || >=18.0.0",
     "antd": "^4.24.0",
+    "react": ">=17.8.0 || >=18.0.0",
     "react-dom": ">=17.8.0 || >=18.0.0",
     "react-is": ">=17.8.0 || >=18.0.0"
   },
@@ -59,15 +59,17 @@
     "@formily/shared": "^2.2.10",
     "@toy-box/autoflow-core": "2.0.0",
     "@toy-box/designable-core": "^1.0.3-alpha.23",
+    "@toy-box/flow-designable": "2.0.0",
     "@toy-box/flow-graph": "2.0.0",
     "@toy-box/flow-node": "2.0.0",
-    "@toy-box/flow-designable": "2.0.0",
     "@toy-box/meta-components": "^3.0.21",
     "@toy-box/studio-base": "^1.0.3-alpha.23",
     "@toy-box/toybox-ui": "^3.0.21",
     "ahooks": "^3.7.4",
+    "axios": "^1.3.4",
     "classnames": "^2.3.2",
-    "reactflow": "^11.1.1"
+    "reactflow": "^11.1.1",
+    "universal-cookie": "^4.0.4"
   },
   "publishConfig": {
     "access": "public"

@@ -211,40 +211,13 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
         })
       })
       onFieldValueChange('automaticallyType', (field) => {
-        const automaticallyType = field.value
-        const outputReference = field.query('outputReference').get('value')
-        const flag =
-          automaticallyType === true || (!automaticallyType && outputReference)
         form.setFieldState('outputReference', (state) => {
           state.value = undefined
-        })
-        form.setFieldState('queriedFields', (state) => {
-          state.value = []
-          state.display = flag ? 'visible' : 'none'
         })
       })
       onFieldValueChange('address', (field) => {
         form.setFieldState('outputReference', (state) => {
           state.value = undefined
-        })
-        const automaticallyType = field.query('automaticallyType').get('value')
-        const outputReference = field.query('outputReference').get('value')
-        const flag =
-          (automaticallyType === true && outputReference) ||
-          (!automaticallyType && outputReference)
-        form.setFieldState('queriedFields', (state) => {
-          // state.value = []
-          state.display = flag ? 'visible' : 'none'
-        })
-      })
-      onFieldValueChange('outputReference', (field) => {
-        const automaticallyType = field.query('automaticallyType').get('value')
-        const outputReference = field.value
-        const flag =
-          automaticallyType === true || (!automaticallyType && outputReference)
-        form.setFieldState('queriedFields', (state) => {
-          state.value = []
-          state.display = flag ? 'visible' : 'none'
         })
       })
     },
@@ -295,7 +268,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
       const registers = metaFlow.registers
       const registerOps: IFieldOption[] = []
       registers.some((re) => {
-        if (re.id === refObjectId) {
+        if (re.key === refObjectId) {
           for (const key in re.properties) {
             // eslint-disable-next-line no-prototype-builtins
             if (re.properties.hasOwnProperty(key)) {
@@ -321,6 +294,27 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
     },
     [form.values]
   )
+
+  const storeOutputReaction = useCallback((field: any) => {
+    const registerId = field.query('registerId').get('value')
+    field.display = registerId ? 'visible' : 'none'
+    form.setFieldState('automaticallyType', (state) => {
+      state.value = field.value === false
+    })
+  }, [])
+
+  const changeTypeOp = useCallback((field: any) => {
+    const registerId = field.query('registerId').get('value')
+    const storeOutputAutomatically = field
+      .query('storeOutputAutomatically')
+      .get('value')
+    field.display = !storeOutputAutomatically && registerId ? 'visible' : 'none'
+    const flag = field.value
+    form.setFieldState('queriedFields', (state) => {
+      state.display = flag ? 'visible' : 'none'
+      state.value = []
+    })
+  }, [])
 
   const myReaction = useCallback(
     (type: string, field: any) => {
@@ -382,10 +376,8 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
           value: FlowResourceType.VARIABLE_RECORD,
         },
       ]
-      field.componentProps.placeholder = (
-        <TextWidget>
-          flowDesigner.flow.form.placeholder.outputReference
-        </TextWidget>
+      field.componentProps.placeholder = useLocale(
+        'flowDesigner.flow.form.placeholder.outputReference'
       )
     } else {
       field.title = (
@@ -398,10 +390,8 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
           value: FlowResourceType.VARIABLE_ARRAY_RECORD,
         },
       ]
-      field.componentProps.placeholder = (
-        <TextWidget>
-          flowDesigner.flow.form.placeholder.outputReferenceArray
-        </TextWidget>
+      field.componentProps.placeholder = useLocale(
+        'flowDesigner.flow.form.placeholder.outputReferenceArray'
       )
     }
   }, [])
@@ -504,6 +494,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
             'x-component': 'ResourceSelect',
             'x-component-props': {
               sourceMode: 'objectService',
+              rank: 'single',
               metaFlow,
             },
           },
@@ -932,14 +923,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
             'x-decorator-props': {
               gridSpan: 2,
             },
-            'x-reactions': {
-              dependencies: ['registerId'],
-              fulfill: {
-                schema: {
-                  'x-display': "{{$deps != '' ? 'visible' : 'none'}}",
-                },
-              },
-            },
+            'x-reactions': storeOutputReaction,
           },
           automaticallyType: {
             type: 'boolean',
@@ -972,14 +956,15 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
             'x-decorator-props': {
               gridSpan: 2,
             },
-            'x-reactions': {
-              dependencies: ['storeOutputAutomatically'],
-              fulfill: {
-                schema: {
-                  'x-display': "{{$deps == 'false' ? 'visible' : 'none'}}",
-                },
-              },
-            },
+            // 'x-reactions': {
+            //   dependencies: ['storeOutputAutomatically'],
+            //   fulfill: {
+            //     schema: {
+            //       'x-display': "{{$deps == 'false' ? 'visible' : 'none'}}",
+            //     },
+            //   },
+            // },
+            'x-reactions': changeTypeOp,
           },
           address: {
             type: 'boolean',
@@ -1033,10 +1018,8 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
             'x-decorator': 'FormItem',
             'x-component': 'ResourceSelect',
             'x-component-props': {
-              placeholder: (
-                <TextWidget>
-                  flowDesigner.flow.form.placeholder.outputReference
-                </TextWidget>
+              placeholder: useLocale(
+                'flowDesigner.flow.form.placeholder.outputReference'
               ),
               metaFlow,
               flowJsonTypes: [
