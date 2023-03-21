@@ -208,7 +208,6 @@ export class FreeFlow extends AutoFlow {
           default:
             break
         }
-        console.log(this.flowMetaNodeMap, 'this.flowMetaNodeMap')
       },
     })
 
@@ -305,7 +304,6 @@ export class FreeFlow extends AutoFlow {
       this.flowMetaNodeMap[currentNode.id] = currentNode
       currentNode.appendFreeAt(meta)
     })
-    console.log(this.flowMetaNodeMap, 'sssssssssssssssssss')
     // this.flow.addFlowFreeNodes(this.flowNodes)
   }
 

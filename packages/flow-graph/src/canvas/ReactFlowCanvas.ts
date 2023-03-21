@@ -156,7 +156,6 @@ export class ReactFlowCanvas implements ICanvas {
 
   addNode(nodeProps: INode) {
     this.nodes = [...this.nodes, this.makeNode(nodeProps)]
-    console.log(this.nodes, 'this.nodes')
   }
 
   addNodes(nodes: INode[]) {

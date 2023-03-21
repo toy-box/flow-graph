@@ -47,7 +47,6 @@ export const Panel: React.FC<any> = observer(({ metaFlow }) => {
       }
     })
   }, [freeFlow.shortcutData])
-  console.log('panel执行')
   // const init = useCallback(() => {
   //   metaFlow.flow.setFlowNodes(flowData1)
   // }, [])
@@ -94,12 +93,12 @@ export const Panel: React.FC<any> = observer(({ metaFlow }) => {
   }, [])
   const isEditMode = freeFlow.mode === FlowModeEnum.EDIT
   const debug = useCallback(() => {
+    console.log('freeFlow', freeFlow)
     freeFlow.changeMode()
     isEditMode && setLeftVisible(false)
     isEditMode && setLeftActiveKey(null)
   }, [])
   const shortcut = useCallback(() => {
-    console.log('freeFlow', freeFlow)
     shortcutOnEdit(freeFlow, undefined, setScActiveKey)
   }, [])
 
@@ -163,7 +162,7 @@ export const Panel: React.FC<any> = observer(({ metaFlow }) => {
               setActiveKey={setScActiveKey as any}
             >
               <CompositePanel.Item
-                title="创建快捷方式"
+                title="Create Shortcut"
                 icon="Profile"
                 activeKey="shortcut"
                 onClick={shortcut}

@@ -543,7 +543,6 @@ const decideRender = (isNew: boolean, metaFlow: AutoFlow) => {
 }
 
 export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
-  console.log('node', node)
   const dialog = decideRender(node.make, node.metaFlow)
   dialog
     .forOpen((payload, next) => {

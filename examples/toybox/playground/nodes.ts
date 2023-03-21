@@ -50,7 +50,6 @@ export const nodeTemplatesProvider = (
         },
       }
     })
-  console.log('shortcutNode', shortcutNodes)
   return [
     {
       icon: 'flow',

@@ -195,7 +195,6 @@ export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
   )
   commSchema.grid.properties.id['x-disabled'] = isEdit
   const schema = convertMetaToFormily(variable, commSchema)
-  console.log('schema', schema)
   const dialog = FormDialog(
     {
       title: title,
@@ -219,7 +218,6 @@ export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
               shortcutJson.variable[key]
             )
           })
-      console.log('shortcutJson', node)
 
       setTimeout(() => {
         next({
@@ -237,7 +235,6 @@ export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
       }, 500)
     })
     .forConfirm((payload, next) => {
-      console.log('payload', payload.values)
       const { name, id, description, shortcutId, shorcutName, ...rest } =
         payload.values
       setTimeout(() => {
@@ -257,7 +254,6 @@ export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
             variable: rest,
           },
         }
-        console.log('paramData', paramData)
         node.make
           ? node.make(at, { ...paramData, ...additionInfo })
           : node.update(paramData)
