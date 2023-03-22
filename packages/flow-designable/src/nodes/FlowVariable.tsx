@@ -255,7 +255,7 @@ export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
           },
         }
         node.make
-          ? node.make(at, { ...paramData, ...additionInfo })
+          ? node.make(at, { ...additionInfo, ...paramData })
           : node.update(paramData)
         next(payload)
       }, 500)

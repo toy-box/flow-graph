@@ -209,6 +209,9 @@ export const httpCallsSchema = {
                     feedbackLayout: 'terse',
                   },
                   'x-component': 'Select',
+                  'x-component-props': {
+                    // defaultValue: 'GET',
+                  },
                   enum: [
                     {
                       label: (
@@ -280,6 +283,11 @@ export const httpCallsSchema = {
                     feedbackLayout: 'terse',
                   },
                   'x-component': 'Input',
+                  // 'x-component-props': {
+                  //   placeholder: useLocale(
+                  //     'flowDesigner.flow.form.httpCalls.placeholderUrl'
+                  //   ),
+                  // },
                   'x-validator': [
                     {
                       triggerType: 'onBlur',
@@ -503,6 +511,7 @@ export const httpCallsSchema = {
                           'x-component': 'Select',
                           'x-component-props': {
                             gridSpan: 1,
+                            // defaultValue: 'No Auth',
                           },
                           required: true,
                           enum: [
@@ -1121,7 +1130,7 @@ export const httpCallsOnEdit = (node: any, at?: string, additionInfo?: any) => {
     if (isEdit) {
       node.update(paramData)
     } else {
-      node.make(at, { ...paramData, ...additionInfo })
+      node.make(at, { ...additionInfo, ...paramData })
     }
     formDialog.close()
   }
@@ -1131,21 +1140,26 @@ export const httpCallsOnEdit = (node: any, at?: string, additionInfo?: any) => {
     <TextWidget>flowDesigner.flow.form.httpCalls.editTitle</TextWidget>
   )
   httpCallsSchema.properties.grid.properties.id['x-disabled'] = isEdit
-  formDialog = FormDialog(
-    {
-      title: title,
-      footer: null,
-      open: false,
-      width: '90vw',
-    },
-    <HttpCalls
-      value={node}
-      isEdit={isEdit}
-      metaFlow={metaFlow}
-      onCancel={onCancel}
-      onSubmit={onSubmit}
-    />
-  )
+  ;(httpCallsSchema.properties.grid.properties.callArguments.properties.grid.properties.url[
+    'x-component-props'
+  ] = {
+    placeholder: useLocale('flowDesigner.flow.form.httpCalls.placeholderUrl'),
+  }),
+    (formDialog = FormDialog(
+      {
+        title: title,
+        footer: null,
+        open: false,
+        width: '90vw',
+      },
+      <HttpCalls
+        value={node}
+        isEdit={isEdit}
+        metaFlow={metaFlow}
+        onCancel={onCancel}
+        onSubmit={onSubmit}
+      />
+    ))
   formDialog
     .forOpen((payload, next) => {
       next({})

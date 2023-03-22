@@ -78,7 +78,7 @@ export const recordDeleteOnEdit = (
     if (isEdit) {
       node.updata(paramData)
     } else {
-      node.make(at, { ...paramData, ...additionInfo })
+      node.make(at, { ...additionInfo, ...paramData })
     }
     formDialog.close()
   }

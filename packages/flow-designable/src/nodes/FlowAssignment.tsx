@@ -382,7 +382,7 @@ export const assignOnEdit = (node: any, at?: string, additionInfo?: any) => {
       setTimeout(() => {
         console.log('assign payload', payload.values)
         node.make
-          ? node.make(at, { ...payload.values, ...additionInfo })
+          ? node.make(at, { ...additionInfo, ...payload.values })
           : node.update(payload.values)
         next(payload)
       }, 500)

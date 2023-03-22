@@ -313,6 +313,7 @@ const zhCN = {
             body: '请求体',
             cookies: 'Cookies',
             result: '请求响应变量',
+            placeholderUrl: '请输入请求地址',
           },
           variable: {
             addTitle: '新建中间变量',
@@ -659,6 +660,7 @@ const enUS = {
             body: 'Body',
             cookies: 'Cookies',
             result: 'Result',
+            placeholderUrl: 'Enter request URL',
           },
           variable: {
             addTitle: 'New Variable',
