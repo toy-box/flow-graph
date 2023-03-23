@@ -62,6 +62,7 @@ export const FlowCanvas: FC<any> = observer(() => {
     })
   }, [designer.metaFlow.initRegisters])
   const [edgeChanges, setEdgeChanges] = useState<any>()
+  const [confirmFlag, setConfirmFlag] = useState<boolean>(false)
   const style = {
     width: '100%',
     height: '100%',
@@ -295,6 +296,14 @@ export const FlowCanvas: FC<any> = observer(() => {
     }
   }, [designer?.layoutMode])
 
+  useEffect(() => {
+    console.log('edgeChanges', edgeChanges)
+    if (edgeChanges) {
+      freeFlow.updateEdges(edgeChanges)
+    }
+    setEdgeChanges(undefined)
+  }, [confirmFlag])
+
   const dispatchClickPane = React.useCallback(
     (data) => {
       eventEngine.dispatch({
@@ -364,7 +373,10 @@ export const FlowCanvas: FC<any> = observer(() => {
             }, 500)
           })
           .forConfirm((payload, next) => {
-            if (edgeChanges) freeFlow.updateEdges(edgeChanges)
+            const selectNode = dragFlow.canvas?.nodes?.find(
+              (node) => node.selected
+            )
+            if (selectNode) setConfirmFlag(!confirmFlag)
             freeFlow.changeNodes(changes)
             next(payload)
           })
