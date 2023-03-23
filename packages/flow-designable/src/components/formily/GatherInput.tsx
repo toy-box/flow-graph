@@ -39,19 +39,17 @@ export const GatherInput: FC = observer((props: any) => {
   )
 
   const registerOptions = useMemo(() => {
-    if (isArr(props?.metaFlow?.registers)) {
-      const options = props.metaFlow.registers.map(
-        (r: { name: any; id: any }) => {
-          return {
-            label: r.name,
-            value: r.id,
-          }
+    if (isArr(props?.registers)) {
+      const options = props.registers.map((r: { name: any; id: any }) => {
+        return {
+          label: r.name,
+          value: r.id,
         }
-      )
+      })
       return options
     }
     return []
-  }, [props?.metaFlow?.registers])
+  }, [props?.registers])
 
   const filterValueInput = useMemo(() => {
     const time = new Date().getTime()

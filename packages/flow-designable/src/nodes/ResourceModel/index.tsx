@@ -568,7 +568,7 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
               disabled: isEdit,
               sourceMode: 'objectService',
               rank: 'single',
-              metaFlow,
+              registers: metaFlow.registers,
               style: {
                 with: '220px',
               },
@@ -595,7 +595,7 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
             'x-decorator': 'FormItem',
             'x-component': 'GatherInput',
             'x-component-props': {
-              metaFlow,
+              registers: metaFlow.registers,
             },
             'x-decorator-props': {
               gridSpan: 2,
