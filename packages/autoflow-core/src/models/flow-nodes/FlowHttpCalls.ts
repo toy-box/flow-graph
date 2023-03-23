@@ -62,8 +62,9 @@ export class FlowHttpCalls extends FlowMetaNode {
     )
     this.connector =
       flowHttpCalls.connector ?? FlowHttpCalls.DefaultConnectorProps
-    this.faultConnector =
-      flowHttpCalls.faultConnector ?? FlowHttpCalls.DefaultConnectorProps
+    this.faultConnector = flowHttpCalls.faultConnector ?? {
+      targetReference: '',
+    }
     this.callArguments = flowHttpCalls.callArguments
     this.result = flowHttpCalls.result
     this.makeObservable()

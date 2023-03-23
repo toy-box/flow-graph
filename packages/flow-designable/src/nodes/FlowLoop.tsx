@@ -283,7 +283,7 @@ export const loopOnEdit = (node: any, at?: string, additionInfo?: any) => {
     .forConfirm((payload, next) => {
       setTimeout(() => {
         node.make
-          ? node.make(at, { ...payload.values, ...additionInfo })
+          ? node.make(at, { ...additionInfo, ...payload.values })
           : node.update(payload.values)
         next(payload)
       }, 500)

@@ -40,7 +40,7 @@ export const nodeTemplatesProvider = (
         make: (at: string, editInfo: INodeEdit) => {
           const info = createLocationInfo(editInfo)
           const flowData = {
-            id: uid(),
+            // id: uid(),
             name: item.name ?? 'ShortCut',
             type: FlowMetaType.SHORTCUT,
             connector: { targetReference: '' },
@@ -50,7 +50,6 @@ export const nodeTemplatesProvider = (
         },
       }
     })
-  console.log('shortcutNode', shortcutNodes)
   return [
     {
       icon: 'flow',
@@ -62,7 +61,7 @@ export const nodeTemplatesProvider = (
       make: (at: string, editInfo: INodeEdit) => {
         const info = createLocationInfo(editInfo)
         const flowData = {
-          id: uid(),
+          // id: uid(),
           name: 'Assignment',
           type: FlowMetaType.ASSIGNMENT,
           connector: {},
@@ -81,7 +80,7 @@ export const nodeTemplatesProvider = (
       make: (at: string, editInfo: INodeEdit) => {
         const info = createLocationInfo(editInfo)
         const flowData = {
-          id: uid(),
+          // id: uid(),
           name: 'Loop',
           type: FlowMetaType.LOOP,
           defaultConnector: { targetReference: '' },
@@ -100,7 +99,7 @@ export const nodeTemplatesProvider = (
       make: (at: string, editInfo: INodeEdit) => {
         const info = createLocationInfo(editInfo)
         const flowData = {
-          id: uid(),
+          // id: uid(),
           name: 'Decision',
           type: FlowMetaType.DECISION,
           defaultConnector: { targetReference: '' },
@@ -130,7 +129,7 @@ export const nodeTemplatesProvider = (
       make: (at: string, editInfo: INodeEdit) => {
         const info = createLocationInfo(editInfo)
         const flowData = {
-          id: uid(),
+          // id: uid(),
           name: 'Wait',
           type: FlowMetaType.WAIT,
           connector: { targetReference: '' },
@@ -149,7 +148,7 @@ export const nodeTemplatesProvider = (
       make: (at: string, editInfo: INodeEdit) => {
         const info = createLocationInfo(editInfo)
         const flowData = {
-          id: uid(),
+          // id: uid(),
           name: 'Sort',
           type: FlowMetaType.SORT_COLLECTION_PROCESSOR,
           connector: { targetReference: '' },
@@ -168,7 +167,7 @@ export const nodeTemplatesProvider = (
       make: (at: string, editInfo: INodeEdit) => {
         const info = createLocationInfo(editInfo)
         const flowData = {
-          id: uid(),
+          // id: uid(),
           name: 'RecordCreate',
           type: FlowMetaType.RECORD_CREATE,
           connector: { targetReference: '' },
@@ -187,7 +186,7 @@ export const nodeTemplatesProvider = (
       make: (at: string, editInfo: INodeEdit) => {
         const info = createLocationInfo(editInfo)
         const flowData = {
-          id: uid(),
+          // id: uid(),
           name: 'RecordUpdate',
           type: FlowMetaType.RECORD_UPDATE,
           connector: { targetReference: '' },
@@ -206,7 +205,7 @@ export const nodeTemplatesProvider = (
       make: (at: string, editInfo: INodeEdit) => {
         const info = createLocationInfo(editInfo)
         const flowData = {
-          id: uid(),
+          // id: uid(),
           name: 'RecordDelete',
           type: FlowMetaType.RECORD_DELETE,
           connector: { targetReference: '' },
@@ -225,7 +224,7 @@ export const nodeTemplatesProvider = (
       make: (at: string, editInfo: INodeEdit) => {
         const info = createLocationInfo(editInfo)
         const flowData = {
-          id: uid(),
+          // id: uid(),
           name: 'RecordLookup',
           type: FlowMetaType.RECORD_LOOKUP,
           connector: { targetReference: '' },
@@ -244,7 +243,7 @@ export const nodeTemplatesProvider = (
       make: (at: string, editInfo: INodeEdit) => {
         const info = createLocationInfo(editInfo)
         const flowData = {
-          id: uid(),
+          // id: uid(),
           name: 'HttpCalls',
           type: FlowMetaType.HTTP_CALLS,
           connector: { targetReference: '' },
@@ -263,7 +262,7 @@ export const nodeTemplatesProvider = (
       make: (at: string, editInfo: INodeEdit) => {
         const info = createLocationInfo(editInfo)
         const flowData = {
-          id: uid(),
+          // id: uid(),
           name: 'Shortcut',
           type: FlowMetaType.SHORTCUT,
           connector: { targetReference: '' },

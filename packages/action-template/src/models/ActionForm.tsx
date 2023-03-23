@@ -139,7 +139,6 @@ export function isJSON(props) {
 
 export function convertJSONSchemaToFormily(schema) {
   const formilySchema = schema
-  console.log('schema[123]', schema)
   // const { type, properties, items, ...rest } = schema;
   // const formilySchema = {
   //   ...rest,
@@ -328,7 +327,6 @@ function metaToSchema(metaList: IFieldMeta[]) {
           'x-component-props'
         ] ?? {},
       ] = setComponentAction(type)
-      console.log('formWidget ---', type, formWidget[key])
     }
 
     // 处理所有属性的子节点
@@ -359,7 +357,10 @@ function metaToSchema(metaList: IFieldMeta[]) {
   return formWidget
 }
 
-export function convertMetaToFormily(metaList: IFieldMeta[]) {
+export function convertMetaToFormily(
+  metaList: IFieldMeta[],
+  additionSchema?: any
+) {
   const formilySchema = {
     type: 'object',
     properties: {
@@ -369,7 +370,7 @@ export function convertMetaToFormily(metaList: IFieldMeta[]) {
         // 'x-component-props': {
         //   maxColumns: 2,
         // },
-        properties: metaToSchema(metaList),
+        properties: { ...additionSchema, ...metaToSchema(metaList) },
       },
     },
   }
@@ -441,7 +442,6 @@ export function convertHttpFormilyToJson({
       headers: objArrayToKeyValue(headers),
     },
   }
-  console.log('result', result)
   return result
 }
 

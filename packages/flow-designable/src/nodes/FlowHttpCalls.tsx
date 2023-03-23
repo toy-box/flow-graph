@@ -210,45 +210,61 @@ export const httpCallsSchema = {
                   },
                   'x-component': 'Select',
                   'x-component-props': {
-                    style: {
-                      // width: 100,
-                    },
+                    // defaultValue: 'GET',
                   },
                   enum: [
                     {
-                      label: 'GET',
+                      label: (
+                        <TextWidget token="flowDesigner.flow.form.httpCalls.enumGET"></TextWidget>
+                      ),
                       value: 'GET',
                     },
                     {
-                      label: 'POST',
+                      label: (
+                        <TextWidget token="flowDesigner.flow.form.httpCalls.enumPOST"></TextWidget>
+                      ),
                       value: 'POST',
                     },
                     {
-                      label: 'PUT',
+                      label: (
+                        <TextWidget token="flowDesigner.flow.form.httpCalls.enumPUT"></TextWidget>
+                      ),
                       value: 'PUT',
                     },
                     {
-                      label: 'DELETE',
+                      label: (
+                        <TextWidget token="flowDesigner.flow.form.httpCalls.enumDELETE"></TextWidget>
+                      ),
                       value: 'DELETE',
                     },
                     {
-                      label: 'HEAD',
+                      label: (
+                        <TextWidget token="flowDesigner.flow.form.httpCalls.enumHEAD"></TextWidget>
+                      ),
                       value: 'HEAD',
                     },
                     {
-                      label: 'OPTIONS',
+                      label: (
+                        <TextWidget token="flowDesigner.flow.form.httpCalls.enumOPTIONS"></TextWidget>
+                      ),
                       value: 'OPTIONS',
                     },
                     {
-                      label: 'PATCH',
+                      label: (
+                        <TextWidget token="flowDesigner.flow.form.httpCalls.enumPATCH"></TextWidget>
+                      ),
                       value: 'PATCH',
                     },
                     {
-                      label: 'CONNECT',
+                      label: (
+                        <TextWidget token="flowDesigner.flow.form.httpCalls.enumCONNECT"></TextWidget>
+                      ),
                       value: 'CONNECT',
                     },
                     {
-                      label: 'TRACE',
+                      label: (
+                        <TextWidget token="flowDesigner.flow.form.httpCalls.enumTRACE"></TextWidget>
+                      ),
                       value: 'TRACE',
                     },
                   ],
@@ -267,6 +283,11 @@ export const httpCallsSchema = {
                     feedbackLayout: 'terse',
                   },
                   'x-component': 'Input',
+                  // 'x-component-props': {
+                  //   placeholder: useLocale(
+                  //     'flowDesigner.flow.form.httpCalls.placeholderUrl'
+                  //   ),
+                  // },
                   'x-validator': [
                     {
                       triggerType: 'onBlur',
@@ -296,7 +317,10 @@ export const httpCallsSchema = {
                   type: 'void',
                   'x-component': 'FormTab.TabPane',
                   'x-component-props': {
-                    tab: 'Params',
+                    // tab: 'Params',
+                    tab: (
+                      <TextWidget token="flowDesigner.flow.form.httpCalls.params"></TextWidget>
+                    ),
                   },
                   properties: {
                     parameters: {
@@ -315,7 +339,9 @@ export const httpCallsSchema = {
                             'x-component': 'ArrayTable.Column',
                             'x-component-props': {
                               width: 50,
-                              title: 'Sort',
+                              title: (
+                                <TextWidget token="flowDesigner.flow.form.comm.arrayTableSort"></TextWidget>
+                              ),
                               align: 'center',
                             },
                             properties: {
@@ -330,7 +356,9 @@ export const httpCallsSchema = {
                             'x-component': 'ArrayTable.Column',
                             'x-component-props': {
                               width: 100,
-                              title: 'TYPE',
+                              title: (
+                                <TextWidget token="flowDesigner.flow.form.comm.arrayTableType"></TextWidget>
+                              ),
                               align: 'center',
                             },
                             properties: {
@@ -341,11 +369,15 @@ export const httpCallsSchema = {
                                 required: true,
                                 enum: [
                                   {
-                                    label: 'Query',
+                                    label: (
+                                      <TextWidget token="flowDesigner.flow.form.httpCalls.enumQuery"></TextWidget>
+                                    ),
                                     value: 'Query',
                                   },
                                   {
-                                    label: 'Path',
+                                    label: (
+                                      <TextWidget token="flowDesigner.flow.form.httpCalls.enumPath"></TextWidget>
+                                    ),
                                     value: 'Path',
                                   },
                                 ],
@@ -355,7 +387,12 @@ export const httpCallsSchema = {
                           column3: {
                             type: 'void',
                             'x-component': 'ArrayTable.Column',
-                            'x-component-props': { width: 200, title: 'KEY' },
+                            'x-component-props': {
+                              width: 200,
+                              title: (
+                                <TextWidget token="flowDesigner.flow.form.comm.arrayTableKey"></TextWidget>
+                              ),
+                            },
                             required: true,
                             properties: {
                               key: {
@@ -386,7 +423,9 @@ export const httpCallsSchema = {
                             'x-component': 'ArrayTable.Column',
                             'x-component-props': {
                               width: 200,
-                              title: 'VALUE',
+                              title: (
+                                <TextWidget token="flowDesigner.flow.form.comm.arrayTableValue"></TextWidget>
+                              ),
                             },
                             required: true,
                             properties: {
@@ -401,7 +440,9 @@ export const httpCallsSchema = {
                             type: 'void',
                             'x-component': 'ArrayTable.Column',
                             'x-component-props': {
-                              title: 'Operations',
+                              title: (
+                                <TextWidget token="flowDesigner.flow.form.comm.arrayTableOperations"></TextWidget>
+                              ),
                               dataIndex: 'operations',
                               width: 200,
                               fixed: 'right',
@@ -433,7 +474,9 @@ export const httpCallsSchema = {
                         add: {
                           type: 'void',
                           'x-component': 'ArrayTable.Addition',
-                          title: '添加条目',
+                          title: (
+                            <TextWidget token="flowDesigner.flow.form.comm.arrayTableAdd"></TextWidget>
+                          ),
                         },
                       },
                     },
@@ -443,7 +486,9 @@ export const httpCallsSchema = {
                   type: 'void',
                   'x-component': 'FormTab.TabPane',
                   'x-component-props': {
-                    tab: 'Authorization',
+                    tab: (
+                      <TextWidget token="flowDesigner.flow.form.httpCalls.authorization"></TextWidget>
+                    ),
                   },
                   properties: {
                     authorization: {
@@ -466,19 +511,26 @@ export const httpCallsSchema = {
                           'x-component': 'Select',
                           'x-component-props': {
                             gridSpan: 1,
+                            // defaultValue: 'No Auth',
                           },
                           required: true,
                           enum: [
                             {
-                              label: 'No Auth',
+                              label: (
+                                <TextWidget token="flowDesigner.flow.form.httpCalls.enumNoAuth"></TextWidget>
+                              ),
                               value: 'No Auth',
                             },
                             {
-                              label: 'Bearer Token',
+                              label: (
+                                <TextWidget token="flowDesigner.flow.form.httpCalls.enumBearerToken"></TextWidget>
+                              ),
                               value: 'Bearer Token',
                             },
                             {
-                              label: 'Basic Auth',
+                              label: (
+                                <TextWidget token="flowDesigner.flow.form.httpCalls.enumBasicAuth"></TextWidget>
+                              ),
                               value: 'Basic Auth',
                             },
                           ],
@@ -601,7 +653,9 @@ export const httpCallsSchema = {
                   type: 'void',
                   'x-component': 'FormTab.TabPane',
                   'x-component-props': {
-                    tab: 'Headers',
+                    tab: (
+                      <TextWidget token="flowDesigner.flow.form.httpCalls.headers"></TextWidget>
+                    ),
                   },
                   properties: {
                     headers: {
@@ -620,7 +674,9 @@ export const httpCallsSchema = {
                             'x-component': 'ArrayTable.Column',
                             'x-component-props': {
                               width: 50,
-                              title: 'Sort',
+                              title: (
+                                <TextWidget token="flowDesigner.flow.form.comm.arrayTableSort"></TextWidget>
+                              ),
                               align: 'center',
                             },
                             properties: {
@@ -633,7 +689,12 @@ export const httpCallsSchema = {
                           column3: {
                             type: 'void',
                             'x-component': 'ArrayTable.Column',
-                            'x-component-props': { width: 200, title: 'KEY' },
+                            'x-component-props': {
+                              width: 200,
+                              title: (
+                                <TextWidget token="flowDesigner.flow.form.comm.arrayTableKey"></TextWidget>
+                              ),
+                            },
                             required: true,
                             properties: {
                               key: {
@@ -648,7 +709,9 @@ export const httpCallsSchema = {
                             'x-component': 'ArrayTable.Column',
                             'x-component-props': {
                               width: 200,
-                              title: 'VALUE',
+                              title: (
+                                <TextWidget token="flowDesigner.flow.form.comm.arrayTableValue"></TextWidget>
+                              ),
                             },
                             required: true,
                             properties: {
@@ -663,7 +726,9 @@ export const httpCallsSchema = {
                             type: 'void',
                             'x-component': 'ArrayTable.Column',
                             'x-component-props': {
-                              title: 'Operations',
+                              title: (
+                                <TextWidget token="flowDesigner.flow.form.comm.arrayTableOperations"></TextWidget>
+                              ),
                               dataIndex: 'operations',
                               width: 200,
                               fixed: 'right',
@@ -695,7 +760,9 @@ export const httpCallsSchema = {
                         add: {
                           type: 'void',
                           'x-component': 'ArrayTable.Addition',
-                          title: '添加条目',
+                          title: (
+                            <TextWidget token="flowDesigner.flow.form.comm.arrayTableAdd"></TextWidget>
+                          ),
                         },
                       },
                     },
@@ -705,7 +772,9 @@ export const httpCallsSchema = {
                   type: 'void',
                   'x-component': 'FormTab.TabPane',
                   'x-component-props': {
-                    tab: 'Body',
+                    tab: (
+                      <TextWidget token="flowDesigner.flow.form.httpCalls.body"></TextWidget>
+                    ),
                   },
                   properties: {
                     contentType: {
@@ -715,27 +784,39 @@ export const httpCallsSchema = {
                       'x-component': 'Radio.Group',
                       enum: [
                         {
-                          label: 'none',
+                          label: (
+                            <TextWidget token="flowDesigner.flow.form.httpCalls.enumNone"></TextWidget>
+                          ),
                           value: 'none',
                         },
                         {
-                          label: 'form-data',
+                          label: (
+                            <TextWidget token="flowDesigner.flow.form.httpCalls.enumFormData"></TextWidget>
+                          ),
                           value: 'form-data',
                         },
                         {
-                          label: 'x-www-form-urlencoded',
+                          label: (
+                            <TextWidget token="flowDesigner.flow.form.httpCalls.enumFormUrl"></TextWidget>
+                          ),
                           value: 'x-www-form-urlencoded',
                         },
                         {
-                          label: 'raw',
+                          label: (
+                            <TextWidget token="flowDesigner.flow.form.httpCalls.enumRaw"></TextWidget>
+                          ),
                           value: 'raw',
                         },
                         {
-                          label: 'binary',
+                          label: (
+                            <TextWidget token="flowDesigner.flow.form.httpCalls.enumBinary"></TextWidget>
+                          ),
                           value: 'binary',
                         },
                         {
-                          label: 'GraphQL',
+                          label: (
+                            <TextWidget token="flowDesigner.flow.form.httpCalls.enumGraphQL"></TextWidget>
+                          ),
                           value: 'GraphQL',
                         },
                       ],
@@ -787,7 +868,9 @@ export const httpCallsSchema = {
                             'x-component': 'ArrayTable.Column',
                             'x-component-props': {
                               width: 50,
-                              title: 'Sort',
+                              title: (
+                                <TextWidget token="flowDesigner.flow.form.comm.arrayTableSort"></TextWidget>
+                              ),
                               align: 'center',
                             },
                             properties: {
@@ -800,7 +883,12 @@ export const httpCallsSchema = {
                           column3: {
                             type: 'void',
                             'x-component': 'ArrayTable.Column',
-                            'x-component-props': { width: 200, title: 'KEY' },
+                            'x-component-props': {
+                              width: 200,
+                              title: (
+                                <TextWidget token="flowDesigner.flow.form.comm.arrayTableKey"></TextWidget>
+                              ),
+                            },
                             required: true,
                             properties: {
                               key: {
@@ -815,7 +903,9 @@ export const httpCallsSchema = {
                             'x-component': 'ArrayTable.Column',
                             'x-component-props': {
                               width: 200,
-                              title: 'VALUE',
+                              title: (
+                                <TextWidget token="flowDesigner.flow.form.comm.arrayTableValue"></TextWidget>
+                              ),
                             },
                             required: true,
                             properties: {
@@ -830,7 +920,9 @@ export const httpCallsSchema = {
                             type: 'void',
                             'x-component': 'ArrayTable.Column',
                             'x-component-props': {
-                              title: 'Operations',
+                              title: (
+                                <TextWidget token="flowDesigner.flow.form.comm.arrayTableOperations"></TextWidget>
+                              ),
                               dataIndex: 'operations',
                               width: 200,
                               fixed: 'right',
@@ -862,7 +954,9 @@ export const httpCallsSchema = {
                         add: {
                           type: 'void',
                           'x-component': 'ArrayTable.Addition',
-                          title: '添加条目',
+                          title: (
+                            <TextWidget token="flowDesigner.flow.form.comm.arrayTableAdd"></TextWidget>
+                          ),
                         },
                       },
                     },
@@ -872,7 +966,9 @@ export const httpCallsSchema = {
                   type: 'void',
                   'x-component': 'FormTab.TabPane',
                   'x-component-props': {
-                    tab: 'Cookies',
+                    tab: (
+                      <TextWidget token="flowDesigner.flow.form.httpCalls.cookies"></TextWidget>
+                    ),
                   },
                   properties: {
                     cookies: {
@@ -891,7 +987,9 @@ export const httpCallsSchema = {
                             'x-component': 'ArrayTable.Column',
                             'x-component-props': {
                               width: 50,
-                              title: 'Sort',
+                              title: (
+                                <TextWidget token="flowDesigner.flow.form.comm.arrayTableSort"></TextWidget>
+                              ),
                               align: 'center',
                             },
                             properties: {
@@ -906,7 +1004,9 @@ export const httpCallsSchema = {
                             'x-component': 'ArrayTable.Column',
                             'x-component-props': {
                               width: 200,
-                              title: 'NAME',
+                              title: (
+                                <TextWidget token="flowDesigner.flow.form.comm.arrayTableName"></TextWidget>
+                              ),
                             },
                             required: true,
                             properties: {
@@ -938,7 +1038,9 @@ export const httpCallsSchema = {
                             'x-component': 'ArrayTable.Column',
                             'x-component-props': {
                               width: 200,
-                              title: 'VALUE',
+                              title: (
+                                <TextWidget token="flowDesigner.flow.form.comm.arrayTableValue"></TextWidget>
+                              ),
                             },
                             required: true,
                             properties: {
@@ -953,7 +1055,9 @@ export const httpCallsSchema = {
                             type: 'void',
                             'x-component': 'ArrayTable.Column',
                             'x-component-props': {
-                              title: 'Operations',
+                              title: (
+                                <TextWidget token="flowDesigner.flow.form.comm.arrayTableOperations"></TextWidget>
+                              ),
                               dataIndex: 'operations',
                               width: 200,
                               fixed: 'right',
@@ -985,7 +1089,9 @@ export const httpCallsSchema = {
                         add: {
                           type: 'void',
                           'x-component': 'ArrayTable.Addition',
-                          title: '添加条目',
+                          title: (
+                            <TextWidget token="flowDesigner.flow.form.comm.arrayTableAdd"></TextWidget>
+                          ),
                         },
                       },
                     },
@@ -997,7 +1103,9 @@ export const httpCallsSchema = {
         },
         result: {
           type: 'string',
-          title: 'result',
+          title: (
+            <TextWidget token="flowDesigner.flow.form.httpCalls.result"></TextWidget>
+          ),
           'x-decorator': 'FormItem',
           'x-decorator-props': {
             layout: 'vertical',
@@ -1022,7 +1130,7 @@ export const httpCallsOnEdit = (node: any, at?: string, additionInfo?: any) => {
     if (isEdit) {
       node.update(paramData)
     } else {
-      node.make(at, { ...paramData, ...additionInfo })
+      node.make(at, { ...additionInfo, ...paramData })
     }
     formDialog.close()
   }
@@ -1032,21 +1140,26 @@ export const httpCallsOnEdit = (node: any, at?: string, additionInfo?: any) => {
     <TextWidget>flowDesigner.flow.form.httpCalls.editTitle</TextWidget>
   )
   httpCallsSchema.properties.grid.properties.id['x-disabled'] = isEdit
-  formDialog = FormDialog(
-    {
-      title: title,
-      footer: null,
-      open: false,
-      width: '90vw',
-    },
-    <HttpCalls
-      value={node}
-      isEdit={isEdit}
-      metaFlow={metaFlow}
-      onCancel={onCancel}
-      onSubmit={onSubmit}
-    />
-  )
+  ;(httpCallsSchema.properties.grid.properties.callArguments.properties.grid.properties.url[
+    'x-component-props'
+  ] = {
+    placeholder: useLocale('flowDesigner.flow.form.httpCalls.placeholderUrl'),
+  }),
+    (formDialog = FormDialog(
+      {
+        title: title,
+        footer: null,
+        open: false,
+        width: '90vw',
+      },
+      <HttpCalls
+        value={node}
+        isEdit={isEdit}
+        metaFlow={metaFlow}
+        onCancel={onCancel}
+        onSubmit={onSubmit}
+      />
+    ))
   formDialog
     .forOpen((payload, next) => {
       next({})
@@ -1114,6 +1227,8 @@ export const HttpCalls: FC<HttpCallsModelPorps> = ({
       }
     }
   }
+
+  formTab.setActiveKey('tab1')
 
   switch (value.callArguments && value.callArguments.contentType) {
     case IContentTypeEnum.FORM_DATA:

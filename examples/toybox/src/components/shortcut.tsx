@@ -107,7 +107,9 @@ const shortcutSchema = {
                   },
                   key: {
                     type: 'string',
-                    title: 'key',
+                    title: (
+                      <TextWidget token="flowDesigner.flow.form.comm.arrayTableKey"></TextWidget>
+                    ),
                     'x-decorator': 'FormItem',
                     'x-decorator-props': {
                       layout: 'vertical',
@@ -122,33 +124,45 @@ const shortcutSchema = {
                   },
                   type: {
                     type: 'string',
-                    title: 'type',
+                    title: (
+                      <TextWidget token="flowDesigner.flow.form.comm.arrayTableType"></TextWidget>
+                    ),
                     // enum: MetaValueType,
                     enum: [
                       // { label: MetaValueType.INTEGER, value: MetaValueType.INTEGER, disabled: false },
                       {
-                        label: MetaValueType.NUMBER,
+                        label: (
+                          <TextWidget token="flowDesigner.shortcut.enumNumber"></TextWidget>
+                        ),
                         value: MetaValueType.NUMBER,
                         disabled: false,
                       },
                       {
-                        label: MetaValueType.STRING,
+                        label: (
+                          <TextWidget token="flowDesigner.shortcut.enumString"></TextWidget>
+                        ),
                         value: MetaValueType.STRING,
                         disabled: false,
                       },
                       // { label: MetaValueType.TEXT, value: MetaValueType.TEXT, disabled: false },
                       {
-                        label: MetaValueType.DATE,
+                        label: (
+                          <TextWidget token="flowDesigner.shortcut.enumDate"></TextWidget>
+                        ),
                         value: MetaValueType.DATE,
                         disabled: false,
                       },
                       {
-                        label: MetaValueType.DATETIME,
+                        label: (
+                          <TextWidget token="flowDesigner.shortcut.enumDateTime"></TextWidget>
+                        ),
                         value: MetaValueType.DATETIME,
                         disabled: false,
                       },
                       {
-                        label: MetaValueType.BOOLEAN,
+                        label: (
+                          <TextWidget token="flowDesigner.shortcut.enumBoolean"></TextWidget>
+                        ),
                         value: MetaValueType.BOOLEAN,
                         disabled: false,
                       },
@@ -158,7 +172,9 @@ const shortcutSchema = {
                       // { label: MetaValueType.MULTI_OPTION, value: MetaValueType.MULTI_OPTION, disabled: false },
                       // { label: MetaValueType.PERCENT, value: MetaValueType.PERCENT, disabled: false },
                       {
-                        label: MetaValueType.OBJECT,
+                        label: (
+                          <TextWidget token="flowDesigner.shortcut.enumObject"></TextWidget>
+                        ),
                         value: MetaValueType.OBJECT,
                         disabled: false,
                       },
@@ -192,7 +208,9 @@ const shortcutSchema = {
           properties: {
             add: {
               type: 'void',
-              title: 'Add entry',
+              title: (
+                <TextWidget token="flowDesigner.flow.form.comm.arrayTableAdd"></TextWidget>
+              ),
               'x-component': 'ArrayItems.Addition',
             },
           },
@@ -202,23 +220,20 @@ const shortcutSchema = {
   },
 }
 
-export const shortcutOnEdit = (metaflow: AutoFlow, shortcutJson?: any) => {
+export const shortcutOnEdit = (
+  metaflow: AutoFlow,
+  shortcutJson?: any,
+  setActiveKey?: any
+) => {
   const isEdit = false
   let formDialog = null
   const onCancel = () => {
     formDialog.close()
   }
   const onSubmit = (form) => {
-    console.log('onSubmit', form.values)
     const paramData = convertHttpFormilyToJson(form.values)
-    console.log('paramData', paramData)
-
-    if (isEdit) {
-      //   node.update(paramData)
-      // } else {
-      //   node.make(at, { ...paramData, ...additionInfo })
-    }
     metaflow.shortcutPush(paramData)
+    setActiveKey(false)
     formDialog.close()
   }
   const title = !isEdit ? (
@@ -246,6 +261,17 @@ export const shortcutOnEdit = (metaflow: AutoFlow, shortcutJson?: any) => {
   formDialog
     .forOpen((payload, next) => {
       next({})
+    })
+    .forConfirm((payload, next) => {
+      setTimeout(() => {
+        next(payload)
+      }, 0)
+    })
+    .forCancel((payload, next) => {
+      setTimeout(() => {
+        setActiveKey(false)
+        next(payload)
+      }, 0)
     })
     .open()
 }
@@ -314,6 +340,8 @@ export const Shortcut: FC<ShortcutModelPorps> = ({
       })
     },
   })
+
+  formTab.setActiveKey('tab1')
 
   if (value) {
     const flowData = clone(value)

@@ -543,7 +543,6 @@ const decideRender = (isNew: boolean, metaFlow: AutoFlow) => {
 }
 
 export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
-  console.log('node', node)
   const dialog = decideRender(node.make, node.metaFlow)
   dialog
     .forOpen((payload, next) => {
@@ -583,7 +582,7 @@ export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
     .forConfirm((payload, next) => {
       setTimeout(() => {
         node.make
-          ? node.make(at, { ...payload.values, ...additionInfo })
+          ? node.make(at, { ...additionInfo, ...payload.values })
           : node.update(payload.values)
         next(payload)
       }, 500)
