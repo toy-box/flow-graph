@@ -270,7 +270,7 @@ export const waitOnEdit = (node: any, at?: string, additionInfo?: any) => {
     .forConfirm((payload, next) => {
       setTimeout(() => {
         node.make
-          ? node.make(at, { ...additionInfo, ...payload.values })
+          ? node.make(at, { ...payload.values, ...additionInfo })
           : node.update(payload.values)
         next(payload)
       }, 500)
@@ -303,7 +303,7 @@ export const waitOnEdit = (node: any, at?: string, additionInfo?: any) => {
 //     .forConfirm((payload, next) => {
 //       setTimeout(() => {
 //         node.make
-//           ? node.make(at, { ...additionInfo, ...payload.values })
+//           ? node.make(at, { ...payload.values, ...additionInfo })
 //           : node.update(payload.values)
 //         next(payload)
 //       }, 500)

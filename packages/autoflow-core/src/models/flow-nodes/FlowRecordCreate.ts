@@ -27,10 +27,6 @@ export class FlowRecordCreate extends FlowMetaNode {
   storeOutputAutomatically?: boolean
   assignRecordIdToReference?: string
 
-  static DefaultConnectorProps = {
-    targetReference: '',
-  }
-
   static DefaultNodeProps: IMakeFlowNodeProps = {
     width: 60,
     height: 60,
@@ -62,10 +58,12 @@ export class FlowRecordCreate extends FlowMetaNode {
       flowRecordCreate.name,
       flowRecordCreate.description
     )
-    this.connector =
-      flowRecordCreate.connector ?? FlowRecordCreate.DefaultConnectorProps
-    this.faultConnector =
-      flowRecordCreate.faultConnector ?? FlowRecordCreate.DefaultConnectorProps
+    this.connector = flowRecordCreate.connector ?? {
+      targetReference: '',
+    }
+    this.faultConnector = flowRecordCreate.faultConnector ?? {
+      targetReference: '',
+    }
     this.registerId = flowRecordCreate.registerId
     this.inputAssignments = flowRecordCreate.inputAssignments
     this.storeOutputAutomatically = flowRecordCreate.storeOutputAutomatically

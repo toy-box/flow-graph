@@ -34,10 +34,6 @@ export class FlowRecordLookup extends FlowMetaNode {
   getFirstRecordOnly?: boolean
   storeOutputAutomatically?: boolean
 
-  static DefaultConnectorProps = {
-    targetReference: '',
-  }
-
   static DefaultNodeProps: IMakeFlowNodeProps = {
     width: 60,
     height: 60,
@@ -69,10 +65,12 @@ export class FlowRecordLookup extends FlowMetaNode {
       flowRecordLookup.name,
       flowRecordLookup.description
     )
-    this.connector =
-      flowRecordLookup.connector ?? FlowRecordLookup.DefaultConnectorProps
-    this.faultConnector =
-      flowRecordLookup.faultConnector ?? FlowRecordLookup.DefaultConnectorProps
+    this.connector = flowRecordLookup.connector ?? {
+      targetReference: '',
+    }
+    this.faultConnector = flowRecordLookup.faultConnector ?? {
+      targetReference: '',
+    }
     this.registerId = flowRecordLookup.registerId
     this.outputAssignments = flowRecordLookup.outputAssignments
     this.outputReference = flowRecordLookup.outputReference

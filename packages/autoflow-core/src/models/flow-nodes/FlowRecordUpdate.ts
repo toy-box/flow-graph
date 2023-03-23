@@ -27,10 +27,6 @@ export class FlowRecordUpdate extends FlowMetaNode {
   registerId?: string
   inputAssignments?: IInputAssignment[]
 
-  static DefaultConnectorProps = {
-    targetReference: '',
-  }
-
   static DefaultNodeProps: IMakeFlowNodeProps = {
     width: 60,
     height: 60,
@@ -62,10 +58,12 @@ export class FlowRecordUpdate extends FlowMetaNode {
       flowRecordUpdate.name,
       flowRecordUpdate.description
     )
-    this.connector =
-      flowRecordUpdate.connector ?? FlowRecordUpdate.DefaultConnectorProps
-    this.faultConnector =
-      flowRecordUpdate.faultConnector ?? FlowRecordUpdate.DefaultConnectorProps
+    this.connector = flowRecordUpdate.connector ?? {
+      targetReference: '',
+    }
+    this.faultConnector = flowRecordUpdate.faultConnector ?? {
+      targetReference: '',
+    }
     this.registerId = flowRecordUpdate.registerId
     this.inputAssignments = flowRecordUpdate.inputAssignments
     this.criteria = flowRecordUpdate.criteria

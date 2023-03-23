@@ -24,9 +24,10 @@ import { useLocale, TextWidget } from '@toy-box/studio-base'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { clone } from '@designable/shared'
 import { ResourceSelect } from '../components/formily'
-import { AutoFlow } from '../interface'
+import { IResourceMetaflow } from '../interface'
 
 import './flowNodes.less'
+import { setResourceMetaflow } from '../utils'
 
 const ArrowLeftOutlinedIcon = () => {
   return <ArrowLeftOutlined />
@@ -74,6 +75,7 @@ export const recordCreateOnEdit = (
   additionInfo?: any
 ) => {
   const metaFlow = node.metaFlow
+  const resourceMetaflow = setResourceMetaflow(metaFlow)
   const isEdit = !node.make
   let formDialog = null
   const onCancel = () => {
@@ -82,7 +84,7 @@ export const recordCreateOnEdit = (
   const onSubmit = (from) => {
     const paramData = submitParamData(from.values)
     if (isEdit) {
-      node.updata(paramData)
+      node.update(paramData)
     } else {
       node.make(at, { ...additionInfo, ...paramData })
     }
@@ -103,7 +105,7 @@ export const recordCreateOnEdit = (
     <RecordCreate
       value={node}
       isEdit={isEdit}
-      metaFlow={metaFlow}
+      metaFlow={resourceMetaflow}
       onCancel={onCancel}
       onSubmit={onSubmit}
     />
@@ -117,7 +119,7 @@ export const recordCreateOnEdit = (
 
 export interface RecordCreateModelPorps {
   value?: FlowMetaParam
-  metaFlow: AutoFlow
+  metaFlow: IResourceMetaflow
   onCancel: () => void
   onSubmit: (from) => void
   isEdit: boolean

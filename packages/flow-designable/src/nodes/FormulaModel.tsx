@@ -6,7 +6,7 @@ import { IFieldMeta, MetaValueType } from '@toy-box/meta-schema'
 // import { PowerFxFormulaEditor } from '@toy-box/powerfx-editor'
 import { TextWidget } from '@toy-box/studio-base'
 import './index.less'
-import { AutoFlow } from '../interface'
+import { IResourceMetaflow } from '../interface'
 import { useFlowPrefix } from '../hooks'
 
 export interface FormulaModelPorps {
@@ -15,7 +15,7 @@ export interface FormulaModelPorps {
   onChange: (value: string) => void
   inputStyle?: CSSProperties
   valueType: MetaValueType
-  metaFlow: AutoFlow
+  metaFlow: IResourceMetaflow
 }
 
 export interface MetaSchemaObj {

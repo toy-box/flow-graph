@@ -30,7 +30,8 @@ import { isBool } from '@formily/shared'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 
 import './flowNodes.less'
-import { AutoFlow } from '../interface'
+import { IResourceMetaflow } from '../interface'
+import { setResourceMetaflow } from '../utils'
 
 const ArrowRightOutlinedIcon = () => {
   return <ArrowRightOutlined />
@@ -103,6 +104,7 @@ export const recordLookUpOnEdit = (
   additionInfo?: any
 ) => {
   const metaFlow = node.metaFlow
+  const resourceMetaflow = setResourceMetaflow(metaFlow)
   const isEdit = !node.make
   let formDialog = null
   const onCancel = () => {
@@ -111,7 +113,7 @@ export const recordLookUpOnEdit = (
   const onSubmit = (from) => {
     const paramData = submitParamData(from.values)
     if (isEdit) {
-      node.updata(paramData)
+      node.update(paramData)
     } else {
       node.make(at, { ...additionInfo, ...paramData })
     }
@@ -132,7 +134,7 @@ export const recordLookUpOnEdit = (
     <RecordLookUp
       value={node}
       isEdit={isEdit}
-      metaFlow={metaFlow}
+      metaFlow={resourceMetaflow}
       onCancel={onCancel}
       onSubmit={onSubmit}
     />
@@ -146,7 +148,7 @@ export const recordLookUpOnEdit = (
 
 export interface RecordLookUpModelPorps {
   value?: FlowMetaParam
-  metaFlow: AutoFlow
+  metaFlow: IResourceMetaflow
   onCancel: () => void
   onSubmit: (from) => void
   isEdit: boolean

@@ -26,10 +26,6 @@ export class FlowRecordDelete extends FlowMetaNode {
   criteria?: Criteria | null
   registerId?: string
 
-  static DefaultConnectorProps = {
-    targetReference: '',
-  }
-
   static DefaultNodeProps: IMakeFlowNodeProps = {
     width: 60,
     height: 60,
@@ -61,10 +57,12 @@ export class FlowRecordDelete extends FlowMetaNode {
       flowRecordDelete.name,
       flowRecordDelete.description
     )
-    this.connector =
-      flowRecordDelete.connector ?? FlowRecordDelete.DefaultConnectorProps
-    this.faultConnector =
-      flowRecordDelete.faultConnector ?? FlowRecordDelete.DefaultConnectorProps
+    this.connector = flowRecordDelete.connector ?? {
+      targetReference: '',
+    }
+    this.faultConnector = flowRecordDelete.faultConnector ?? {
+      targetReference: '',
+    }
     this.registerId = flowRecordDelete.registerId
     this.criteria = flowRecordDelete.criteria
     this.makeObservable()

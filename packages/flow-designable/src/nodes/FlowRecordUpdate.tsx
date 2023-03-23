@@ -25,7 +25,8 @@ import { clone } from '@designable/shared'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 
 import './flowNodes.less'
-import { AutoFlow } from '../interface'
+import { IResourceMetaflow } from '../interface'
+import { setResourceMetaflow } from '../utils'
 
 const ArrowLeftOutlinedIcon = () => {
   return <ArrowLeftOutlined />
@@ -85,6 +86,7 @@ export const recordUpdateOnEdit = (
   additionInfo?: any
 ) => {
   const metaFlow = node.metaFlow
+  const resourceMetaflow = setResourceMetaflow(metaFlow)
   const isEdit = !node.make
   let formDialog = null
   const onCancel = () => {
@@ -93,7 +95,7 @@ export const recordUpdateOnEdit = (
   const onSubmit = (from) => {
     const paramData = submitParamData(from.values)
     if (isEdit) {
-      node.updata(paramData)
+      node.update(paramData)
     } else {
       node.make(at, { ...additionInfo, ...paramData })
     }
@@ -114,7 +116,7 @@ export const recordUpdateOnEdit = (
     <RecordUpdate
       value={node}
       isEdit={isEdit}
-      metaFlow={metaFlow}
+      metaFlow={resourceMetaflow}
       onCancel={onCancel}
       onSubmit={onSubmit}
     />
@@ -128,7 +130,7 @@ export const recordUpdateOnEdit = (
 
 export interface RecordUpdateModelPorps {
   value?: FlowMetaParam
-  metaFlow: AutoFlow
+  metaFlow: IResourceMetaflow
   onCancel: () => void
   onSubmit: (from) => void
   isEdit: boolean

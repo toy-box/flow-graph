@@ -14,12 +14,13 @@ import {
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
 import * as ICONS from '@ant-design/icons'
+import { TextWidget, useLocale } from '@toy-box/studio-base'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 
 import { BranchArrays } from '../components/formily'
-import { AutoFlow } from '../interface'
+import { IResourceMetaflow } from '../interface'
 import './flowNodes.less'
-import { TextWidget, useLocale } from '@toy-box/studio-base'
+import { setResourceMetaflow } from '../utils'
 
 const descTipHtml = () => {
   return (
@@ -70,7 +71,7 @@ const SchemaField = createSchemaField({
 //   logic: '',
 // })
 
-const decideRender = (isNew: boolean, metaFlow: AutoFlow) => {
+const decideRender = (isNew: boolean, metaFlow: IResourceMetaflow) => {
   const decidePanelSchema = {
     type: 'object',
     properties: {
@@ -543,7 +544,9 @@ const decideRender = (isNew: boolean, metaFlow: AutoFlow) => {
 }
 
 export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
-  const dialog = decideRender(node.make, node.metaFlow)
+  const metaFlow = node.metaFlow
+  const resourceMetaflow = setResourceMetaflow(metaFlow)
+  const dialog = decideRender(node.make, resourceMetaflow)
   dialog
     .forOpen((payload, next) => {
       setTimeout(() => {

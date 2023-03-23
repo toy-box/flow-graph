@@ -21,9 +21,10 @@ import { Button } from 'antd'
 import { useLocale, TextWidget } from '@toy-box/studio-base'
 import { clone } from '@designable/shared'
 import { ResourceSelect, OperationSelect } from '../components/formily'
-import { AutoFlow } from '../interface'
+import { AutoFlow, IResourceMetaflow } from '../interface'
 
 import './flowNodes.less'
+import { setResourceMetaflow } from '../utils'
 
 const SchemaField = createSchemaField({
   components: {
@@ -68,6 +69,7 @@ export const recordDeleteOnEdit = (
   additionInfo?: any
 ) => {
   const metaFlow = node.metaFlow
+  const resourceMetaflow = setResourceMetaflow(metaFlow)
   const isEdit = !node.make
   let formDialog = null
   const onCancel = () => {
@@ -76,7 +78,7 @@ export const recordDeleteOnEdit = (
   const onSubmit = (from) => {
     const paramData = submitParamData(from.values)
     if (isEdit) {
-      node.updata(paramData)
+      node.update(paramData)
     } else {
       node.make(at, { ...additionInfo, ...paramData })
     }
@@ -97,7 +99,7 @@ export const recordDeleteOnEdit = (
     <RecordDelete
       value={node}
       isEdit={isEdit}
-      metaFlow={metaFlow}
+      metaFlow={resourceMetaflow}
       onCancel={onCancel}
       onSubmit={onSubmit}
     />
@@ -111,7 +113,7 @@ export const recordDeleteOnEdit = (
 
 export interface RecordDeleteModelPorps {
   value?: FlowMetaParam
-  metaFlow: AutoFlow
+  metaFlow: IResourceMetaflow
   onCancel: () => void
   onSubmit: (from) => void
   isEdit: boolean

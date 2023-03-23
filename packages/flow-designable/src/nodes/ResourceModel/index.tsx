@@ -19,7 +19,7 @@ import {
   Field,
 } from '@formily/core'
 import { FormProvider, createSchemaField } from '@formily/react'
-import { Button, Modal } from 'antd'
+import { Button } from 'antd'
 import { action } from '@formily/reactive'
 import {
   MetaValueType,
@@ -31,8 +31,8 @@ import { FlowResourceType, IFieldMetaFlow } from '@toy-box/autoflow-core'
 // import { RepeatErrorMessage } from './RepeatErrorMessage'
 import { GatherInput, FormulaEditor } from '../../components/formily'
 // import { FormulaEditor, BraftEditorTemplate } from '../formily'
-import { useLocale, TextWidget } from '@toy-box/studio-base'
-import { AutoFlow } from '../../interface'
+import { TextWidget } from '@toy-box/studio-base'
+import { IResourceMetaflow } from '../../interface'
 
 const SchemaField = createSchemaField({
   components: {
@@ -116,7 +116,7 @@ const labelNames: any = {
   ),
 }
 
-const handleOk = (values, metaflow: AutoFlow, isEdit: boolean) => {
+const handleOk = (values, metaflow: IResourceMetaflow, isEdit: boolean) => {
   const obj: any = values
   const resourceData: any = {
     description: obj.description,
@@ -178,7 +178,7 @@ const handleOk = (values, metaflow: AutoFlow, isEdit: boolean) => {
 }
 
 export const resourceEdit = (
-  metaFlow: AutoFlow,
+  metaFlow: IResourceMetaflow,
   isEdit: boolean,
   value?: IFieldMetaFlow,
   fieldType?: string
@@ -239,7 +239,7 @@ export const resourceEdit = (
 
 interface ResourceCreateProps {
   //   fieldMetas?: ICompareOperation[]
-  metaFlow: AutoFlow
+  metaFlow: IResourceMetaflow
   isEdit?: boolean
   //   title?: string | JSX.Element
   value?: IFieldMetaFlow

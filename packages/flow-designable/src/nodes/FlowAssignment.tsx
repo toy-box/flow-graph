@@ -13,9 +13,10 @@ import { createSchemaField } from '@formily/react'
 import * as ICONS from '@ant-design/icons'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
 import { ResourceSelect, OperationSelect } from '../components/formily'
-import { AutoFlow } from '../interface'
+import { IResourceMetaflow } from '../interface'
 
 import './flowNodes.less'
+import { setResourceMetaflow } from '../utils'
 
 const AssignmentDesc = () => {
   return (
@@ -51,7 +52,7 @@ const SchemaField = createSchemaField({
   },
 })
 
-const assignRender = (isNew: boolean, metaFlow: AutoFlow) => {
+const assignRender = (isNew: boolean, metaFlow: IResourceMetaflow) => {
   const assignPanelSchema = {
     type: 'object',
     properties: {
@@ -361,8 +362,10 @@ const assignRender = (isNew: boolean, metaFlow: AutoFlow) => {
   )
 }
 
-export const assignOnEdit = (node: any, at?: string, additionInfo?: any) => {
-  const dialog = assignRender(node.make, node.metaFlow)
+export const assignOnEdit = (node: any, at: string, additionInfo?: any) => {
+  const metaFlow = node.metaFlow
+  const resourceMetaflow = setResourceMetaflow(metaFlow)
+  const dialog = assignRender(node.make, resourceMetaflow)
   dialog
     .forOpen((payload, next) => {
       setTimeout(() => {
