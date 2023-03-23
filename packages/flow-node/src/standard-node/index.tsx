@@ -63,9 +63,10 @@ export const StandardNode: React.FC<
     const dialog = connectDialog.deleteDialog()
     dialog
       .forOpen((payload, next) => {
-        setTimeout(() => {
-          next({})
-        }, 500)
+        next()
+        // setTimeout(() => {
+        //   next({})
+        // }, 500)
       })
       .forConfirm((payload, next) => {
         if (node) {
