@@ -65,8 +65,7 @@ export class FlowShortcut extends FlowMetaNode {
     )
     this.connector =
       flowShortcut.connector ?? FlowShortcut.DefaultConnectorProps
-    this.faultConnector =
-      flowShortcut.faultConnector ?? FlowShortcut.DefaultConnectorProps
+    this.faultConnector = flowShortcut.faultConnector ?? { targetReference: '' }
     this.variable = flowShortcut.variable
     this.shortcutJson = flowShortcut.shortcutJson
     this.shortcutId = flowShortcut.shortcutId
