@@ -185,6 +185,8 @@ export class FlowLoop extends FlowMetaNode {
   }
 
   appendFreeAt(flowData: FlowMetaParamWithSize) {
+    this.x = flowData.x
+    this.y = flowData.y
     const nodeProps = {
       x: flowData.x,
       y: flowData.y,
@@ -234,6 +236,8 @@ export class FlowLoop extends FlowMetaNode {
       defaultConnector: this.defaultConnector,
       collectionReference: this.collectionReference,
       iterationOrder: this.iterationOrder,
+      x: this.x,
+      y: this.y,
     }
   }
 }

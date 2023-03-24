@@ -172,6 +172,8 @@ export class FlowHttpCalls extends FlowMetaNode {
   }
 
   appendFreeAt(flowData: FlowMetaParamWithSize) {
+    this.x = flowData.x
+    this.y = flowData.y
     const nodeProps = {
       x: flowData.x,
       y: flowData.y,
@@ -221,6 +223,8 @@ export class FlowHttpCalls extends FlowMetaNode {
       faultConnector: this.faultConnector,
       callArguments: this.callArguments,
       result: this.result,
+      x: this.x,
+      y: this.y,
     }
   }
 }

@@ -173,6 +173,8 @@ export class FlowRecordUpdate extends FlowMetaNode {
   }
 
   appendFreeAt(flowData: FlowMetaParamWithSize) {
+    this.x = flowData.x
+    this.y = flowData.y
     const nodeProps = {
       x: flowData.x,
       y: flowData.y,
@@ -224,6 +226,8 @@ export class FlowRecordUpdate extends FlowMetaNode {
       registerId: this.registerId,
       inputAssignments: this.inputAssignments,
       criteria: this.criteria,
+      x: this.x,
+      y: this.y,
     }
   }
 }

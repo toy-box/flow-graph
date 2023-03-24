@@ -170,6 +170,8 @@ export class FlowRecordDelete extends FlowMetaNode {
   }
 
   appendFreeAt(flowData: FlowMetaParamWithSize) {
+    this.x = flowData.x
+    this.y = flowData.y
     const nodeProps = {
       x: flowData.x,
       y: flowData.y,
@@ -219,6 +221,8 @@ export class FlowRecordDelete extends FlowMetaNode {
       faultConnector: this.faultConnector,
       registerId: this.registerId,
       criteria: this.criteria,
+      x: this.x,
+      y: this.y,
     }
   }
 }

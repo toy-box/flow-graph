@@ -77,16 +77,16 @@ export class FreeFlow extends AutoFlow {
         console.log(item, 'onRedo')
         switch (item.type) {
           case OpearteTypeEnum.ADD_NODE:
-            this.flowMetaNodeMap = item.updateMetaNodeMap
+            // this.flowMetaNodeMap = item.updateMetaNodeMap
             item.flowNode.appendFreeAt(item.flowNode)
             break
           case OpearteTypeEnum.UPDATE_NODE:
-            this.flowMetaNodeMap = item.updateMetaNodeMap
+            // this.flowMetaNodeMap = item.updateMetaNodeMap
             const flowNode = item.flowNode.makeFlowNode()
             this.flow.updateFreeNode(flowNode)
             break
           case OpearteTypeEnum.REMOVE_NODE:
-            this.flowMetaNodeMap = item.updateMetaNodeMap
+            // this.flowMetaNodeMap = item.updateMetaNodeMap
             if (item?.edges?.length > 0) {
               const edges: any = item?.edges?.map((edge) => {
                 return {
@@ -112,7 +112,7 @@ export class FreeFlow extends AutoFlow {
             })
             break
           case OpearteTypeEnum.ADD_EDGE:
-            this.flowMetaNodeMap = item.updateMetaNodeMap
+            // this.flowMetaNodeMap = item.updateMetaNodeMap
             item.edges.forEach((edge) => {
               const sourceNode = this.flowMetaNodeMap[edge.source]
               this.flow.canvas.onConnect({
@@ -125,7 +125,7 @@ export class FreeFlow extends AutoFlow {
             })
             break
           case OpearteTypeEnum.REMOVE_EDGE:
-            this.flowMetaNodeMap = item.updateMetaNodeMap
+            // this.flowMetaNodeMap = item.updateMetaNodeMap
             const edges: any = item.edges.map((edge) => {
               return {
                 id: edge.id,

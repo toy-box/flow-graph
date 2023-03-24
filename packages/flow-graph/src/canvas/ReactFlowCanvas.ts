@@ -14,6 +14,7 @@ import {
   NodeChange,
   EdgeProps,
   NodeProps,
+  EdgeRemoveChange,
 } from 'reactflow'
 import { action, batch, define, observable } from '@formily/reactive'
 import { FlowMetaType, FreeFlow, OpearteTypeEnum } from '@toy-box/autoflow-core'
@@ -183,6 +184,19 @@ export class ReactFlowCanvas implements ICanvas {
             [change.id]: {},
             ...rest
           } = flowMetaNodeMap
+          const deleteEdges = this.edges
+            .map(({ id, source, target }) => {
+              if (change.id === source || change.id === target) {
+                const target: EdgeRemoveChange = { id, type: 'remove' }
+                return target
+              }
+            })
+            .filter(Boolean)
+          deleteEdges &&
+            this.onEdgesChange({
+              changes: deleteEdges,
+              freeFlow: nodesChange.freeFlow as FreeFlow,
+            })
           delete this.flowGraph?.nodeMap[change.id]
           if (!nodesChange.isHistory) {
             nodesChange.freeFlow?.history.push({
@@ -258,6 +272,7 @@ export class ReactFlowCanvas implements ICanvas {
   onConnect(connecObj: IConnectionProps) {
     const { target, source } = connecObj.connection
     const nodeMapTargets = this.flowGraph.nodeMap[source].targets
+    if (connecObj.isHistory && nodeMapTargets?.length > 0) return
     let edgeId = connecObj?.edge?.id ?? uid()
     let newEdge: IEdge = { ...connecObj.connection }
     const targetNode = this.nodes.find((node) => node.id === target).data.name

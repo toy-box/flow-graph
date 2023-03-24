@@ -192,6 +192,8 @@ export class FlowRecordLookup extends FlowMetaNode {
   }
 
   appendFreeAt(flowData: FlowMetaParamWithSize) {
+    this.x = flowData.x
+    this.y = flowData.y
     const nodeProps = {
       x: flowData.x,
       y: flowData.y,
@@ -255,6 +257,8 @@ export class FlowRecordLookup extends FlowMetaNode {
       sortField: this.sortField,
       getFirstRecordOnly: this.getFirstRecordOnly,
       storeOutputAutomatically: this.storeOutputAutomatically,
+      x: this.x,
+      y: this.y,
     }
   }
 }

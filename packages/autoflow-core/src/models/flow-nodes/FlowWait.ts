@@ -192,6 +192,8 @@ export class FlowWait extends FlowMetaNode {
   }
 
   appendFreeAt(flowData: FlowMetaParamWithSize) {
+    this.x = flowData.x
+    this.y = flowData.y
     const nodeProps = {
       x: flowData.x,
       y: flowData.y,
@@ -255,6 +257,8 @@ export class FlowWait extends FlowMetaNode {
       defaultConnector: this.defaultConnector,
       defaultConnectorName: this.defaultConnectorName,
       waitEvents: this.waitEvents,
+      x: this.x,
+      y: this.y,
     }
   }
 }

@@ -69,21 +69,21 @@ export const StandardNode: React.FC<
         // }, 500)
       })
       .forConfirm((payload, next) => {
-        if (node) {
-          const deleteEdges = freeFlow.flow.canvas.edges
-            .map(({ id: edgeId, source, target }) => {
-              if (id === source || id === target) {
-                const target: EdgeRemoveChange = { id: edgeId, type: 'remove' }
-                return target
-              }
-            })
-            .filter(Boolean)
-          deleteEdges &&
-            metaFlow.flow.canvas.onEdgesChange({
-              changes: deleteEdges,
-              freeFlow: freeFlow as FreeFlow,
-            })
-        }
+        // if (node) {
+        //   const deleteEdges = freeFlow.flow.canvas.edges
+        //     .map(({ id: edgeId, source, target }) => {
+        //       if (id === source || id === target) {
+        //         const target: EdgeRemoveChange = { id: edgeId, type: 'remove' }
+        //         return target
+        //       }
+        //     })
+        //     .filter(Boolean)
+        //   deleteEdges &&
+        //     metaFlow.flow.canvas.onEdgesChange({
+        //       changes: deleteEdges,
+        //       freeFlow: freeFlow as FreeFlow,
+        //     })
+        // }
         metaFlow.flow.canvas.onNodesChange({
           changes: [{ id, type: 'remove' }],
           freeFlow: freeFlow as FreeFlow,

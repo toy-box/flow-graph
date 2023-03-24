@@ -176,6 +176,8 @@ export class FlowShortcut extends FlowMetaNode {
   }
 
   appendFreeAt(flowData: FlowMetaParamWithSize) {
+    this.x = flowData.x
+    this.y = flowData.y
     const nodeProps = {
       x: flowData.x,
       y: flowData.y,
@@ -227,6 +229,8 @@ export class FlowShortcut extends FlowMetaNode {
       faultConnector: this.faultConnector,
       variable: this.variable,
       shortcutJson: this.shortcutJson,
+      x: this.x,
+      y: this.y,
     }
   }
 }

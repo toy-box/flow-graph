@@ -61,8 +61,6 @@ export const FlowCanvas: FC<any> = observer(() => {
       if (isArr(data)) designer.metaFlow.initRegisters(data)
     })
   }, [designer.metaFlow.initRegisters])
-  const [edgeChanges, setEdgeChanges] = useState<any>()
-  const [confirmFlag, setConfirmFlag] = useState<boolean>(false)
   const style = {
     width: '100%',
     height: '100%',
@@ -296,14 +294,6 @@ export const FlowCanvas: FC<any> = observer(() => {
     }
   }, [designer?.layoutMode])
 
-  useEffect(() => {
-    console.log('edgeChanges', edgeChanges)
-    if (edgeChanges) {
-      freeFlow.updateEdges(edgeChanges)
-    }
-    setEdgeChanges(undefined)
-  }, [confirmFlag])
-
   const dispatchClickPane = React.useCallback(
     (data) => {
       eventEngine.dispatch({
@@ -361,41 +351,32 @@ export const FlowCanvas: FC<any> = observer(() => {
     onPanelEdit(freeFlow.flowMetaNodeMap[node.id], node.id)
   }
 
-  const onNodesChange = useCallback(
-    (changes: NodeChange[]) => {
-      const deleteNodeList = changes.filter((item) => item.type === 'remove')
-      if (deleteNodeList.length) {
-        const dialog = deleteDialog()
-        dialog
-          .forOpen((payload, next) => {
-            setTimeout(() => {
-              next({})
-            }, 500)
-          })
-          .forConfirm((payload, next) => {
-            const selectNode = dragFlow.canvas?.nodes?.find(
-              (node) => node.selected
-            )
-            if (selectNode) setConfirmFlag(!confirmFlag)
-            freeFlow.changeNodes(changes)
-            next(payload)
-          })
-          .forCancel((payload, next) => {
-            next(payload)
-          })
-          .open()
-      } else {
-        freeFlow.changeNodes(changes)
-      }
-    },
-    [edgeChanges]
-  )
+  const onNodesChange = useCallback((changes: NodeChange[]) => {
+    const deleteNodeList = changes.filter((item) => item.type === 'remove')
+    if (deleteNodeList.length) {
+      const dialog = deleteDialog()
+      dialog
+        .forOpen((payload, next) => {
+          setTimeout(() => {
+            next({})
+          }, 500)
+        })
+        .forConfirm((payload, next) => {
+          freeFlow.changeNodes(changes)
+          next(payload)
+        })
+        .forCancel((payload, next) => {
+          next(payload)
+        })
+        .open()
+    } else {
+      freeFlow.changeNodes(changes)
+    }
+  }, [])
 
   const onEdgesChange = (changes: any) => {
     const selectNode = dragFlow.canvas?.nodes?.find((node) => node.selected)
-    if (selectNode) {
-      setEdgeChanges(changes)
-    } else {
+    if (!selectNode) {
       freeFlow.updateEdges(changes)
     }
   }

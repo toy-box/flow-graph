@@ -149,6 +149,8 @@ export class FlowSortCollectionProcessor extends FlowMetaNode {
   }
 
   appendFreeAt(flowData: FlowMetaParamWithSize) {
+    this.x = flowData.x
+    this.y = flowData.y
     const nodeProps = {
       x: flowData.x,
       y: flowData.y,
@@ -191,6 +193,8 @@ export class FlowSortCollectionProcessor extends FlowMetaNode {
       collectionReference: this.collectionReference,
       limit: this.limit,
       sortOptions: this.sortOptions,
+      x: this.x,
+      y: this.y,
     }
   }
 }
