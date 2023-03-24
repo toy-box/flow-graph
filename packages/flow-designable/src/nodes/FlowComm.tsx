@@ -21,7 +21,7 @@ import { recordDeleteOnEdit } from './FlowRecordDelete'
 import { recordUpdateOnEdit } from './FlowRecordUpdate'
 import { recordLookUpOnEdit } from './FlowRecordLookUp'
 import { httpCallsOnEdit } from './FlowHttpCalls'
-import { variableOnEdit } from './FlowVariable'
+import { variableOnEdit } from './FlowShortcut'
 
 export * from './addNode'
 export * from './connectDialog'

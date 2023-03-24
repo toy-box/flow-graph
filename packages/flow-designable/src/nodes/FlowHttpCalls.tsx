@@ -202,6 +202,7 @@ export const httpCallsSchema = {
                     <TextWidget token="flowDesigner.flow.form.httpCalls.methodTitle"></TextWidget>
                   ),
                   required: true,
+                  default: 'GET',
                   'x-decorator': 'FormItem',
                   'x-decorator-props': {
                     layout: 'vertical',
@@ -209,9 +210,6 @@ export const httpCallsSchema = {
                     feedbackLayout: 'terse',
                   },
                   'x-component': 'Select',
-                  'x-component-props': {
-                    // defaultValue: 'GET',
-                  },
                   enum: [
                     {
                       label: (
@@ -502,6 +500,7 @@ export const httpCallsSchema = {
                         type: {
                           type: 'string',
                           title: 'Type',
+                          default: 'No Auth',
                           'x-decorator': 'FormItem',
                           'x-decorator-props': {
                             layout: 'vertical',
@@ -511,7 +510,6 @@ export const httpCallsSchema = {
                           'x-component': 'Select',
                           'x-component-props': {
                             gridSpan: 1,
-                            // defaultValue: 'No Auth',
                           },
                           required: true,
                           enum: [
@@ -782,6 +780,7 @@ export const httpCallsSchema = {
                       'x-decorator': 'FormItem',
                       required: true,
                       'x-component': 'Radio.Group',
+                      default: 'none',
                       enum: [
                         {
                           label: (
