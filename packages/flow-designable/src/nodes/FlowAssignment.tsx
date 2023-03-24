@@ -13,10 +13,11 @@ import { createSchemaField } from '@formily/react'
 import * as ICONS from '@ant-design/icons'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
 import { ResourceSelect, OperationSelect } from '../components/formily'
-import { IResourceMetaflow } from '../interface'
+import { apiReg, IResourceMetaflow } from '../interface'
 
 import './flowNodes.less'
 import { setResourceMetaflow } from '../utils'
+import { RepeatErrorMessage } from './RepeatErrorMessage'
 
 const AssignmentDesc = () => {
   return (
@@ -52,7 +53,11 @@ const SchemaField = createSchemaField({
   },
 })
 
-const assignRender = (isNew: boolean, metaFlow: IResourceMetaflow) => {
+const assignRender = (
+  isNew: boolean,
+  metaFlow: IResourceMetaflow,
+  node: any
+) => {
   const assignPanelSchema = {
     type: 'object',
     properties: {
@@ -102,23 +107,23 @@ const assignRender = (isNew: boolean, metaFlow: IResourceMetaflow) => {
                   </TextWidget>
                 ),
               },
-              //   {
-              //     triggerType: 'onBlur',
-              //     validator: (value: string) => {
-              //       if (!value) return null
-              //       const message = new RepeatErrorMessage(
-              //         flowGraph,
-              //         value,
-              //         assignmentData,
-              //         apiReg
-              //       )
-              //       return (
-              //         message.errorMessage && (
-              //           <TextWidget>{message.errorMessage}</TextWidget>
-              //         )
-              //       )
-              //     },
-              //   },
+              {
+                triggerType: 'onBlur',
+                validator: (value: string) => {
+                  if (!value) return null
+                  const message = new RepeatErrorMessage(
+                    metaFlow,
+                    value,
+                    node,
+                    apiReg
+                  )
+                  return (
+                    message.errorMessage && (
+                      <TextWidget>{message.errorMessage}</TextWidget>
+                    )
+                  )
+                },
+              },
             ],
             'x-decorator': 'FormItem',
             'x-decorator-props': {
@@ -365,7 +370,7 @@ const assignRender = (isNew: boolean, metaFlow: IResourceMetaflow) => {
 export const assignOnEdit = (node: any, at: string, additionInfo?: any) => {
   const metaFlow = node.metaFlow
   const resourceMetaflow = setResourceMetaflow(metaFlow)
-  const dialog = assignRender(node.make, resourceMetaflow)
+  const dialog = assignRender(node.make, resourceMetaflow, node)
   dialog
     .forOpen((payload, next) => {
       setTimeout(() => {

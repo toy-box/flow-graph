@@ -30,8 +30,9 @@ import { isBool } from '@formily/shared'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 
 import './flowNodes.less'
-import { IResourceMetaflow } from '../interface'
+import { apiReg, IResourceMetaflow } from '../interface'
 import { setResourceMetaflow } from '../utils'
+import { RepeatErrorMessage } from './RepeatErrorMessage'
 
 const ArrowRightOutlinedIcon = () => {
   return <ArrowRightOutlined />
@@ -446,19 +447,19 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
               },
               {
                 triggerType: 'onBlur',
-                validator: (value: string) => {
-                  if (!value) return null
-                  // const message = new RepeatErrorMessage(
-                  //   flowGraph,
-                  //   value,
-                  //   metaFlowData,
-                  //   apiReg
-                  // )
-                  // return (
-                  //   message.errorMessage && (
-                  //     <TextWidget>{message.errorMessage}</TextWidget>
-                  //   )
-                  // )
+                validator: (val: string) => {
+                  if (!val) return null
+                  const message = new RepeatErrorMessage(
+                    metaFlow,
+                    val,
+                    value,
+                    apiReg
+                  )
+                  return (
+                    message.errorMessage && (
+                      <TextWidget>{message.errorMessage}</TextWidget>
+                    )
+                  )
                 },
               },
             ],

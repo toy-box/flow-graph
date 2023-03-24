@@ -14,6 +14,9 @@ import {
 import { createSchemaField } from '@formily/react'
 import * as ICONS from '@ant-design/icons'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
+import { RepeatErrorMessage } from './RepeatErrorMessage'
+import { apiReg, IResourceMetaflow } from '../interface'
+import { setResourceMetaflow } from '../utils'
 
 const LoopDescrip = () => {
   return (
@@ -42,7 +45,7 @@ const SchemaField = createSchemaField({
   },
 })
 
-const loopRender = (isNew: boolean) => {
+const loopRender = (isNew: boolean, metaFlow: IResourceMetaflow, node: any) => {
   const loopPanelSchema = {
     type: 'object',
     properties: {
@@ -100,6 +103,23 @@ const loopRender = (isNew: boolean) => {
                     flowDesigner.flow.form.validator.value
                   </TextWidget>
                 ),
+              },
+              {
+                triggerType: 'onBlur',
+                validator: (value: string) => {
+                  if (!value) return null
+                  const message = new RepeatErrorMessage(
+                    metaFlow,
+                    value,
+                    node,
+                    apiReg
+                  )
+                  return (
+                    message.errorMessage && (
+                      <TextWidget>{message.errorMessage}</TextWidget>
+                    )
+                  )
+                },
               },
             ],
             'x-decorator': 'FormItem',
@@ -266,7 +286,9 @@ const loopRender = (isNew: boolean) => {
 }
 
 export const loopOnEdit = (node: any, at?: string, additionInfo?: any) => {
-  const dialog = loopRender(node.make)
+  const metaFlow = node.metaFlow
+  const resourceMetaflow = setResourceMetaflow(metaFlow)
+  const dialog = loopRender(node.make, resourceMetaflow, node)
   dialog
     .forOpen((payload, next) => {
       setTimeout(() => {

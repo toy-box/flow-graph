@@ -24,10 +24,11 @@ import { useLocale, TextWidget } from '@toy-box/studio-base'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { clone } from '@designable/shared'
 import { ResourceSelect } from '../components/formily'
-import { IResourceMetaflow } from '../interface'
+import { apiReg, IResourceMetaflow } from '../interface'
 
 import './flowNodes.less'
 import { setResourceMetaflow } from '../utils'
+import { RepeatErrorMessage } from './RepeatErrorMessage'
 
 const ArrowLeftOutlinedIcon = () => {
   return <ArrowLeftOutlined />
@@ -215,19 +216,19 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
               },
               {
                 triggerType: 'onBlur',
-                validator: (value: string) => {
-                  if (!value) return null
-                  // const message = new RepeatErrorMessage(
-                  //   flowGraph,
-                  //   value,
-                  //   metaFlowData,
-                  //   apiReg
-                  // )
-                  // return (
-                  //   message.errorMessage && (
-                  //     <TextWidget>{message.errorMessage}</TextWidget>
-                  //   )
-                  // )
+                validator: (val: string) => {
+                  if (!val) return null
+                  const message = new RepeatErrorMessage(
+                    metaFlow,
+                    val,
+                    value,
+                    apiReg
+                  )
+                  return (
+                    message.errorMessage && (
+                      <TextWidget>{message.errorMessage}</TextWidget>
+                    )
+                  )
                 },
               },
             ],

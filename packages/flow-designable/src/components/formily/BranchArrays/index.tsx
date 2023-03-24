@@ -14,6 +14,7 @@ import {
   ReactFC,
 } from '@formily/react'
 import { IFlowMetaDecisionRule } from '@toy-box/autoflow-core'
+import { uid } from '@designable/shared'
 import './index.less'
 import { ArrayBase } from './ArrayBase'
 
@@ -161,7 +162,7 @@ export const BranchArrays: FC = observer((props: any) => {
   const addRule = useCallback(() => {
     const ruleItem: IFlowMetaDecisionRule = {
       name: '',
-      id: '',
+      id: uid(),
       criteria: {
         conditions: [{}],
         logic: '$and',

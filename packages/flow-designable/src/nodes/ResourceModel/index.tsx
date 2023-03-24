@@ -32,7 +32,8 @@ import { FlowResourceType, IFieldMetaFlow } from '@toy-box/autoflow-core'
 import { GatherInput, FormulaEditor } from '../../components/formily'
 // import { FormulaEditor, BraftEditorTemplate } from '../formily'
 import { TextWidget } from '@toy-box/studio-base'
-import { IResourceMetaflow } from '../../interface'
+import { apiReg, IResourceMetaflow } from '../../interface'
+import { RepeatErrorMessage } from '../RepeatErrorMessage'
 
 const SchemaField = createSchemaField({
   components: {
@@ -443,23 +444,23 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
                   </TextWidget>
                 ),
               },
-              //   {
-              //     triggerType: 'onBlur',
-              //     validator: (val: string) => {
-              //       if (!val) return null
-              //       const message = new RepeatErrorMessage(
-              //         flowGraph,
-              //         val,
-              //         value,
-              //         apiReg
-              //       )
-              //       return (
-              //         message.errorMessage && (
-              //           <TextWidget>{message.errorMessage}</TextWidget>
-              //         )
-              //       )
-              //     },
-              //   },
+              {
+                triggerType: 'onBlur',
+                validator: (val: string) => {
+                  if (!val) return null
+                  const message = new RepeatErrorMessage(
+                    metaFlow,
+                    val,
+                    value,
+                    apiReg
+                  )
+                  return (
+                    message.errorMessage && (
+                      <TextWidget>{message.errorMessage}</TextWidget>
+                    )
+                  )
+                },
+              },
             ],
             'x-decorator': 'FormItem',
             'x-component': 'Input',
