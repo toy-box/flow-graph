@@ -229,6 +229,7 @@ export class FlowShortcut extends FlowMetaNode {
       faultConnector: this.faultConnector,
       variable: this.variable,
       shortcutJson: this.shortcutJson,
+      shortcutId: this.shortcutId,
       x: this.x,
       y: this.y,
     }
