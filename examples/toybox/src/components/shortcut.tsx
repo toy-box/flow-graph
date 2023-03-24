@@ -49,177 +49,6 @@ import {
   AssignmentDesc,
 } from '@toy-box/flow-designable'
 
-const shortcutSchema = {
-  type: 'object',
-  properties: {
-    grid: {
-      type: 'void',
-      'x-component': 'FormGrid',
-      'x-component-props': {
-        maxColumns: 6,
-      },
-      properties: {
-        grid: {
-          ...httpCallsSchema.properties.grid,
-          'x-decorator': 'FormItem',
-          'x-decorator-props': {
-            gridSpan: 4,
-            feedbackLayout: 'terse',
-          },
-        },
-        // divider:{
-        //   type: 'void',
-        //   'x-component': ()=><Divider type="vertical" />,
-        //   'x-decorator': 'FormItem',
-        //   'x-decorator-props': {
-        //     gridSpan: 1,
-        //     feedbackLayout: 'terse',
-        //   },
-        // },
-        variable: {
-          type: 'array',
-          title: (
-            <TextWidget token="flowDesigner.shortcut.variable"></TextWidget>
-          ),
-          required: true,
-          'x-decorator': 'FormItem',
-          'x-decorator-props': {
-            gridSpan: 2,
-            layout: 'vertical',
-            colon: false,
-            style: {
-              borderLeft: '1px solid rgba(0, 0, 0, 0.06)',
-              paddingLeft: '8px',
-            },
-          },
-          'x-component': 'ArrayItems',
-          items: {
-            type: 'object',
-            properties: {
-              space: {
-                type: 'void',
-                'x-component': 'Space',
-                properties: {
-                  sort: {
-                    type: 'void',
-                    'x-decorator': 'FormItem',
-                    'x-component': 'ArrayItems.SortHandle',
-                  },
-                  key: {
-                    type: 'string',
-                    title: (
-                      <TextWidget token="flowDesigner.flow.form.comm.arrayTableKey"></TextWidget>
-                    ),
-                    'x-decorator': 'FormItem',
-                    'x-decorator-props': {
-                      layout: 'vertical',
-                      colon: false,
-                    },
-                    'x-component': 'Input',
-                    // 'x-component-props': {
-                    //   style: {
-                    //     width: 160,
-                    //   },
-                    // },
-                  },
-                  type: {
-                    type: 'string',
-                    title: (
-                      <TextWidget token="flowDesigner.flow.form.comm.arrayTableType"></TextWidget>
-                    ),
-                    // enum: MetaValueType,
-                    enum: [
-                      // { label: MetaValueType.INTEGER, value: MetaValueType.INTEGER, disabled: false },
-                      {
-                        label: (
-                          <TextWidget token="flowDesigner.shortcut.enumNumber"></TextWidget>
-                        ),
-                        value: MetaValueType.NUMBER,
-                        disabled: false,
-                      },
-                      {
-                        label: (
-                          <TextWidget token="flowDesigner.shortcut.enumString"></TextWidget>
-                        ),
-                        value: MetaValueType.STRING,
-                        disabled: false,
-                      },
-                      // { label: MetaValueType.TEXT, value: MetaValueType.TEXT, disabled: false },
-                      {
-                        label: (
-                          <TextWidget token="flowDesigner.shortcut.enumDate"></TextWidget>
-                        ),
-                        value: MetaValueType.DATE,
-                        disabled: false,
-                      },
-                      {
-                        label: (
-                          <TextWidget token="flowDesigner.shortcut.enumDateTime"></TextWidget>
-                        ),
-                        value: MetaValueType.DATETIME,
-                        disabled: false,
-                      },
-                      {
-                        label: (
-                          <TextWidget token="flowDesigner.shortcut.enumBoolean"></TextWidget>
-                        ),
-                        value: MetaValueType.BOOLEAN,
-                        disabled: false,
-                      },
-                      // { label: MetaValueType.ARRAY, value: MetaValueType.ARRAY, disabled: false },
-                      // { label: MetaValueType.OBJECT_ID, value: MetaValueType.OBJECT_ID, disabled: false },
-                      // { label: MetaValueType.SINGLE_OPTION, value: MetaValueType.SINGLE_OPTION, disabled: false },
-                      // { label: MetaValueType.MULTI_OPTION, value: MetaValueType.MULTI_OPTION, disabled: false },
-                      // { label: MetaValueType.PERCENT, value: MetaValueType.PERCENT, disabled: false },
-                      {
-                        label: (
-                          <TextWidget token="flowDesigner.shortcut.enumObject"></TextWidget>
-                        ),
-                        value: MetaValueType.OBJECT,
-                        disabled: false,
-                      },
-                      // { label: MetaValueType.RATE, value: MetaValueType.RATE, disabled: false },
-                      // { label: MetaValueType.TIMESTAMP, value: MetaValueType.TIMESTAMP, disabled: false },
-                      // { label: MetaValueType.BIG_INT, value: MetaValueType.BIG_INT, disabled: false },
-                      // { label: MetaValueType.BIG_NUMBER, value: MetaValueType.BIG_NUMBER, disabled: false },
-                      // { label: MetaValueType.ADDRESS, value: MetaValueType.ADDRESS, disabled: false },
-                    ],
-                    'x-decorator': 'FormItem',
-                    'x-decorator-props': {
-                      layout: 'vertical',
-                      colon: false,
-                    },
-                    'x-component': 'Select',
-                    'x-component-props': {
-                      style: {
-                        width: 160,
-                      },
-                    },
-                  },
-                  remove: {
-                    type: 'void',
-                    'x-decorator': 'FormItem',
-                    'x-component': 'ArrayItems.Remove',
-                  },
-                },
-              },
-            },
-          },
-          properties: {
-            add: {
-              type: 'void',
-              title: (
-                <TextWidget token="flowDesigner.flow.form.comm.arrayTableAdd"></TextWidget>
-              ),
-              'x-component': 'ArrayItems.Addition',
-            },
-          },
-        },
-      },
-    },
-  },
-}
-
 export const shortcutOnEdit = (
   metaflow: AutoFlow,
   shortcutJson?: any,
@@ -242,6 +71,176 @@ export const shortcutOnEdit = (
     <TextWidget>flowDesigner.shortcut.editTitle</TextWidget>
   )
   // httpCallsSchema.properties.grid.properties.id['x-disabled'] = isEdit
+  const shortcutSchema = {
+    type: 'object',
+    properties: {
+      grid: {
+        type: 'void',
+        'x-component': 'FormGrid',
+        'x-component-props': {
+          maxColumns: 6,
+        },
+        properties: {
+          grid: {
+            ...httpCallsSchema(isEdit).properties.grid,
+            'x-decorator': 'FormItem',
+            'x-decorator-props': {
+              gridSpan: 4,
+              feedbackLayout: 'terse',
+            },
+          },
+          // divider:{
+          //   type: 'void',
+          //   'x-component': ()=><Divider type="vertical" />,
+          //   'x-decorator': 'FormItem',
+          //   'x-decorator-props': {
+          //     gridSpan: 1,
+          //     feedbackLayout: 'terse',
+          //   },
+          // },
+          variable: {
+            type: 'array',
+            title: (
+              <TextWidget token="flowDesigner.shortcut.variable"></TextWidget>
+            ),
+            required: true,
+            'x-decorator': 'FormItem',
+            'x-decorator-props': {
+              gridSpan: 2,
+              layout: 'vertical',
+              colon: false,
+              style: {
+                borderLeft: '1px solid rgba(0, 0, 0, 0.06)',
+                paddingLeft: '8px',
+              },
+            },
+            'x-component': 'ArrayItems',
+            items: {
+              type: 'object',
+              properties: {
+                space: {
+                  type: 'void',
+                  'x-component': 'Space',
+                  properties: {
+                    sort: {
+                      type: 'void',
+                      'x-decorator': 'FormItem',
+                      'x-component': 'ArrayItems.SortHandle',
+                    },
+                    key: {
+                      type: 'string',
+                      title: (
+                        <TextWidget token="flowDesigner.flow.form.comm.arrayTableKey"></TextWidget>
+                      ),
+                      'x-decorator': 'FormItem',
+                      'x-decorator-props': {
+                        layout: 'vertical',
+                        colon: false,
+                      },
+                      'x-component': 'Input',
+                      // 'x-component-props': {
+                      //   style: {
+                      //     width: 160,
+                      //   },
+                      // },
+                    },
+                    type: {
+                      type: 'string',
+                      title: (
+                        <TextWidget token="flowDesigner.flow.form.comm.arrayTableType"></TextWidget>
+                      ),
+                      // enum: MetaValueType,
+                      enum: [
+                        // { label: MetaValueType.INTEGER, value: MetaValueType.INTEGER, disabled: false },
+                        {
+                          label: (
+                            <TextWidget token="flowDesigner.shortcut.enumNumber"></TextWidget>
+                          ),
+                          value: MetaValueType.NUMBER,
+                          disabled: false,
+                        },
+                        {
+                          label: (
+                            <TextWidget token="flowDesigner.shortcut.enumString"></TextWidget>
+                          ),
+                          value: MetaValueType.STRING,
+                          disabled: false,
+                        },
+                        // { label: MetaValueType.TEXT, value: MetaValueType.TEXT, disabled: false },
+                        {
+                          label: (
+                            <TextWidget token="flowDesigner.shortcut.enumDate"></TextWidget>
+                          ),
+                          value: MetaValueType.DATE,
+                          disabled: false,
+                        },
+                        {
+                          label: (
+                            <TextWidget token="flowDesigner.shortcut.enumDateTime"></TextWidget>
+                          ),
+                          value: MetaValueType.DATETIME,
+                          disabled: false,
+                        },
+                        {
+                          label: (
+                            <TextWidget token="flowDesigner.shortcut.enumBoolean"></TextWidget>
+                          ),
+                          value: MetaValueType.BOOLEAN,
+                          disabled: false,
+                        },
+                        // { label: MetaValueType.ARRAY, value: MetaValueType.ARRAY, disabled: false },
+                        // { label: MetaValueType.OBJECT_ID, value: MetaValueType.OBJECT_ID, disabled: false },
+                        // { label: MetaValueType.SINGLE_OPTION, value: MetaValueType.SINGLE_OPTION, disabled: false },
+                        // { label: MetaValueType.MULTI_OPTION, value: MetaValueType.MULTI_OPTION, disabled: false },
+                        // { label: MetaValueType.PERCENT, value: MetaValueType.PERCENT, disabled: false },
+                        {
+                          label: (
+                            <TextWidget token="flowDesigner.shortcut.enumObject"></TextWidget>
+                          ),
+                          value: MetaValueType.OBJECT,
+                          disabled: false,
+                        },
+                        // { label: MetaValueType.RATE, value: MetaValueType.RATE, disabled: false },
+                        // { label: MetaValueType.TIMESTAMP, value: MetaValueType.TIMESTAMP, disabled: false },
+                        // { label: MetaValueType.BIG_INT, value: MetaValueType.BIG_INT, disabled: false },
+                        // { label: MetaValueType.BIG_NUMBER, value: MetaValueType.BIG_NUMBER, disabled: false },
+                        // { label: MetaValueType.ADDRESS, value: MetaValueType.ADDRESS, disabled: false },
+                      ],
+                      'x-decorator': 'FormItem',
+                      'x-decorator-props': {
+                        layout: 'vertical',
+                        colon: false,
+                      },
+                      'x-component': 'Select',
+                      'x-component-props': {
+                        style: {
+                          width: 160,
+                        },
+                      },
+                    },
+                    remove: {
+                      type: 'void',
+                      'x-decorator': 'FormItem',
+                      'x-component': 'ArrayItems.Remove',
+                    },
+                  },
+                },
+              },
+            },
+            properties: {
+              add: {
+                type: 'void',
+                title: (
+                  <TextWidget token="flowDesigner.flow.form.comm.arrayTableAdd"></TextWidget>
+                ),
+                'x-component': 'ArrayItems.Addition',
+              },
+            },
+          },
+        },
+      },
+    },
+  }
 
   formDialog = FormDialog(
     {
@@ -256,6 +255,7 @@ export const shortcutOnEdit = (
       isEdit={isEdit}
       onCancel={onCancel}
       onSubmit={onSubmit}
+      schema={shortcutSchema}
     />
   )
   formDialog
@@ -305,6 +305,7 @@ export interface ShortcutModelPorps {
   onCancel: () => void
   onSubmit: (from) => void
   isEdit: boolean
+  schema: any
 }
 
 export const Shortcut: FC<ShortcutModelPorps> = ({
@@ -313,6 +314,7 @@ export const Shortcut: FC<ShortcutModelPorps> = ({
   onSubmit,
   // metaFlow,
   isEdit,
+  schema,
 }) => {
   const form = createForm({
     effects: () => {
@@ -387,7 +389,7 @@ export const Shortcut: FC<ShortcutModelPorps> = ({
     <>
       <FormLayout layout="vertical" colon={false}>
         <FormProvider form={form}>
-          <SchemaField schema={shortcutSchema} scope={{ formTab }} />
+          <SchemaField schema={schema} scope={{ formTab }} />
           <FormDialog.Footer>
             <Button onClick={() => onCancel()}>
               <TextWidget>flowDesigner.comm.cancel</TextWidget>
