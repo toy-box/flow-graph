@@ -21,10 +21,11 @@ import { Button } from 'antd'
 import { useLocale, TextWidget } from '@toy-box/studio-base'
 import { clone } from '@designable/shared'
 import { ResourceSelect, OperationSelect } from '../components/formily'
-import { AutoFlow, IResourceMetaflow } from '../interface'
+import { apiReg, AutoFlow, IResourceMetaflow } from '../interface'
 
 import './flowNodes.less'
 import { setResourceMetaflow } from '../utils'
+import { RepeatErrorMessage } from './RepeatErrorMessage'
 
 const SchemaField = createSchemaField({
   components: {
@@ -186,19 +187,19 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
               },
               {
                 triggerType: 'onBlur',
-                validator: (value: string) => {
-                  if (!value) return null
-                  // const message = new RepeatErrorMessage(
-                  //   flowGraph,
-                  //   value,
-                  //   metaFlowData,
-                  //   apiReg
-                  // )
-                  // return (
-                  //   message.errorMessage && (
-                  //     <TextWidget>{message.errorMessage}</TextWidget>
-                  //   )
-                  // )
+                validator: (val: string) => {
+                  if (!val) return null
+                  const message = new RepeatErrorMessage(
+                    metaFlow,
+                    val,
+                    value,
+                    apiReg
+                  )
+                  return (
+                    message.errorMessage && (
+                      <TextWidget>{message.errorMessage}</TextWidget>
+                    )
+                  )
                 },
               },
             ],

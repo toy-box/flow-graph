@@ -18,9 +18,10 @@ import { TextWidget, useLocale } from '@toy-box/studio-base'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 
 import { BranchArrays } from '../components/formily'
-import { IResourceMetaflow } from '../interface'
+import { apiReg, IResourceMetaflow } from '../interface'
 import './flowNodes.less'
 import { setResourceMetaflow } from '../utils'
+import { RepeatErrorMessage } from './RepeatErrorMessage'
 
 const descTipHtml = () => {
   return (
@@ -71,7 +72,7 @@ const SchemaField = createSchemaField({
 //   logic: '',
 // })
 
-const decideRender = (isNew: boolean, metaFlow: IResourceMetaflow) => {
+const decideRender = (isNew: boolean, metaFlow: IResourceMetaflow, node) => {
   const decidePanelSchema = {
     type: 'object',
     properties: {
@@ -120,6 +121,23 @@ const decideRender = (isNew: boolean, metaFlow: IResourceMetaflow) => {
                     flowDesigner.flow.form.validator.required
                   </TextWidget>
                 ),
+              },
+              {
+                triggerType: 'onBlur',
+                validator: (value: string) => {
+                  if (!value) return null
+                  const message = new RepeatErrorMessage(
+                    metaFlow,
+                    value,
+                    node,
+                    apiReg
+                  )
+                  return (
+                    message.errorMessage && (
+                      <TextWidget>{message.errorMessage}</TextWidget>
+                    )
+                  )
+                },
               },
             ],
             'x-decorator': 'FormItem',
@@ -238,30 +256,45 @@ const decideRender = (isNew: boolean, metaFlow: IResourceMetaflow) => {
                       ],
                       'x-component': 'Input',
                     },
-                    id: {
+                    description: {
                       type: 'string',
+                      title: (
+                        <TextWidget>
+                          flowDesigner.flow.form.comm.description
+                        </TextWidget>
+                      ),
                       'x-decorator': 'FormItem',
+                      'x-component': 'Input.TextArea',
                       'x-decorator-props': {
                         layout: 'vertical',
                         colon: false,
+                        gridSpan: 2,
                       },
-                      title: (
-                        <TextWidget token="flowDesigner.flow.form.decision.ruleId"></TextWidget>
-                      ),
-                      required: true,
-                      'x-validator': [
-                        {
-                          triggerType: 'onBlur',
-                          required: false,
-                          message: (
-                            <TextWidget>
-                              flowDesigner.flow.form.validator.required
-                            </TextWidget>
-                          ),
-                        },
-                      ],
-                      'x-component': 'Input',
                     },
+                    // id: {
+                    //   type: 'string',
+                    //   'x-decorator': 'FormItem',
+                    //   'x-decorator-props': {
+                    //     layout: 'vertical',
+                    //     colon: false,
+                    //   },
+                    //   title: (
+                    //     <TextWidget token="flowDesigner.flow.form.decision.ruleId"></TextWidget>
+                    //   ),
+                    //   required: true,
+                    //   'x-validator': [
+                    //     {
+                    //       triggerType: 'onBlur',
+                    //       required: false,
+                    //       message: (
+                    //         <TextWidget>
+                    //           flowDesigner.flow.form.validator.required
+                    //         </TextWidget>
+                    //       ),
+                    //     },
+                    //   ],
+                    //   'x-component': 'Input',
+                    // },
                   },
                 },
                 criteria: {
@@ -546,7 +579,7 @@ const decideRender = (isNew: boolean, metaFlow: IResourceMetaflow) => {
 export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
   const metaFlow = node.metaFlow
   const resourceMetaflow = setResourceMetaflow(metaFlow)
-  const dialog = decideRender(node.make, resourceMetaflow)
+  const dialog = decideRender(node.make, resourceMetaflow, node)
   dialog
     .forOpen((payload, next) => {
       setTimeout(() => {

@@ -25,8 +25,9 @@ import { clone } from '@designable/shared'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 
 import './flowNodes.less'
-import { IResourceMetaflow } from '../interface'
+import { apiReg, IResourceMetaflow } from '../interface'
 import { setResourceMetaflow } from '../utils'
+import { RepeatErrorMessage } from './RepeatErrorMessage'
 
 const ArrowLeftOutlinedIcon = () => {
   return <ArrowLeftOutlined />
@@ -227,19 +228,19 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
               },
               {
                 triggerType: 'onBlur',
-                validator: (value: string) => {
-                  if (!value) return null
-                  // const message = new RepeatErrorMessage(
-                  //   flowGraph,
-                  //   value,
-                  //   metaFlowData,
-                  //   apiReg
-                  // )
-                  // return (
-                  //   message.errorMessage && (
-                  //     <TextWidget>{message.errorMessage}</TextWidget>
-                  //   )
-                  // )
+                validator: (val: string) => {
+                  if (!val) return null
+                  const message = new RepeatErrorMessage(
+                    metaFlow,
+                    val,
+                    value,
+                    apiReg
+                  )
+                  return (
+                    message.errorMessage && (
+                      <TextWidget>{message.errorMessage}</TextWidget>
+                    )
+                  )
                 },
               },
             ],

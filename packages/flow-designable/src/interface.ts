@@ -30,3 +30,5 @@ export interface IResourceMetaflow {
   createResource: (type: FlowResourceType, resource: IFieldMetaResource) => void
   editResource: (type: FlowResourceType, resource: IFieldMetaResource) => void
 }
+
+export const apiReg = /^\w+$/
