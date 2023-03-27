@@ -51,7 +51,7 @@ export const FaultEdge = ({
     targetPosition: targetPos,
   })
 
-  const faultEdgeStyle = {
+  const faultEdgeStyle: any = {
     stroke: 'rgb(194, 57, 52)',
     strokeWidth: 2,
     strokeDasharray: [8, 12],

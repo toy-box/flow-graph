@@ -511,7 +511,7 @@ export class FreeFlow extends AutoFlow {
       case FlowMetaType.HTTP_CALLS:
         return new FlowHttpCalls(node, this)
       case FlowMetaType.SHORTCUT:
-        return new FlowShortcut(node, this)
+        return new FlowShortcut(node as any, this)
       default:
         return
     }

@@ -18,7 +18,13 @@ export const App: React.FC = () => {
   const metaFlow = new MetaFlow(FlowModeEnum.EDIT)
   const freeFlow = new FreeFlow(FlowModeEnum.EDIT)
   useEffect(() => {
-    metaFlow.setMetaFlow({}, 'AUTO_START_UP')
+    metaFlow.setMetaFlow(
+      {
+        resources: undefined,
+        nodes: undefined,
+      },
+      'AUTO_START_UP'
+    )
     freeFlow.setMetaFlow(freeMeta, 'AUTO_START_UP')
   }, [metaFlow, freeFlow])
   return (
@@ -35,7 +41,6 @@ export const App: React.FC = () => {
         }}
       >
         <Panel metaFlow={freeFlow} />
-        {/* <LeftPanel /> */}
       </FlowContext.Provider>
     </div>
   )

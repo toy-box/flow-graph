@@ -18,11 +18,6 @@ import {
   Form,
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
-import * as ICONS from '@ant-design/icons'
-import { createForm } from '@formily/core'
-import { observable } from '@formily/reactive'
-import { FlowMetaNode, FlowMetaType, FreeFlow } from '@toy-box/autoflow-core'
-import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
 import {
@@ -32,7 +27,6 @@ import {
   objArrayToKeyValue,
 } from '@toy-box/action-template'
 import { MetaValueType } from '@toy-box/meta-schema'
-import { AssignmentDesc } from '@toy-box/flow-designable'
 
 import { BranchArrays } from '../components/formily'
 
@@ -47,6 +41,22 @@ const descTipHtml = () => {
       <p className="tip">
         <TextWidget>flowDesigner.flow.form.decision.tip</TextWidget>
       </p>
+    </div>
+  )
+}
+
+const AssignmentDesc = () => {
+  return (
+    <div>
+      <Divider className="margin-0" />
+      <div className="assignment-content">
+        <div className="assignment-title connectDialog-title">
+          <TextWidget>flowDesigner.flow.form.assignment.setVariable</TextWidget>
+        </div>
+        <div className="assignment-desc">
+          <TextWidget>flowDesigner.flow.form.assignment.tip</TextWidget>
+        </div>
+      </div>
     </div>
   )
 }

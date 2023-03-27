@@ -174,7 +174,7 @@ export class MetaFlow extends AutoFlow {
   addNode(flowData: FlowMetaParam) {
     const flowNode = this.makeFlowNode(flowData)
     this.flowMetaNodeMap[flowNode.id] = flowNode
-    this.flow.addGraphNode({ ...flowData, data: flowNode })
+    this.flow.addGraphNode({ ...flowData, data: flowNode } as any)
   }
 
   mountNodes(flowDatas: FlowMetaParam[], parent?: FlowMetaNode) {

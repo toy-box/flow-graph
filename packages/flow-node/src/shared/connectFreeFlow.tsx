@@ -37,7 +37,7 @@ export function connectFreeFlow({
     const connectionNodeId = useStore(connectionNodeIdSelector)
     const isTarget = connectionNodeId && connectionNodeId !== props.id
     const freeFlow = useFreeFlow()
-    const getFlowMetaNode = freeFlow.flowMetaNodeMap[props.id]
+    const getFlowMetaNode: any = freeFlow.flowMetaNodeMap[props.id]
     if (getFlowMetaNode) {
       getFlowMetaNode.connectDialog = connectDialog
     }

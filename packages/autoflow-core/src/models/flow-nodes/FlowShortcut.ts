@@ -21,6 +21,20 @@ import { MetaFlow } from '../MetaFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 import { IFieldMeta } from '@toy-box/meta-schema'
 
+export interface ShortcuParam {
+  id: string
+  name: string
+  type: FlowMetaType
+  description?: string
+  connector?: TargetReference
+  faultConnector?: TargetReference
+  variable: IFieldMeta[]
+  shortcutJson: any
+  shortcutId: string
+  x: number
+  y: number
+}
+
 export class FlowShortcut extends FlowMetaNode {
   connector?: TargetReference
   faultConnector?: TargetReference
@@ -56,7 +70,7 @@ export class FlowShortcut extends FlowMetaNode {
     return 'Fault'
   }
 
-  constructor(flowShortcut: any, metaFlow: MetaFlow | FreeFlow) {
+  constructor(flowShortcut: ShortcuParam, metaFlow: MetaFlow | FreeFlow) {
     super(
       metaFlow,
       flowShortcut.id,
@@ -189,7 +203,7 @@ export class FlowShortcut extends FlowMetaNode {
     this.metaFlow.flow.addFlowFreeNode(flowNode)
   }
 
-  update(payload: FlowMetaUpdate): void {
+  update(payload: ShortcuParam): void {
     this.name = payload.name
     this.description = payload.description
     this.variable = payload.variable
@@ -218,7 +232,7 @@ export class FlowShortcut extends FlowMetaNode {
     this.toJson()
   }
 
-  toJson(): FlowMetaParam {
+  toJson(): ShortcuParam {
     return {
       id: this.id,
       name: this.name,

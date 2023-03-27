@@ -102,7 +102,7 @@ export const FlowCanvas: FC<any> = observer(() => {
             handles: [{ type: 'target', position: Position.Top }],
           }),
           ExtendNode: connectReactFlow({
-            component: ExtendNode,
+            component: ExtendNode as any,
             handles: [
               { type: 'target', position: Position.Top },
               { type: 'source', position: Position.Bottom },
@@ -178,7 +178,7 @@ export const FlowCanvas: FC<any> = observer(() => {
             handles: [{ type: 'target', position: Position.Top }],
           }),
           ExtendNode: connectFreeFlow({
-            component: ExtendNode,
+            component: ExtendNode as any,
             handles: [
               { type: 'target', position: Position.Top },
               { type: 'source', position: Position.Bottom },

@@ -11,6 +11,9 @@ export interface IFlowEndProps {
 }
 
 export class FlowEnd extends FlowMetaNode {
+  deleteConnector(targetId: string, label?: any): void {
+    throw new Error('Method not implemented.')
+  }
   static DefaultNodeProps = {
     width: 60,
     height: 60,

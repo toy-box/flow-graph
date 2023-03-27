@@ -1,6 +1,6 @@
 {
   "name": "@toy-box/flow-graph",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "license": "MIT",
   "description": "",
   "main": "lib/index.js",
@@ -22,6 +22,7 @@
   },
   "peerDependencies": {
     "@formily/reactive": "^2.2.10",
+    "@toy-box/autoflow-core": "^2.0.0",
     "@types/react": ">=17.8.0 || >=18.0.0",
     "@types/react-dom": ">=17.8.0 || >=18.0.0",
     "react": ">=17.8.0 || >=18.0.0",

@@ -22,6 +22,7 @@ export interface IStandardNodeProps {
   id: string
   className?: string
   style?: React.CSSProperties
+  type: string
 }
 
 export const StandardNode: React.FC<

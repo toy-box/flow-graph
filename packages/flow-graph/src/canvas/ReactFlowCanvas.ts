@@ -17,8 +17,8 @@ import {
   EdgeRemoveChange,
 } from 'reactflow'
 import { action, batch, define, observable } from '@formily/reactive'
-import { FlowMetaType, FreeFlow, OpearteTypeEnum } from '@toy-box/autoflow-core'
-import { FormDialog, FormItem, FormLayout } from '@formily/antd'
+// import { FlowMetaType, FreeFlow, OpearteTypeEnum } from '@toy-box/autoflow-core'
+// import { FlowMetaType } from '@toy-box/autoflow-core'
 import { uid } from '@toy-box/toybox-shared'
 import { ICanvas } from './Canvas'
 import {
@@ -48,6 +48,30 @@ declare type templateSource = {
   nextNodes?: string[]
 }
 
+export enum OpearteTypeEnum {
+  ADD_NODE = 'addNode',
+  REMOVE_NODE = 'removeNode',
+  UPDATE_NODE = 'updateNode',
+  ADD_EDGE = 'addEdge',
+  REMOVE_EDGE = 'removeEdge',
+}
+
+export enum FlowMetaType {
+  START = 'start',
+  ASSIGNMENT = 'assignments',
+  DECISION = 'decisions',
+  WAIT = 'waits',
+  LOOP = 'loops',
+  SORT_COLLECTION_PROCESSOR = 'sortCollectionProcessor',
+  RECORD_CREATE = 'recordCreates',
+  RECORD_UPDATE = 'recordUpdates',
+  RECORD_DELETE = 'recordDeletes',
+  RECORD_LOOKUP = 'recordLookups',
+  HTTP_CALLS = 'httpCalls',
+  SHORTCUT = 'shortcut',
+  END = 'end',
+}
+
 export interface IConnectionWithLabel extends Connection {
   label?: string
   type?: string
@@ -56,13 +80,15 @@ export interface IConnectionWithLabel extends Connection {
 
 export interface INodesChangeProps {
   changes: NodeChange[]
-  freeFlow?: FreeFlow
+  // freeFlow?: FreeFlow
+  freeFlow?: any
   isHistory?: boolean
 }
 
 export interface IEdgesChangeProps {
   changes: EdgeChange[]
-  freeFlow?: FreeFlow
+  // freeFlow?: FreeFlow
+  freeFlow?: any
   isHistory?: boolean
   edges?: Edge[]
 }
@@ -70,7 +96,8 @@ export interface IEdgesChangeProps {
 export interface IConnectionProps {
   connection: Connection
   sourceFlowmetaNode: any
-  freeFlow?: FreeFlow
+  freeFlow?: any
+  // freeFlow?: FreeFlow
   isHistory?: boolean
   edge?: IEdge
 }
@@ -198,7 +225,8 @@ export class ReactFlowCanvas implements ICanvas {
             this.onEdgesChange({
               changes: deleteEdges,
               isHistory: true,
-              freeFlow: nodesChange.freeFlow as FreeFlow,
+              // freeFlow: nodesChange.freeFlow as FreeFlow,
+              freeFlow: nodesChange.freeFlow as any,
             })
           delete this.flowGraph?.nodeMap[change.id]
           if (!nodesChange.isHistory) {
