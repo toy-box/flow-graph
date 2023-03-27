@@ -63,8 +63,8 @@ export class History {
     //   this.history = this.history.slice(0, this.current + 1)
     // }
     // const currentIdx = this.current
-    // this.current = this.history.length
-    this.current += 1
+    this.current = this.history.length
+    // this.current += 1
     const timestamp = new Date().getTime()
     // const isRemoveNode = this.context?.edges.some((edge) => {
     //   const sourceData = context.updateMetaNodeMap[edge.source]
@@ -91,8 +91,8 @@ export class History {
         ...context,
         timestamp,
       }
-      // this.history.push(this.context)
-      this.history.splice(this.current, 0, this.context)
+      this.history.push(this.context)
+      // this.history.splice(this.current, 0, this.context)
     }
     console.log(this.history, 'this.history')
     // const overSizeCount = this.history.length - this.maxSize

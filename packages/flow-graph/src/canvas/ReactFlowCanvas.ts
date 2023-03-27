@@ -184,10 +184,12 @@ export class ReactFlowCanvas implements ICanvas {
             [change.id]: {},
             ...rest
           } = flowMetaNodeMap
+          const removeEdges = []
           const deleteEdges = this.edges
-            .map(({ id, source, target }) => {
-              if (change.id === source || change.id === target) {
-                const target: EdgeRemoveChange = { id, type: 'remove' }
+            .map((edge) => {
+              if (change.id === edge.source || change.id === edge.target) {
+                const target: EdgeRemoveChange = { id: edge.id, type: 'remove' }
+                removeEdges.push(edge)
                 return target
               }
             })
@@ -195,6 +197,7 @@ export class ReactFlowCanvas implements ICanvas {
           deleteEdges &&
             this.onEdgesChange({
               changes: deleteEdges,
+              isHistory: true,
               freeFlow: nodesChange.freeFlow as FreeFlow,
             })
           delete this.flowGraph?.nodeMap[change.id]
@@ -204,6 +207,8 @@ export class ReactFlowCanvas implements ICanvas {
               flowNode: flowMetaNodeMap[change.id],
               updateMetaNodeMap: { ...rest },
               flowMetaNodeMap: { ...flowMetaNodeMap },
+              edges: removeEdges,
+              nodeId: change?.id,
             })
           }
           nodesChange.freeFlow.getFlowMetaNodeMap(rest)
