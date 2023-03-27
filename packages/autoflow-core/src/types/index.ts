@@ -141,6 +141,9 @@ export interface FlowMetaParam {
   waitEvents?: IwaitEvent[]
   result?: string
   callArguments?: ICallArgumentData
+  shortcutJson?: IShortcutJsonData
+  shortcutId?: string
+
   variable?: Record<string, VariableParam>
   x?: number
   y?: number
@@ -358,6 +361,10 @@ export interface ICallArgumentData {
   headers?: Record<string, string | number>
   body?: Record<string, string | number>
   authorization?: IAuthorizationParams
+}
+
+export interface IShortcutJsonData extends ICallArgumentData {
+  variable: Record<string, any>
 }
 
 export interface ICallArgumentFormily

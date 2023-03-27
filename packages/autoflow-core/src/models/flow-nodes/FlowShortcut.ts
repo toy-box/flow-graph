@@ -15,6 +15,7 @@ import {
   FlowMetaType,
   FlowMetaParamWithSize,
   VariableParam,
+  IShortcutJsonData,
 } from '../../types'
 import { FreeFlow } from '../FreeFlow'
 import { MetaFlow } from '../MetaFlow'
@@ -24,8 +25,8 @@ import { IFieldMeta } from '@toy-box/meta-schema'
 export class FlowShortcut extends FlowMetaNode {
   connector?: TargetReference
   faultConnector?: TargetReference
-  variable: IFieldMeta[]
-  shortcutJson: any
+  variable: Record<string, VariableParam>
+  shortcutJson: IShortcutJsonData
   shortcutId: string
 
   static DefaultConnectorProps = {
