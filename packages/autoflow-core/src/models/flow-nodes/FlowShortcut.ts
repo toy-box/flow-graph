@@ -53,7 +53,7 @@ export class FlowShortcut extends FlowMetaNode {
   }
 
   get type() {
-    return FlowMetaType.SHORTCUT
+    return FlowMetaType.SHORT_CUT
   }
 
   get nextNodes() {

@@ -67,20 +67,23 @@ export const FlowCanvas: FC<any> = observer(() => {
     // marginLeft:
     //   metaflow.layoutMode === LayoutModeEnum.FREE_LAYOUT ? '300px' : 0,
   }
-  const graphEle: any = document.querySelector('#flow-canvas')
-  window.onload = function () {
-    graphEle.ondragover = (e) => {
-      e.dataTransfer.dropEffect = 'link'
-      e.preventDefault()
+
+  useEffect(() => {
+    const graphEle: any = document.querySelector('#flow-canvas')
+    window.onload = function () {
+      graphEle.ondragover = (e) => {
+        e.dataTransfer.dropEffect = 'link'
+        e.preventDefault()
+      }
+      graphEle.ondrop = (e) => {
+        e.stopPropagation()
+        const { clientX, clientY } = e
+        const { key, id } = JSON.parse(e.dataTransfer.getData('text/plain'))
+        console.log('nodeType', key, id)
+        addFreeLayoutNode(clientX, clientY, key, nodes, id)
+      }
     }
-    graphEle.ondrop = (e) => {
-      e.stopPropagation()
-      const { clientX, clientY } = e
-      const { key, id } = JSON.parse(e.dataTransfer.getData('text/plain'))
-      console.log('nodeType', key, id)
-      addFreeLayoutNode(clientX, clientY, key, nodes, id)
-    }
-  }
+  }, [designer?.layoutMode])
   useEffect(() => {
     if (designer?.layoutMode === LayoutModeEnum.AUTO_LAYOUT) {
       flow.flowGraph.centerX = ref?.current?.offsetWidth / 2

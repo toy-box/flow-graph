@@ -36,7 +36,7 @@ export class FlowHttpCalls extends FlowMetaNode {
   }
 
   get type() {
-    return FlowMetaType.HTTP_CALLS
+    return FlowMetaType.HTTP_CALL
   }
 
   get nextNodes() {

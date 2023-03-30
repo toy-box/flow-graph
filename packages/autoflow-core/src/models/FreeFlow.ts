@@ -482,7 +482,7 @@ export class FreeFlow extends AutoFlow {
         return new FlowStart(
           {
             id: node.id ?? uid(),
-            name: 'start',
+            name: node.name ?? 'start',
             flowType: this.flowType,
             connector: node.connector,
           },
@@ -508,9 +508,9 @@ export class FreeFlow extends AutoFlow {
         return new FlowRecordLookup(node, this)
       case FlowMetaType.RECORD_DELETE:
         return new FlowRecordDelete(node, this)
-      case FlowMetaType.HTTP_CALLS:
+      case FlowMetaType.HTTP_CALL:
         return new FlowHttpCalls(node, this)
-      case FlowMetaType.SHORTCUT:
+      case FlowMetaType.SHORT_CUT:
         return new FlowShortcut(node as any, this)
       default:
         return

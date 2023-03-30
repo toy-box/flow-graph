@@ -34,14 +34,14 @@ export const nodeTemplatesProvider = (
         icon: 'flow',
         title: 'ShortCut',
         description: item.description ?? 'ShortCut',
-        type: FlowMetaType.SHORTCUT,
+        type: FlowMetaType.SHORT_CUT,
         group: 'flow',
         metaFlow: freeFlow,
         make: (at: string, editInfo: INodeEdit) => {
           const info = createLocationInfo(editInfo)
           const flowData = {
             name: item.name ?? 'ShortCut',
-            type: FlowMetaType.SHORTCUT,
+            type: FlowMetaType.SHORT_CUT,
             connector: { targetReference: '' },
             ...Object.assign(editInfo, info),
           }
@@ -227,14 +227,14 @@ export const nodeTemplatesProvider = (
       icon: 'flow',
       title: 'HttpCalls',
       description: 'HttpCalls',
-      type: FlowMetaType.HTTP_CALLS,
+      type: FlowMetaType.HTTP_CALL,
       group: 'flow',
       metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
         const info = createLocationInfo(editInfo)
         const flowData = {
           name: 'HttpCalls',
-          type: FlowMetaType.HTTP_CALLS,
+          type: FlowMetaType.HTTP_CALL,
           connector: { targetReference: '' },
           ...Object.assign(editInfo, info),
         }
@@ -245,14 +245,14 @@ export const nodeTemplatesProvider = (
       icon: 'flow',
       title: 'Shortcut',
       description: 'Shortcut',
-      type: FlowMetaType.SHORTCUT,
+      type: FlowMetaType.SHORT_CUT,
       group: 'flow',
       metaFlow: freeFlow,
       make: (at: string, editInfo: INodeEdit) => {
         const info = createLocationInfo(editInfo)
         const flowData = {
           name: 'Shortcut',
-          type: FlowMetaType.SHORTCUT,
+          type: FlowMetaType.SHORT_CUT,
           connector: { targetReference: '' },
           ...Object.assign(editInfo, info),
         }

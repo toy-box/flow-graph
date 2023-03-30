@@ -536,7 +536,11 @@ const decideRender = (isNew: boolean, metaFlow: IResourceMetaflow, node) => {
                       properties: {
                         addition: {
                           type: 'void',
-                          title: 'Add Condition',
+                          title: (
+                            <TextWidget>
+                              flowDesigner.flow.form.recordRemove.addBtn
+                            </TextWidget>
+                          ),
                           'x-component': 'ArrayItems.Addition',
                           'x-component-props': {
                             style: {

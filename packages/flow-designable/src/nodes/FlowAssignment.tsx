@@ -335,7 +335,11 @@ const assignRender = (
             properties: {
               addition: {
                 type: 'void',
-                title: 'Add Assignment',
+                title: (
+                  <TextWidget>
+                    flowDesigner.flow.form.recordRemove.addBtn
+                  </TextWidget>
+                ),
                 'x-component': 'ArrayItems.Addition',
                 'x-component-props': {
                   style: {

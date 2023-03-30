@@ -1,6 +1,6 @@
 {
   "name": "@toy-box/flow-node",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "license": "MIT",
   "description": "",
   "main": "lib/index.js",
@@ -30,8 +30,8 @@
     "react-is": ">=17.8.0 || >=18.0.0"
   },
   "dependencies": {
-    "@toy-box/autoflow-core": "2.0.1",
-    "@toy-box/flow-graph": "2.0.1",
+    "@toy-box/autoflow-core": "2.0.2",
+    "@toy-box/flow-graph": "2.0.2",
     "@types/lodash.uniq": "^4.5.7",
     "lodash.uniq": "^4.5.0"
   }

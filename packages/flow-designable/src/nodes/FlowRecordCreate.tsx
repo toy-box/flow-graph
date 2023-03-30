@@ -428,7 +428,11 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
             properties: {
               addition: {
                 type: 'void',
-                title: 'Add Condition',
+                title: (
+                  <TextWidget>
+                    flowDesigner.flow.form.recordRemove.addBtn
+                  </TextWidget>
+                ),
                 'x-component': 'ArrayItems.Addition',
                 'x-component-props': {
                   style: {

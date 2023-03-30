@@ -339,9 +339,9 @@ export const onPanelEdit = (
         return recordUpdateOnEdit(node, at, additionInfo)
       case FlowMetaType.RECORD_LOOKUP:
         return recordLookUpOnEdit(node, at, additionInfo)
-      case FlowMetaType.HTTP_CALLS:
+      case FlowMetaType.HTTP_CALL:
         return httpCallsOnEdit(node, at, additionInfo)
-      case FlowMetaType.SHORTCUT:
+      case FlowMetaType.SHORT_CUT:
         return variableOnEdit(node, at, additionInfo)
       default:
         return recordCreateOnEdit(node, at, additionInfo)

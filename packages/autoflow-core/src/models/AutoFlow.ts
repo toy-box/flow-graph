@@ -177,4 +177,8 @@ export abstract class AutoFlow {
       this.shortcutData = shortcutData
     }
   }
+
+  changeMode(mode: FlowModeType) {
+    this.mode = mode
+  }
 }

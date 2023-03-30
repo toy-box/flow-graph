@@ -71,7 +71,7 @@ export interface IFlowMetaNodes {
   recordDeletes?: FlowMetaParam[]
   recordUpdates?: FlowMetaParam[]
   recordLookups?: FlowMetaParam[]
-  httpCalls?: FlowMetaParam[]
+  actionCalls?: FlowMetaParam[]
 }
 export interface IFlowMeta {
   resources: IFlowMetaResource
@@ -80,17 +80,17 @@ export interface IFlowMeta {
 
 export enum FlowMetaType {
   START = 'start',
-  ASSIGNMENT = 'assignments',
-  DECISION = 'decisions',
-  WAIT = 'waits',
-  LOOP = 'loops',
+  ASSIGNMENT = 'assignment',
+  DECISION = 'decision',
+  WAIT = 'wait',
+  LOOP = 'loop',
   SORT_COLLECTION_PROCESSOR = 'sortCollectionProcessor',
-  RECORD_CREATE = 'recordCreates',
-  RECORD_UPDATE = 'recordUpdates',
-  RECORD_DELETE = 'recordDeletes',
-  RECORD_LOOKUP = 'recordLookups',
-  HTTP_CALLS = 'httpCalls',
-  SHORTCUT = 'shortcut',
+  RECORD_CREATE = 'recordCreate',
+  RECORD_UPDATE = 'recordUpdate',
+  RECORD_DELETE = 'recordDelete',
+  RECORD_LOOKUP = 'recordLookup',
+  HTTP_CALL = 'httpCall',
+  SHORT_CUT = 'shortCut',
   END = 'end',
 }
 

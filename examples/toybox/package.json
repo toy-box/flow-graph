@@ -57,7 +57,7 @@
     "@formily/reactive": "^2.2.10",
     "@formily/reactive-react": "^2.2.10",
     "@formily/shared": "^2.2.10",
-    "@toy-box/autoflow-core": "2.0.0",
+    "@toy-box/autoflow-core": "2.0.1",
     "@toy-box/designable-core": "^1.0.3-alpha.23",
     "@toy-box/flow-designable": "2.0.0",
     "@toy-box/flow-graph": "2.0.0",
