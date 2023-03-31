@@ -31,7 +31,7 @@ export default {
     children: false,
   },
   entry: {
-    playground: path.resolve(__dirname, './main'),
+    playground: path.resolve(__dirname, './app'),
   },
   output: {
     path: path.resolve(__dirname, '../public'),

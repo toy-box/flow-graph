@@ -15,6 +15,7 @@ import {
 import { createSchemaField } from '@formily/react'
 import * as ICONS from '@ant-design/icons'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
+import { opTypeEnum } from '@toy-box/autoflow-core'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 
 import { BranchArrays } from '../components/formily'
@@ -411,7 +412,7 @@ const decideRender = (isNew: boolean, metaFlow: IResourceMetaflow, node) => {
                                 //   return <div></div>
                                 // },
                               },
-                              operation: {
+                              fieldPattern: {
                                 type: 'string',
                                 title: (
                                   <TextWidget>
@@ -446,7 +447,7 @@ const decideRender = (isNew: boolean, metaFlow: IResourceMetaflow, node) => {
                                   ),
                                 },
                               },
-                              type: {
+                              operation: {
                                 type: 'string',
                                 title: (
                                   <TextWidget>
@@ -477,7 +478,7 @@ const decideRender = (isNew: boolean, metaFlow: IResourceMetaflow, node) => {
                                   placeholder: useLocale(
                                     'flowDesigner.flow.form.comm.typePlace'
                                   ),
-                                  reactionKey: 'operation',
+                                  reactionKey: 'fieldPattern',
                                 },
                               },
                               value: {
@@ -513,7 +514,7 @@ const decideRender = (isNew: boolean, metaFlow: IResourceMetaflow, node) => {
                                     'flowDesigner.flow.form.comm.valuePlace'
                                   ),
                                   metaFlow: metaFlow,
-                                  reactionKey: 'operation',
+                                  reactionKey: 'fieldPattern',
                                   isInput: true,
                                 },
                               },
@@ -620,10 +621,30 @@ export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
       }, 500)
     })
     .forConfirm((payload, next) => {
+      const value = payload.values
+      value.rules.forEach((rule: any) => {
+        const conditions = rule?.criteria?.conditions.map((data: any) => {
+          return {
+            fieldPattern: data.fieldPattern,
+            operation: data.operation,
+            type: opTypeEnum.INPUT,
+            value: data.value,
+          }
+        })
+        rule.criteria.conditions = conditions
+      })
+      const paramData = {
+        id: value.id,
+        name: value.name,
+        defaultConnectorName: useLocale(
+          'flowDesigner.flow.form.decision.defaultConnectorName'
+        ),
+        rules: value.rules,
+      }
       setTimeout(() => {
         node.make
-          ? node.make(at, { ...additionInfo, ...payload.values })
-          : node.update(payload.values)
+          ? node.make(at, { ...additionInfo, ...paramData })
+          : node.update(paramData)
         next(payload)
       }, 500)
     })

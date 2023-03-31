@@ -12,6 +12,7 @@ import {
 import { createSchemaField } from '@formily/react'
 import * as ICONS from '@ant-design/icons'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
+import { opTypeEnum } from '@toy-box/autoflow-core'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 import { apiReg, IResourceMetaflow } from '../interface'
 
@@ -192,7 +193,7 @@ const assignRender = (
                     },
                   },
                   properties: {
-                    operation: {
+                    assignToReference: {
                       type: 'string',
                       title: (
                         <TextWidget>
@@ -227,7 +228,7 @@ const assignRender = (
                         ),
                       },
                     },
-                    type: {
+                    operation: {
                       type: 'string',
                       title: (
                         <TextWidget>
@@ -276,7 +277,7 @@ const assignRender = (
                         placeholder: useLocale(
                           'flowDesigner.flow.form.comm.typePlace'
                         ),
-                        reactionKey: 'operation',
+                        reactionKey: 'assignToReference',
                       },
                     },
                     value: {
@@ -312,7 +313,7 @@ const assignRender = (
                           'flowDesigner.flow.form.comm.valuePlace'
                         ),
                         metaFlow: metaFlow,
-                        reactionKey: 'operation',
+                        reactionKey: 'assignToReference',
                         isInput: true,
                       },
                     },
@@ -393,9 +394,24 @@ export const assignOnEdit = (node: any, at: string, additionInfo?: any) => {
     .forConfirm((payload, next) => {
       setTimeout(() => {
         console.log('assign payload', payload.values)
+        const value = payload.values
+        const assignmentItems = value?.assignmentItems.map((data: any) => {
+          return {
+            assignToReference: data.assignToReference,
+            operation: data.operation,
+            type: opTypeEnum.INPUT,
+            value: data.value,
+          }
+        })
+        const paramData = {
+          id: value.id,
+          name: value.name,
+          description: value.description,
+          assignmentItems,
+        }
         node.make
-          ? node.make(at, { ...additionInfo, ...payload.values })
-          : node.update(payload.values)
+          ? node.make(at, { ...additionInfo, ...paramData })
+          : node.update(paramData)
         next(payload)
       }, 500)
     })

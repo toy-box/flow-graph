@@ -34,6 +34,13 @@ export abstract class AutoFlow {
     this.mode = mode
     this.layoutMode = layoutMode
     this.flow = flow ?? new Flow(this.layoutMode)
+  }
+
+  initRegisters(data: any[]) {
+    this.registers = data
+  }
+
+  onInitResource(resources) {
     this.metaResourceDatas = [
       {
         type: FlowResourceType.VARIABLE,
@@ -64,13 +71,6 @@ export abstract class AutoFlow {
         children: [],
       },
     ]
-  }
-
-  initRegisters(data: any[]) {
-    this.registers = data
-  }
-
-  onInitResource(resources) {
     const resourcePrarms = this.parseResource(resources)
     resourcePrarms.forEach((resource) => {
       const currentResource = new FlowVariable(resource)

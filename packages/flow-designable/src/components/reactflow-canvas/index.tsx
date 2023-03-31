@@ -70,18 +70,16 @@ export const FlowCanvas: FC<any> = observer(() => {
 
   useEffect(() => {
     const graphEle: any = document.querySelector('#flow-canvas')
-    window.onload = function () {
-      graphEle.ondragover = (e) => {
-        e.dataTransfer.dropEffect = 'link'
-        e.preventDefault()
-      }
-      graphEle.ondrop = (e) => {
-        e.stopPropagation()
-        const { clientX, clientY } = e
-        const { key, id } = JSON.parse(e.dataTransfer.getData('text/plain'))
-        console.log('nodeType', key, id)
-        addFreeLayoutNode(clientX, clientY, key, nodes, id)
-      }
+    graphEle.ondragover = (e) => {
+      e.dataTransfer.dropEffect = 'link'
+      e.preventDefault()
+    }
+    graphEle.ondrop = (e) => {
+      e.stopPropagation()
+      const { clientX, clientY } = e
+      const { key, id } = JSON.parse(e.dataTransfer.getData('text/plain'))
+      console.log('nodeType', key, id)
+      addFreeLayoutNode(clientX, clientY, key, nodes, id)
     }
   }, [designer?.layoutMode])
   useEffect(() => {

@@ -1,22 +1,29 @@
-import React, { useEffect } from 'react'
-import ReactDOM from 'react-dom'
+import React, { useCallback, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { FlowContext, EventEngine } from '@toy-box/flow-node'
 import { FlowModeEnum, MetaFlow, FreeFlow } from '@toy-box/autoflow-core'
 import { icons } from '@toy-box/studio-base'
+import { Button } from 'antd'
 import { GlobalRegistry } from '@toy-box/designable-core'
 import { Panel, Shortcut, shortcutOnEdit } from '../src'
 import { freeInitMeta, freeMeta } from '../src/data/flowData'
 import { deleteDialog, FlowCanvas } from '@toy-box/flow-designable'
 import { nodeTemplatesProvider } from './nodes'
 import '../src/styles/theme.less'
+import ReactDOM from 'react-dom'
 
 GlobalRegistry.setDesignerLanguage('en-US')
 GlobalRegistry.registerDesignerIcons(icons)
 
-export const App: React.FC = () => {
-  const eventEngine = new EventEngine()
-  const metaFlow = new MetaFlow(FlowModeEnum.EDIT)
-  const freeFlow = new FreeFlow(FlowModeEnum.EDIT)
+const eventEngine = new EventEngine()
+const metaFlow = new MetaFlow(FlowModeEnum.EDIT)
+const freeFlow = new FreeFlow(FlowModeEnum.EDIT)
+
+export const Main: React.FC = () => {
+  const history = useNavigate()
+  const submit = useCallback(() => {
+    history('/')
+  }, [])
   useEffect(() => {
     metaFlow.setMetaFlow(
       {
@@ -29,6 +36,7 @@ export const App: React.FC = () => {
   }, [metaFlow, freeFlow])
   return (
     <div className="App">
+      <Button onClick={submit}>返回</Button>
       <FlowContext.Provider
         value={{
           metaFlow: freeFlow,
@@ -46,4 +54,4 @@ export const App: React.FC = () => {
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+// ReactDOM.render(<Main />, document.getElementById('root'))
