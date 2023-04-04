@@ -1,6 +1,6 @@
 import { Flow, FlowModeEnum, LayoutModeEnum } from '@toy-box/flow-graph'
-import { MetaValueType } from '@toy-box/meta-schema'
-import { clone } from '@toy-box/toybox-shared'
+import { IFieldMeta, MetaValueType } from '@toy-box/meta-schema'
+import { clone, isObj } from '@toy-box/toybox-shared'
 import {
   FlowMetaParam,
   FlowResourceType,
@@ -8,6 +8,7 @@ import {
   IFieldMetaResource,
   IFlowMeta,
   IFlowMetaResource,
+  IRecordObject,
   IResourceParam,
 } from '../types'
 import { FlowMetaNode } from './flow-nodes'
@@ -29,18 +30,12 @@ export abstract class AutoFlow {
   flowType: FlowType
   history: History
   shortcutData: FlowMetaParam[] = []
+  recordObject: IRecordObject
 
   constructor(mode: FlowModeType, layoutMode: LayoutModeEnum, flow: Flow) {
     this.mode = mode
     this.layoutMode = layoutMode
     this.flow = flow ?? new Flow(this.layoutMode)
-  }
-
-  initRegisters(data: any[]) {
-    this.registers = data
-  }
-
-  onInitResource(resources) {
     this.metaResourceDatas = [
       {
         type: FlowResourceType.VARIABLE,
@@ -70,7 +65,61 @@ export abstract class AutoFlow {
         type: FlowResourceType.TEMPLATE,
         children: [],
       },
+      {
+        type: FlowResourceType.GLOBAL_VARIABLE,
+        children: [],
+      },
     ]
+  }
+
+  initRegisters(data: any[]) {
+    this.registers = data
+    const objectRegister = this.registers.find(
+      (reg) => reg.key === this?.recordObject?.objectId
+    )
+    if (objectRegister) {
+      const registerOps = []
+      for (const key in objectRegister) {
+        if (objectRegister.properties.hasOwnProperty(key)) {
+          const obj = objectRegister.properties[key]
+          const option = {
+            label: '$RECORD',
+            key: '$RECORD',
+            children: [],
+          }
+          const changeObj = this.setMetaChildren(option, obj)
+          registerOps.push(changeObj)
+        }
+      }
+    }
+  }
+
+  setMetaChildren = (obj: any, meta: IFieldMeta) => {
+    if (meta.properties && isObj(meta.properties)) {
+      for (const proKey in meta.properties) {
+        if (meta.properties.hasOwnProperty(proKey)) {
+          const p = meta.properties[proKey]
+          const child = {
+            label: p.name,
+            key: p.key,
+            children: [],
+          }
+          this.setMetaChildren(child, p)
+          if (child?.children?.length === 0) {
+            delete child?.children
+          }
+          obj?.children?.push(child)
+        }
+      }
+      if (obj?.children?.length === 0) delete obj?.children
+      return obj
+    } else {
+      if (obj?.children?.length === 0) delete obj?.children
+      return obj
+    }
+  }
+
+  onInitResource(resources) {
     const resourcePrarms = this.parseResource(resources)
     resourcePrarms.forEach((resource) => {
       const currentResource = new FlowVariable(resource)

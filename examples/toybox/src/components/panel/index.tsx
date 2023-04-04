@@ -65,7 +65,7 @@ export const Panel: React.FC<any> = observer(({ metaFlow }) => {
     console.log('freeFlow', freeFlow.history.list())
     console.log('freeFlowdata数据json化', freeFlow.toJsonList)
     console.log('变了数据json化', freeFlow.toVarJsonList)
-  }, [])
+  }, [freeFlow])
   // const handleFreeLayout = useCallback(() => {
   //   // metaFlow.flow.setGraphNodes([])
   //   freeFlow.setMetaFlow(

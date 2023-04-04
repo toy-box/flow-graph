@@ -9,6 +9,7 @@ import {
   IFlowMetaNodes,
   FlowMetaUpdate,
   StartFlowMetaUpdate,
+  IRecordObject,
 } from '../types'
 import {
   FlowStart,
@@ -118,11 +119,14 @@ export class MetaFlow extends AutoFlow {
   setMetaFlow(
     flowMeta: IFlowMeta,
     flowType: FlowType,
+    recordObject?: IRecordObject,
     layoutMode?: LayoutModeEnum
   ) {
     this.flowMeta = flowMeta
     this.flowType = flowType
     // this.layoutMode = layoutMode
+    this.recordObject = recordObject
+    this.onInitResource(this.flowMeta.resources)
     this.onInit()
   }
 

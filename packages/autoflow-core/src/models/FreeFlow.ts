@@ -11,6 +11,7 @@ import {
   FlowMetaUpdate,
   StartFlowMetaUpdate,
   FlowMetaParamWithSize,
+  IRecordObject,
 } from '../types'
 import {
   FlowStart,
@@ -227,6 +228,7 @@ export class FreeFlow extends AutoFlow {
       mode: observable.ref,
       flowType: observable.ref,
       layoutMode: observable.ref,
+      recordObject: observable.deep,
       setMetaFlow: batch,
       getFlowMetaNodeMap: batch,
       // removeNodeWithBind: batch,
@@ -287,10 +289,12 @@ export class FreeFlow extends AutoFlow {
   setMetaFlow(
     flowMeta: IFlowMeta,
     flowType: FlowType,
+    recordObject?: IRecordObject,
     layoutMode?: LayoutModeEnum
   ) {
     this.flowMeta = flowMeta
     this.flowType = flowType
+    this.recordObject = recordObject
     // this.layoutMode = layoutMode
     this.onInitResource(this.flowMeta.resources)
     this.onInit()

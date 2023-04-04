@@ -81,7 +81,7 @@ export const FlowCanvas: FC<any> = observer(() => {
       console.log('nodeType', key, id)
       addFreeLayoutNode(clientX, clientY, key, nodes, id)
     }
-  }, [designer?.layoutMode])
+  }, [designer?.layoutMode, freeFlow])
   useEffect(() => {
     if (designer?.layoutMode === LayoutModeEnum.AUTO_LAYOUT) {
       flow.flowGraph.centerX = ref?.current?.offsetWidth / 2
@@ -293,7 +293,7 @@ export const FlowCanvas: FC<any> = observer(() => {
       })
       dragFlow.setCanvas(freeFlowCanvas)
     }
-  }, [designer?.layoutMode])
+  }, [designer?.layoutMode, freeFlow])
 
   const dispatchClickPane = React.useCallback(
     (data) => {

@@ -47,6 +47,7 @@ export enum FlowResourceType {
   CONSTANT = 'constants',
   FORMULA = 'formulas',
   TEMPLATE = 'templates',
+  GLOBAL_VARIABLE = 'global_variable',
 }
 
 export interface IFlowMetaResource {
@@ -363,4 +364,11 @@ export interface ICallArgumentData {
 export interface ICallArgumentFormily
   extends Omit<ICallArgumentData, 'pathParameters' | 'queryParameters'> {
   parameters?: Record<string, string | number>[]
+}
+
+export interface IRecordObject {
+  criteria?: Criteria
+  objectId?: string
+  recordTriggerType?: string
+  triggerType?: string
 }

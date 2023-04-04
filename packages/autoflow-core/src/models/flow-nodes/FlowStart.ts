@@ -18,11 +18,11 @@ import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 export class FlowStart extends FlowMetaNode {
   flowType: FlowType
   connector?: TargetReference
-  criteria?: Criteria | null
-  objectId?: string
-  recordTriggerType?: string
-  schedule?: ISchedule
-  triggerType?: string
+  // criteria?: Criteria | null
+  // objectId?: string
+  // recordTriggerType?: string
+  // schedule?: ISchedule
+  // triggerType?: string
 
   static DefaultNodeProps: IMakeFlowNodeProps = {
     width: 60,
@@ -47,12 +47,12 @@ export class FlowStart extends FlowMetaNode {
   constructor(flowStart: IStartFlowMeta, metaFlow: MetaFlow | FreeFlow) {
     super(metaFlow, flowStart.id, flowStart.name)
     this.connector = flowStart.connector
-    this.criteria = flowStart.criteria
-    this.flowType = flowStart.flowType
-    this.objectId = flowStart.objectId
-    this.recordTriggerType = flowStart.recordTriggerType
-    this.schedule = flowStart.schedule
-    this.triggerType = flowStart.triggerType
+    // this.criteria = flowStart.criteria
+    // this.flowType = flowStart.flowType
+    // this.objectId = flowStart.objectId
+    // this.recordTriggerType = flowStart.recordTriggerType
+    // this.schedule = flowStart.schedule
+    // this.triggerType = flowStart.triggerType
     this.makeObservable()
   }
 
@@ -62,11 +62,11 @@ export class FlowStart extends FlowMetaNode {
       name: observable.ref,
       type: observable.ref,
       connector: observable.deep,
-      criteria: observable.deep,
-      objectId: observable.ref,
-      recordTriggerType: observable.ref,
-      schedule: observable.deep,
-      triggerType: observable.ref,
+      // criteria: observable.deep,
+      // objectId: observable.ref,
+      // recordTriggerType: observable.ref,
+      // schedule: observable.deep,
+      // triggerType: observable.ref,
       update: action,
       appendAt: batch,
     })
@@ -162,12 +162,12 @@ export class FlowStart extends FlowMetaNode {
     this.name = data.name
     this.description = data.description
     this.connector = data.connector
-    this.criteria = data.criteria
-    this.flowType = data.flowType
-    this.objectId = data.objectId
-    this.recordTriggerType = data.recordTriggerType
-    this.schedule = data.schedule
-    this.triggerType = data.triggerType
+    // this.criteria = data.criteria
+    // this.flowType = data.flowType
+    // this.objectId = data.objectId
+    // this.recordTriggerType = data.recordTriggerType
+    // this.schedule = data.schedule
+    // this.triggerType = data.triggerType
   }
 
   updateConnector = (targetId: string) => {
@@ -187,7 +187,7 @@ export class FlowStart extends FlowMetaNode {
       description: this.description,
       type: this.type,
       connector: this.connector,
-      criteria: this.criteria,
+      // criteria: this.criteria,
       x: this.x,
       y: this.y,
     }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FlowContext, EventEngine } from '@toy-box/flow-node'
 import { FlowModeEnum, MetaFlow, FreeFlow } from '@toy-box/autoflow-core'
@@ -15,11 +15,11 @@ import ReactDOM from 'react-dom'
 GlobalRegistry.setDesignerLanguage('en-US')
 GlobalRegistry.registerDesignerIcons(icons)
 
-const eventEngine = new EventEngine()
-const metaFlow = new MetaFlow(FlowModeEnum.EDIT)
-const freeFlow = new FreeFlow(FlowModeEnum.EDIT)
-
 export const Main: React.FC = () => {
+  const eventEngine = new EventEngine()
+  const metaFlow = new MetaFlow(FlowModeEnum.EDIT)
+  const freeFlow = new FreeFlow(FlowModeEnum.EDIT)
+  const [loading, setLoading] = useState(true)
   const history = useNavigate()
   const submit = useCallback(() => {
     history('/')
@@ -32,6 +32,7 @@ export const Main: React.FC = () => {
       },
       'AUTO_START_UP'
     )
+    setLoading(false)
     freeFlow.setMetaFlow(freeMeta, 'AUTO_START_UP')
   }, [metaFlow, freeFlow])
   return (

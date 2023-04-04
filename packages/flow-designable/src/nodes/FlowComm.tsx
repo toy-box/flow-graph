@@ -344,7 +344,7 @@ export const onPanelEdit = (
       case FlowMetaType.SHORT_CUT:
         return variableOnEdit(node, at, additionInfo)
       default:
-        return recordCreateOnEdit(node, at, additionInfo)
+        return null
     }
   }
   chooseDialog()
