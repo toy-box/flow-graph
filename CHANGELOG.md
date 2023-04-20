@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.6(2023-04-20)
+
+### No Change Log
+
 ## v2.0.5(2023-04-20)
 
 ### No Change Log
