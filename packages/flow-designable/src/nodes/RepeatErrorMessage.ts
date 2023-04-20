@@ -37,7 +37,7 @@ export class RepeatErrorMessage {
     metaFlow.metaResourceDatas.forEach((data: any) => {
       if (data?.children?.length > 0) this.metaFlowDatas.push(...data.children)
     })
-    this.metaFlowDatas.push(...metaFlow.shortcutData)
+    this.metaFlowDatas.push(...metaFlow.shortCutDatas)
     this.errorMessageFunc()
   }
 

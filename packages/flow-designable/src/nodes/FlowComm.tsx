@@ -20,7 +20,7 @@ import { recordCreateOnEdit } from './FlowRecordCreate'
 import { recordDeleteOnEdit } from './FlowRecordDelete'
 import { recordUpdateOnEdit } from './FlowRecordUpdate'
 import { recordLookUpOnEdit } from './FlowRecordLookUp'
-import { httpCallsOnEdit } from './FlowHttpCalls'
+import { httpCallsOnEdit } from './FlowHttpCall'
 import { variableOnEdit } from './FlowShortcut'
 
 export * from './addNode'

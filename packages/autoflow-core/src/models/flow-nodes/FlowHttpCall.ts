@@ -19,11 +19,10 @@ import { FreeFlow } from '../FreeFlow'
 import { MetaFlow } from '../MetaFlow'
 import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 
-export class FlowHttpCalls extends FlowMetaNode {
+export class FlowHttpCall extends FlowMetaNode {
   connector?: TargetReference
   faultConnector?: TargetReference
   callArguments: ICallArgumentData
-  result?: string
 
   static DefaultConnectorProps = {
     targetReference: '',
@@ -61,12 +60,11 @@ export class FlowHttpCalls extends FlowMetaNode {
       flowHttpCalls.description
     )
     this.connector =
-      flowHttpCalls.connector ?? FlowHttpCalls.DefaultConnectorProps
+      flowHttpCalls.connector ?? FlowHttpCall.DefaultConnectorProps
     this.faultConnector = flowHttpCalls.faultConnector ?? {
       targetReference: '',
     }
     this.callArguments = flowHttpCalls.callArguments
-    this.result = flowHttpCalls.result
     this.makeObservable()
   }
 
@@ -77,7 +75,6 @@ export class FlowHttpCalls extends FlowMetaNode {
       connector: observable.deep,
       faultConnector: observable.deep,
       callArguments: observable.deep,
-      result: observable.ref,
       update: action,
     })
   }
@@ -89,7 +86,7 @@ export class FlowHttpCalls extends FlowMetaNode {
       x,
       y,
       component,
-    }: IMakeFlowNodeProps = FlowHttpCalls.DefaultNodeProps
+    }: IMakeFlowNodeProps = FlowHttpCall.DefaultNodeProps
   ): IFlowNodeProps {
     const targets = []
     const conId = this.connector.targetReference
@@ -125,7 +122,7 @@ export class FlowHttpCalls extends FlowMetaNode {
       x,
       y,
       component,
-    }: IMakeFlowNodeProps = FlowHttpCalls.DefaultNodeProps,
+    }: IMakeFlowNodeProps = FlowHttpCall.DefaultNodeProps,
     targets: TargetProps[]
   ): IFlowNodeProps[] {
     const extendId = uid()
@@ -162,7 +159,7 @@ export class FlowHttpCalls extends FlowMetaNode {
         this.connector.targetReference = at.targets[0].id
       }
       const flowNodes = this.makeFlowNodeWithExtend(
-        FlowHttpCalls.DefaultNodeProps,
+        FlowHttpCall.DefaultNodeProps,
         at.targets
       )
       this.metaFlow.flow.addFlowNodeAt(at.id, flowNodes[0])
@@ -177,9 +174,9 @@ export class FlowHttpCalls extends FlowMetaNode {
     const nodeProps = {
       x: flowData.x,
       y: flowData.y,
-      width: flowData.width || FlowHttpCalls.DefaultNodeProps.width,
-      height: flowData.height || FlowHttpCalls.DefaultNodeProps.height,
-      component: FlowHttpCalls.DefaultNodeProps.component,
+      width: flowData.width || FlowHttpCall.DefaultNodeProps.width,
+      height: flowData.height || FlowHttpCall.DefaultNodeProps.height,
+      component: FlowHttpCall.DefaultNodeProps.component,
     }
     const flowNode = this.makeFlowNode(nodeProps)
     this.metaFlow.flow.addFlowFreeNode(flowNode)
@@ -189,7 +186,6 @@ export class FlowHttpCalls extends FlowMetaNode {
     this.name = payload.name
     this.description = payload.description
     this.callArguments = payload.callArguments
-    this.result = payload.result
     this.toJson()
   }
 
@@ -222,7 +218,6 @@ export class FlowHttpCalls extends FlowMetaNode {
       connector: this.connector,
       faultConnector: this.faultConnector,
       callArguments: this.callArguments,
-      result: this.result,
       x: this.x,
       y: this.y,
     }

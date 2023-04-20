@@ -452,12 +452,11 @@ export function keyValueToObjArray(
   >,
   type?: 'Query' | 'Path'
 ) {
-  return (
-    obj &&
-    Object.entries(obj).map(([key, value]) =>
-      type ? { key, value, type } : { key, value }
-    )
-  )
+  return obj
+    ? Object.entries(obj).map(([key, value]) =>
+        type ? { key, value, type } : { key, value }
+      )
+    : []
 }
 
 export function converHttpJsonToFormily({ callArguments, ...rest }) {
@@ -469,10 +468,9 @@ export function converHttpJsonToFormily({ callArguments, ...rest }) {
     queryParameters,
     ...restArguments
   } = callArguments
-  const parameters = [
-    ...keyValueToObjArray(pathParameters, 'Path'),
-    ...keyValueToObjArray(pathParameters, 'Query'),
-  ]
+  const path = keyValueToObjArray(pathParameters, 'Path')
+  const query = keyValueToObjArray(queryParameters, 'Query')
+  const parameters = [...path, ...query]
   return {
     ...rest,
     callArguments: {

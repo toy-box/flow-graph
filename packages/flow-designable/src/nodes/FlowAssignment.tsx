@@ -223,10 +223,16 @@ const assignRender = (
                       'x-component-props': {
                         suffix: "{{icon('SearchOutlined')}}",
                         metaFlow: metaFlow,
+                        typeKey: 'type',
+                        isSetType: true,
                         placeholder: useLocale(
                           'flowDesigner.flow.form.comm.operationPlace'
                         ),
                       },
+                    },
+                    type: {
+                      type: 'string',
+                      title: '',
                     },
                     operation: {
                       type: 'string',
@@ -278,6 +284,7 @@ const assignRender = (
                           'flowDesigner.flow.form.comm.typePlace'
                         ),
                         reactionKey: 'assignToReference',
+                        reactionTypeKey: 'type',
                       },
                     },
                     value: {
@@ -315,6 +322,7 @@ const assignRender = (
                         metaFlow: metaFlow,
                         reactionKey: 'assignToReference',
                         isInput: true,
+                        reactionTypeKey: 'type',
                       },
                     },
                     remove: {

@@ -37,19 +37,16 @@ export const Panel: React.FC<any> = observer(({ metaFlow }) => {
   }
 
   const itemMapShortcut = useMemo(() => {
-    return (
-      freeFlow?.shortcutData ||
-      [].map(({ id, name }) => {
-        return {
-          id: id ?? 'Shortcut',
-          type: 'Shortcut',
-          title: name ?? 'flowDesigner.flow.extend.shortcut',
-          thumb:
-            'https://cdnmarket.sasago.com/microIcon/componentsIcon/titleText.png',
-        }
-      })
-    )
-  }, [freeFlow?.shortcutData])
+    return freeFlow?.shortCutDatas?.map(({ id, name }) => {
+      return {
+        id: id ?? 'Shortcut',
+        type: 'Shortcut',
+        title: name ?? 'flowDesigner.flow.extend.shortcut',
+        thumb:
+          'https://cdnmarket.sasago.com/microIcon/componentsIcon/titleText.png',
+      }
+    })
+  }, [freeFlow?.shortCutDatas])
   // const init = useCallback(() => {
   //   metaFlow.flow.setFlowNodes(flowData1)
   // }, [])

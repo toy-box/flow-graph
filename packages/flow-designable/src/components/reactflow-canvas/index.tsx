@@ -53,13 +53,18 @@ export const FlowCanvas: FC<any> = observer(() => {
   const dragFlow = useDragFlow()
   const eventEngine = useEvent()
   const designer = useDesigner()
-  const { getMetaObjectData } = useService()
+  const { getMetaObjectData, getShortCuts } = useService()
   const freeFlow = designer.metaFlow as FreeFlow
   const metaflow = designer.metaFlow as MetaFlow
   useEffect(() => {
     getMetaObjectData().then(({ data }) => {
       if (isArr(data)) designer.metaFlow.initRegisters(data)
     })
+    if (getShortCuts) {
+      getShortCuts().then(({ data }) => {
+        if (isArr(data)) designer.metaFlow.initShortCuts(data)
+      })
+    }
   }, [designer.metaFlow.initRegisters])
   const style = {
     width: '100%',

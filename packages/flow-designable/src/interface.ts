@@ -18,6 +18,7 @@ export enum AssignmentOpEnum {
 
 export interface MetaService {
   getMetaObjectData: (value?: string) => Promise<any>
+  getShortCuts: () => Promise<any>
 }
 
 export type AutoFlow = FreeFlow | MetaFlow
@@ -26,7 +27,7 @@ export interface IResourceMetaflow {
   metaResourceDatas: IResourceParam[]
   registers: any[]
   metaFlowDatas: FlowMetaParam[]
-  shortcutData: FlowMetaParam[]
+  shortCutDatas: FlowMetaParam[]
   createResource: (type: FlowResourceType, resource: IFieldMetaResource) => void
   editResource: (type: FlowResourceType, resource: IFieldMetaResource) => void
 }

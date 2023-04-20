@@ -331,6 +331,9 @@ const zhCN = {
         enumDateTime: 'datetime',
         enumBoolean: 'boolean',
         enumObject: 'object',
+        error: {
+          nodeNull: '节点信息不存在',
+        },
       },
     },
   },
@@ -678,6 +681,9 @@ const enUS = {
         enumDateTime: 'datetime',
         enumBoolean: 'boolean',
         enumObject: 'object',
+        error: {
+          nodeNull: 'node message error',
+        },
       },
     },
   },

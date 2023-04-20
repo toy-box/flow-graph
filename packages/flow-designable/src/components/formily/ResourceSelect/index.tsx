@@ -10,7 +10,7 @@ import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Dropdown, Input, Tag } from 'antd'
 import { observer } from '@formily/reactive-react'
-import { clone, isObj } from '@formily/shared'
+import { clone, isObj, isStr } from '@formily/shared'
 import { useField, useForm } from '@formily/react'
 import { IFieldMeta } from '@toy-box/meta-schema'
 import { useLocale } from '@toy-box/studio-base'
@@ -53,14 +53,28 @@ export const ResourceSelect: FC = observer((props: any) => {
   }
 
   useEffect(() => {
-    setSelectKeys(formilyField?.value?.split('.')?.reverse() || [])
+    const val = formilyField?.value
+    const len = val?.length
+    if (isStr(val) && val.startsWith('{!') && val.endsWith('}')) {
+      const newVal = val.slice(2, len - 1)
+      setSelectKeys(newVal?.split('.')?.reverse() || [])
+    } else if (isStr(val) && val.startsWith('{{') && val.endsWith('}}')) {
+      const newVal = val.slice(2, len - 2)
+      setSelectKeys(newVal?.split('.')?.reverse() || [])
+    } else {
+      setSelectKeys(val?.split('.')?.reverse() || [])
+    }
   }, [formilyField?.value])
 
   const onChange = useCallback(
-    (value: string[]) => {
+    (value: string[], parentType?: FlowResourceType) => {
       form.setFieldState(formilyField?.path?.entire, (state) => {
         const val = value?.reverse()?.join('.')
-        state.value = val
+        if (parentType === FlowResourceType.FORMULA) {
+          state.value = `{!${val}}`
+        } else {
+          state.value = val
+        }
         formilyField.validate()
       })
     },
@@ -71,17 +85,22 @@ export const ResourceSelect: FC = observer((props: any) => {
     const segments = formilyField?.path?.segments
     const length = segments?.length
     const arr = segments.slice(0, length - 1)
+    return arr
+  }, [formilyField?.path?.segments])
+
+  const reactionKey = useMemo(() => {
+    const arr = clone(reactionPath)
     arr.push(props?.reactionKey)
     return arr
-  }, [formilyField?.path?.segments, props?.reactionKey])
+  }, [reactionPath, props?.reactionKey])
 
   const disabled = useMemo(() => {
-    const reactionValue = get(form.values, reactionPath)
+    const reactionValue = get(form.values, reactionKey)
     if (props?.reactionKey) {
       return !reactionValue
     }
     return false
-  }, [get(form.values, reactionPath)])
+  }, [get(form.values, reactionKey)])
 
   useEffect(() => {
     if (props?.sourceMode === 'objectService') {
@@ -103,6 +122,7 @@ export const ResourceSelect: FC = observer((props: any) => {
                   const option = {
                     label: obj.name,
                     key: obj.key,
+                    dataType: obj.type,
                     children: [],
                   }
                   const changeObj = setMetaChildren(option, obj)
@@ -120,6 +140,7 @@ export const ResourceSelect: FC = observer((props: any) => {
             const obj = {
               label: r.name,
               key: r.key,
+              dataType: r.type,
               children: [],
             }
             const changeObj = setMetaChildren(obj, r)
@@ -156,6 +177,8 @@ export const ResourceSelect: FC = observer((props: any) => {
               const obj = {
                 label: child.name,
                 key: child.key,
+                dataType: child.type,
+                parentType: child.webType,
                 children: [],
               }
               const changeObj = setMetaChildren(obj, child)
@@ -190,10 +213,12 @@ export const ResourceSelect: FC = observer((props: any) => {
       if (meta.properties && isObj(meta.properties)) {
         for (const proKey in meta.properties) {
           if (meta.properties.hasOwnProperty(proKey)) {
-            const p = meta.properties[proKey]
+            const p: any = meta.properties[proKey]
             const child = {
               label: p.name,
               key: p.key,
+              dataType: p.type,
+              parentType: p.webType,
               children: [],
             }
             setMetaChildren(child, p)
@@ -253,18 +278,38 @@ export const ResourceSelect: FC = observer((props: any) => {
     }
   }, [selectKeys, props.isInput])
 
-  const onClick: MenuProps['onClick'] = (e) => {
+  const onClick: MenuProps['onClick'] = (e: any) => {
     setVariable(false)
     setItems(historyItems)
     if (e.key === '0') {
       createResource()
     } else {
       const target: any = e.domEvent.target
+      const { dataType, parentType } = e?.item?.props
       setSelectKeys(e.keyPath)
       setInputValue(target?.innerText ?? '')
-      onChange(e.keyPath)
+      onChange(e.keyPath, parentType)
+      if (props?.isSetType) onChangeTypeValue(dataType)
     }
   }
+
+  const reactionTypeKey = useMemo(() => {
+    const arr = clone(reactionPath)
+    arr.push(props?.reactionTypeKey)
+    return arr
+  }, [reactionPath, props?.reactionTypeKey])
+
+  const onChangeTypeValue = useCallback(
+    (dataType: any) => {
+      const arr = clone(reactionPath)
+      arr.push(props?.typeKey)
+      form.setFieldState(arr.join('.'), (state) => {
+        state.value = dataType
+        formilyField.validate()
+      })
+    },
+    [reactionPath, props?.typeKey]
+  )
 
   const handleClose = () => {
     // const newTags = selectKeys.filter((tag) => tag !== removedTag)

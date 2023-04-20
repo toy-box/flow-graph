@@ -5,6 +5,7 @@ import { FieldSelect } from '@toy-box/meta-components'
 import { MetaValueType } from '@toy-box/meta-schema'
 import { useField, useForm } from '@formily/react'
 import { FlowResourceType } from '@toy-box/autoflow-core'
+import { clone } from '@designable/shared'
 import get from 'lodash.get'
 import { AssignmentOpEnum } from '../../../interface'
 
@@ -113,17 +114,29 @@ export const OperationSelect: FC = observer((props: any) => {
     const segments = field?.path?.segments
     const length = segments?.length
     const arr = segments.slice(0, length - 1)
+    return arr
+  }, [field?.path?.segments])
+
+  const reactionKey = useMemo(() => {
+    const arr = clone(reactionPath)
     arr.push(props?.reactionKey)
     return arr
-  }, [field?.path?.segments, props?.reactionKey])
+  }, [reactionPath, props?.reactionKey])
+
+  const reactionTypeKey = useMemo(() => {
+    const arr = clone(reactionPath)
+    arr.push(props?.reactionTypeKey)
+    return arr
+  }, [reactionPath, props?.reactionTypeKey])
 
   const operatOps = useMemo(() => {
-    const reactionValue = get(form.values, reactionPath)
+    const reactionValue = get(form.values, reactionKey)
+    const reactionTypeValue = get(form.values, reactionTypeKey)
     if (reactionValue) {
       return textOps
     }
     return false
-  }, [get(form.values, reactionPath)])
+  }, [get(form.values, reactionKey, reactionTypeKey)])
 
   return (
     <FieldSelect

@@ -5,7 +5,7 @@ export const setResourceMetaflow = (metaFlow: AutoFlow) => {
     metaResourceDatas: metaFlow.metaResourceDatas,
     registers: metaFlow.registers,
     metaFlowDatas: metaFlow.metaFlowDatas,
-    shortcutData: metaFlow.shortcutData,
+    shortCutDatas: metaFlow.shortCutDatas,
     createResource: metaFlow.createResource,
     editResource: metaFlow.editResource,
   }

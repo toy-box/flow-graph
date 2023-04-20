@@ -46,7 +46,7 @@ export enum FlowResourceType {
   VARIABLE_ARRAY_RECORD = 'variables_array_record',
   CONSTANT = 'constants',
   FORMULA = 'formulas',
-  TEMPLATE = 'templates',
+  TEMPLATE = 'textTemplates',
   GLOBAL_VARIABLE = 'global_variable',
 }
 
@@ -317,9 +317,8 @@ export interface IFieldMetaResource extends IFieldMeta {
 }
 
 export enum IAuthorizationEnum {
-  NO_AUTH = 'No Auth',
-  BEARER_TOKEN = 'Bearer Token',
-  BASIC_AUTH = 'Basic Auth',
+  BEARER_TOKEN = 'bearer',
+  BASIC_AUTH = 'basic',
 }
 
 export enum IHttpMethodEnum {
@@ -336,14 +335,14 @@ export enum IHttpMethodEnum {
 
 export enum IContentTypeEnum {
   NONE = 'none',
-  FORM_DATA = 'form-data',
-  X_WWW_FORM_URLENCODED = 'x-www-form-urlencoded',
+  FORM_DATA = 'multipart/form-data',
+  X_WWW_FORM_URLENCODED = 'application/x-www-form-urlencoded',
   raw = 'raw',
   BINARY = 'binary',
   GRAPH_QL = 'GraphQL',
 }
 export interface IAuthorizationParams {
-  type: IAuthorizationEnum
+  type?: IAuthorizationEnum
   username?: string
   password?: string
   token?: string
@@ -357,8 +356,11 @@ export interface ICallArgumentData {
   queryParameters?: Record<string, string | number>
   cookies?: Record<string, string | number>
   headers?: Record<string, string | number>
+  form?: Record<string, string | number>
   body?: Record<string, string | number>
   authorization?: IAuthorizationParams
+  result?: string
+  connectTimeout?: number
 }
 
 export interface ICallArgumentFormily

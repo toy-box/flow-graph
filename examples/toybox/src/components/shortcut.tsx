@@ -61,7 +61,7 @@ export const shortcutOnEdit = (
   }
   const onSubmit = (form) => {
     const paramData = convertHttpFormilyToJson(form.values)
-    metaflow.shortcutPush(paramData)
+    metaflow.shortCutPush(paramData)
     setActiveKey(false)
     formDialog.close()
   }

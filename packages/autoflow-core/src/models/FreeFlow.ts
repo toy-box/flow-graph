@@ -26,7 +26,7 @@ import {
   FlowRecordUpdate,
   FlowRecordLookup,
   FlowRecordDelete,
-  FlowHttpCalls,
+  FlowHttpCall,
 } from './flow-nodes'
 
 import { History, OpearteTypeEnum } from './History'
@@ -221,7 +221,7 @@ export class FreeFlow extends AutoFlow {
       flowResourceMap: observable.deep,
       history: observable.deep,
       metaResourceDatas: observable.deep,
-      shortcutData: observable.deep,
+      shortCutDatas: observable.deep,
       flowMetaNodes: observable.computed,
       flow: observable.ref,
       // flowFree: observable.ref,
@@ -242,7 +242,8 @@ export class FreeFlow extends AutoFlow {
       createResource: action,
       editResource: action,
       changeMode: action,
-      shortcutPush: action,
+      shortCutPush: action,
+      initShortCuts: action,
     })
   }
   get flowGraph() {
@@ -513,7 +514,7 @@ export class FreeFlow extends AutoFlow {
       case FlowMetaType.RECORD_DELETE:
         return new FlowRecordDelete(node, this)
       case FlowMetaType.HTTP_CALL:
-        return new FlowHttpCalls(node, this)
+        return new FlowHttpCall(node, this)
       case FlowMetaType.SHORT_CUT:
         return new FlowShortcut(node as any, this)
       default:

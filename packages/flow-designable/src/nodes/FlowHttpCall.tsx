@@ -25,6 +25,7 @@ import {
   FlowMetaUpdate,
   IContentTypeEnum,
   FlowMetaParam,
+  IAuthorizationEnum,
 } from '@toy-box/autoflow-core'
 import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { ResourceSelect, OperationSelect } from '../components/formily'
@@ -1535,7 +1536,6 @@ export const httpCallsSchema = (isEdit: boolean) => {
                           type: {
                             type: 'string',
                             title: 'Type',
-                            default: 'No Auth',
                             'x-decorator': 'FormItem',
                             'x-decorator-props': {
                               layout: 'vertical',
@@ -1546,25 +1546,18 @@ export const httpCallsSchema = (isEdit: boolean) => {
                             'x-component-props': {
                               gridSpan: 1,
                             },
-                            required: true,
                             enum: [
-                              {
-                                label: (
-                                  <TextWidget token="flowDesigner.flow.form.httpCalls.enumNoAuth"></TextWidget>
-                                ),
-                                value: 'No Auth',
-                              },
                               {
                                 label: (
                                   <TextWidget token="flowDesigner.flow.form.httpCalls.enumBearerToken"></TextWidget>
                                 ),
-                                value: 'Bearer Token',
+                                value: IAuthorizationEnum.BEARER_TOKEN,
                               },
                               {
                                 label: (
                                   <TextWidget token="flowDesigner.flow.form.httpCalls.enumBasicAuth"></TextWidget>
                                 ),
-                                value: 'Basic Auth',
+                                value: IAuthorizationEnum.BASIC_AUTH,
                               },
                             ],
                           },
@@ -1821,38 +1814,38 @@ export const httpCallsSchema = (isEdit: boolean) => {
                             label: (
                               <TextWidget token="flowDesigner.flow.form.httpCalls.enumNone"></TextWidget>
                             ),
-                            value: 'none',
+                            value: IContentTypeEnum.NONE,
                           },
                           {
                             label: (
                               <TextWidget token="flowDesigner.flow.form.httpCalls.enumFormData"></TextWidget>
                             ),
-                            value: 'form-data',
+                            value: IContentTypeEnum.FORM_DATA,
                           },
                           {
                             label: (
                               <TextWidget token="flowDesigner.flow.form.httpCalls.enumFormUrl"></TextWidget>
                             ),
-                            value: 'x-www-form-urlencoded',
+                            value: IContentTypeEnum.X_WWW_FORM_URLENCODED,
                           },
-                          {
-                            label: (
-                              <TextWidget token="flowDesigner.flow.form.httpCalls.enumRaw"></TextWidget>
-                            ),
-                            value: 'raw',
-                          },
-                          {
-                            label: (
-                              <TextWidget token="flowDesigner.flow.form.httpCalls.enumBinary"></TextWidget>
-                            ),
-                            value: 'binary',
-                          },
-                          {
-                            label: (
-                              <TextWidget token="flowDesigner.flow.form.httpCalls.enumGraphQL"></TextWidget>
-                            ),
-                            value: 'GraphQL',
-                          },
+                          // {
+                          //   label: (
+                          //     <TextWidget token="flowDesigner.flow.form.httpCalls.enumRaw"></TextWidget>
+                          //   ),
+                          //   value: 'raw',
+                          // },
+                          // {
+                          //   label: (
+                          //     <TextWidget token="flowDesigner.flow.form.httpCalls.enumBinary"></TextWidget>
+                          //   ),
+                          //   value: 'binary',
+                          // },
+                          // {
+                          //   label: (
+                          //     <TextWidget token="flowDesigner.flow.form.httpCalls.enumGraphQL"></TextWidget>
+                          //   ),
+                          //   value: 'GraphQL',
+                          // },
                         ],
                       },
                       body: {
@@ -2135,7 +2128,7 @@ export const httpCallsSchema = (isEdit: boolean) => {
               },
             },
           },
-          result: {
+          'callArguments.result': {
             type: 'string',
             title: (
               <TextWidget token="flowDesigner.flow.form.httpCalls.result"></TextWidget>
@@ -2188,7 +2181,7 @@ export const httpCallsOnEdit = (node: any, at?: string, additionInfo?: any) => {
       open: false,
       width: '90vw',
     },
-    <HttpCalls
+    <HttpCall
       value={node}
       isEdit={isEdit}
       metaFlow={metaFlow}
@@ -2213,7 +2206,7 @@ export interface HttpCallsModelPorps {
   schema: any
 }
 
-export const HttpCalls: FC<HttpCallsModelPorps> = ({
+export const HttpCall: FC<HttpCallsModelPorps> = ({
   value,
   onCancel,
   onSubmit,
@@ -2256,7 +2249,7 @@ export const HttpCalls: FC<HttpCallsModelPorps> = ({
         description: flowData.description,
         id: flowData.id,
         callArguments: flowData.callArguments,
-        result: flowData.result,
+        // result: flowData.result,
       })
     } else {
       form.initialValues = {

@@ -28,9 +28,10 @@ export interface ShortcuParam {
   description?: string
   connector?: TargetReference
   faultConnector?: TargetReference
-  variable: IFieldMeta[]
-  shortcutJson: any
-  shortcutId: string
+  // variable: IFieldMeta[]
+  // shortcutJson: any
+  callArguments: Record<string, any>
+  shortCutModelId: string
   x: number
   y: number
 }
@@ -38,9 +39,10 @@ export interface ShortcuParam {
 export class FlowShortcut extends FlowMetaNode {
   connector?: TargetReference
   faultConnector?: TargetReference
-  variable: IFieldMeta[]
-  shortcutJson: any
-  shortcutId: string
+  // variable: IFieldMeta[]
+  // shortcutJson: any
+  callArguments: Record<string, any>
+  shortCutModelId: string
 
   static DefaultConnectorProps = {
     targetReference: '',
@@ -81,9 +83,8 @@ export class FlowShortcut extends FlowMetaNode {
       targetReference: '',
     }
     this.faultConnector = flowShortcut.faultConnector ?? { targetReference: '' }
-    this.variable = flowShortcut.variable
-    this.shortcutJson = flowShortcut.shortcutJson
-    this.shortcutId = flowShortcut.shortcutId
+    this.callArguments = flowShortcut.callArguments
+    this.shortCutModelId = flowShortcut.shortCutModelId
     this.makeObservable()
   }
 
@@ -93,9 +94,8 @@ export class FlowShortcut extends FlowMetaNode {
       name: observable.ref,
       connector: observable.deep,
       faultConnector: observable.deep,
-      variable: observable.deep,
-      shortcutJson: observable.deep,
-      shortcutId: observable.ref,
+      callArguments: observable.deep,
+      shortCutModelId: observable.ref,
       update: action,
     })
   }
@@ -206,9 +206,7 @@ export class FlowShortcut extends FlowMetaNode {
   update(payload: ShortcuParam): void {
     this.name = payload.name
     this.description = payload.description
-    this.variable = payload.variable
-    this.shortcutJson = payload.shortcutJson
-    this.shortcutId = payload.shortcutId
+    this.callArguments = payload.callArguments
     this.toJson()
   }
 
@@ -240,9 +238,8 @@ export class FlowShortcut extends FlowMetaNode {
       type: this.type,
       connector: this.connector,
       faultConnector: this.faultConnector,
-      variable: this.variable,
-      shortcutJson: this.shortcutJson,
-      shortcutId: this.shortcutId,
+      callArguments: this.callArguments,
+      shortCutModelId: this.shortCutModelId,
       x: this.x,
       y: this.y,
     }

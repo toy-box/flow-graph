@@ -16,24 +16,31 @@ GlobalRegistry.setDesignerLanguage('en-US')
 GlobalRegistry.registerDesignerIcons(icons)
 
 export const Main: React.FC = () => {
-  const eventEngine = new EventEngine()
-  const metaFlow = new MetaFlow(FlowModeEnum.EDIT)
-  const freeFlow = new FreeFlow(FlowModeEnum.EDIT)
+  const [eventEngine, setEventEngine] = useState<any>()
+  const [metaFlow, setMetaFlow] = useState<any>()
+  const [freeFlow, setFreeFlow] = useState<any>()
   const [loading, setLoading] = useState(true)
   const history = useNavigate()
+  useEffect(() => {
+    setEventEngine(new EventEngine())
+    setFreeFlow(new FreeFlow(FlowModeEnum.EDIT))
+    setMetaFlow(new MetaFlow(FlowModeEnum.EDIT))
+  }, [])
   const submit = useCallback(() => {
     history('/')
   }, [])
   useEffect(() => {
-    metaFlow.setMetaFlow(
-      {
-        resources: undefined,
-        nodes: undefined,
-      },
-      'AUTO_START_UP'
-    )
-    setLoading(false)
-    freeFlow.setMetaFlow(freeMeta, 'AUTO_START_UP')
+    if (freeFlow && metaFlow) {
+      metaFlow.setMetaFlow(
+        {
+          resources: undefined,
+          nodes: undefined,
+        },
+        'AUTO_START_UP'
+      )
+      setLoading(false)
+      freeFlow.setMetaFlow(freeMeta, 'AUTO_START_UP')
+    }
   }, [metaFlow, freeFlow])
   return (
     <div className="App">
@@ -49,7 +56,7 @@ export const Main: React.FC = () => {
           },
         }}
       >
-        <Panel metaFlow={freeFlow} />
+        {freeFlow && <Panel metaFlow={freeFlow} />}
       </FlowContext.Provider>
     </div>
   )

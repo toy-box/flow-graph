@@ -28,8 +28,8 @@ export const nodeTemplatesProvider = (
   }
   const shortcutNodes =
     freeFlow &&
-    freeFlow.shortcutData.length &&
-    freeFlow.shortcutData.map((item: FlowMetaParam) => {
+    freeFlow.shortCutDatas.length &&
+    freeFlow.shortCutDatas.map((item: FlowMetaParam) => {
       return {
         icon: 'flow',
         title: 'ShortCut',

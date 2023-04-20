@@ -29,7 +29,7 @@ export abstract class AutoFlow {
   layoutMode?: LayoutModeEnum
   flowType: FlowType
   history: History
-  shortcutData: FlowMetaParam[] = []
+  shortCutDatas: FlowMetaParam[] = []
   recordObject: IRecordObject
 
   constructor(mode: FlowModeType, layoutMode: LayoutModeEnum, flow: Flow) {
@@ -211,19 +211,26 @@ export abstract class AutoFlow {
   parseResource(resources: IFlowMetaResource) {
     const resourcePrarms: IFieldMetaResource[] = []
     for (const key in resources) {
-      resourcePrarms.push({ ...resources[key], webType: key })
+      const res = resources[key].map((resource) => {
+        return { ...resource, webType: key }
+      })
+      resourcePrarms.push(...res)
     }
     return resourcePrarms
   }
 
-  shortcutPush(shortcutItem: FlowMetaParam) {
+  initShortCuts(shortCutDatas: FlowMetaParam[]) {
+    this.shortCutDatas = shortCutDatas
+  }
+
+  shortCutPush(shortcutItem: FlowMetaParam) {
     function checkUnique(id, list): boolean {
       return list.findIndex((item) => item.id === id) === -1
     }
-    if (checkUnique(shortcutItem.id, this.shortcutData)) {
-      const shortcutData = clone(this.shortcutData)
-      shortcutData.push(shortcutItem)
-      this.shortcutData = shortcutData
+    if (checkUnique(shortcutItem.id, this.shortCutDatas)) {
+      const shortCutDatas = clone(this.shortCutDatas)
+      shortCutDatas.push(shortcutItem)
+      this.shortCutDatas = shortCutDatas
     }
   }
 

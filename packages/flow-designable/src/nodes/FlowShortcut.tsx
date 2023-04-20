@@ -1,5 +1,5 @@
 import React from 'react'
-import { Divider } from 'antd'
+import { Divider, message } from 'antd'
 import {
   FormDialog,
   FormItem,
@@ -103,9 +103,9 @@ export const commSchema = {
           feedbackLayout: 'terse',
         },
       },
-      shortcutId: {
+      shortCutModelId: {
         type: 'string',
-        title: 'shortcutId',
+        title: 'shortCutModelId',
         'x-decorator': 'FormItem',
         'x-component': 'PreviewText.Input',
         'x-decorator-props': {
@@ -190,14 +190,17 @@ export const commSchema = {
 
 export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
   const isEdit = !node.make
-  const { name, id, description, title: shortcutIdMake } = node
-  const shortcutId = shortcutIdMake ?? node.shortcutId
-  const metaFlowShortcut = node.metaFlow.shortcutData.find(
-    (shortcut) => shortcut.id === shortcutId
+  const { name, id, description, title: shortCutModelIdMake } = node
+  const shortCutModelId = shortCutModelIdMake ?? node.shortCutModelId
+  const shortCutData = node.metaFlow.shortCutDatas.find(
+    (shortcut) => shortcut.id === shortCutModelId
   )
-  const shorcutName = metaFlowShortcut.name
-  const shortcutJson = node?.shortcutJson ?? metaFlowShortcut
-  const variable = node?.variable ?? shortcutJson.variable
+  if (!shortCutData) {
+    message.error(useLocale('flowDesigner.shortcut.error.nodeNull'))
+    return
+  }
+  const shorcutName = shortCutData?.name
+  const variable = shortCutData.variable
   const title = !isEdit ? (
     <TextWidget>flowDesigner.flow.form.variable.addTitle</TextWidget>
   ) : (
@@ -220,32 +223,34 @@ export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
   )
   dialog
     .forOpen((payload, next) => {
-      node?.shortcutJson &&
+      isEdit &&
         variable
           .filter(({ type }) => type === MetaValueType.OBJECT)
           .map(({ key }) => {
-            shortcutJson.variable[key] = keyValueToObjArray(
-              shortcutJson.variable[key]
+            shortCutData.variable[key] = keyValueToObjArray(
+              shortCutData.variable[key]
             )
           })
 
       setTimeout(() => {
         next({
-          initialValues: node?.shortcutJson
-            ? {
-                shortcutId,
-                shorcutName,
-                name,
-                id,
-                description,
-                ...shortcutJson.variable,
-              }
-            : { shortcutId, shorcutName, name: 'shortcut node' },
+          initialValues: isEdit
+            ? Object.assign(
+                {
+                  shortCutModelId,
+                  shorcutName,
+                  name,
+                  id,
+                  description,
+                },
+                node.callArguments || {}
+              )
+            : { shortCutModelId, shorcutName, name: 'shortcut node' },
         })
       }, 500)
     })
     .forConfirm((payload, next) => {
-      const { name, id, description, shortcutId, shorcutName, ...rest } =
+      const { name, id, description, shortCutModelId, shorcutName, ...rest } =
         payload.values
       setTimeout(() => {
         variable
@@ -254,16 +259,18 @@ export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
             rest[key] = objArrayToKeyValue(rest[key])
           })
         const paramData = {
-          shortcutId,
+          shortCutModelId,
           name,
           id,
           description,
-          variable,
-          shortcutJson: {
-            ...shortcutJson,
-            variable: rest,
-          },
+          callArguments: rest,
+          // variable,
+          // shortcutJson: {
+          //   ...shortCutData,
+          //   variable: rest,
+          // },
         }
+        debugger
         node.make
           ? node.make(at, { ...additionInfo, ...paramData })
           : node.update(paramData)
