@@ -43,7 +43,8 @@ import {
 } from '@formily/core'
 
 import './flowNodes.less'
-import { AutoFlow } from '../interface'
+import { IResourceMetaflow } from '../interface'
+import { setResourceMetaflow } from '../utils'
 
 export const AssignmentDesc = () => {
   return (
@@ -1118,7 +1119,10 @@ const SchemaField = createSchemaField({
 //   },
 // }
 
-export const httpCallsSchema = (isEdit: boolean) => {
+export const httpCallsSchema = (
+  isEdit: boolean,
+  metaFlow: IResourceMetaflow
+) => {
   return {
     type: 'object',
     properties: {
@@ -1466,7 +1470,16 @@ export const httpCallsSchema = (isEdit: boolean) => {
                                 value: {
                                   type: 'string',
                                   'x-decorator': 'FormItem',
-                                  'x-component': 'Input',
+                                  'x-component': 'ResourceSelect',
+                                  'x-component-props': {
+                                    suffix: "{{icon('SearchOutlined')}}",
+                                    placeholder: useLocale(
+                                      'flowDesigner.flow.form.comm.valuePlace'
+                                    ),
+                                    metaFlow: metaFlow,
+                                    isFormula: true,
+                                    isInput: true,
+                                  },
                                 },
                               },
                             },
@@ -1596,12 +1609,22 @@ export const httpCallsSchema = (isEdit: boolean) => {
                                   layout: 'vertical',
                                   colon: false,
                                 },
-                                'x-component': 'Input',
+                                // 'x-component': 'Input',
+                                'x-component': 'ResourceSelect',
+                                'x-component-props': {
+                                  suffix: "{{icon('SearchOutlined')}}",
+                                  placeholder: useLocale(
+                                    'flowDesigner.flow.form.comm.valuePlace'
+                                  ),
+                                  metaFlow: metaFlow,
+                                  isFormula: true,
+                                  isInput: true,
+                                },
                                 required: true,
                                 'x-reactions': [
                                   {
                                     dependencies: ['....authorization.type'],
-                                    when: "{{$deps[0] === 'Bearer Token'}}",
+                                    when: "{{$deps[0] === 'bearer'}}",
                                     fulfill: {
                                       schema: {
                                         'x-visible': true,
@@ -1623,12 +1646,21 @@ export const httpCallsSchema = (isEdit: boolean) => {
                                   layout: 'vertical',
                                   colon: false,
                                 },
-                                'x-component': 'Input',
+                                'x-component': 'ResourceSelect',
+                                'x-component-props': {
+                                  suffix: "{{icon('SearchOutlined')}}",
+                                  placeholder: useLocale(
+                                    'flowDesigner.flow.form.comm.valuePlace'
+                                  ),
+                                  metaFlow: metaFlow,
+                                  isFormula: true,
+                                  isInput: true,
+                                },
                                 required: true,
                                 'x-reactions': [
                                   {
                                     dependencies: ['....authorization.type'],
-                                    when: "{{$deps[0] === 'Basic Auth'}}",
+                                    when: "{{$deps[0] === 'basic'}}",
                                     fulfill: {
                                       schema: {
                                         'x-visible': true,
@@ -1655,7 +1687,7 @@ export const httpCallsSchema = (isEdit: boolean) => {
                                 'x-reactions': [
                                   {
                                     dependencies: ['....authorization.type'],
-                                    when: "{{$deps[0] === 'Basic Auth'}}",
+                                    when: "{{$deps[0] === 'basic'}}",
                                     fulfill: {
                                       schema: {
                                         'x-visible': true,
@@ -1744,7 +1776,16 @@ export const httpCallsSchema = (isEdit: boolean) => {
                                 value: {
                                   type: 'string',
                                   'x-decorator': 'FormItem',
-                                  'x-component': 'Input',
+                                  'x-component': 'ResourceSelect',
+                                  'x-component-props': {
+                                    suffix: "{{icon('SearchOutlined')}}",
+                                    placeholder: useLocale(
+                                      'flowDesigner.flow.form.comm.valuePlace'
+                                    ),
+                                    metaFlow: metaFlow,
+                                    isFormula: true,
+                                    isInput: true,
+                                  },
                                 },
                               },
                             },
@@ -1939,7 +1980,16 @@ export const httpCallsSchema = (isEdit: boolean) => {
                                 value: {
                                   type: 'string',
                                   'x-decorator': 'FormItem',
-                                  'x-component': 'Input',
+                                  'x-component': 'ResourceSelect',
+                                  'x-component-props': {
+                                    suffix: "{{icon('SearchOutlined')}}",
+                                    placeholder: useLocale(
+                                      'flowDesigner.flow.form.comm.valuePlace'
+                                    ),
+                                    metaFlow: metaFlow,
+                                    isFormula: true,
+                                    isInput: true,
+                                  },
                                 },
                               },
                             },
@@ -2138,7 +2188,16 @@ export const httpCallsSchema = (isEdit: boolean) => {
               layout: 'vertical',
               colon: false,
             },
-            'x-component': 'Input',
+            'x-component': 'ResourceSelect',
+            'x-component-props': {
+              suffix: "{{icon('SearchOutlined')}}",
+              placeholder: useLocale(
+                'flowDesigner.flow.form.placeholder.callArgument.result'
+              ),
+              metaFlow: metaFlow,
+              isFormula: true,
+              isInput: true,
+            },
           },
         },
       },
@@ -2148,6 +2207,7 @@ export const httpCallsSchema = (isEdit: boolean) => {
 
 export const httpCallsOnEdit = (node: any, at?: string, additionInfo?: any) => {
   const metaFlow = node.metaFlow
+  const resourceMetaflow = setResourceMetaflow(metaFlow)
   const isEdit = !node.make
   let formDialog = null
   const onCancel = () => {
@@ -2184,10 +2244,10 @@ export const httpCallsOnEdit = (node: any, at?: string, additionInfo?: any) => {
     <HttpCall
       value={node}
       isEdit={isEdit}
-      metaFlow={metaFlow}
+      metaFlow={resourceMetaflow}
       onCancel={onCancel}
       onSubmit={onSubmit}
-      schema={httpCallsSchema(isEdit)}
+      schema={httpCallsSchema(isEdit, resourceMetaflow)}
     />
   )
   formDialog
@@ -2199,7 +2259,7 @@ export const httpCallsOnEdit = (node: any, at?: string, additionInfo?: any) => {
 
 export interface HttpCallsModelPorps {
   value?: FlowMetaParam
-  metaFlow: AutoFlow
+  metaFlow: IResourceMetaflow
   onCancel: () => void
   onSubmit: (from) => void
   isEdit: boolean

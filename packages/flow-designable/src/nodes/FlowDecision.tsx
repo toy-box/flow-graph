@@ -442,10 +442,16 @@ const decideRender = (isNew: boolean, metaFlow: IResourceMetaflow, node) => {
                                 'x-component-props': {
                                   suffix: "{{icon('SearchOutlined')}}",
                                   metaFlow: metaFlow,
+                                  typeKey: 'type',
+                                  isSetType: true,
                                   placeholder: useLocale(
                                     'flowDesigner.flow.form.comm.operationPlace'
                                   ),
                                 },
+                              },
+                              type: {
+                                type: 'string',
+                                title: '',
                               },
                               operation: {
                                 type: 'string',
@@ -479,6 +485,7 @@ const decideRender = (isNew: boolean, metaFlow: IResourceMetaflow, node) => {
                                     'flowDesigner.flow.form.comm.typePlace'
                                   ),
                                   reactionKey: 'fieldPattern',
+                                  reactionTypeKey: 'type',
                                 },
                               },
                               value: {
@@ -516,6 +523,8 @@ const decideRender = (isNew: boolean, metaFlow: IResourceMetaflow, node) => {
                                   metaFlow: metaFlow,
                                   reactionKey: 'fieldPattern',
                                   isInput: true,
+                                  isFormula: true,
+                                  reactionTypeKey: 'type',
                                 },
                               },
                               remove: {

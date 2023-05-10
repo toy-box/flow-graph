@@ -12,6 +12,7 @@ import { useFlowPrefix } from '../hooks'
 export interface FormulaModelPorps {
   metaSchema?: Toybox.MetaSchema.Types.IFieldMeta[] | MetaSchemaObj
   value?: string
+  disabled?: boolean
   onChange: (value: string) => void
   inputStyle?: CSSProperties
   valueType: MetaValueType
@@ -27,6 +28,7 @@ export interface MetaSchemaObj {
 export const FormulaModel: FC<FormulaModelPorps> = ({
   value,
   onChange,
+  disabled = false,
   inputStyle,
   valueType,
   metaFlow,
@@ -51,7 +53,7 @@ export const FormulaModel: FC<FormulaModelPorps> = ({
   }, [])
 
   const showModal = () => {
-    setIsModalVisible(true)
+    if (!disabled) setIsModalVisible(true)
   }
 
   const handleOk = () => {
@@ -66,7 +68,11 @@ export const FormulaModel: FC<FormulaModelPorps> = ({
 
   return (
     <>
-      <Button className={prefix} title={formulaValue} onClick={showModal}>
+      <Button
+        className={`${prefix} ${disabled ? 'disable' : ''}`}
+        title={formulaValue}
+        onClick={showModal}
+      >
         <div className={prefix + '-icon'}>=</div>
         {formulaValue.length > 0 ? (
           <div className={prefix + '-code'}>{formulaValue}</div>

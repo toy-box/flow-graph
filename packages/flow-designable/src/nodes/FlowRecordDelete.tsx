@@ -397,10 +397,16 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
                             sourceMode: 'objectService',
                             metaFlow: metaFlow,
                             objectKey: 'registerId',
+                            typeKey: 'type',
+                            isSetType: true,
                             placeholder: useLocale(
                               'flowDesigner.flow.form.comm.operationPlace'
                             ),
                           },
+                        },
+                        type: {
+                          type: 'string',
+                          title: '',
                         },
                         operation: {
                           type: 'string',
@@ -434,6 +440,7 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
                               'flowDesigner.flow.form.comm.typePlace'
                             ),
                             reactionKey: 'fieldPattern',
+                            reactionTypeKey: 'type',
                           },
                         },
                         value: {
@@ -469,7 +476,9 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
                             ),
                             metaFlow: metaFlow,
                             reactionKey: 'fieldPattern',
+                            reactionTypeKey: 'type',
                             isInput: true,
+                            isFormula: true,
                           },
                         },
                         remove: {

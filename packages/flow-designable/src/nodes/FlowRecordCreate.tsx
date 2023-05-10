@@ -406,7 +406,9 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
                         ),
                         metaFlow: metaFlow,
                         reactionKey: 'field',
+                        reactionTypeKey: 'type',
                         isInput: true,
+                        isFormula: true,
                       },
                     },
                     remove: {

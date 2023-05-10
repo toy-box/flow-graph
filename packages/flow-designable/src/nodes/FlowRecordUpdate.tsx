@@ -437,10 +437,16 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
                             sourceMode: 'objectService',
                             objectKey: 'registerId',
                             metaFlow: metaFlow,
+                            typeKey: 'type',
+                            isSetType: true,
                             placeholder: useLocale(
                               'flowDesigner.flow.form.comm.operationPlace'
                             ),
                           },
+                        },
+                        type: {
+                          type: 'string',
+                          title: '',
                         },
                         operation: {
                           type: 'string',
@@ -474,6 +480,7 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
                               'flowDesigner.flow.form.comm.typePlace'
                             ),
                             reactionKey: 'fieldPattern',
+                            reactionTypeKey: 'type',
                           },
                         },
                         value: {
@@ -509,7 +516,9 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
                             ),
                             metaFlow: metaFlow,
                             reactionKey: 'fieldPattern',
+                            reactionTypeKey: 'type',
                             isInput: true,
+                            isFormula: true,
                           },
                         },
                         remove: {
@@ -678,7 +687,9 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
                         ),
                         metaFlow: metaFlow,
                         reactionKey: 'field',
+                        reactionTypeKey: 'type',
                         isInput: true,
+                        isFormula: true,
                       },
                     },
                     remove: {

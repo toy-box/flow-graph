@@ -6,7 +6,11 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
+import {
+  PlusOutlined,
+  SearchOutlined,
+  SettingOutlined,
+} from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Dropdown, Input, Tag } from 'antd'
 import { observer } from '@formily/reactive-react'
@@ -16,9 +20,14 @@ import { IFieldMeta } from '@toy-box/meta-schema'
 import { useLocale } from '@toy-box/studio-base'
 import { FlowResourceType } from '@toy-box/autoflow-core'
 import get from 'lodash.get'
-import { resourceEdit } from '../../../nodes'
-import './index.less'
 import { isArr } from '@designable/shared'
+import { FormulaModel, resourceEdit } from '../../../nodes'
+import './index.less'
+
+export enum InputtypeEnum {
+  BASE = 'BASE',
+  FORMULA = 'FORMULA',
+}
 
 export const ResourceSelect: FC = observer((props: any) => {
   const form = useForm()
@@ -26,6 +35,7 @@ export const ResourceSelect: FC = observer((props: any) => {
   const [visible, setVariable] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [selectKeys, setSelectKeys] = useState([])
+  const [inputType, setInputType] = useState(InputtypeEnum.BASE)
   const ref = useRef()
   const [items, setItems] = useState<MenuProps['items']>([])
   const [historyItems, setHistoryItems] = useState([])
@@ -57,29 +67,47 @@ export const ResourceSelect: FC = observer((props: any) => {
     const len = val?.length
     if (isStr(val) && val.startsWith('{!') && val.endsWith('}')) {
       const newVal = val.slice(2, len - 1)
-      setSelectKeys(newVal?.split('.')?.reverse() || [])
+      setInputType(InputtypeEnum.FORMULA)
+      setInputValue(newVal)
     } else if (isStr(val) && val.startsWith('{{') && val.endsWith('}}')) {
       const newVal = val.slice(2, len - 2)
       setSelectKeys(newVal?.split('.')?.reverse() || [])
     } else {
-      setSelectKeys(val?.split('.')?.reverse() || [])
+      if (val) {
+        setSelectKeys(val?.split('.')?.reverse())
+      } else {
+        setSelectKeys([])
+      }
     }
-  }, [formilyField?.value])
+  }, [])
 
   const onChange = useCallback(
-    (value: string[], parentType?: FlowResourceType) => {
+    (value: string[] | string, parentType?: FlowResourceType) => {
       form.setFieldState(formilyField?.path?.entire, (state) => {
-        const val = value?.reverse()?.join('.')
-        if (parentType === FlowResourceType.FORMULA) {
-          state.value = `{!${val}}`
-        } else {
-          state.value = val
-        }
+        let val = value
+        if (isArr(value)) val = value?.reverse()?.join('.')
+        state.value = val
         formilyField.validate()
       })
     },
     [form, formilyField]
   )
+
+  const onChangeValue = useCallback(
+    (value: string) => {
+      form.setFieldState(formilyField?.path?.entire, (state) => {
+        state.value = value
+        formilyField.validate()
+      })
+    },
+    [form, formilyField]
+  )
+
+  const changeInputType = useCallback((type: InputtypeEnum) => {
+    setInputValue('')
+    setInputType(type)
+    setSelectKeys([])
+  }, [])
 
   const reactionPath = useMemo(() => {
     const segments = formilyField?.path?.segments
@@ -275,6 +303,8 @@ export const ResourceSelect: FC = observer((props: any) => {
     if (selectKeys.length === 0 && !props.isInput) {
       setInputValue('')
       onChange(undefined)
+    } else {
+      onChange(inputValue)
     }
   }, [selectKeys, props.isInput])
 
@@ -342,12 +372,21 @@ export const ResourceSelect: FC = observer((props: any) => {
     const length = selectKeys.length
     if (length > 0 && !inputValue) {
       const selectKey = selectKeys[0]
+      let value = null
       historyItems.some((item) => {
-        if (item.key === selectKey) return setInputValue(item.label)
+        if (item.key === selectKey) {
+          value = item.label
+          return setInputValue(value)
+        }
         if (item?.children?.length > 0) {
-          return setInputValue(findName(item?.children, selectKey, length))
+          value = findName(item?.children, selectKey, length)
+          return setInputValue(value)
         }
       })
+      if (!value) {
+        setSelectKeys([])
+        setInputValue(selectKey)
+      }
     }
   }, [historyItems, selectKeys, inputValue])
 
@@ -370,54 +409,97 @@ export const ResourceSelect: FC = observer((props: any) => {
     []
   )
 
+  const isFormula = useMemo(() => props.isFormula, [props.isFormula])
+
   return (
     <div ref={ref}>
-      <Dropdown
-        open={visible}
-        onOpenChange={() => {
-          setVariable(!disabled ? !visible : false)
-          // if (!visible) openSelect()
-        }}
-        overlayClassName="resource-select-list"
-        menu={{
-          items,
-          onClick,
-          selectable: true,
-          selectedKeys: selectKeys,
-          defaultSelectedKeys: selectKeys,
-        }}
-        trigger={['click']}
-        destroyPopupOnHide={true}
-      >
-        <a
-          onClick={(e) => {
-            // if (!disabled) setVariable(true)
-            e.stopPropagation()
+      {inputType === InputtypeEnum.BASE ? (
+        <Dropdown
+          open={visible}
+          onOpenChange={() => {
+            setVariable(!disabled ? !visible : false)
+            // if (!visible) openSelect()
           }}
+          overlayClassName="resource-select-list"
+          menu={{
+            items,
+            onClick,
+            selectable: true,
+            selectedKeys: selectKeys,
+            defaultSelectedKeys: selectKeys,
+          }}
+          trigger={['click']}
+          destroyPopupOnHide={true}
         >
-          <div style={{ width: '100%' }}>
-            {selectKeys.length > 0 ? (
-              <div
-                className={`resource-select-custom-input ${
-                  disabled ? 'disabled' : ''
-                }`}
-              >
-                {tagChild()}
-              </div>
-            ) : (
-              <Input
-                allowClear
-                suffix={<SearchOutlined />}
-                onChange={changeValue}
-                value={inputValue}
-                placeholder={props.placeholder}
-                onBlur={changeBlur}
-                disabled={disabled}
-              />
-            )}
-          </div>
-        </a>
-      </Dropdown>
+          <a
+            onClick={(e) => {
+              // if (!disabled) setVariable(true)
+              e.stopPropagation()
+            }}
+          >
+            <div style={{ width: '100%' }}>
+              {selectKeys.length > 0 ? (
+                <div
+                  className={`resource-select-custom-input ${
+                    disabled ? 'disabled' : ''
+                  }`}
+                >
+                  {tagChild()}
+                </div>
+              ) : (
+                <div className="resource-select-formula">
+                  <Input
+                    allowClear
+                    suffix={<SearchOutlined />}
+                    onChange={changeValue}
+                    value={inputValue}
+                    placeholder={props.placeholder}
+                    onBlur={changeBlur}
+                    disabled={disabled}
+                  />
+                  {isFormula && (
+                    <span
+                      className={`resource-select-formula-check ${
+                        disabled ? 'disable' : ''
+                      }`}
+                      onClick={(e) => {
+                        if (!disabled) {
+                          e.stopPropagation()
+                          changeInputType(InputtypeEnum.FORMULA)
+                        }
+                      }}
+                    >
+                      <SettingOutlined />
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          </a>
+        </Dropdown>
+      ) : (
+        <div className="resource-select-formula">
+          <FormulaModel
+            metaFlow={props.metaFlow}
+            valueType={'string' as any}
+            value={inputValue}
+            disabled={disabled}
+            onChange={(value: string) => onChangeValue(value)}
+          />
+          <span
+            className={`resource-select-formula-check ${
+              disabled ? 'disable' : ''
+            }`}
+            onClick={() => {
+              if (!disabled) {
+                changeInputType(InputtypeEnum.BASE)
+              }
+            }}
+          >
+            <SettingOutlined />
+          </span>
+        </div>
+      )}
     </div>
   )
 })

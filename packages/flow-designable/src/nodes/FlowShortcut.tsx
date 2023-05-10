@@ -270,7 +270,6 @@ export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
           //   variable: rest,
           // },
         }
-        debugger
         node.make
           ? node.make(at, { ...additionInfo, ...paramData })
           : node.update(paramData)

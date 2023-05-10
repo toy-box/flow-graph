@@ -285,6 +285,7 @@ const assignRender = (
                         ),
                         reactionKey: 'assignToReference',
                         reactionTypeKey: 'type',
+                        isAssignment: true,
                       },
                     },
                     value: {
@@ -320,6 +321,7 @@ const assignRender = (
                           'flowDesigner.flow.form.comm.valuePlace'
                         ),
                         metaFlow: metaFlow,
+                        isFormula: true,
                         reactionKey: 'assignToReference',
                         isInput: true,
                         reactionTypeKey: 'type',

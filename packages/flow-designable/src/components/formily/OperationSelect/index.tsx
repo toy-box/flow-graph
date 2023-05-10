@@ -2,7 +2,7 @@ import React, { FC, useCallback, useMemo } from 'react'
 import { observer } from '@formily/reactive-react'
 import { useLocale } from '@toy-box/studio-base'
 import { FieldSelect } from '@toy-box/meta-components'
-import { MetaValueType } from '@toy-box/meta-schema'
+import { CompareOP, MetaValueType } from '@toy-box/meta-schema'
 import { useField, useForm } from '@formily/react'
 import { FlowResourceType } from '@toy-box/autoflow-core'
 import { clone } from '@designable/shared'
@@ -12,6 +12,69 @@ import { AssignmentOpEnum } from '../../../interface'
 export const OperationSelect: FC = observer((props: any) => {
   const form = useForm()
   const field = useField() as any
+
+  const numberOps = [
+    CompareOP.EQ,
+    CompareOP.NE,
+    CompareOP.GT,
+    CompareOP.LT,
+    CompareOP.GTE,
+    CompareOP.LTE,
+    CompareOP.IS_NULL,
+  ]
+
+  const dateOps = [
+    CompareOP.UNIT_DATE_RANGE,
+    CompareOP.BETWEEN,
+    CompareOP.EQ,
+    CompareOP.NE,
+    CompareOP.GT,
+    CompareOP.LT,
+    CompareOP.GTE,
+    CompareOP.LTE,
+    CompareOP.IS_NULL,
+  ]
+
+  const stringOps = [
+    CompareOP.EQ,
+    CompareOP.NE,
+    CompareOP.IN,
+    CompareOP.NIN,
+    CompareOP.GT,
+    CompareOP.LT,
+    CompareOP.GTE,
+    CompareOP.LTE,
+    CompareOP.LIKE,
+    CompareOP.IS_NULL,
+  ]
+
+  const optionOps = [
+    CompareOP.EQ,
+    CompareOP.NE,
+    CompareOP.IN,
+    CompareOP.NIN,
+    CompareOP.IS_NULL,
+  ]
+
+  const optionMultiOps = [CompareOP.EQ, CompareOP.IN, CompareOP.NIN]
+
+  const booleanOps = [CompareOP.EQ, CompareOP.NE, CompareOP.IS_NULL]
+
+  const FieldOpMap: Record<string, Array<Toybox.MetaSchema.Types.CompareOP>> = {
+    [MetaValueType.INTEGER]: numberOps,
+    [MetaValueType.NUMBER]: numberOps,
+    [MetaValueType.STRING]: stringOps,
+    [MetaValueType.TEXT]: stringOps,
+    [MetaValueType.BOOLEAN]: booleanOps,
+    [MetaValueType.DATE]: dateOps,
+    [MetaValueType.DATETIME]: dateOps,
+    [MetaValueType.TIMESTAMP]: dateOps,
+    [MetaValueType.SINGLE_OPTION]: optionOps,
+    [MetaValueType.MULTI_OPTION]: optionMultiOps,
+    [MetaValueType.OBJECT_ID]: optionOps,
+    [MetaValueType.OBJECT]: optionOps,
+    [MetaValueType.ARRAY]: optionOps,
+  }
 
   const textOps = [
     {
@@ -65,42 +128,6 @@ export const OperationSelect: FC = observer((props: any) => {
       value: AssignmentOpEnum.REMOVE_ALL,
     },
   ]
-  const operatOptions = [
-    {
-      type: FlowResourceType.VARIABLE,
-      children: [
-        { type: MetaValueType.STRING, children: textOps },
-        { type: MetaValueType.TEXT, children: textOps },
-        { type: MetaValueType.NUMBER, children: numOps },
-        { type: MetaValueType.BOOLEAN, children: eqOps },
-        { type: MetaValueType.DATE, children: numOps },
-        { type: MetaValueType.DATETIME, children: eqOps },
-      ],
-    },
-    {
-      type: FlowResourceType.VARIABLE_RECORD,
-      children: [
-        { type: MetaValueType.OBJECT_ID, children: eqOps },
-        { type: MetaValueType.OBJECT, children: eqOps },
-      ],
-    },
-    {
-      type: FlowResourceType.VARIABLE_ARRAY,
-      children: [
-        { type: MetaValueType.STRING, children: varArrayOps },
-        { type: MetaValueType.TEXT, children: varArrayOps },
-        { type: MetaValueType.NUMBER, children: varArrayOps },
-        { type: MetaValueType.BOOLEAN, children: varArrayOps },
-        { type: MetaValueType.DATE, children: varArrayOps },
-        { type: MetaValueType.DATETIME, children: varArrayOps },
-        { type: MetaValueType.ARRAY, children: varArrayOps },
-      ],
-    },
-    {
-      type: FlowResourceType.VARIABLE_ARRAY_RECORD,
-      children: [{ type: MetaValueType.ARRAY, children: varArrayOps }],
-    },
-  ]
 
   const handleSelectOptions = useCallback(
     (value: any) => {
@@ -133,10 +160,37 @@ export const OperationSelect: FC = observer((props: any) => {
     const reactionValue = get(form.values, reactionKey)
     const reactionTypeValue = get(form.values, reactionTypeKey)
     if (reactionValue) {
-      return textOps
+      if (props?.isAssignment) {
+        switch (reactionTypeValue) {
+          case MetaValueType.STRING:
+          case MetaValueType.TEXT:
+            return textOps
+          case MetaValueType.NUMBER:
+          case MetaValueType.DATE:
+            return numOps
+          case MetaValueType.BOOLEAN:
+          case MetaValueType.DATETIME:
+          case MetaValueType.OBJECT_ID:
+          case MetaValueType.OBJECT:
+            return eqOps
+          case MetaValueType.ARRAY:
+            return varArrayOps
+          default:
+            return textOps
+        }
+      } else if (reactionTypeValue) {
+        const compareOperation = FieldOpMap[reactionTypeValue]
+        const compareOperations = compareOperation?.map((op) => {
+          return {
+            label: useLocale(`flowDesigner.compareOperation.${op}`),
+            value: op,
+          }
+        })
+        return compareOperations
+      }
     }
     return false
-  }, [get(form.values, reactionKey, reactionTypeKey)])
+  }, [get(form.values, reactionKey, reactionTypeKey, props?.isAssignment)])
 
   return (
     <FieldSelect

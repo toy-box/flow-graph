@@ -656,10 +656,16 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
                             sourceMode: 'objectService',
                             objectKey: 'registerId',
                             metaFlow: metaFlow,
+                            typeKey: 'type',
+                            isSetType: true,
                             placeholder: useLocale(
                               'flowDesigner.flow.form.comm.operationPlace'
                             ),
                           },
+                        },
+                        type: {
+                          type: 'string',
+                          title: '',
                         },
                         operation: {
                           type: 'string',
@@ -693,6 +699,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
                               'flowDesigner.flow.form.comm.typePlace'
                             ),
                             reactionKey: 'fieldPattern',
+                            reactionTypeKey: 'type',
                           },
                         },
                         value: {
@@ -728,7 +735,9 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
                             ),
                             metaFlow: metaFlow,
                             reactionKey: 'fieldPattern',
+                            reactionTypeKey: 'type',
                             isInput: true,
+                            isFormula: true,
                           },
                         },
                         remove: {
@@ -1244,7 +1253,9 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
                         ),
                         metaFlow: metaFlow,
                         reactionKey: 'field',
+                        reactionTypeKey: 'type',
                         isInput: true,
+                        isFormula: true,
                       },
                     },
                     remove: {

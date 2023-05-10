@@ -11,6 +11,20 @@ const zhCN = {
         error: '错误',
         debug: '调试',
       },
+      compareOperation: {
+        $eq: '等于',
+        $ne: '不等于',
+        $gt: '大于',
+        $lt: '小于',
+        $gte: '大于等于',
+        $lte: '小于等于',
+        $in: '包含',
+        $nin: '不包含',
+        $like: '匹配',
+        $unitDateRange: '在',
+        $between: '介于',
+        $isNull: '为空',
+      },
       resource: {
         create: '新建资源',
       },
@@ -138,6 +152,9 @@ const zhCN = {
             formula: '配置表达式',
             outputReference: '选择记录变量',
             outputReferenceArray: '选择记录集合变量',
+            callArgument: {
+              result: '结果赋值',
+            },
             formilyInput: {
               input: '请输入值',
               select: '请选择值',
@@ -356,6 +373,20 @@ const enUS = {
         },
         debug: 'Debug',
       },
+      compareOperation: {
+        $eq: 'Equal',
+        $ne: 'Not equal',
+        $gt: 'Greater than',
+        $lt: 'Less than',
+        $gte: 'Greater or equal than',
+        $lte: 'Less or equal than',
+        $in: 'Include',
+        $like: 'Like',
+        $nin: 'Not include',
+        $unitDateRange: 'On',
+        $between: 'Between',
+        $isNull: 'Is Null',
+      },
       resource: {
         create: 'create resource',
       },
@@ -487,6 +518,9 @@ const enUS = {
             formula: 'Set Formula',
             outputReference: 'Select Record Variable',
             outputReferenceArray: 'Select Record Variables',
+            callArgument: {
+              result: 'result assignment',
+            },
             formilyInput: {
               input: 'Input Value',
               select: 'Select Value',
