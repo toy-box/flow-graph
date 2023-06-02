@@ -45,7 +45,7 @@ export class FlowShortcut extends FlowMetaNode {
   shortCutModelId: string
 
   static DefaultConnectorProps = {
-    targetReference: '',
+    targetReference: null,
   }
 
   static DefaultNodeProps: IMakeFlowNodeProps = {
@@ -80,9 +80,11 @@ export class FlowShortcut extends FlowMetaNode {
       flowShortcut.description
     )
     this.connector = flowShortcut.connector ?? {
-      targetReference: '',
+      targetReference: null,
     }
-    this.faultConnector = flowShortcut.faultConnector ?? { targetReference: '' }
+    this.faultConnector = flowShortcut.faultConnector ?? {
+      targetReference: null,
+    }
     this.callArguments = flowShortcut.callArguments
     this.shortCutModelId = flowShortcut.shortCutModelId
     this.makeObservable()
@@ -223,9 +225,9 @@ export class FlowShortcut extends FlowMetaNode {
       this.faultConnector.targetReference === target &&
       nodeTarget.label === this.faultConnectorName
     ) {
-      this.faultConnector = { targetReference: '' }
+      this.faultConnector = { targetReference: null }
     } else {
-      this.connector = { targetReference: '' }
+      this.connector = { targetReference: null }
     }
     this.toJson()
   }

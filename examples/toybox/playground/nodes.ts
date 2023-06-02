@@ -42,7 +42,7 @@ export const nodeTemplatesProvider = (
           const flowData = {
             name: item.name ?? 'ShortCut',
             type: FlowMetaType.SHORT_CUT,
-            connector: { targetReference: '' },
+            connector: { targetReference: null },
             ...Object.assign(editInfo, info),
           }
           appendOrAddNode(at, flowData)
@@ -80,7 +80,7 @@ export const nodeTemplatesProvider = (
         const flowData = {
           name: 'Loop',
           type: FlowMetaType.LOOP,
-          defaultConnector: { targetReference: '' },
+          defaultConnector: { targetReference: null },
           ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
@@ -98,7 +98,7 @@ export const nodeTemplatesProvider = (
         const flowData = {
           name: 'Decision',
           type: FlowMetaType.DECISION,
-          defaultConnector: { targetReference: '' },
+          defaultConnector: { targetReference: null },
           rules: [
             {
               id: uid(),
@@ -127,7 +127,7 @@ export const nodeTemplatesProvider = (
         const flowData = {
           name: 'Wait',
           type: FlowMetaType.WAIT,
-          connector: { targetReference: '' },
+          connector: { targetReference: null },
           ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
@@ -145,7 +145,7 @@ export const nodeTemplatesProvider = (
         const flowData = {
           name: 'Sort',
           type: FlowMetaType.SORT_COLLECTION_PROCESSOR,
-          connector: { targetReference: '' },
+          connector: { targetReference: null },
           ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
@@ -163,7 +163,7 @@ export const nodeTemplatesProvider = (
         const flowData = {
           name: 'RecordCreate',
           type: FlowMetaType.RECORD_CREATE,
-          connector: { targetReference: '' },
+          connector: { targetReference: null },
           ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
@@ -181,7 +181,7 @@ export const nodeTemplatesProvider = (
         const flowData = {
           name: 'RecordUpdate',
           type: FlowMetaType.RECORD_UPDATE,
-          connector: { targetReference: '' },
+          connector: { targetReference: null },
           ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
@@ -199,7 +199,7 @@ export const nodeTemplatesProvider = (
         const flowData = {
           name: 'RecordDelete',
           type: FlowMetaType.RECORD_DELETE,
-          connector: { targetReference: '' },
+          connector: { targetReference: null },
           ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
@@ -217,7 +217,7 @@ export const nodeTemplatesProvider = (
         const flowData = {
           name: 'RecordLookup',
           type: FlowMetaType.RECORD_LOOKUP,
-          connector: { targetReference: '' },
+          connector: { targetReference: null },
           ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
@@ -235,7 +235,7 @@ export const nodeTemplatesProvider = (
         const flowData = {
           name: 'HttpCalls',
           type: FlowMetaType.HTTP_CALL,
-          connector: { targetReference: '' },
+          connector: { targetReference: null },
           ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
@@ -253,7 +253,7 @@ export const nodeTemplatesProvider = (
         const flowData = {
           name: 'Shortcut',
           type: FlowMetaType.SHORT_CUT,
-          connector: { targetReference: '' },
+          connector: { targetReference: null },
           ...Object.assign(editInfo, info),
         }
         appendOrAddNode(at, flowData)
@@ -271,7 +271,7 @@ export const nodeTemplatesProvider = (
     //     const flowData = {
     //       name: 'ShortCut',
     //       type: FlowMetaType.SHORTCUT,
-    //       connector: { targetReference: '' },
+    //       connector: { targetReference: null },
     //       ...Object.assign(editInfo, info),,
     //     }
     //     appendOrAddNode(at, flowData)

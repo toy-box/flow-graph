@@ -176,7 +176,7 @@ export class FlowStart extends FlowMetaNode {
   }
 
   deleteConnector() {
-    this.connector = { targetReference: '' }
+    this.connector = { targetReference: null }
     this.toJson()
   }
 

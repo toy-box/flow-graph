@@ -3,6 +3,7 @@ import {
   FlowResourceType,
   FreeFlow,
   IFieldMetaResource,
+  IRecordObject,
   IResourceParam,
   MetaFlow,
 } from '@toy-box/autoflow-core'
@@ -26,10 +27,11 @@ export type AutoFlow = FreeFlow | MetaFlow
 export interface IResourceMetaflow {
   metaResourceDatas: IResourceParam[]
   registers: any[]
+  recordObject: IRecordObject
   metaFlowDatas: FlowMetaParam[]
   shortCutDatas: FlowMetaParam[]
   createResource: (type: FlowResourceType, resource: IFieldMetaResource) => void
   editResource: (type: FlowResourceType, resource: IFieldMetaResource) => void
 }
 
-export const apiReg = /^\w+$/
+export const apiReg = /^[A-Za-z][A-Za-z0-9_]*(\[[0-9]+\]|[A-Za-z0-9]*)$/

@@ -39,7 +39,15 @@ export const Main: React.FC = () => {
         'AUTO_START_UP'
       )
       setLoading(false)
-      freeFlow.setMetaFlow(freeMeta, 'AUTO_START_UP')
+      freeFlow.setMetaFlow(freeMeta, 'AUTO_START_UP', {
+        name: 'dsds',
+        objectId: 'penalty_detail',
+        recordTriggerType: 'create',
+        rocordType: 'recordAfterSave',
+        system: false,
+        triggerType: 'webhook',
+        type: 'RECORD_TRIGGER',
+      })
     }
   }, [metaFlow, freeFlow])
   return (

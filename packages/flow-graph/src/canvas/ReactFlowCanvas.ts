@@ -204,13 +204,17 @@ export class ReactFlowCanvas implements ICanvas {
 
   onNodesChange(nodesChange: INodesChangeProps) {
     if (nodesChange.freeFlow) {
-      const { flowMetaNodeMap } = nodesChange.freeFlow
+      const { flowMetaNodeMap, metaFlowDatas } = nodesChange.freeFlow
+      let updateMetaFlowDatas = metaFlowDatas
       nodesChange.changes.map((change) => {
         if (change.type === 'remove') {
           const {
             [change.id]: {},
             ...rest
           } = flowMetaNodeMap
+          updateMetaFlowDatas = updateMetaFlowDatas.filter(
+            (data) => data.id !== change.id
+          )
           const removeEdges = []
           const deleteEdges = this.edges
             .map((edge) => {
@@ -240,6 +244,7 @@ export class ReactFlowCanvas implements ICanvas {
             })
           }
           nodesChange.freeFlow.getFlowMetaNodeMap(rest)
+          nodesChange.freeFlow.updateMetaFlowDatas(updateMetaFlowDatas)
         }
       })
     }

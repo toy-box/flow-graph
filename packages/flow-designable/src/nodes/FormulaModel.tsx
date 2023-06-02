@@ -1,4 +1,11 @@
-import React, { FC, useState, CSSProperties, useRef, useEffect } from 'react'
+import React, {
+  FC,
+  useState,
+  CSSProperties,
+  useRef,
+  useEffect,
+  useCallback,
+} from 'react'
 import { Modal, Button } from 'antd'
 import { IFieldMeta, MetaValueType } from '@toy-box/meta-schema'
 // import { MonacoInput } from '@toy-box/designable-react-settings-form'
@@ -35,6 +42,7 @@ export const FormulaModel: FC<FormulaModelPorps> = ({
 }) => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [formulaValue, setFormulaValue] = useState(value || '')
+  const [currentValue, setCurrentValue] = useState('')
   const prefix = useFlowPrefix('-powerfx-editor')
   const variableMap: Record<string, IFieldMeta> = {}
   const [client, setClient] = useState<PowerfxWorkerManager>()
@@ -56,10 +64,11 @@ export const FormulaModel: FC<FormulaModelPorps> = ({
     if (!disabled) setIsModalVisible(true)
   }
 
-  const handleOk = () => {
+  const handleOk = useCallback(() => {
+    setFormulaValue(currentValue)
     setIsModalVisible(false)
-    onChange(formulaValue)
-  }
+    onChange(currentValue)
+  }, [currentValue])
 
   const handleCancel = () => {
     setFormulaValue(value || '')
@@ -106,7 +115,7 @@ export const FormulaModel: FC<FormulaModelPorps> = ({
           <PowerFxFormulaEditor
             style={{ border: '1px solid grey' }}
             context={context}
-            defaultValue=""
+            defaultValue={formulaValue}
             minLineCount={1}
             maxLineCount={6}
             // width={200}
@@ -119,7 +128,7 @@ export const FormulaModel: FC<FormulaModelPorps> = ({
               },
             }}
             onChange={(newValue: string): void => {
-              setFormulaValue(() => newValue)
+              setCurrentValue(() => newValue)
               // this._evalAsync(context, newValue);//计算自行处理
             }}
             onEditorDidMount={(editor, _): void => {

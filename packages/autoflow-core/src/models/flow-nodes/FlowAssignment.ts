@@ -41,7 +41,7 @@ export class FlowAssignment extends FlowMetaNode {
       flowAssignment.description
     )
     this.connector = flowAssignment.connector ?? {
-      targetReference: '',
+      targetReference: null,
     }
     this.assignmentItems = flowAssignment.assignmentItems
     this.makeObservable()
@@ -178,7 +178,7 @@ export class FlowAssignment extends FlowMetaNode {
   }
 
   deleteConnector() {
-    this.connector = { targetReference: '' }
+    this.connector = { targetReference: null }
     this.toJson()
   }
 

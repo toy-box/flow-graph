@@ -25,7 +25,7 @@ export class FlowHttpCall extends FlowMetaNode {
   callArguments: ICallArgumentData
 
   static DefaultConnectorProps = {
-    targetReference: '',
+    targetReference: null,
   }
 
   static DefaultNodeProps: IMakeFlowNodeProps = {
@@ -62,9 +62,9 @@ export class FlowHttpCall extends FlowMetaNode {
     this.connector =
       flowHttpCalls.connector ?? FlowHttpCall.DefaultConnectorProps
     this.faultConnector = flowHttpCalls.faultConnector ?? {
-      targetReference: '',
+      targetReference: null,
     }
-    this.callArguments = flowHttpCalls.callArguments
+    this.callArguments = flowHttpCalls.callArguments as ICallArgumentData
     this.makeObservable()
   }
 
@@ -185,7 +185,7 @@ export class FlowHttpCall extends FlowMetaNode {
   update(payload: FlowMetaUpdate): void {
     this.name = payload.name
     this.description = payload.description
-    this.callArguments = payload.callArguments
+    this.callArguments = payload.callArguments as ICallArgumentData
     this.toJson()
   }
 
@@ -202,9 +202,9 @@ export class FlowHttpCall extends FlowMetaNode {
       this.faultConnector.targetReference === target &&
       nodeTarget.label === this.faultConnectorName
     ) {
-      this.faultConnector = { targetReference: '' }
+      this.faultConnector = { targetReference: null }
     } else {
-      this.connector = { targetReference: '' }
+      this.connector = { targetReference: null }
     }
     this.toJson()
   }

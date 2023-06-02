@@ -62,7 +62,7 @@ export class FlowDecision extends FlowMetaNode {
     )
     this.connector = flowDecision.connector
     this.defaultConnector = flowDecision.defaultConnector ?? {
-      targetReference: '',
+      targetReference: null,
     }
     this.defaultConnectorName = flowDecision.defaultConnectorName ?? 'default'
     this.rules = flowDecision.rules
@@ -221,7 +221,7 @@ export class FlowDecision extends FlowMetaNode {
         return {
           ...rule,
           connector: {
-            targetReference: '',
+            targetReference: null,
           },
         }
       return rule
@@ -255,13 +255,13 @@ export class FlowDecision extends FlowMetaNode {
       this.defaultConnector.targetReference === target &&
       (ruleId === null || !ruleId)
     ) {
-      this.defaultConnector = { targetReference: '' }
+      this.defaultConnector = { targetReference: null }
     } else {
       this.rules.map((rule, index) => {
         if (rule?.connector?.targetReference === target && rule.id === ruleId) {
           this.rules[index] = {
             ...this.rules[index],
-            connector: { targetReference: '' },
+            connector: { targetReference: null },
           }
         }
       })

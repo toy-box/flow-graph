@@ -409,7 +409,6 @@ export const assignOnEdit = (node: any, at: string, additionInfo?: any) => {
           return {
             assignToReference: data.assignToReference,
             operation: data.operation,
-            type: opTypeEnum.INPUT,
             value: data.value,
           }
         })

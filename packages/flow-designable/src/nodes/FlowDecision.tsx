@@ -15,6 +15,7 @@ import {
 import { createSchemaField } from '@formily/react'
 import * as ICONS from '@ant-design/icons'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
+import { uid } from '@designable/shared'
 import { opTypeEnum } from '@toy-box/autoflow-core'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 
@@ -601,14 +602,22 @@ export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
           initialValues: {
             name: node.type,
             description: node.description,
-            defaultConnectorName: node.defaultConnectorName,
+            defaultConnectorName:
+              node.defaultConnectorName ||
+              useLocale('flowDesigner.flow.form.decision.defaultConnectorName'),
             id: node.id,
             rules: node.rules ?? [
               {
+                name: '',
+                id: uid(),
                 criteria: {
-                  logic: '$and',
                   conditions: [{}],
+                  logic: '$and',
                 },
+                connector: {
+                  targetReference: null,
+                },
+                description: '',
               },
               // {
               //   criteria: {
@@ -636,7 +645,6 @@ export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
           return {
             fieldPattern: data.fieldPattern,
             operation: data.operation,
-            type: opTypeEnum.INPUT,
             value: data.value,
           }
         })
@@ -645,9 +653,9 @@ export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
       const paramData = {
         id: value.id,
         name: value.name,
-        defaultConnectorName: useLocale(
-          'flowDesigner.flow.form.decision.defaultConnectorName'
-        ),
+        defaultConnectorName:
+          value.defaultConnectorName ||
+          useLocale('flowDesigner.flow.form.decision.defaultConnectorName'),
         rules: value.rules,
       }
       setTimeout(() => {

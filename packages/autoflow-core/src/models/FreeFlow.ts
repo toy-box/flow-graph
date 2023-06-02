@@ -357,6 +357,7 @@ export class FreeFlow extends AutoFlow {
     const flowNode = this.makeFlowNode(flowData)
     const flowMetaNodeMap = { ...this.flowMetaNodeMap }
     this.flowMetaNodeMap[flowNode.id] = flowNode
+    this.metaFlowDatas.push(flowData)
     this.history.push({
       type: OpearteTypeEnum.ADD_NODE,
       flowNode,

@@ -50,11 +50,10 @@ const SchemaField = createSchemaField({
 
 const submitParamData = (values) => {
   const value = values
-  const inputAssignments = value.inputAssignments.map(
+  const inputAssignments = value.inputAssignments?.map(
     (data: IInputAssignment) => {
       return {
         field: data.field,
-        type: data.type || opTypeEnum.INPUT,
         value: data.value,
       }
     }
@@ -63,9 +62,11 @@ const submitParamData = (values) => {
     id: value.id,
     name: value.name,
     registerId: value.registerId,
-    inputAssignments: inputAssignments,
-    storeOutputAutomatically: value.storeOutputAutomatically,
-    assignRecordIdToReference: value.assignRecordIdToReference,
+    callArguments: {
+      inputAssignments,
+      storeOutputAutomatically: value.storeOutputAutomatically,
+      assignRecordIdToReference: value.assignRecordIdToReference,
+    },
   }
   return paramData
 }
@@ -104,7 +105,7 @@ export const recordCreateOnEdit = (
       width: '60vw',
     },
     <RecordCreate
-      value={node}
+      value={isEdit ? node : null}
       isEdit={isEdit}
       metaFlow={resourceMetaflow}
       onCancel={onCancel}
@@ -141,7 +142,9 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
     effects: () => {
       onFieldValueChange('registerId', (field) => {
         const registers = metaFlow.registers
-        const register = registers.find((rg) => rg.id === field.value)
+        const register = registers.find(
+          (rg) => rg.id === field.value || rg.key === field.value
+        )
         if (register) {
           form.setFieldState('inputAssignments', (state) => {
             state.title = `${setName} ${register.name} ${setField}`
@@ -157,13 +160,14 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
 
   if (value) {
     const flowData = clone(value)
+    const callArguments = flowData?.callArguments
     form.initialValues = {
       id: flowData.id,
       name: flowData.name,
       registerId: flowData.registerId,
-      inputAssignments: flowData.inputAssignments,
-      storeOutputAutomatically: flowData.storeOutputAutomatically,
-      assignRecordIdToReference: flowData.assignRecordIdToReference,
+      inputAssignments: callArguments?.inputAssignments,
+      storeOutputAutomatically: callArguments?.storeOutputAutomatically,
+      assignRecordIdToReference: callArguments?.assignRecordIdToReference,
     }
   }
 

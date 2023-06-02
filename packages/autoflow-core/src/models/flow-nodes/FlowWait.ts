@@ -55,7 +55,7 @@ export class FlowWait extends FlowMetaNode {
     super(metaFlow, flowWait.id, flowWait.name, flowWait.description)
     this.connector = flowWait.connector
     this.defaultConnector = flowWait.defaultConnector ?? {
-      targetReference: '',
+      targetReference: null,
     }
     this.defaultConnectorName = flowWait.defaultConnectorName ?? 'Defalut Path'
     this.waitEvents = flowWait.waitEvents
@@ -234,13 +234,13 @@ export class FlowWait extends FlowMetaNode {
       this.defaultConnector.targetReference === target &&
       (ruleId === null || !ruleId)
     ) {
-      this.defaultConnector = { targetReference: '' }
+      this.defaultConnector = { targetReference: null }
     } else {
       this.waitEvents.map((rule, index) => {
         if (rule.connector.targetReference === target && rule.id === ruleId) {
           this.waitEvents[index] = {
             ...this.waitEvents[index],
-            connector: { targetReference: '' },
+            connector: { targetReference: null },
           }
         }
       })

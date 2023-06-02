@@ -129,22 +129,49 @@ export interface FlowMetaParam {
   limit?: null | number
   sortOptions?: SortOption[]
   registerId?: string
+  criteria?: Criteria | null
+  waitEvents?: IwaitEvent[]
+  result?: string
+  callArguments?: callArgumentType
+  variable?: Record<string, VariableParam>
+  x?: number
+  y?: number
+}
+
+export type callArgumentType =
+  | ICallArgumentData
+  | IcallArgumentRecordCreate
+  | IcallArgumentRecordDelete
+  | IcallArgumentRecordUpdate
+  | IcallArgumentRecordLookUp
+
+export interface IcallArgumentRecordCreate {
   inputAssignments?: IInputAssignment[]
   storeOutputAutomatically?: boolean
   assignRecordIdToReference?: string
-  criteria?: Criteria | null
+  inputReference?: string //todo
+}
+
+export interface IcallArgumentRecordUpdate {
+  inputAssignments: IInputAssignment[]
+  criteria?: Criteria
+}
+
+export interface IcallArgumentRecordDelete {
+  criteria: Criteria
+  inputReference?: string //todo
+}
+
+export interface IcallArgumentRecordLookUp {
+  criteria?: Criteria
   outputAssignments?: IOutputAssignment[]
   outputReference?: null | string
   queriedFields?: string[]
   sortOrder?: SortOrder
   sortField?: string
   getFirstRecordOnly?: boolean
-  waitEvents?: IwaitEvent[]
-  result?: string
-  callArguments?: ICallArgumentData
-  variable?: Record<string, VariableParam>
-  x?: number
-  y?: number
+  storeOutputAutomatically?: boolean
+  assignNullValuesIfNoRecordsFound?: boolean
 }
 
 export interface FlowMetaParamWithSize extends FlowMetaParam {
@@ -227,7 +254,6 @@ export enum OpartType {
 
 export interface IInputAssignment {
   field: string
-  type: string
   value: any
 }
 
@@ -240,14 +266,12 @@ export interface IOutParameter {
 export interface ICriteriaCondition {
   fieldPattern: string
   operation: string
-  type: string
   value: any
 }
 
 export interface IAssignmentData {
   assignToReference: string
   operation: string
-  type: string
   value: any
 }
 

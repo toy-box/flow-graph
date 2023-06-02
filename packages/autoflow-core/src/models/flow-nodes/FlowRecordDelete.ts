@@ -11,10 +11,9 @@ import {
   FlowMetaParam,
   FlowMetaUpdate,
   TargetReference,
-  IInputAssignment,
   FlowMetaType,
   FlowMetaParamWithSize,
-  Criteria,
+  IcallArgumentRecordDelete,
 } from '../../types'
 import { FreeFlow } from '../FreeFlow'
 import { MetaFlow } from '../MetaFlow'
@@ -23,7 +22,7 @@ import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 export class FlowRecordDelete extends FlowMetaNode {
   connector?: TargetReference
   faultConnector?: TargetReference
-  criteria?: Criteria | null
+  callArguments: IcallArgumentRecordDelete
   registerId?: string
 
   static DefaultNodeProps: IMakeFlowNodeProps = {
@@ -58,13 +57,14 @@ export class FlowRecordDelete extends FlowMetaNode {
       flowRecordDelete.description
     )
     this.connector = flowRecordDelete.connector ?? {
-      targetReference: '',
+      targetReference: null,
     }
     this.faultConnector = flowRecordDelete.faultConnector ?? {
-      targetReference: '',
+      targetReference: null,
     }
     this.registerId = flowRecordDelete.registerId
-    this.criteria = flowRecordDelete.criteria
+    this.callArguments =
+      flowRecordDelete.callArguments as IcallArgumentRecordDelete
     this.makeObservable()
   }
 
@@ -73,7 +73,7 @@ export class FlowRecordDelete extends FlowMetaNode {
       id: observable.ref,
       name: observable.ref,
       registerId: observable.ref,
-      criteria: observable.deep,
+      callArguments: observable.deep,
       connector: observable.deep,
       faultConnector: observable.deep,
       update: action,
@@ -187,7 +187,8 @@ export class FlowRecordDelete extends FlowMetaNode {
     this.name = flowRecordupdate.name
     this.description = flowRecordupdate.description
     this.registerId = flowRecordupdate.registerId
-    this.criteria = flowRecordupdate.criteria
+    this.callArguments =
+      flowRecordupdate.callArguments as IcallArgumentRecordDelete
     this.toJson()
   }
 
@@ -204,9 +205,9 @@ export class FlowRecordDelete extends FlowMetaNode {
       this.faultConnector.targetReference === target &&
       nodeTarget.label === 'Fault'
     ) {
-      this.faultConnector = { targetReference: '' }
+      this.faultConnector = { targetReference: null }
     } else {
-      this.connector = { targetReference: '' }
+      this.connector = { targetReference: null }
     }
     this.toJson()
   }
@@ -220,7 +221,7 @@ export class FlowRecordDelete extends FlowMetaNode {
       connector: this.connector,
       faultConnector: this.faultConnector,
       registerId: this.registerId,
-      criteria: this.criteria,
+      callArguments: this.callArguments,
       x: this.x,
       y: this.y,
     }

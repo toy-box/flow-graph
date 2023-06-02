@@ -11,11 +11,9 @@ import {
   FlowMetaParam,
   FlowMetaUpdate,
   TargetReference,
-  IOutputAssignment,
   FlowMetaType,
   FlowMetaParamWithSize,
-  Criteria,
-  SortOrder,
+  IcallArgumentRecordLookUp,
 } from '../../types'
 import { FreeFlow } from '../FreeFlow'
 import { MetaFlow } from '../MetaFlow'
@@ -24,15 +22,8 @@ import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 export class FlowRecordLookup extends FlowMetaNode {
   connector?: TargetReference
   faultConnector?: TargetReference
-  criteria?: Criteria | null
   registerId?: string
-  outputAssignments?: IOutputAssignment[]
-  outputReference?: null | string
-  queriedFields?: string[]
-  sortOrder?: SortOrder
-  sortField?: string
-  getFirstRecordOnly?: boolean
-  storeOutputAutomatically?: boolean
+  callArguments: IcallArgumentRecordLookUp
 
   static DefaultNodeProps: IMakeFlowNodeProps = {
     width: 60,
@@ -66,20 +57,14 @@ export class FlowRecordLookup extends FlowMetaNode {
       flowRecordLookup.description
     )
     this.connector = flowRecordLookup.connector ?? {
-      targetReference: '',
+      targetReference: null,
     }
     this.faultConnector = flowRecordLookup.faultConnector ?? {
-      targetReference: '',
+      targetReference: null,
     }
     this.registerId = flowRecordLookup.registerId
-    this.outputAssignments = flowRecordLookup.outputAssignments
-    this.outputReference = flowRecordLookup.outputReference
-    this.queriedFields = flowRecordLookup.queriedFields
-    this.sortOrder = flowRecordLookup.sortOrder
-    this.sortField = flowRecordLookup.sortField
-    this.getFirstRecordOnly = flowRecordLookup.getFirstRecordOnly
-    this.storeOutputAutomatically = flowRecordLookup.storeOutputAutomatically
-    this.criteria = flowRecordLookup.criteria
+    this.callArguments =
+      flowRecordLookup.callArguments as IcallArgumentRecordLookUp
     this.makeObservable()
   }
 
@@ -88,14 +73,7 @@ export class FlowRecordLookup extends FlowMetaNode {
       id: observable.ref,
       name: observable.ref,
       registerId: observable.ref,
-      criteria: observable.deep,
-      outputAssignments: observable.deep,
-      outputReference: observable.ref,
-      queriedFields: observable.deep,
-      sortOrder: observable.deep,
-      sortField: observable.ref,
-      getFirstRecordOnly: observable.ref,
-      storeOutputAutomatically: observable.ref,
+      callArguments: observable.deep,
       connector: observable.deep,
       faultConnector: observable.deep,
       update: action,
@@ -209,14 +187,8 @@ export class FlowRecordLookup extends FlowMetaNode {
     this.name = flowRecordLookup.name
     this.description = flowRecordLookup.description
     this.registerId = flowRecordLookup.registerId
-    this.outputAssignments = flowRecordLookup.outputAssignments
-    this.outputReference = flowRecordLookup.outputReference
-    this.queriedFields = flowRecordLookup.queriedFields
-    this.sortOrder = flowRecordLookup.sortOrder
-    this.sortField = flowRecordLookup.sortField
-    this.getFirstRecordOnly = flowRecordLookup.getFirstRecordOnly
-    this.storeOutputAutomatically = flowRecordLookup.storeOutputAutomatically
-    this.criteria = flowRecordLookup.criteria
+    this.callArguments =
+      flowRecordLookup.callArguments as IcallArgumentRecordLookUp
     this.toJson()
   }
 
@@ -233,9 +205,9 @@ export class FlowRecordLookup extends FlowMetaNode {
       this.faultConnector.targetReference === target &&
       nodeTarget.label === 'Fault'
     ) {
-      this.faultConnector = { targetReference: '' }
+      this.faultConnector = { targetReference: null }
     } else {
-      this.connector = { targetReference: '' }
+      this.connector = { targetReference: null }
     }
     this.toJson()
   }
@@ -249,14 +221,7 @@ export class FlowRecordLookup extends FlowMetaNode {
       connector: this.connector,
       faultConnector: this.faultConnector,
       registerId: this.registerId,
-      outputAssignments: this.outputAssignments,
-      criteria: this.criteria,
-      outputReference: this.outputReference,
-      queriedFields: this.queriedFields,
-      sortOrder: this.sortOrder,
-      sortField: this.sortField,
-      getFirstRecordOnly: this.getFirstRecordOnly,
-      storeOutputAutomatically: this.storeOutputAutomatically,
+      callArguments: this.callArguments,
       x: this.x,
       y: this.y,
     }

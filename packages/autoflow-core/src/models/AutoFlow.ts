@@ -65,10 +65,6 @@ export abstract class AutoFlow {
         type: FlowResourceType.TEMPLATE,
         children: [],
       },
-      {
-        type: FlowResourceType.GLOBAL_VARIABLE,
-        children: [],
-      },
     ]
   }
 
@@ -102,6 +98,7 @@ export abstract class AutoFlow {
           const child = {
             label: p.name,
             key: p.key,
+            type: p.type,
             children: [],
           }
           this.setMetaChildren(child, p)
@@ -236,5 +233,9 @@ export abstract class AutoFlow {
 
   changeMode(mode: FlowModeType) {
     this.mode = mode
+  }
+
+  updateMetaFlowDatas(metaFlowDatas: FlowMetaParam[]) {
+    this.metaFlowDatas = metaFlowDatas
   }
 }

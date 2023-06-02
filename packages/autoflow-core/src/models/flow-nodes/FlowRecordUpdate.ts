@@ -11,10 +11,9 @@ import {
   FlowMetaParam,
   FlowMetaUpdate,
   TargetReference,
-  IInputAssignment,
   FlowMetaType,
   FlowMetaParamWithSize,
-  Criteria,
+  IcallArgumentRecordUpdate,
 } from '../../types'
 import { FreeFlow } from '../FreeFlow'
 import { MetaFlow } from '../MetaFlow'
@@ -23,9 +22,8 @@ import { FlowMetaNode, IMakeFlowNodeProps } from './FlowMetaNode'
 export class FlowRecordUpdate extends FlowMetaNode {
   connector?: TargetReference
   faultConnector?: TargetReference
-  criteria?: Criteria | null
   registerId?: string
-  inputAssignments?: IInputAssignment[]
+  callArguments?: IcallArgumentRecordUpdate
 
   static DefaultNodeProps: IMakeFlowNodeProps = {
     width: 60,
@@ -59,14 +57,14 @@ export class FlowRecordUpdate extends FlowMetaNode {
       flowRecordUpdate.description
     )
     this.connector = flowRecordUpdate.connector ?? {
-      targetReference: '',
+      targetReference: null,
     }
     this.faultConnector = flowRecordUpdate.faultConnector ?? {
-      targetReference: '',
+      targetReference: null,
     }
     this.registerId = flowRecordUpdate.registerId
-    this.inputAssignments = flowRecordUpdate.inputAssignments
-    this.criteria = flowRecordUpdate.criteria
+    this.callArguments =
+      flowRecordUpdate.callArguments as IcallArgumentRecordUpdate
     this.makeObservable()
   }
 
@@ -75,8 +73,7 @@ export class FlowRecordUpdate extends FlowMetaNode {
       id: observable.ref,
       name: observable.ref,
       registerId: observable.ref,
-      criteria: observable.deep,
-      inputAssignments: observable.deep,
+      callArguments: observable.deep,
       connector: observable.deep,
       faultConnector: observable.deep,
       update: action,
@@ -190,8 +187,8 @@ export class FlowRecordUpdate extends FlowMetaNode {
     this.name = flowRecordupdate.name
     this.description = flowRecordupdate.description
     this.registerId = flowRecordupdate.registerId
-    this.inputAssignments = flowRecordupdate.inputAssignments
-    this.criteria = flowRecordupdate.criteria
+    this.callArguments =
+      flowRecordupdate.callArguments as IcallArgumentRecordUpdate
     this.toJson()
   }
 
@@ -208,9 +205,9 @@ export class FlowRecordUpdate extends FlowMetaNode {
       this.faultConnector.targetReference === target &&
       nodeTarget.label === 'Fault'
     ) {
-      this.faultConnector = { targetReference: '' }
+      this.faultConnector = { targetReference: null }
     } else {
-      this.connector = { targetReference: '' }
+      this.connector = { targetReference: null }
     }
     this.toJson()
   }
@@ -224,8 +221,7 @@ export class FlowRecordUpdate extends FlowMetaNode {
       connector: this.connector,
       faultConnector: this.faultConnector,
       registerId: this.registerId,
-      inputAssignments: this.inputAssignments,
-      criteria: this.criteria,
+      callArguments: this.callArguments,
       x: this.x,
       y: this.y,
     }

@@ -63,10 +63,10 @@ export class FlowLoop extends FlowMetaNode {
   constructor(flowLoop: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
     super(metaFlow, flowLoop.id, flowLoop.name, flowLoop.description)
     this.defaultConnector = flowLoop.defaultConnector ?? {
-      targetReference: '',
+      targetReference: null,
     }
     this.nextValueConnector = flowLoop.nextValueConnector ?? {
-      targetReference: '',
+      targetReference: null,
     }
     this.defaultConnectorName =
       flowLoop.defaultConnectorName ?? 'After Last Item'
@@ -219,9 +219,9 @@ export class FlowLoop extends FlowMetaNode {
       this.defaultConnector.targetReference === target &&
       nodeTarget.label === this.defaultConnectorName
     ) {
-      this.defaultConnector = { targetReference: '' }
+      this.defaultConnector = { targetReference: null }
     } else {
-      this.nextValueConnector = { targetReference: '' }
+      this.nextValueConnector = { targetReference: null }
     }
     this.toJson()
   }

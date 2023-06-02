@@ -11,17 +11,13 @@ import {
   Submit,
 } from '@formily/antd'
 import { createSchemaField, FormProvider } from '@formily/react'
-import {
-  FlowMetaParam,
-  ICriteriaCondition,
-  opTypeEnum,
-} from '@toy-box/autoflow-core'
+import { FlowMetaParam, ICriteriaCondition } from '@toy-box/autoflow-core'
 import { createForm, onFieldValueChange } from '@formily/core'
 import { Button } from 'antd'
 import { useLocale, TextWidget } from '@toy-box/studio-base'
 import { clone } from '@designable/shared'
 import { ResourceSelect, OperationSelect } from '../components/formily'
-import { apiReg, AutoFlow, IResourceMetaflow } from '../interface'
+import { apiReg, IResourceMetaflow } from '../interface'
 
 import './flowNodes.less'
 import { setResourceMetaflow } from '../utils'
@@ -47,7 +43,6 @@ const submitParamData = (values) => {
       return {
         fieldPattern: data.fieldPattern,
         operation: data.operation,
-        type: data.type || opTypeEnum.INPUT,
         value: data.value,
       }
     }
@@ -56,9 +51,11 @@ const submitParamData = (values) => {
     id: value.id,
     name: value.name,
     registerId: value.registerId,
-    criteria: {
-      conditions,
-      logic: value.criteria.logic || '$and',
+    callArguments: {
+      criteria: {
+        conditions,
+        logic: value.criteria.logic || '$and',
+      },
     },
   }
   return paramData
@@ -98,7 +95,7 @@ export const recordDeleteOnEdit = (
       width: '60vw',
     },
     <RecordDelete
-      value={node}
+      value={isEdit ? node : null}
       isEdit={isEdit}
       metaFlow={resourceMetaflow}
       onCancel={onCancel}
@@ -127,23 +124,40 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
   metaFlow,
   isEdit,
 }) => {
+  const filterName = useLocale('flowDesigner.flow.form.recordUpdate.filter')
+  const record = useLocale('flowDesigner.flow.form.recordUpdate.record')
   const form = createForm({
     effects: () => {
       onFieldValueChange('registerId', (field) => {
-        form.setFieldState('criteria.conditions', (state) => {
-          state.value = []
-        })
+        const registers = metaFlow.registers
+        const register = registers.find(
+          (rg) => rg.id === field.value || rg.key === field.value
+        )
+        if (register) {
+          form.setFieldState('titleWeb', (state) => {
+            const title = `${filterName} ${register.name} ${record}`
+            state.title = (
+              <>
+                <div className="connectDialog-title marginTB-5">{title}</div>
+              </>
+            )
+          })
+          form.setFieldState('criteria.conditions', (state) => {
+            state.value = []
+          })
+        }
       })
     },
   })
 
   if (value) {
     const flowData = clone(value)
+    const callArguments = flowData.callArguments
     form.initialValues = {
       id: flowData.id,
       name: flowData.name,
       registerId: flowData.registerId,
-      criteria: flowData.criteria,
+      criteria: callArguments.criteria,
     }
   }
 
@@ -235,16 +249,33 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
             },
             'x-decorator': 'FormItem',
             'x-component': 'ResourceSelect',
+            'x-decorator-props': {
+              gridSpan: 2,
+            },
             'x-component-props': {
               sourceMode: 'objectService',
               rank: 'single',
               metaFlow,
+              style: {
+                width: '50%',
+              },
             },
           },
-          web: {
-            type: 'string',
-            title: '',
+          titleWeb: {
+            type: 'void',
             'x-decorator': 'FormItem',
+            'x-decorator-props': {
+              feedbackLayout: 'terse',
+              gridSpan: 2,
+            },
+            'x-reactions': {
+              dependencies: ['registerId'],
+              fulfill: {
+                schema: {
+                  'x-display': "{{$deps != '' ? 'visible' : 'none'}}",
+                },
+              },
+            },
           },
           criteria: {
             type: 'object',

@@ -49,21 +49,19 @@ const SchemaField = createSchemaField({
 
 const submitParamData = (values) => {
   const value = values
-  const conditions = value?.criteria?.conditions.map(
+  const conditions = value?.criteria?.conditions?.map(
     (data: ICriteriaCondition) => {
       return {
         fieldPattern: data.fieldPattern,
         operation: data.operation,
-        type: data.type || opTypeEnum.INPUT,
         value: data.value,
       }
     }
   )
-  const inputAssignments = value.inputAssignments.map(
+  const inputAssignments = value.inputAssignments?.map(
     (data: IInputAssignment) => {
       return {
         field: data.field,
-        type: data.type || opTypeEnum.INPUT,
         value: data.value,
       }
     }
@@ -72,11 +70,16 @@ const submitParamData = (values) => {
     id: value.id,
     name: value.name,
     registerId: value.registerId,
-    criteria: {
-      conditions,
-      logic: value.criteria.logic || '$and',
+    callArguments: {
+      criteria:
+        value.criteria.logic === '$and'
+          ? {
+              conditions,
+              logic: value.criteria.logic || '$and',
+            }
+          : null,
+      inputAssignments,
     },
-    inputAssignments,
   }
   return paramData
 }
@@ -115,7 +118,7 @@ export const recordUpdateOnEdit = (
       width: '60vw',
     },
     <RecordUpdate
-      value={node}
+      value={isEdit ? node : null}
       isEdit={isEdit}
       metaFlow={resourceMetaflow}
       onCancel={onCancel}
@@ -153,7 +156,9 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
     effects: () => {
       onFieldValueChange('registerId', (field) => {
         const registers = metaFlow.registers
-        const register = registers.find((rg) => rg.id === field.value)
+        const register = registers.find(
+          (rg) => rg.id === field.value || rg.key === field.value
+        )
         if (register) {
           form.setFieldState('criteria.conditions', (state) => {
             state.title = `${filterName} ${register.name} ${record}`
@@ -170,12 +175,16 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
 
   if (value) {
     const flowData = clone(value)
+    const callArguments = flowData.callArguments
     form.initialValues = {
       id: flowData.id,
       name: flowData.name,
       registerId: flowData.registerId,
-      criteria: flowData.criteria,
-      inputAssignments: flowData.inputAssignments,
+      criteria: callArguments?.criteria ?? {
+        conditions: [],
+        logic: 'none',
+      },
+      inputAssignments: callArguments?.inputAssignments,
     }
   }
 
@@ -304,6 +313,7 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
                   <TextWidget token="flowDesigner.flow.form.recordUpdate.filterTitle"></TextWidget>
                 ),
                 required: true,
+                default: '$and',
                 'x-validator': [
                   {
                     triggerType: 'onBlur',
@@ -316,6 +326,12 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
                   },
                 ],
                 enum: [
+                  {
+                    label: (
+                      <TextWidget token="flowDesigner.flow.form.decision.logicNone"></TextWidget>
+                    ),
+                    value: 'none',
+                  },
                   {
                     label: (
                       <TextWidget token="flowDesigner.flow.form.decision.logicAnd"></TextWidget>
@@ -372,6 +388,14 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
                 },
                 'x-decorator': 'FormItem',
                 'x-component': 'ArrayItems',
+                'x-reactions': {
+                  dependencies: ['criteria.logic'],
+                  fulfill: {
+                    schema: {
+                      'x-display': "{{$deps == '$and' ? 'visible' : 'none'}}",
+                    },
+                  },
+                },
                 items: {
                   type: 'object',
                   'x-component': 'ArrayItems.Item',

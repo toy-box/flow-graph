@@ -16,18 +16,14 @@ import {
   Submit,
 } from '@formily/antd'
 import { Button } from 'antd'
-import { createSchemaField, FormProvider, observer } from '@formily/react'
+import { createSchemaField, FormProvider } from '@formily/react'
 import * as ICONS from '@ant-design/icons'
 import {
-  FlowMetaNode,
-  FlowMetaType,
-  FreeFlow,
-  FlowMetaUpdate,
   IContentTypeEnum,
   FlowMetaParam,
   IAuthorizationEnum,
+  ICallArgumentData,
 } from '@toy-box/autoflow-core'
-import { INodeTemplate, NodeMake } from '@toy-box/flow-node'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
 import { clone } from '@designable/shared'
@@ -35,12 +31,7 @@ import {
   convertHttpFormilyToJson,
   converHttpJsonToFormily,
 } from '@toy-box/action-template'
-import {
-  createForm,
-  onFieldChange,
-  onFieldInitialValueChange,
-  onFieldValueChange,
-} from '@formily/core'
+import { createForm, onFieldValueChange } from '@formily/core'
 
 import './flowNodes.less'
 import { IResourceMetaflow } from '../interface'
@@ -1558,6 +1549,7 @@ export const httpCallsSchema = (
                             'x-component': 'Select',
                             'x-component-props': {
                               gridSpan: 1,
+                              allowClear: true,
                             },
                             enum: [
                               {
@@ -2321,8 +2313,8 @@ export const HttpCall: FC<HttpCallsModelPorps> = ({
   }
 
   formTab.setActiveKey('tab1')
-
-  switch (value.callArguments && value.callArguments.contentType) {
+  const callArguments = value?.callArguments as ICallArgumentData
+  switch (callArguments && callArguments?.contentType) {
     case IContentTypeEnum.FORM_DATA:
     case IContentTypeEnum.X_WWW_FORM_URLENCODED:
       form.setFieldState('callArguments.body', (state) => {

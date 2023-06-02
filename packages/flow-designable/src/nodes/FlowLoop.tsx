@@ -13,10 +13,12 @@ import {
 } from '@formily/antd'
 import { createSchemaField } from '@formily/react'
 import * as ICONS from '@ant-design/icons'
+import { FlowResourceType } from '@toy-box/autoflow-core'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
 import { RepeatErrorMessage } from './RepeatErrorMessage'
 import { apiReg, IResourceMetaflow } from '../interface'
 import { setResourceMetaflow } from '../utils'
+import { ResourceSelect } from '../components/formily'
 
 const LoopDescrip = () => {
   return (
@@ -37,6 +39,7 @@ const SchemaField = createSchemaField({
     Select,
     Radio,
     Divider,
+    ResourceSelect,
   },
   scope: {
     icon(name) {
@@ -156,7 +159,7 @@ const loopRender = (isNew: boolean, metaFlow: IResourceMetaflow, node: any) => {
             <>
               <Divider className="margin-0" />
               <div className="connectDialog-title marginTB-5">
-                <TextWidget token="flowDesigner.flow.form.loop.titleCollection" />
+                <TextWidget token="flowDesigner.flow.form.loop.setCollectionReference" />
               </div>
             </>
           )
@@ -184,10 +187,19 @@ const loopRender = (isNew: boolean, metaFlow: IResourceMetaflow, node: any) => {
           wrapperWidth: 350,
           feedbackLayout: 'terse',
         },
-        'x-component': 'Input',
+        'x-component': 'ResourceSelect',
         'x-component-props': {
           suffix: "{{icon('SearchOutlined')}}",
           placeholder: useLocale('flowDesigner.flow.form.comm.collectionPlace'),
+          metaFlow,
+          flowJsonTypes: [
+            {
+              value: FlowResourceType.VARIABLE_ARRAY,
+            },
+            {
+              value: FlowResourceType.VARIABLE_ARRAY_RECORD,
+            },
+          ],
         },
       },
       titleDirection: {
@@ -295,6 +307,7 @@ export const loopOnEdit = (node: any, at?: string, additionInfo?: any) => {
         next({
           initialValues: {
             name: node.type,
+            id: node.id,
             description: node.description,
             collectionReference: node.collectionReference,
             iterationOrder: node.iterationOrder,

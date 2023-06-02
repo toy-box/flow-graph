@@ -42,7 +42,7 @@ export class FlowSortCollectionProcessor extends FlowMetaNode {
       sortCollection.description
     )
     this.connector = sortCollection.connector ?? {
-      targetReference: '',
+      targetReference: null,
     }
     this.collectionReference = sortCollection.collectionReference
     this.limit = sortCollection.limit
@@ -179,7 +179,7 @@ export class FlowSortCollectionProcessor extends FlowMetaNode {
   }
 
   deleteConnector() {
-    this.connector = { targetReference: '' }
+    this.connector = { targetReference: null }
     this.toJson()
   }
 

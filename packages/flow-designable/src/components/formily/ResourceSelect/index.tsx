@@ -60,6 +60,9 @@ export const ResourceSelect: FC = observer((props: any) => {
     [FlowResourceType.TEMPLATE]: useLocale(
       'flowDesigner.flow.autoFlow.template'
     ),
+    [FlowResourceType.GLOBAL_VARIABLE]: useLocale(
+      'flowDesigner.flow.autoFlow.global_variable'
+    ),
   }
 
   useEffect(() => {
@@ -77,9 +80,10 @@ export const ResourceSelect: FC = observer((props: any) => {
         setSelectKeys(val?.split('.')?.reverse())
       } else {
         setSelectKeys([])
+        setInputValue(null)
       }
     }
-  }, [])
+  }, [formilyField?.value])
 
   const onChange = useCallback(
     (value: string[] | string, parentType?: FlowResourceType) => {
@@ -96,7 +100,7 @@ export const ResourceSelect: FC = observer((props: any) => {
   const onChangeValue = useCallback(
     (value: string) => {
       form.setFieldState(formilyField?.path?.entire, (state) => {
-        state.value = value
+        state.value = `{!${value}}`
         formilyField.validate()
       })
     },
@@ -221,12 +225,45 @@ export const ResourceSelect: FC = observer((props: any) => {
           })
         arr.push(...metaArr)
       }
+      const objectRegister = props?.metaFlow?.registers?.find(
+        (reg) => reg.key === props?.metaFlow?.recordObject?.objectId
+      )
+      if (objectRegister?.properties && !props?.flowJsonTypes) {
+        const registerOps = []
+        const option = [
+          {
+            label: '$RECORD',
+            key: '$RECORD',
+            children: registerOps,
+          },
+        ]
+        for (const key in objectRegister.properties) {
+          if (objectRegister.properties.hasOwnProperty(key)) {
+            const obj = objectRegister.properties[key]
+            const p = {
+              label: obj.name,
+              key: obj.key,
+              dataType: obj.type,
+              children: [],
+            }
+            const changeObj = setMetaChildren(p, obj)
+            registerOps.push(changeObj)
+          }
+        }
+        arr.push({
+          label: templateObj[FlowResourceType.GLOBAL_VARIABLE],
+          key: FlowResourceType.GLOBAL_VARIABLE,
+          type: 'group',
+          children: option,
+        } as any)
+      }
       setItems(arr)
       setHistoryItems(arr)
     }
   }, [
     props?.metaFlow?.metaResourceDatas,
     props?.metaFlow?.registers,
+    props?.metaFlow?.recordObject?.objectId,
     props?.sourceMode,
     props?.flowJsonTypes,
     props.objectKey,
@@ -376,11 +413,13 @@ export const ResourceSelect: FC = observer((props: any) => {
       historyItems.some((item) => {
         if (item.key === selectKey) {
           value = item.label
-          return setInputValue(value)
+          if (value) setInputValue(value)
+          return true
         }
         if (item?.children?.length > 0) {
           value = findName(item?.children, selectKey, length)
-          return setInputValue(value)
+          setInputValue(value)
+          return value
         }
       })
       if (!value) {
@@ -390,29 +429,30 @@ export const ResourceSelect: FC = observer((props: any) => {
     }
   }, [historyItems, selectKeys, inputValue])
 
-  const findName = useCallback(
-    (children: any[], selectKey: string, length: number) => {
-      const num = length - 1
-      let name = ''
-      children.some((child) => {
-        if (num === 0) {
-          if (child.key === selectKey) {
-            name = child.label
-            return true
-          }
-        } else if (child?.children?.length > 0) {
-          findName(child?.children, selectKey, num)
+  const findName = (
+    children: any[],
+    selectKey: string,
+    length: number,
+    name = ''
+  ) => {
+    const num = length - 1
+    children.some((child) => {
+      if (num === 0) {
+        if (child.key === selectKey) {
+          name = child.label
+          return true
         }
-      })
-      return name
-    },
-    []
-  )
+      } else if (child?.children?.length > 0 && num > 0) {
+        name = findName(child?.children, selectKey, num, name)
+      }
+    })
+    return name
+  }
 
   const isFormula = useMemo(() => props.isFormula, [props.isFormula])
 
   return (
-    <div ref={ref}>
+    <div ref={ref} style={props.style}>
       {inputType === InputtypeEnum.BASE ? (
         <Dropdown
           open={visible}

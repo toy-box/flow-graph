@@ -61,17 +61,16 @@ const SchemaField = createSchemaField({
 
 const submitParamData = (values) => {
   const value = values
-  const queriedFields = value?.queriedFields?.map(
-    (field: { field: string }) => {
+  const queriedFields = value?.queriedFields
+    ?.map((field: { field: string }) => {
       return field.field
-    }
-  )
-  const conditions = value?.criteria?.conditions.map(
+    })
+    .filter(Boolean)
+  const conditions = value?.criteria?.conditions?.map(
     (data: ICriteriaCondition) => {
       return {
         fieldPattern: data.fieldPattern,
         operation: data.operation,
-        type: data.type || opTypeEnum.INPUT,
         value: data.value,
       }
     }
@@ -80,21 +79,23 @@ const submitParamData = (values) => {
     id: value.id,
     name: value.name,
     registerId: value.registerId,
-    criteria:
-      conditions && conditions.length > 0
-        ? {
-            conditions,
-            logic: value.criteria.logic || '$and',
-          }
-        : null,
-    outputAssignments: value?.outputAssignments,
-    outputReference: value.address ? value.outputReference : undefined,
-    queriedFields,
-    sortOrder: value.sortOrder,
-    sortField: value.sortField,
-    storeOutputAutomatically: value.storeOutputAutomatically,
-    getFirstRecordOnly: value.getFirstRecordOnly,
-    assignNullValuesIfNoRecordsFound: value.assignNullValuesIfNoRecordsFound,
+    callArguments: {
+      criteria:
+        conditions && conditions.length > 0
+          ? {
+              conditions,
+              logic: value.criteria.logic || '$and',
+            }
+          : null,
+      outputAssignments: value?.outputAssignments,
+      outputReference: value.address ? value.outputReference : undefined,
+      queriedFields,
+      sortOrder: value.sortOrder,
+      sortField: value.sortField,
+      storeOutputAutomatically: value.storeOutputAutomatically,
+      getFirstRecordOnly: value.getFirstRecordOnly,
+      assignNullValuesIfNoRecordsFound: value.assignNullValuesIfNoRecordsFound,
+    },
   }
   return paramData
 }
@@ -121,9 +122,9 @@ export const recordLookUpOnEdit = (
     formDialog.close()
   }
   const title = !isEdit ? (
-    <TextWidget>flowDesigner.flow.form.recordUpdate.addTitle</TextWidget>
+    <TextWidget>flowDesigner.flow.form.recordLookUp.addTitle</TextWidget>
   ) : (
-    <TextWidget>flowDesigner.flow.form.recordUpdate.editTitle</TextWidget>
+    <TextWidget>flowDesigner.flow.form.recordLookUp.editTitle</TextWidget>
   )
   formDialog = FormDialog(
     {
@@ -133,7 +134,7 @@ export const recordLookUpOnEdit = (
       width: '60vw',
     },
     <RecordLookUp
-      value={node}
+      value={isEdit ? node : null}
       isEdit={isEdit}
       metaFlow={resourceMetaflow}
       onCancel={onCancel}
@@ -169,7 +170,9 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
     effects: () => {
       onFieldValueChange('registerId', (field) => {
         const registers = metaFlow.registers
-        const register = registers.find((rg) => rg.id === field.value)
+        const register = registers.find(
+          (rg) => rg.key === field.value || rg.id === field.value
+        )
         if (register) {
           form.setFieldState('criteria.conditions', (state) => {
             state.title = `${filterName} ${register.name} ${record}`
@@ -181,17 +184,29 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
           form.setFieldState('sortField', (state) => {
             state.value = undefined
           })
-        } else {
-          form.setFieldState('outputAssignments', (state) => {
-            state.value = undefined
-          })
-          form.setFieldState('outputReference', (state) => {
-            state.value = undefined
-          })
-          form.setFieldState('queriedFields', (state) => {
-            state.value = undefined
-          })
         }
+        form.setFieldState('outputAssignments', (state) => {
+          const select = useLocale(
+            'flowDesigner.flow.form.recordLookUp.outputReference'
+          )
+          const field = useLocale('flowDesigner.flow.form.recordLookUp.field')
+          const reference = useLocale(
+            'flowDesigner.flow.form.recordLookUp.reference'
+          )
+          state.value = undefined
+          state.title = `${select} ${register.name} ${reference}${field}`
+        })
+        form.setFieldState('outputReference', (state) => {
+          state.value = undefined
+        })
+        form.setFieldState('queriedFields', (state) => {
+          const select = useLocale(
+            'flowDesigner.flow.form.recordLookUp.queriedFields'
+          )
+          const field = useLocale('flowDesigner.flow.form.recordLookUp.field')
+          state.value = []
+          state.title = `${select} ${register.name} ${field}`
+        })
       })
       onFieldValueChange('getFirstRecordOnly', (field) => {
         const registerId = field.query('registerId').get('value')
@@ -199,6 +214,11 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
         if (field.value && registerId && automaticallyType === false) {
           form.setFieldState('address', (state) => {
             state.value = true
+          })
+        }
+        if (!field.value && registerId && automaticallyType === false) {
+          form.setFieldState('outputReference', (state) => {
+            state.value = undefined
           })
         }
       })
@@ -210,7 +230,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
           state.value = undefined
         })
         form.setFieldState('queriedFields', (state) => {
-          state.value = undefined
+          state.value = []
         })
       })
       onFieldValueChange('automaticallyType', (field) => {
@@ -228,19 +248,22 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
 
   if (value) {
     const flowData = clone(value)
+    const callArguments = flowData?.callArguments
     let address = false
     let automaticallyType = false
-    if (flowData.queriedFields && !flowData.outputReference) {
+    if (callArguments?.queriedFields && !callArguments?.outputReference) {
       automaticallyType = true
     } else {
       automaticallyType = false
-      if (!flowData.outputReference) {
+      if (!callArguments.outputReference && !callArguments.outputAssignments) {
+        address = true
+      } else if (!callArguments.outputReference) {
         address = false
       } else {
         address = true
       }
     }
-    const queriedFields = flowData?.queriedFields?.map((field: string) => {
+    const queriedFields = callArguments?.queriedFields?.map((field: string) => {
       return {
         field: field,
       }
@@ -249,20 +272,63 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
       id: flowData.id,
       name: flowData.name,
       registerId: flowData.registerId,
-      criteria: flowData.criteria,
+      criteria: callArguments?.criteria ?? {
+        conditions: [],
+        logic: 'none',
+      },
       queriedFields,
       address,
       automaticallyType,
-      outputAssignments: flowData?.outputAssignments,
-      outputReference: flowData.outputReference,
-      sortOrder: flowData.sortOrder,
-      sortField: flowData.sortField,
-      storeOutputAutomatically: flowData.storeOutputAutomatically,
-      getFirstRecordOnly: flowData.getFirstRecordOnly,
+      outputAssignments: callArguments?.outputAssignments,
+      outputReference: callArguments.outputReference,
+      sortOrder: callArguments.sortOrder,
+      sortField: callArguments.sortField,
+      storeOutputAutomatically: callArguments.storeOutputAutomatically,
+      getFirstRecordOnly: callArguments.getFirstRecordOnly,
       assignNullValuesIfNoRecordsFound:
-        flowData.assignNullValuesIfNoRecordsFound,
+        callArguments.assignNullValuesIfNoRecordsFound,
     }
   }
+
+  const storeOutputReaction = useCallback((field: any) => {
+    const registerId = field.query('registerId').get('value')
+    field.display = registerId ? 'visible' : 'none'
+    // form.setFieldState('automaticallyType', (state) => {
+    //   state.value = field.value === false
+    // })
+  }, [])
+
+  const changeTypeOp = useCallback((field: any) => {
+    const registerId = field.query('registerId').get('value')
+    const storeOutputAutomatically = field
+      .query('storeOutputAutomatically')
+      .get('value')
+    const bool = !storeOutputAutomatically && registerId
+    field.display = bool ? 'visible' : 'none'
+    // form.setFieldState('queriedFields', (state) => {
+    //   state.value = []
+    // })
+    form.setFieldState('outputReference', (state) => {
+      state.value = null
+    })
+    form.setFieldState('address', (state) => {
+      state.value = true
+    })
+  }, [])
+
+  const myReaction = useCallback(
+    (type: string, field: any) => {
+      const val = form.values
+      const sortOrder = val.sortOrder
+      if (type === 'sortOrderIsEmpty') {
+        field.display = sortOrder === null ? 'visible' : 'none'
+      } else {
+        field.display =
+          sortOrder === 'asc' || sortOrder === 'desc' ? 'visible' : 'none'
+      }
+    },
+    [form.values]
+  )
 
   const reactionField = useCallback(
     (type: string | number, field: any) => {
@@ -298,41 +364,6 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
     [form.values]
   )
 
-  const storeOutputReaction = useCallback((field: any) => {
-    const registerId = field.query('registerId').get('value')
-    field.display = registerId ? 'visible' : 'none'
-    form.setFieldState('automaticallyType', (state) => {
-      state.value = field.value === false
-    })
-  }, [])
-
-  const changeTypeOp = useCallback((field: any) => {
-    const registerId = field.query('registerId').get('value')
-    const storeOutputAutomatically = field
-      .query('storeOutputAutomatically')
-      .get('value')
-    field.display = !storeOutputAutomatically && registerId ? 'visible' : 'none'
-    const flag = field.value
-    form.setFieldState('queriedFields', (state) => {
-      state.display = flag ? 'visible' : 'none'
-      state.value = []
-    })
-  }, [])
-
-  const myReaction = useCallback(
-    (type: string, field: any) => {
-      const val = form.values
-      const sortOrder = val.sortOrder
-      if (type === 'sortOrderIsEmpty') {
-        field.display = sortOrder === null ? 'visible' : 'none'
-      } else {
-        field.display =
-          sortOrder === 'asc' || sortOrder === 'desc' ? 'visible' : 'none'
-      }
-    },
-    [form.values]
-  )
-
   const reactionQueriedFields = useCallback(
     (field: any) => {
       const automaticallyType = form.values.automaticallyType
@@ -350,6 +381,10 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
   )
 
   const reactionOutputReference = useCallback((field: any) => {
+    const select = useLocale(
+      'flowDesigner.flow.form.recordLookUp.outputReference'
+    )
+    const fieldName = useLocale('flowDesigner.flow.form.recordLookUp.reference')
     const addressVal = field.query('address').get('value')
     const getFirstRecordOnly = field.query('getFirstRecordOnly').get('value')
     const storeOutputAutomatically = field
@@ -368,12 +403,12 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
       ((isBool(addressVal) && addressVal) || getFirstRecordOnly === false)
     field.display = isVisible ? 'visible' : 'none'
     field.componentProps.refRegisterId = registerId
-    if (getFirstRecordOnly) {
-      field.title = (
-        <TextWidget>
-          flowDesigner.flow.form.recordLookUp.outputReference
-        </TextWidget>
-      )
+    const registers = metaFlow?.registers
+    const register = registers.find(
+      (rg) => rg.key === registerId || rg.id === registerId
+    )
+    if (getFirstRecordOnly && register) {
+      field.title = `${select} ${register?.name} ${fieldName}`
       field.componentProps.flowJsonTypes = [
         {
           value: FlowResourceType.VARIABLE_RECORD,
@@ -388,6 +423,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
           flowDesigner.flow.form.recordLookUp.outputReferenceArray
         </TextWidget>
       )
+      field.title = `${select} ${register?.name} ${record}${fieldName}`
       field.componentProps.flowJsonTypes = [
         {
           value: FlowResourceType.VARIABLE_ARRAY_RECORD,
@@ -399,14 +435,17 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
     }
   }, [])
 
-  const reactionAddress = useCallback((field: any) => {
-    const automaticallyType = field.query('automaticallyType').get('value')
-    const getFirstRecordOnly = field.query('getFirstRecordOnly').get('value')
-    field.display =
-      automaticallyType === false && getFirstRecordOnly !== false
-        ? 'visible'
-        : 'none'
-  }, [])
+  const reactionAddress = useCallback(
+    (field: any) => {
+      const automaticallyType = field.query('automaticallyType').get('value')
+      const getFirstRecordOnly = field.query('getFirstRecordOnly').get('value')
+      field.display =
+        automaticallyType === false && getFirstRecordOnly !== false
+          ? 'visible'
+          : 'none'
+    },
+    [metaFlow?.registers]
+  )
 
   const schema = {
     type: 'object',
@@ -435,6 +474,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
             type: 'string',
             title: <TextWidget>flowDesigner.flow.form.comm.value</TextWidget>,
             required: true,
+            'x-disabled': isEdit,
             'x-validator': [
               {
                 triggerType: 'onBlur',
@@ -519,6 +559,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
             properties: {
               logic: {
                 type: 'string',
+                default: '$and',
                 title: (
                   <TextWidget token="flowDesigner.flow.form.recordUpdate.filterTitle"></TextWidget>
                 ),
@@ -535,6 +576,12 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
                   },
                 ],
                 enum: [
+                  {
+                    label: (
+                      <TextWidget token="flowDesigner.flow.form.decision.logicNone"></TextWidget>
+                    ),
+                    value: 'none',
+                  },
                   {
                     label: (
                       <TextWidget token="flowDesigner.flow.form.decision.logicAnd"></TextWidget>
@@ -591,6 +638,14 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
                 },
                 'x-decorator': 'FormItem',
                 'x-component': 'ArrayItems',
+                'x-reactions': {
+                  dependencies: ['criteria.logic'],
+                  fulfill: {
+                    schema: {
+                      'x-display': "{{$deps == '$and' ? 'visible' : 'none'}}",
+                    },
+                  },
+                },
                 items: {
                   type: 'object',
                   'x-component': 'ArrayItems.Item',
@@ -1077,6 +1132,12 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
               ),
             },
             required: true,
+            'x-decorator-props': {
+              gridSpan: 2,
+              style: {
+                width: '50%',
+              },
+            },
             items: {
               type: 'object',
               properties: {
@@ -1117,7 +1178,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
               },
             },
             'x-visible': false,
-            // 'x-reactions': reactionQueriedFields,
+            'x-reactions': reactionQueriedFields,
           },
           outputAssignments: {
             type: 'array',
