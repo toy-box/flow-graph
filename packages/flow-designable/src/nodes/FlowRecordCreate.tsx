@@ -142,9 +142,7 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
     effects: () => {
       onFieldValueChange('registerId', (field) => {
         const registers = metaFlow.registers
-        const register = registers.find(
-          (rg) => rg.id === field.value || rg.key === field.value
-        )
+        const register = registers.find((rg) => rg.id === field.value)
         if (register) {
           form.setFieldState('inputAssignments', (state) => {
             state.title = `${setName} ${register.name} ${setField}`

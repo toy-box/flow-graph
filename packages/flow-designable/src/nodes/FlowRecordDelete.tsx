@@ -130,9 +130,7 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
     effects: () => {
       onFieldValueChange('registerId', (field) => {
         const registers = metaFlow.registers
-        const register = registers.find(
-          (rg) => rg.id === field.value || rg.key === field.value
-        )
+        const register = registers.find((rg) => rg.id === field.value)
         if (register) {
           form.setFieldState('titleWeb', (state) => {
             const title = `${filterName} ${register.name} ${record}`

@@ -274,6 +274,7 @@ const zhCN = {
             },
             sortField: '排序标准',
             getFirstRecordOnly: '存储的记录数量',
+            filterTitle: '查询记录的条件要求',
             getFirstRecordOnlyOp: {
               first: '仅限第一个记录',
               all: '所有记录',
@@ -652,6 +653,7 @@ const enUS = {
               all: 'All Record',
             },
             storeOutputAutomatically: 'How To Store Record Data',
+            filterTitle: 'LookUp Record Filter Condition',
             storeOutputAutomaticallyOp: {
               auto: 'Automatically Store All Fields',
               people: 'Manually Store All Fields',

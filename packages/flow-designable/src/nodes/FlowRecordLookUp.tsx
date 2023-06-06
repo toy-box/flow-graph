@@ -170,9 +170,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
     effects: () => {
       onFieldValueChange('registerId', (field) => {
         const registers = metaFlow.registers
-        const register = registers.find(
-          (rg) => rg.key === field.value || rg.id === field.value
-        )
+        const register = registers.find((rg) => rg.id === field.value)
         if (register) {
           form.setFieldState('criteria.conditions', (state) => {
             state.title = `${filterName} ${register.name} ${record}`
@@ -337,18 +335,18 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
       const registers = metaFlow.registers
       const registerOps: IFieldOption[] = []
       registers.some((re) => {
-        if (re.key === refObjectId) {
+        if (re.id === refObjectId) {
           for (const key in re.properties) {
             // eslint-disable-next-line no-prototype-builtins
             if (re.properties.hasOwnProperty(key)) {
               const obj = re.properties[key]
               const value = form.values
               const idx = value?.[type]?.findIndex(
-                (option: any) => option.field === obj.key
+                (option: any) => option.field === obj.id
               )
               const option = {
                 label: obj.name,
-                value: obj.key,
+                value: obj.id,
                 type: obj.type,
                 disabled: idx > -1,
               }
@@ -404,9 +402,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
     field.display = isVisible ? 'visible' : 'none'
     field.componentProps.refRegisterId = registerId
     const registers = metaFlow?.registers
-    const register = registers.find(
-      (rg) => rg.key === registerId || rg.id === registerId
-    )
+    const register = registers.find((rg) => rg.id === registerId)
     if (getFirstRecordOnly && register) {
       field.title = `${select} ${register?.name} ${fieldName}`
       field.componentProps.flowJsonTypes = [
@@ -561,7 +557,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
                 type: 'string',
                 default: '$and',
                 title: (
-                  <TextWidget token="flowDesigner.flow.form.recordUpdate.filterTitle"></TextWidget>
+                  <TextWidget token="flowDesigner.flow.form.recordLookUp.filterTitle"></TextWidget>
                 ),
                 required: true,
                 'x-validator': [

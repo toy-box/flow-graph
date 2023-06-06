@@ -95,12 +95,12 @@ const loopRender = (isNew: boolean, metaFlow: IResourceMetaflow, node: any) => {
           id: {
             type: 'string',
             title: <TextWidget>flowDesigner.flow.form.comm.value</TextWidget>,
-            required: false,
+            required: true,
             'x-disabled': !isNew,
             'x-validator': [
               {
                 triggerType: 'onBlur',
-                required: false,
+                required: true,
                 message: (
                   <TextWidget>
                     flowDesigner.flow.form.validator.value

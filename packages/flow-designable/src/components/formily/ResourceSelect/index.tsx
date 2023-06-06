@@ -153,7 +153,7 @@ export const ResourceSelect: FC = observer((props: any) => {
                   const obj = re.properties[key]
                   const option = {
                     label: obj.name,
-                    key: obj.key,
+                    key: obj.id,
                     dataType: obj.type,
                     children: [],
                   }
@@ -228,7 +228,10 @@ export const ResourceSelect: FC = observer((props: any) => {
       const objectRegister = props?.metaFlow?.registers?.find(
         (reg) => reg.key === props?.metaFlow?.recordObject?.objectId
       )
-      if (objectRegister?.properties && !props?.flowJsonTypes) {
+      if (
+        objectRegister?.properties &&
+        (!props?.flowJsonTypes || props.isShowGlobal)
+      ) {
         const registerOps = []
         const option = [
           {
@@ -267,6 +270,7 @@ export const ResourceSelect: FC = observer((props: any) => {
     props?.sourceMode,
     props?.flowJsonTypes,
     props.objectKey,
+    props.isShowGlobal,
   ])
 
   const setMetaChildren = useCallback(

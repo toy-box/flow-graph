@@ -12,7 +12,7 @@ import {
 import { createSchemaField } from '@formily/react'
 import * as ICONS from '@ant-design/icons'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
-import { opTypeEnum } from '@toy-box/autoflow-core'
+import { FlowResourceType } from '@toy-box/autoflow-core'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 import { apiReg, IResourceMetaflow } from '../interface'
 
@@ -225,6 +225,21 @@ const assignRender = (
                         metaFlow: metaFlow,
                         typeKey: 'type',
                         isSetType: true,
+                        isShowGlobal: true,
+                        flowJsonTypes: [
+                          {
+                            value: FlowResourceType.VARIABLE,
+                          },
+                          {
+                            value: FlowResourceType.VARIABLE_RECORD,
+                          },
+                          {
+                            value: FlowResourceType.VARIABLE_ARRAY,
+                          },
+                          {
+                            value: FlowResourceType.VARIABLE_ARRAY_RECORD,
+                          },
+                        ],
                         placeholder: useLocale(
                           'flowDesigner.flow.form.comm.operationPlace'
                         ),
