@@ -84,6 +84,7 @@ export class MetaFlow extends AutoFlow {
       mode: observable.ref,
       flowType: observable.ref,
       layoutMode: observable.ref,
+      i8nDataMap: observable.deep,
       setMetaFlow: batch,
       getFlowMetaNodeMap: batch,
       removeNodeWithBind: batch,
@@ -92,6 +93,7 @@ export class MetaFlow extends AutoFlow {
       addNode: batch,
       mountNodes: batch,
       changeMode: action,
+      setI8nDataMap: action,
     })
   }
   get flowGraph() {
@@ -217,8 +219,7 @@ export class MetaFlow extends AutoFlow {
             nextValueNode
           )
           // defaultConnector
-          const targetRef = (parent as FlowLoop).defaultConnector
-            ?.targetReference
+          const targetRef = (parent as FlowLoop).connector?.targetReference
           const currentData = flowDatas.find((data) => data.id === targetRef)
           const currentNode = this.makeFlowNode(currentData)
           // edit mode

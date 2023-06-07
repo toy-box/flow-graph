@@ -169,7 +169,7 @@ const handleOk = (values, metaflow: IResourceMetaflow, isEdit: boolean) => {
   const flowDataType = obj.flowType
   if (flowDataType === FlowResourceType.VARIABLE) {
     resourceData.isInput = obj.paramLabel?.includes('isInput') ?? true
-    resourceData.isOutPut = obj.paramLabel?.includes('isOutPut') ?? true
+    resourceData.isOutput = obj.paramLabel?.includes('isOutput') ?? true
   }
   if (isEdit) {
     metaflow.editResource(flowDataType, resourceData)
@@ -365,7 +365,7 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
     }
     const arr = []
     if (flowDataVal?.isInput) arr?.push('isInput')
-    if (flowDataVal?.isOutPut) arr?.push('isOutPut')
+    if (flowDataVal?.isOutput) arr?.push('isOutput')
     flowDataVal.paramLabel = arr
     formData.setValues(flowDataVal)
   }
@@ -644,10 +644,10 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
               {
                 label: (
                   <TextWidget>
-                    flowDesigner.flow.form.resourceCreate.isOutPut
+                    flowDesigner.flow.form.resourceCreate.isOutput
                   </TextWidget>
                 ),
-                value: 'isOutPut',
+                value: 'isOutput',
               },
             ],
             'x-decorator': 'FormItem',

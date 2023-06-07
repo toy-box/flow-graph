@@ -18,8 +18,9 @@ import {
 import { FreeFlow } from '../FreeFlow'
 
 export class FlowLoop extends FlowMetaNode {
-  defaultConnector?: TargetReference
+  connector?: TargetReference
   defaultConnectorName?: string
+  nextValueConnectorName?: string
   nextValueConnector?: TargetReference
   collectionReference?: string
   iterationOrder?: string
@@ -36,7 +37,7 @@ export class FlowLoop extends FlowMetaNode {
 
   get nextNodes() {
     return this.metaFlow.flowMetaNodes.filter(
-      (node) => node.id === this.defaultConnector.targetReference
+      (node) => node.id === this.connector.targetReference
     )
   }
 
@@ -56,20 +57,16 @@ export class FlowLoop extends FlowMetaNode {
     return this.nextValueConnector
   }
 
-  get nextValueConnectorName() {
-    return 'For Each Item'
-  }
-
   constructor(flowLoop: FlowMetaParam, metaFlow: MetaFlow | FreeFlow) {
     super(metaFlow, flowLoop.id, flowLoop.name, flowLoop.description)
-    this.defaultConnector = flowLoop.defaultConnector ?? {
+    this.connector = flowLoop.connector ?? {
       targetReference: null,
     }
     this.nextValueConnector = flowLoop.nextValueConnector ?? {
       targetReference: null,
     }
-    this.defaultConnectorName =
-      flowLoop.defaultConnectorName ?? 'After Last Item'
+    this.defaultConnectorName = metaFlow?.i8nDataMap?.['afterLastItem']
+    this.nextValueConnectorName = metaFlow?.i8nDataMap?.['forEachItem']
     // this.nextValueConnectorName =
     //   flowLoop.nextValueConnectorName ?? 'For Each Item'
     this.collectionReference = flowLoop.collectionReference
@@ -82,7 +79,7 @@ export class FlowLoop extends FlowMetaNode {
     define(this, {
       id: observable.ref,
       name: observable.ref,
-      defaultConnector: observable.deep,
+      connector: observable.deep,
       defaultConnectorName: observable.ref,
       nextValueConnector: observable.deep,
       collectionReference: observable.ref,
@@ -104,7 +101,7 @@ export class FlowLoop extends FlowMetaNode {
     const nextConId = this?.nextValueConnector.targetReference
     if (nextConId)
       targets.push({ id: nextConId, label: this.nextValueConnectorName })
-    const defaultConId = this.defaultConnector.targetReference
+    const defaultConId = this.connector.targetReference
     if (defaultConId)
       targets.push({ id: defaultConId, label: this.defaultConnectorName })
     return {
@@ -120,7 +117,7 @@ export class FlowLoop extends FlowMetaNode {
         this.metaFlow.layoutMode === LayoutModeEnum.AUTO_LAYOUT
           ? [this.nextValueConnector.targetReference]
           : targets,
-      loopEndTarget: this.defaultConnector.targetReference,
+      loopEndTarget: this.connector.targetReference,
       component,
     }
   }
@@ -170,9 +167,9 @@ export class FlowLoop extends FlowMetaNode {
   appendAt(at: FlowNode): void {
     if (this.flowNode == null) {
       if (at.isLoopBack) {
-        this.defaultConnector.targetReference = at.loopBegin.id
+        this.connector.targetReference = at.loopBegin.id
       } else {
-        this.defaultConnector.targetReference = at.targets[0].id
+        this.connector.targetReference = at.targets[0].id
       }
       const flowNodes = this.makeFlowNodeWithExtend(
         FlowLoop.DefaultNodeProps,
@@ -208,7 +205,7 @@ export class FlowLoop extends FlowMetaNode {
 
   updateConnector(targetId: string, isDefaultConnecter: boolean): void {
     if (isDefaultConnecter) {
-      this.defaultConnector.targetReference = targetId
+      this.connector.targetReference = targetId
     } else {
       this.nextValueConnector.targetReference = targetId
     }
@@ -216,10 +213,10 @@ export class FlowLoop extends FlowMetaNode {
 
   deleteConnector(target, nodeTarget) {
     if (
-      this.defaultConnector.targetReference === target &&
+      this.connector.targetReference === target &&
       nodeTarget.label === this.defaultConnectorName
     ) {
-      this.defaultConnector = { targetReference: null }
+      this.connector = { targetReference: null }
     } else {
       this.nextValueConnector = { targetReference: null }
     }
@@ -233,7 +230,7 @@ export class FlowLoop extends FlowMetaNode {
       description: this.description,
       type: this.type,
       nextValueConnector: this.nextValueConnector,
-      defaultConnector: this.defaultConnector,
+      connector: this.connector,
       collectionReference: this.collectionReference,
       iterationOrder: this.iterationOrder,
       x: this.x,

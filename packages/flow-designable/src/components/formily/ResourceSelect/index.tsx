@@ -245,7 +245,7 @@ export const ResourceSelect: FC = observer((props: any) => {
             const obj = objectRegister.properties[key]
             const p = {
               label: obj.name,
-              key: obj.key,
+              key: obj.id || obj.key,
               dataType: obj.type,
               children: [],
             }
@@ -285,7 +285,7 @@ export const ResourceSelect: FC = observer((props: any) => {
             const p: any = meta.properties[proKey]
             const child = {
               label: p.name,
-              key: p.key,
+              key: p.id || p.key,
               dataType: p.type,
               parentType: p.webType,
               children: [],

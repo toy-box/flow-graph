@@ -335,7 +335,7 @@ export class ReactFlowCanvas implements ICanvas {
           })
           .filter(Boolean)
         const isDefaultConnecter =
-          connecObj.sourceFlowmetaNode.defaultConnector.targetReference === ''
+          connecObj.sourceFlowmetaNode.defaultConnector.targetReference === null
         if (isDefaultConnecter) {
           loadData.push({
             label: connecObj.sourceFlowmetaNode.defaultConnectorName,
@@ -436,7 +436,7 @@ export class ReactFlowCanvas implements ICanvas {
           }
         } else {
           const isDefaultConnecter =
-            connecObj.sourceFlowmetaNode.defaultConnector.targetReference == ''
+            connecObj.sourceFlowmetaNode.connector.targetReference == null
           newEdge = {
             ...connecObj.connection,
             label: isDefaultConnecter
@@ -482,12 +482,12 @@ export class ReactFlowCanvas implements ICanvas {
           connecObj.sourceFlowmetaNode.updateConnector(target)
         } else {
           const isFaultConnector =
-            connecObj.sourceFlowmetaNode.faultConnector.targetReference == ''
+            connecObj.sourceFlowmetaNode.faultConnector.targetReference == null
           newEdge = {
             ...connecObj.connection,
             label: isFaultConnector
               ? connecObj.sourceFlowmetaNode.faultConnectorName
-              : '',
+              : null,
             type: isFaultConnector
               ? EdgeTypeEnum.FAULT_EDGE
               : EdgeTypeEnum.FREE_EDGE,

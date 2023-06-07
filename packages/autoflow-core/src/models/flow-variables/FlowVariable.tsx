@@ -10,7 +10,7 @@ import { FlowResourceType, IUpdateFieldMetaVariable } from '../../types'
 export interface IFieldMetaWithWeb extends IFieldMeta {
   webType: FlowResourceType
   isInput?: boolean
-  isOutPut?: boolean
+  isOutput?: boolean
 }
 
 export class FlowVariable {
@@ -47,7 +47,7 @@ export class FlowVariable {
   properties?: Record<string, IFieldMeta>
   webType: FlowResourceType
   isInput?: boolean
-  isOutPut?: boolean
+  isOutput?: boolean
 
   constructor(flowVariable: IFieldMetaWithWeb) {
     this.key = flowVariable.key
@@ -70,7 +70,7 @@ export class FlowVariable {
     this.multipleOf = flowVariable.multipleOf
     this.webType = flowVariable.webType
     this.isInput = flowVariable.isInput
-    this.isOutPut = flowVariable.isOutPut
+    this.isOutput = flowVariable.isOutput
     this.makeObservable()
   }
 
@@ -103,7 +103,7 @@ export class FlowVariable {
     this.description = updateData.description
     this.defaultValue = updateData.defaultValue
     this.isInput = updateData.isInput
-    this.isOutPut = updateData.isOutPut
+    this.isOutput = updateData.isOutput
   }
 
   toJson = (): IFieldMetaWithWeb => {
@@ -128,7 +128,7 @@ export class FlowVariable {
       multipleOf: this.multipleOf,
       webType: this.webType,
       isInput: this.isInput,
-      isOutPut: this.isOutPut,
+      isOutput: this.isOutput,
     }
   }
 }

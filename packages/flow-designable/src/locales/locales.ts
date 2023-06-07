@@ -130,7 +130,7 @@ const zhCN = {
             expression: '公式',
             paramLabel: '在流外部可用',
             isInput: '可供输入',
-            isOutPut: '可供输出',
+            isOutput: '可供输出',
           },
           validator: {
             filter: '筛选记录是必填项',
@@ -201,8 +201,11 @@ const zhCN = {
             titleCollection: '指定循环访问集合的方向',
             collectionReference: '集合变量',
             titleDirection: '指定循环访问集合的方向',
+            iterationOrder: '排序方向',
             iterationPositive: '第一项到最后一项',
             iterationReverse: '最后一项到第一项',
+            firstItem: '适合每个项目',
+            lastItem: '在最后一个项目后',
             titleLoop: '选择循环变量',
             loopVariable: '循环变量',
             loopDescrip:
@@ -502,7 +505,7 @@ const enUS = {
             expression: 'Expression',
             paramLabel: 'Available Outside The Flow',
             isInput: 'Available Input',
-            isOutPut: 'Available OutPut',
+            isOutput: 'Available OutPut',
           },
           validator: {
             filter: 'filtering record is required',
@@ -574,9 +577,12 @@ const enUS = {
             setCollectionReference: 'Setect Collection Variable',
             titleCollection: 'Specify Direction for Iterating Over Collection',
             collectionReference: 'Collection Variable',
+            iterationOrder: 'Sort Direction',
             titleDirection: 'Specify Direction for Iterating Over Collection',
             iterationPositive: 'First item to last item',
             iterationReverse: 'Last item to first item',
+            firstItem: 'For Each Item',
+            lastItem: 'After Last Item',
             titleLoop: 'Select Loop Variable',
             loopVariable: 'Loop Variable',
             loopDescrip:

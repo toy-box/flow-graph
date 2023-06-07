@@ -31,6 +31,7 @@ export abstract class AutoFlow {
   history: History
   shortCutDatas: FlowMetaParam[] = []
   recordObject: IRecordObject
+  i8nDataMap: Record<string, string> = {}
 
   constructor(mode: FlowModeType, layoutMode: LayoutModeEnum, flow: Flow) {
     this.mode = mode
@@ -237,5 +238,9 @@ export abstract class AutoFlow {
 
   updateMetaFlowDatas(metaFlowDatas: FlowMetaParam[]) {
     this.metaFlowDatas = metaFlowDatas
+  }
+
+  setI8nDataMap = (dataMap) => {
+    this.i8nDataMap = Object.assign(this.i8nDataMap, dataMap)
   }
 }

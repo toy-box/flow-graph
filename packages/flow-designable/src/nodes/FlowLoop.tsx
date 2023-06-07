@@ -221,7 +221,9 @@ const loopRender = (isNew: boolean, metaFlow: IResourceMetaflow, node: any) => {
       },
       iterationOrder: {
         type: 'number',
-        title: 'Direction',
+        title: (
+          <TextWidget token="flowDesigner.flow.form.loop.iterationOrder" />
+        ),
         enum: [
           {
             label: (

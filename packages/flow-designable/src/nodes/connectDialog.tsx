@@ -6,7 +6,7 @@ import { ReactFlowCanvas } from '@toy-box/flow-graph'
 import { OpearteTypeEnum } from '@toy-box/autoflow-core'
 import { uid } from '@toy-box/toybox-shared'
 import { AutoFlow } from '../interface'
-import { TextWidget } from '@toy-box/studio-base'
+import { TextWidget, useLocale } from '@toy-box/studio-base'
 
 const SchemaField = createSchemaField({
   components: {
@@ -46,13 +46,13 @@ const loopConnectSchema = {
           label: (
             <TextWidget token="flowDesigner.flow.form.loopConnect.eachResult" />
           ),
-          value: 'For Each Item',
+          value: 'firstItem',
         },
         {
           label: (
             <TextWidget token="flowDesigner.flow.form.loopConnect.lastResult" />
           ),
-          value: 'After Last Item',
+          value: 'lastItem',
         },
       ],
     },
@@ -203,14 +203,16 @@ export const loopConnectDialog = (
       setTimeout(() => {
         const edgeId = uid()
         const flowMetaNodeMap = { ...freeFlow.flowMetaNodeMap }
+        const isFirst = payload.values.loopResult === 'firstItem'
+        const labelName = useLocale(
+          `flowDesigner.flow.form.loop.${isFirst ? 'firstItem' : 'lastItem'}`
+        )
         const newEdge = {
           ...connection,
           id: edgeId,
-          label: payload.values.loopResult,
+          label: labelName,
         }
-        payload.values.loopResult === 'For Each Item'
-          ? sourceFlowmetaNode.updateConnector(target, false)
-          : sourceFlowmetaNode.updateConnector(target, true)
+        sourceFlowmetaNode.updateConnector(target, !isFirst)
         canvas.flowGraph.setTarget(source, [
           ...canvas.flowGraph.nodeMap[source].targets,
           {

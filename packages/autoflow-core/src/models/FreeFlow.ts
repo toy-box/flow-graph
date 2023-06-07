@@ -229,6 +229,7 @@ export class FreeFlow extends AutoFlow {
       flowType: observable.ref,
       layoutMode: observable.ref,
       recordObject: observable.deep,
+      i8nDataMap: observable.deep,
       setMetaFlow: batch,
       getFlowMetaNodeMap: batch,
       // removeNodeWithBind: batch,
@@ -244,6 +245,7 @@ export class FreeFlow extends AutoFlow {
       changeMode: action,
       shortCutPush: action,
       initShortCuts: action,
+      setI8nDataMap: action,
     })
   }
   get flowGraph() {
@@ -401,8 +403,7 @@ export class FreeFlow extends AutoFlow {
             )
           }
           // defaultConnector
-          const targetRef = (parent as FlowLoop).defaultConnector
-            ?.targetReference
+          const targetRef = (parent as FlowLoop).connector?.targetReference
           const currentData = flowDatas.find((data) => data.id === targetRef)
           if (currentData) {
             const currentNode = this.makeFlowNode(currentData)
