@@ -171,7 +171,7 @@ export const ResourceSelect: FC = observer((props: any) => {
           props.metaFlow?.registers?.map((r: any) => {
             const obj = {
               label: r.name,
-              key: r.key,
+              key: r.id,
               dataType: r.type,
               children: [],
             }
