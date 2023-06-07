@@ -153,7 +153,7 @@ export const ResourceSelect: FC = observer((props: any) => {
                   const obj = re.properties[key]
                   const option = {
                     label: obj.name,
-                    key: obj.id,
+                    key: obj.key,
                     dataType: obj.type,
                     children: [],
                   }
