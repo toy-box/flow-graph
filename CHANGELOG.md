@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.12(2023-06-07)
+
+### No Change Log
+
 ## v2.0.11(2023-06-07)
 
 ### No Change Log
@@ -469,9 +473,5 @@
 1. [feat: extendNode 增加 closeExtend 方法](https://github.com/alibaba/designable/commit/1de9d8e) :point_right: ( [Huhui](https://github.com/Huhui) )
 
 ## v1.0.6(2021-08-19)
-
-### No Change Log
-
-## v1.0.5(2021-08-19)
 
 ### No Change Log

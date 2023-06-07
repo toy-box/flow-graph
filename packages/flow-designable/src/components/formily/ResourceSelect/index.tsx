@@ -141,13 +141,13 @@ export const ResourceSelect: FC = observer((props: any) => {
         const objectKey = form.values[props.objectKey]
         props.metaFlow?.registers?.some(
           (re: {
-            key: any
+            id: any
             properties: {
               [x: string]: any
               hasOwnProperty: (arg0: string) => any
             }
           }) => {
-            if (re.key === objectKey) {
+            if (re.id === objectKey) {
               for (const key in re.properties) {
                 if (re.properties.hasOwnProperty(key)) {
                   const obj = re.properties[key]
@@ -226,7 +226,7 @@ export const ResourceSelect: FC = observer((props: any) => {
         arr.push(...metaArr)
       }
       const objectRegister = props?.metaFlow?.registers?.find(
-        (reg) => reg.key === props?.metaFlow?.recordObject?.objectId
+        (reg) => reg.id === props?.metaFlow?.recordObject?.objectId
       )
       if (
         objectRegister?.properties &&
@@ -415,7 +415,7 @@ export const ResourceSelect: FC = observer((props: any) => {
       const selectKey = selectKeys[0]
       let value = null
       historyItems.some((item) => {
-        if (item.key === selectKey) {
+        if (item.id === selectKey || item.key === selectKey) {
           value = item.label
           if (value) setInputValue(value)
           return true
@@ -442,7 +442,7 @@ export const ResourceSelect: FC = observer((props: any) => {
     const num = length - 1
     children.some((child) => {
       if (num === 0) {
-        if (child.key === selectKey) {
+        if (child.id === selectKey || child.key === selectKey) {
           name = child.label
           return true
         }
