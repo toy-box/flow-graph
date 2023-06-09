@@ -25,12 +25,12 @@ import { createForm, onFieldValueChange } from '@formily/core'
 import { Button } from 'antd'
 import { useLocale, TextWidget } from '@toy-box/studio-base'
 import { ArrowRightOutlined } from '@ant-design/icons'
-import { clone } from '@designable/shared'
+import cloneDeep from 'lodash.clonedeep'
 import { isBool } from '@formily/shared'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 
 import './flowNodes.less'
-import { apiReg, IResourceMetaflow } from '../interface'
+import { apiReg, IResourceMetaflow, RegisterOpTypeEnum } from '../interface'
 import { setResourceMetaflow } from '../utils'
 import { RepeatErrorMessage } from './RepeatErrorMessage'
 
@@ -245,8 +245,8 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
   })
 
   if (value) {
-    const flowData = clone(value)
-    const callArguments = flowData?.callArguments
+    const flowData = cloneDeep(value)
+    const callArguments: any = flowData?.callArguments
     let address = false
     let automaticallyType = false
     if (callArguments?.queriedFields && !callArguments?.outputReference) {
@@ -274,7 +274,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
         conditions: [],
         logic: 'none',
       },
-      queriedFields,
+      queriedFields: queriedFields || [],
       address,
       automaticallyType,
       outputAssignments: callArguments?.outputAssignments,
@@ -306,12 +306,12 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
     // form.setFieldState('queriedFields', (state) => {
     //   state.value = []
     // })
-    form.setFieldState('outputReference', (state) => {
-      state.value = null
-    })
-    form.setFieldState('address', (state) => {
-      state.value = true
-    })
+    // form.setFieldState('outputReference', (state) => {
+    //   state.value = null
+    // })
+    // form.setFieldState('address', (state) => {
+    //   state.value = true
+    // })
   }, [])
 
   const myReaction = useCallback(
@@ -340,17 +340,20 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
             // eslint-disable-next-line no-prototype-builtins
             if (re.properties.hasOwnProperty(key)) {
               const obj = re.properties[key]
-              const value = form.values
-              const idx = value?.[type]?.findIndex(
-                (option: any) => option.field === obj.id
-              )
-              const option = {
-                label: obj.name,
-                value: obj.id,
-                type: obj.type,
-                disabled: idx > -1,
+              const bool = obj[RegisterOpTypeEnum.FILTERABLE]
+              if (bool) {
+                const value = form.values
+                const idx = value?.[type]?.findIndex(
+                  (option: any) => option.field === obj.key
+                )
+                const option = {
+                  label: obj.name,
+                  value: obj.key,
+                  type: obj.type,
+                  disabled: idx > -1,
+                }
+                registerOps.push(option)
               }
-              registerOps.push(option)
             }
           }
           return true
@@ -369,13 +372,24 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
         .query('storeOutputAutomatically')
         .get('value')
       const outputReference = field.query('outputReference').get('value')
+      const val = form.values
+      const registerId = val.registerId
+      const registers = metaFlow?.registers
+      const register = registers?.find((rg) => rg.id === registerId)
+      if (register) {
+        const select = useLocale(
+          'flowDesigner.flow.form.recordLookUp.queriedFields'
+        )
+        const fieldName = useLocale('flowDesigner.flow.form.recordLookUp.field')
+        field.title = `${select} ${register.name} ${fieldName}`
+      }
       field.display =
         (storeOutputAutomatically === false && automaticallyType !== false) ||
         outputReference
           ? 'visible'
           : 'none'
     },
-    [form.values.automaticallyType]
+    [form.values.automaticallyType, metaFlow?.registers]
   )
 
   const reactionOutputReference = useCallback((field: any) => {
@@ -441,6 +455,28 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
           : 'none'
     },
     [metaFlow?.registers]
+  )
+
+  const outputAssignmentRea = useCallback(
+    (field: any) => {
+      const val = form.values
+      const registerId = val.registerId
+      const address = val.address
+      const registers = metaFlow?.registers
+      const register = registers?.find((rg) => rg.id === registerId)
+      if (register) {
+        const select = useLocale(
+          'flowDesigner.flow.form.recordLookUp.outputReference'
+        )
+        const fieldName = useLocale('flowDesigner.flow.form.recordLookUp.field')
+        const reference = useLocale(
+          'flowDesigner.flow.form.recordLookUp.reference'
+        )
+        field.title = `${select} ${register.name} ${reference}${fieldName}`
+      }
+      field.display = address === false ? 'visible' : 'none'
+    },
+    [form.values, metaFlow?.registers]
   )
 
   const schema = {
@@ -707,6 +743,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
                             sourceMode: 'objectService',
                             objectKey: 'registerId',
                             metaFlow: metaFlow,
+                            registerOpType: RegisterOpTypeEnum.FILTERABLE,
                             typeKey: 'type',
                             isSetType: true,
                             placeholder: useLocale(
@@ -911,6 +948,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
             'x-reactions': myReaction.bind(this, 'sortField'),
             'x-component-props': {
               sourceMode: 'objectService',
+              registerOpType: RegisterOpTypeEnum.FILTERABLE,
               objectKey: 'registerId',
               metaFlow,
             },
@@ -1179,14 +1217,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
           outputAssignments: {
             type: 'array',
             required: true,
-            'x-reactions': {
-              dependencies: ['address'],
-              fulfill: {
-                schema: {
-                  'x-display': "{{$deps == 'false' ? 'visible' : 'none'}}",
-                },
-              },
-            },
+            'x-reactions': outputAssignmentRea,
             title: (
               <TextWidget>
                 flowDesigner.flow.form.recordLookUp.outputAssignments
@@ -1255,6 +1286,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
                       'x-component': 'ResourceSelect',
                       'x-component-props': {
                         sourceMode: 'objectService',
+                        registerOpType: RegisterOpTypeEnum.FILTERABLE,
                         objectKey: 'registerId',
                         metaFlow: metaFlow,
                         placeholder: useLocale(

@@ -20,7 +20,7 @@ import { IFieldMeta } from '@toy-box/meta-schema'
 import { useLocale } from '@toy-box/studio-base'
 import { FlowResourceType } from '@toy-box/autoflow-core'
 import get from 'lodash.get'
-import { isArr } from '@designable/shared'
+import { isArr, isBool } from '@designable/shared'
 import { FormulaModel, resourceEdit } from '../../../nodes'
 import './index.less'
 
@@ -89,12 +89,16 @@ export const ResourceSelect: FC = observer((props: any) => {
     (value: string[] | string, parentType?: FlowResourceType) => {
       form.setFieldState(formilyField?.path?.entire, (state) => {
         let val = value
-        if (isArr(value)) val = value?.reverse()?.join('.')
+        if (isArr(value)) {
+          val = props?.isFormula
+            ? `{{${value?.reverse()?.join('.')}}}`
+            : value?.reverse()?.join('.')
+        }
         state.value = val
         formilyField.validate()
       })
     },
-    [form, formilyField]
+    [form, formilyField, props?.isFormula]
   )
 
   const onChangeValue = useCallback(
@@ -157,8 +161,16 @@ export const ResourceSelect: FC = observer((props: any) => {
                     dataType: obj.type,
                     children: [],
                   }
-                  const changeObj = setMetaChildren(option, obj)
-                  registerOps.push(changeObj)
+                  if (props?.registerOpType) {
+                    const bool = obj[props.registerOpType]
+                    if (bool) {
+                      const changeObj = setMetaChildren(option, obj)
+                      registerOps.push(changeObj)
+                    }
+                  } else {
+                    const changeObj = setMetaChildren(option, obj)
+                    registerOps.push(changeObj)
+                  }
                 }
               }
               return true
@@ -271,6 +283,7 @@ export const ResourceSelect: FC = observer((props: any) => {
     props?.flowJsonTypes,
     props.objectKey,
     props.isShowGlobal,
+    props?.registerOpType,
   ])
 
   const setMetaChildren = useCallback(
@@ -290,11 +303,22 @@ export const ResourceSelect: FC = observer((props: any) => {
               parentType: p.webType,
               children: [],
             }
-            setMetaChildren(child, p)
-            if (child?.children?.length === 0) {
-              delete child?.children
+            if (props?.registerOpType) {
+              const bool = p[props?.registerOpType]
+              if (isBool(bool) && bool) {
+                setMetaChildren(child, p)
+                if (child?.children?.length === 0) {
+                  delete child?.children
+                }
+                obj?.children?.push(child)
+              }
+            } else {
+              setMetaChildren(child, p)
+              if (child?.children?.length === 0) {
+                delete child?.children
+              }
+              obj?.children?.push(child)
             }
-            obj?.children?.push(child)
           }
         }
         if (obj?.children?.length === 0) delete obj?.children
@@ -304,7 +328,7 @@ export const ResourceSelect: FC = observer((props: any) => {
         return obj
       }
     },
-    [props.rank]
+    [props.rank, props?.registerOpType]
   )
 
   const createResource = useCallback(() => {
@@ -417,6 +441,7 @@ export const ResourceSelect: FC = observer((props: any) => {
       historyItems.some((item) => {
         if (item.id === selectKey || item.key === selectKey) {
           value = item.label
+          if (props?.isSetType) onChangeTypeValue(item.dataType)
           if (value) setInputValue(value)
           return true
         }
@@ -431,7 +456,7 @@ export const ResourceSelect: FC = observer((props: any) => {
         setInputValue(selectKey)
       }
     }
-  }, [historyItems, selectKeys, inputValue])
+  }, [historyItems, selectKeys, inputValue, props?.isSetType])
 
   const findName = (
     children: any[],
@@ -444,6 +469,7 @@ export const ResourceSelect: FC = observer((props: any) => {
       if (num === 0) {
         if (child.id === selectKey || child.key === selectKey) {
           name = child.label
+          if (props?.isSetType) onChangeTypeValue(child.dataType)
           return true
         }
       } else if (child?.children?.length > 0 && num > 0) {

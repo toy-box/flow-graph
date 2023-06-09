@@ -26,7 +26,7 @@ import {
 } from '@toy-box/autoflow-core'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
-import { clone } from '@designable/shared'
+import cloneDeep from 'lodash.clonedeep'
 import {
   convertHttpFormilyToJson,
   converHttpJsonToFormily,
@@ -2294,7 +2294,7 @@ export const HttpCall: FC<HttpCallsModelPorps> = ({
   })
 
   if (value) {
-    const flowData = clone(value)
+    const flowData = cloneDeep(value)
     if (isEdit) {
       form.initialValues = converHttpJsonToFormily({
         name: flowData.type,

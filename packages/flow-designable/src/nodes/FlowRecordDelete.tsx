@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useCallback } from 'react'
 import {
   FormDialog,
   Input,
@@ -15,9 +15,9 @@ import { FlowMetaParam, ICriteriaCondition } from '@toy-box/autoflow-core'
 import { createForm, onFieldValueChange } from '@formily/core'
 import { Button } from 'antd'
 import { useLocale, TextWidget } from '@toy-box/studio-base'
-import { clone } from '@designable/shared'
+import cloneDeep from 'lodash.clonedeep'
 import { ResourceSelect, OperationSelect } from '../components/formily'
-import { apiReg, IResourceMetaflow } from '../interface'
+import { apiReg, IResourceMetaflow, RegisterOpTypeEnum } from '../interface'
 
 import './flowNodes.less'
 import { setResourceMetaflow } from '../utils'
@@ -149,15 +149,34 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
   })
 
   if (value) {
-    const flowData = clone(value)
-    const callArguments = flowData.callArguments
+    const flowData = cloneDeep(value)
+    const callArguments: any = flowData.callArguments
     form.initialValues = {
       id: flowData.id,
       name: flowData.name,
       registerId: flowData.registerId,
-      criteria: callArguments.criteria,
+      criteria: callArguments?.criteria,
     }
   }
+
+  const myReaction = useCallback(
+    (field: any) => {
+      const val = form.values
+      const registerId = val.registerId
+      const registers = metaFlow?.registers
+      const register = registers?.find((rg) => rg.id === registerId)
+      if (register) {
+        const title = `${filterName} ${register.name} ${record}`
+        field.title = (
+          <>
+            <div className="connectDialog-title marginTB-5">{title}</div>
+          </>
+        )
+      }
+      field.display = registerId ? 'visible' : 'none'
+    },
+    [form.values, metaFlow?.registers]
+  )
 
   const schema = {
     type: 'object',
@@ -266,14 +285,7 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
               feedbackLayout: 'terse',
               gridSpan: 2,
             },
-            'x-reactions': {
-              dependencies: ['registerId'],
-              fulfill: {
-                schema: {
-                  'x-display': "{{$deps != '' ? 'visible' : 'none'}}",
-                },
-              },
-            },
+            'x-reactions': myReaction,
           },
           criteria: {
             type: 'object',
@@ -426,6 +438,7 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
                             sourceMode: 'objectService',
                             metaFlow: metaFlow,
                             objectKey: 'registerId',
+                            registerOpType: RegisterOpTypeEnum.FILTERABLE,
                             typeKey: 'type',
                             isSetType: true,
                             placeholder: useLocale(

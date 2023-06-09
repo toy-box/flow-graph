@@ -34,4 +34,10 @@ export interface IResourceMetaflow {
   editResource: (type: FlowResourceType, resource: IFieldMetaResource) => void
 }
 
+export enum RegisterOpTypeEnum {
+  CREATABLE = 'creatable',
+  FILTERABLE = 'filterable',
+  UPDATABLE = 'updatable',
+}
+
 export const apiReg = /^[A-Za-z][A-Za-z0-9_]*(\[[0-9]+\]|[A-Za-z0-9]*)$/

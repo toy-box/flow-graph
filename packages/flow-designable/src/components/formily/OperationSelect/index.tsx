@@ -190,7 +190,13 @@ export const OperationSelect: FC = observer((props: any) => {
       }
     }
     return false
-  }, [get(form.values, reactionKey, reactionTypeKey, props?.isAssignment)])
+  }, [
+    form.values,
+    reactionKey,
+    reactionTypeKey,
+    props?.isAssignment,
+    get(form.values, reactionTypeKey),
+  ])
 
   return (
     <FieldSelect

@@ -22,9 +22,9 @@ import { createForm, onFieldValueChange } from '@formily/core'
 import { Button } from 'antd'
 import { useLocale, TextWidget } from '@toy-box/studio-base'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { clone } from '@designable/shared'
+import cloneDeep from 'lodash.clonedeep'
 import { ResourceSelect } from '../components/formily'
-import { apiReg, IResourceMetaflow } from '../interface'
+import { apiReg, IResourceMetaflow, RegisterOpTypeEnum } from '../interface'
 
 import './flowNodes.less'
 import { setResourceMetaflow } from '../utils'
@@ -157,8 +157,8 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
   })
 
   if (value) {
-    const flowData = clone(value)
-    const callArguments = flowData?.callArguments
+    const flowData = cloneDeep(value)
+    const callArguments: any = flowData?.callArguments
     form.initialValues = {
       id: flowData.id,
       name: flowData.name,
@@ -173,9 +173,30 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
     (field: any) => {
       const val = form.values
       const registerId = val.registerId
+      const registers = metaFlow?.registers
+      const register = registers?.find((rg) => rg.id === registerId)
+      if (register) {
+        field.title = `${setName} ${register.name} ${setField}`
+        field.value = field.value || []
+      }
       field.display = registerId ? 'visible' : 'none'
     },
-    [form.values]
+    [form.values, metaFlow?.registers]
+  )
+
+  const assignRecordIdToReference = useCallback(
+    (field: any) => {
+      const val = form.values
+      const registerId = val.registerId
+      const storeOutputAutomatically = val.storeOutputAutomatically
+      const registers = metaFlow?.registers
+      const register = registers?.find((rg) => rg.id === registerId)
+      if (register) {
+        field.title = `${saveId} ${register.name} ID`
+      }
+      field.display = storeOutputAutomatically === true ? 'visible' : 'none'
+    },
+    [form.values, metaFlow?.registers]
   )
 
   const schema = {
@@ -353,6 +374,7 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
                       'x-component-props': {
                         // suffix: "{{icon('SearchOutlined')}}",
                         sourceMode: 'objectService',
+                        registerOpType: RegisterOpTypeEnum.CREATABLE,
                         metaFlow,
                         objectKey: 'registerId',
                         placeholder: useLocale(
@@ -491,14 +513,7 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
               ],
               // flowGraph,
             },
-            'x-reactions': {
-              dependencies: ['storeOutputAutomatically'],
-              fulfill: {
-                schema: {
-                  'x-display': "{{$deps == 'true' ? 'visible' : 'none'}}",
-                },
-              },
-            },
+            'x-reactions': assignRecordIdToReference,
           },
         },
       },

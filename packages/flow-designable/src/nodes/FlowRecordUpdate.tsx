@@ -21,11 +21,11 @@ import { createForm, onFieldValueChange } from '@formily/core'
 import { Button } from 'antd'
 import { useLocale, TextWidget } from '@toy-box/studio-base'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { clone } from '@designable/shared'
+import cloneDeep from 'lodash.clonedeep'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 
 import './flowNodes.less'
-import { apiReg, IResourceMetaflow } from '../interface'
+import { apiReg, IResourceMetaflow, RegisterOpTypeEnum } from '../interface'
 import { setResourceMetaflow } from '../utils'
 import { RepeatErrorMessage } from './RepeatErrorMessage'
 
@@ -172,8 +172,8 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
   })
 
   if (value) {
-    const flowData = clone(value)
-    const callArguments = flowData.callArguments
+    const flowData = cloneDeep(value)
+    const callArguments: any = flowData.callArguments
     form.initialValues = {
       id: flowData.id,
       name: flowData.name,
@@ -190,9 +190,29 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
     (field: any) => {
       const val = form.values
       const registerId = val.registerId
+      const registers = metaFlow?.registers
+      const register = registers?.find((rg) => rg.id === registerId)
+      if (register) {
+        field.title = `${setName} ${register.name} ${setField}`
+        field.value = field.value || []
+      }
       field.display = registerId ? 'visible' : 'none'
     },
-    [form.values]
+    [form.values, metaFlow?.registers]
+  )
+
+  const myConditions = useCallback(
+    (field: any) => {
+      const val = form.values
+      const registerId = val.registerId
+      const registers = metaFlow?.registers
+      const register = registers?.find((rg) => rg.id === registerId)
+      if (register) {
+        field.title = `${filterName} ${register.name} ${record}`
+      }
+      field.display = registerId ? 'visible' : 'none'
+    },
+    [form.values, metaFlow?.registers]
   )
 
   const schema = {
@@ -296,14 +316,7 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
           },
           criteria: {
             type: 'object',
-            'x-reactions': {
-              dependencies: ['registerId'],
-              fulfill: {
-                schema: {
-                  'x-display': "{{$deps != '' ? 'visible' : 'none'}}",
-                },
-              },
-            },
+            'x-reactions': myConditions,
             properties: {
               logic: {
                 type: 'string',
@@ -324,12 +337,12 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
                   },
                 ],
                 enum: [
-                  {
-                    label: (
-                      <TextWidget token="flowDesigner.flow.form.decision.logicNone"></TextWidget>
-                    ),
-                    value: 'none',
-                  },
+                  // {
+                  //   label: (
+                  //     <TextWidget token="flowDesigner.flow.form.decision.logicNone"></TextWidget>
+                  //   ),
+                  //   value: 'none',
+                  // },
                   {
                     label: (
                       <TextWidget token="flowDesigner.flow.form.decision.logicAnd"></TextWidget>
@@ -459,6 +472,7 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
                             sourceMode: 'objectService',
                             objectKey: 'registerId',
                             metaFlow: metaFlow,
+                            registerOpType: RegisterOpTypeEnum.FILTERABLE,
                             typeKey: 'type',
                             isSetType: true,
                             placeholder: useLocale(
@@ -655,6 +669,7 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
                         // suffix: "{{icon('SearchOutlined')}}",
                         sourceMode: 'objectService',
                         objectKey: 'registerId',
+                        registerOpType: RegisterOpTypeEnum.UPDATABLE,
                         metaFlow: metaFlow,
                         placeholder: useLocale(
                           'flowDesigner.flow.form.comm.operationPlace'

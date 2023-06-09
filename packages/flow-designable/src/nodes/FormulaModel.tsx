@@ -83,7 +83,7 @@ export const FormulaModel: FC<FormulaModelPorps> = ({
         onClick={showModal}
       >
         <div className={prefix + '-icon'}>=</div>
-        {formulaValue.length > 0 ? (
+        {formulaValue?.length > 0 ? (
           <div className={prefix + '-code'}>{formulaValue}</div>
         ) : (
           <div className={prefix + '-placeholder'}>
