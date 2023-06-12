@@ -174,7 +174,7 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
   if (value) {
     const flowData = cloneDeep(value)
     const callArguments: any = flowData.callArguments
-    form.initialValues = {
+    form.setValues({
       id: flowData.id,
       name: flowData.name,
       registerId: flowData.registerId,
@@ -183,7 +183,7 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
         logic: 'none',
       },
       inputAssignments: callArguments?.inputAssignments,
-    }
+    })
   }
 
   const myReaction = useCallback(

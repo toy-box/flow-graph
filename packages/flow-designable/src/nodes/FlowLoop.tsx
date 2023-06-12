@@ -307,7 +307,7 @@ export const loopOnEdit = (node: any, at?: string, additionInfo?: any) => {
     .forOpen((payload, next) => {
       setTimeout(() => {
         next({
-          initialValues: {
+          values: {
             name: node.type,
             id: node.id,
             description: node.description,

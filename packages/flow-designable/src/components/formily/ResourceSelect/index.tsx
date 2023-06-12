@@ -16,8 +16,8 @@ import { Dropdown, Input, Tag } from 'antd'
 import { observer } from '@formily/reactive-react'
 import { clone, isObj, isStr } from '@formily/shared'
 import { useField, useForm } from '@formily/react'
-import { IFieldMeta } from '@toy-box/meta-schema'
-import { useLocale } from '@toy-box/studio-base'
+import { IFieldMeta, MetaValueType } from '@toy-box/meta-schema'
+import { TextWidget, useLocale } from '@toy-box/studio-base'
 import { FlowResourceType } from '@toy-box/autoflow-core'
 import get from 'lodash.get'
 import { isArr, isBool } from '@designable/shared'
@@ -65,6 +65,33 @@ export const ResourceSelect: FC = observer((props: any) => {
     ),
   }
 
+  const metaDataOps = {
+    [MetaValueType.STRING]: (
+      <TextWidget>flowDesigner.flow.metaType.str</TextWidget>
+    ),
+    [MetaValueType.NUMBER]: (
+      <TextWidget>flowDesigner.flow.metaType.num</TextWidget>
+    ),
+    [MetaValueType.OBJECT]: (
+      <TextWidget>flowDesigner.flow.metaType.objectId</TextWidget>
+    ),
+    [MetaValueType.TEXT]: (
+      <TextWidget>flowDesigner.flow.metaType.text</TextWidget>
+    ),
+    [MetaValueType.BOOLEAN]: (
+      <TextWidget>flowDesigner.flow.metaType.bool</TextWidget>
+    ),
+    [MetaValueType.DATE]: (
+      <TextWidget>flowDesigner.flow.metaType.date</TextWidget>
+    ),
+    [MetaValueType.DATETIME]: (
+      <TextWidget>flowDesigner.flow.metaType.dateTime</TextWidget>
+    ),
+    [MetaValueType.ARRAY]: (
+      <TextWidget>flowDesigner.flow.metaType.array</TextWidget>
+    ),
+  }
+
   useEffect(() => {
     const val = formilyField?.value
     const len = val?.length
@@ -75,9 +102,12 @@ export const ResourceSelect: FC = observer((props: any) => {
     } else if (isStr(val) && val.startsWith('{{') && val.endsWith('}}')) {
       const newVal = val.slice(2, len - 2)
       setSelectKeys(newVal?.split('.')?.reverse() || [])
+      setInputValue(null)
     } else {
       if (val) {
-        setSelectKeys(val?.split('.')?.reverse())
+        const newVal = val?.split('.')?.reverse()
+        setSelectKeys(newVal)
+        setInputValue(null)
       } else {
         setSelectKeys([])
         setInputValue(null)
@@ -156,7 +186,8 @@ export const ResourceSelect: FC = observer((props: any) => {
                 if (re.properties.hasOwnProperty(key)) {
                   const obj = re.properties[key]
                   const option = {
-                    label: obj.name,
+                    label: itemLabelName(obj),
+                    labelName: obj.name,
                     key: obj.key,
                     dataType: obj.type,
                     children: [],
@@ -182,7 +213,8 @@ export const ResourceSelect: FC = observer((props: any) => {
         registerOps =
           props.metaFlow?.registers?.map((r: any) => {
             const obj = {
-              label: r.name,
+              label: itemLabelName(r),
+              labelName: r.name,
               key: r.id,
               dataType: r.type,
               children: [],
@@ -219,7 +251,8 @@ export const ResourceSelect: FC = observer((props: any) => {
           .map((meta) => {
             const children = meta.children.map((child) => {
               const obj = {
-                label: child.name,
+                label: itemLabelName(child),
+                labelName: child.name,
                 key: child.key,
                 dataType: child.type,
                 parentType: child.webType,
@@ -256,7 +289,8 @@ export const ResourceSelect: FC = observer((props: any) => {
           if (objectRegister.properties.hasOwnProperty(key)) {
             const obj = objectRegister.properties[key]
             const p = {
-              label: obj.name,
+              label: itemLabelName(obj),
+              labelName: obj.name,
               key: obj.id || obj.key,
               dataType: obj.type,
               children: [],
@@ -297,7 +331,8 @@ export const ResourceSelect: FC = observer((props: any) => {
           if (meta.properties.hasOwnProperty(proKey)) {
             const p: any = meta.properties[proKey]
             const child = {
-              label: p.name,
+              label: itemLabelName(p),
+              labelName: p.name,
               key: p.id || p.key,
               dataType: p.type,
               parentType: p.webType,
@@ -330,6 +365,17 @@ export const ResourceSelect: FC = observer((props: any) => {
     },
     [props.rank, props?.registerOpType]
   )
+
+  const itemLabelName = useCallback((item) => {
+    return (
+      <div style={{ lineHeight: '15px' }}>
+        <div>{item.name}</div>
+        <div style={{ fontSize: '12px', color: '#ccc' }}>
+          {metaDataOps[item.type]}
+        </div>
+      </div>
+    )
+  }, [])
 
   const createResource = useCallback(() => {
     resourceEdit(props.metaFlow, false)
@@ -380,9 +426,9 @@ export const ResourceSelect: FC = observer((props: any) => {
       createResource()
     } else {
       const target: any = e.domEvent.target
-      const { dataType, parentType } = e?.item?.props
+      const { dataType, parentType, labelName } = e?.item?.props
       setSelectKeys(e.keyPath)
-      setInputValue(target?.innerText ?? '')
+      setInputValue(labelName ?? '')
       onChange(e.keyPath, parentType)
       if (props?.isSetType) onChangeTypeValue(dataType)
     }
@@ -440,7 +486,7 @@ export const ResourceSelect: FC = observer((props: any) => {
       let value = null
       historyItems.some((item) => {
         if (item.id === selectKey || item.key === selectKey) {
-          value = item.label
+          value = item.labelName
           if (props?.isSetType) onChangeTypeValue(item.dataType)
           if (value) setInputValue(value)
           return true
@@ -468,7 +514,7 @@ export const ResourceSelect: FC = observer((props: any) => {
     children.some((child) => {
       if (num === 0) {
         if (child.id === selectKey || child.key === selectKey) {
-          name = child.label
+          name = child.labelName
           if (props?.isSetType) onChangeTypeValue(child.dataType)
           return true
         }

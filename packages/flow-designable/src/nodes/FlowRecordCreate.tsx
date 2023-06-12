@@ -159,14 +159,14 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
   if (value) {
     const flowData = cloneDeep(value)
     const callArguments: any = flowData?.callArguments
-    form.initialValues = {
+    form.setValues({
       id: flowData.id,
       name: flowData.name,
       registerId: flowData.registerId,
       inputAssignments: callArguments?.inputAssignments,
       storeOutputAutomatically: callArguments?.storeOutputAutomatically,
       assignRecordIdToReference: callArguments?.assignRecordIdToReference,
-    }
+    })
   }
 
   const myReaction = useCallback(

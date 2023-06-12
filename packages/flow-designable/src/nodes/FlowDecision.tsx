@@ -599,7 +599,7 @@ export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
     .forOpen((payload, next) => {
       setTimeout(() => {
         next({
-          initialValues: {
+          values: {
             name: node.type,
             description: node.description,
             defaultConnectorName:

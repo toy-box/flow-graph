@@ -119,6 +119,7 @@ const labelNames: any = {
 
 const handleOk = (values, metaflow: IResourceMetaflow, isEdit: boolean) => {
   const obj: any = values
+  debugger
   const resourceData: any = {
     description: obj.description,
     exclusiveMaximum: null,
@@ -346,6 +347,13 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
       })
     },
   })
+
+  const formulaReaction = useCallback((field) => {
+    const flowType = field.query('flowType').get('value')
+    const type = field.query('type').get('value')
+    field.display =
+      flowType === FlowResourceType.FORMULA && type ? 'visible' : 'none'
+  }, [])
 
   if (value) {
     const flowDataVal = clone(value)
@@ -678,6 +686,7 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
               ),
             },
             'x-visible': false,
+            'x-reactions': formulaReaction,
             'x-decorator': 'FormItem',
             'x-component': 'FormulaEditor',
             'x-component-props': {

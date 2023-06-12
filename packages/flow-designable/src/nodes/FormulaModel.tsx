@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useCallback,
 } from 'react'
-import { Modal, Button } from 'antd'
+import { Modal, Button, Input } from 'antd'
 import { IFieldMeta, MetaValueType } from '@toy-box/meta-schema'
 // import { MonacoInput } from '@toy-box/designable-react-settings-form'
 import { PowerfxWorkerManager } from '@toy-box/powerfx-worker'
@@ -42,7 +42,7 @@ export const FormulaModel: FC<FormulaModelPorps> = ({
 }) => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [formulaValue, setFormulaValue] = useState(value || '')
-  const [currentValue, setCurrentValue] = useState('')
+  const [currentValue, setCurrentValue] = useState(value || '')
   const prefix = useFlowPrefix('-powerfx-editor')
   const variableMap: Record<string, IFieldMeta> = {}
   const [client, setClient] = useState<PowerfxWorkerManager>()
@@ -75,6 +75,11 @@ export const FormulaModel: FC<FormulaModelPorps> = ({
     setIsModalVisible(false)
   }
 
+  const changeValue = useCallback((e) => {
+    setCurrentValue(e.target.value)
+    console.log(value)
+  }, [])
+
   return (
     <>
       <Button
@@ -105,7 +110,10 @@ export const FormulaModel: FC<FormulaModelPorps> = ({
         onCancel={handleCancel}
       >
         {isModalVisible && (
-          // <div>111111111</div>
+          // <Input
+          //   value={currentValue}
+          //   onChange={changeValue}
+          // />
           // <MonacoInput
           //   value={formulaValue}
           //   onChange={callback}

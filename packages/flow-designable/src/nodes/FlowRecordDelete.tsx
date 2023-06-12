@@ -151,12 +151,12 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
   if (value) {
     const flowData = cloneDeep(value)
     const callArguments: any = flowData.callArguments
-    form.initialValues = {
+    form.setValues({
       id: flowData.id,
       name: flowData.name,
       registerId: flowData.registerId,
       criteria: callArguments?.criteria,
-    }
+    })
   }
 
   const myReaction = useCallback(

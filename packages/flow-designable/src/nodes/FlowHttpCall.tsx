@@ -2296,19 +2296,21 @@ export const HttpCall: FC<HttpCallsModelPorps> = ({
   if (value) {
     const flowData = cloneDeep(value)
     if (isEdit) {
-      form.initialValues = converHttpJsonToFormily({
-        name: flowData.type,
-        description: flowData.description,
-        id: flowData.id,
-        callArguments: flowData.callArguments,
-        // result: flowData.result,
-      })
+      form.setValues(
+        converHttpJsonToFormily({
+          name: flowData.type,
+          description: flowData.description,
+          id: flowData.id,
+          callArguments: flowData.callArguments,
+          // result: flowData.result,
+        })
+      )
     } else {
-      form.initialValues = {
+      form.setValues({
         id: flowData.id,
         name: flowData.name,
         description: flowData.description,
-      }
+      })
     }
   }
 

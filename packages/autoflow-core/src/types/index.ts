@@ -285,11 +285,13 @@ export interface IFieldMetaFlow extends IFieldMeta {
   flowMetaType?: FlowMetaType
   isInput?: boolean
   isOutput?: boolean
+  calcType?: string
+  formula?: string
 }
 
 export type IUpdateFieldMetaVariable = Pick<
   IFieldMetaFlow,
-  'name' | 'defaultValue' | 'description' | 'isInput' | 'isOutput'
+  'name' | 'defaultValue' | 'description' | 'isInput' | 'isOutput' | 'formula'
 >
 
 export type FlowType =

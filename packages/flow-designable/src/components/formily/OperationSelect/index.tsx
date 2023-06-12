@@ -156,6 +156,14 @@ export const OperationSelect: FC = observer((props: any) => {
     return arr
   }, [reactionPath, props?.reactionTypeKey])
 
+  const disabled = useMemo(() => {
+    const reactionValue = get(form.values, reactionKey)
+    if (props?.reactionKey) {
+      return !reactionValue
+    }
+    return false
+  }, [get(form.values, reactionKey)])
+
   const operatOps = useMemo(() => {
     const reactionValue = get(form.values, reactionKey)
     const reactionTypeValue = get(form.values, reactionTypeKey)
@@ -209,7 +217,7 @@ export const OperationSelect: FC = observer((props: any) => {
           'flowDesigner.flow.form.placeholder.formilyInput.record'
         ),
       }}
-      disabled={!operatOps}
+      disabled={disabled}
       value={props.value}
       onChange={handleSelectOptions}
     />

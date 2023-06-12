@@ -72,6 +72,7 @@ const zhCN = {
           dateTime: '时间',
           singleOption: '单选列表',
           multiOption: '多选列表',
+          array: '数组',
         },
         formula: {
           editTitle: '编辑公式',
@@ -447,6 +448,7 @@ const enUS = {
           dateTime: 'dateTime',
           singleOption: 'singleOption',
           multiOption: 'multiOption',
+          array: 'array',
         },
         formula: {
           editTitle: 'Editor Formula',

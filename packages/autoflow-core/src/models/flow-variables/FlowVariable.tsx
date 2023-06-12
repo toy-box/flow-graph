@@ -11,6 +11,8 @@ export interface IFieldMetaWithWeb extends IFieldMeta {
   webType: FlowResourceType
   isInput?: boolean
   isOutput?: boolean
+  calcType?: string
+  formula?: string
 }
 
 export class FlowVariable {
@@ -42,6 +44,8 @@ export class FlowVariable {
   uniqueItems?: boolean
   pattern?: string
   format?: string
+  calcType?: string
+  formula?: string
   titleKey?: string
   defaultValue?: any
   properties?: Record<string, IFieldMeta>
@@ -71,6 +75,8 @@ export class FlowVariable {
     this.webType = flowVariable.webType
     this.isInput = flowVariable.isInput
     this.isOutput = flowVariable.isOutput
+    this.calcType = flowVariable.calcType
+    this.formula = flowVariable.formula
     this.makeObservable()
   }
 
@@ -83,6 +89,7 @@ export class FlowVariable {
       index: observable.ref,
       items: observable.deep,
       format: observable.ref,
+      calcType: observable.ref,
       required: observable.ref,
       primary: observable.ref,
       parentKey: observable.ref,
@@ -104,6 +111,7 @@ export class FlowVariable {
     this.defaultValue = updateData.defaultValue
     this.isInput = updateData.isInput
     this.isOutput = updateData.isOutput
+    this.formula = updateData?.formula
   }
 
   toJson = (): IFieldMetaWithWeb => {
@@ -129,6 +137,8 @@ export class FlowVariable {
       webType: this.webType,
       isInput: this.isInput,
       isOutput: this.isOutput,
+      calcType: this.calcType,
+      formula: this.formula,
     }
   }
 }

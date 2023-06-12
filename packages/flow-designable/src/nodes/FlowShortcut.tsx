@@ -234,7 +234,7 @@ export const variableOnEdit = (node: any, at?: string, additionInfo?: any) => {
 
       setTimeout(() => {
         next({
-          initialValues: isEdit
+          values: isEdit
             ? Object.assign(
                 {
                   shortCutModelId,

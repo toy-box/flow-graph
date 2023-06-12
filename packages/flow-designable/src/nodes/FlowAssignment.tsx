@@ -405,7 +405,7 @@ export const assignOnEdit = (node: any, at: string, additionInfo?: any) => {
     .forOpen((payload, next) => {
       setTimeout(() => {
         next({
-          initialValues: {
+          values: {
             name: node.type,
             description: node.description,
             assignmentItems: node.assignmentItems ?? [

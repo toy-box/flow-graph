@@ -266,7 +266,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
         field: field,
       }
     })
-    form.initialValues = {
+    form.setValues({
       id: flowData.id,
       name: flowData.name,
       registerId: flowData.registerId,
@@ -285,7 +285,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
       getFirstRecordOnly: callArguments.getFirstRecordOnly,
       assignNullValuesIfNoRecordsFound:
         callArguments.assignNullValuesIfNoRecordsFound,
-    }
+    })
   }
 
   const storeOutputReaction = useCallback((field: any) => {
