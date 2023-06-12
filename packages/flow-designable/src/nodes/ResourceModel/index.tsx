@@ -119,7 +119,6 @@ const labelNames: any = {
 
 const handleOk = (values, metaflow: IResourceMetaflow, isEdit: boolean) => {
   const obj: any = values
-  debugger
   const resourceData: any = {
     description: obj.description,
     exclusiveMaximum: null,

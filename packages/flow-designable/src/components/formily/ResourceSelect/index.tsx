@@ -18,7 +18,11 @@ import { clone, isObj, isStr } from '@formily/shared'
 import { useField, useForm } from '@formily/react'
 import { IFieldMeta, MetaValueType } from '@toy-box/meta-schema'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
-import { FlowResourceType } from '@toy-box/autoflow-core'
+import {
+  FlowMetaType,
+  FlowResourceType,
+  IFieldMetaFlow,
+} from '@toy-box/autoflow-core'
 import get from 'lodash.get'
 import { isArr, isBool } from '@designable/shared'
 import { FormulaModel, resourceEdit } from '../../../nodes'
@@ -270,6 +274,73 @@ export const ResourceSelect: FC = observer((props: any) => {
           })
         arr.push(...metaArr)
       }
+      const metaFlowDatas = props?.metaFlow?.metaFlowDatas
+      if (metaFlowDatas) {
+        metaFlowDatas.forEach((record) => {
+          if (record.type === FlowMetaType.RECORD_LOOKUP) {
+            if (
+              !record.callArguments?.outputAssignments &&
+              (record.callArguments?.storeOutputAutomatically ||
+                (record.callArguments?.queriedFields &&
+                  !record.callArguments?.outputReference))
+            ) {
+              const register = props?.metaFlow?.registers?.find(
+                (reg) => reg.id === record.registerId
+              )
+              const registerOps = []
+              const resourceData: any = {
+                labelName: `来自${record.id}的 ${register.name}`,
+                label: itemLabelName(record, register),
+                webType: record.getFirstRecordOnly
+                  ? FlowResourceType.VARIABLE_RECORD
+                  : FlowResourceType.VARIABLE_ARRAY_RECORD,
+                dataType: record.getFirstRecordOnly
+                  ? MetaValueType.OBJECT_ID
+                  : MetaValueType.ARRAY,
+                key: record.id,
+                refRegisterId: register?.id,
+                children: registerOps,
+              }
+              if (register?.properties) {
+                for (const key in register.properties) {
+                  if (register.properties.hasOwnProperty(key)) {
+                    const obj = register.properties[key]
+                    const p = {
+                      label: itemLabelName(obj),
+                      labelName: obj.name,
+                      key: obj.id || obj.key,
+                      dataType: obj.type,
+                      children: [],
+                    }
+                    const changeObj = setMetaChildren(p, obj)
+                    registerOps.push(changeObj)
+                  }
+                }
+              }
+              if (resourceData.type === MetaValueType.ARRAY) {
+                resourceData.items = {
+                  type: MetaValueType.OBJECT,
+                  properties: null,
+                }
+              }
+              const p: any = arr.find(
+                (m: any) => m.key === resourceData.webType && m.type
+              )
+              if (p) {
+                p?.children?.push(resourceData)
+              } else {
+                const obj: any = {
+                  label: templateObj[resourceData.webType],
+                  key: resourceData.webType,
+                  type: 'group',
+                  children: [resourceData],
+                }
+                arr.push(obj)
+              }
+            }
+          }
+        })
+      }
       const objectRegister = props?.metaFlow?.registers?.find(
         (reg) => reg.id === props?.metaFlow?.recordObject?.objectId
       )
@@ -318,6 +389,7 @@ export const ResourceSelect: FC = observer((props: any) => {
     props.objectKey,
     props.isShowGlobal,
     props?.registerOpType,
+    props?.metaFlow?.metaFlowDatas,
   ])
 
   const setMetaChildren = useCallback(
@@ -366,10 +438,14 @@ export const ResourceSelect: FC = observer((props: any) => {
     [props.rank, props?.registerOpType]
   )
 
-  const itemLabelName = useCallback((item) => {
+  const itemLabelName = useCallback((item, register?: any) => {
     return (
       <div style={{ lineHeight: '15px' }}>
-        <div>{item.name}</div>
+        {!register ? (
+          <div>{item.name}</div>
+        ) : (
+          <div>{`来自${item.id}的 ${register.name}`}</div>
+        )}
         <div style={{ fontSize: '12px', color: '#ccc' }}>
           {metaDataOps[item.type]}
         </div>
@@ -388,24 +464,29 @@ export const ResourceSelect: FC = observer((props: any) => {
       setVariable(true)
       setInputValue(val)
       const list = clone(historyItems)
-      const arrs = list.filter((item: any) => {
-        if (item?.type === 'group') {
-          const childs = item?.children?.filter((child) => {
-            const lowerLabel = child.label.toLowerCase()
-            return lowerLabel.indexOf(lowerVal) > -1
-          })
-          if (childs.length > 0) {
-            item.children = childs
-            return childs
+      if (val?.length > 0) {
+        const arrs = list.filter((item: any) => {
+          if (item?.type === 'group') {
+            const childs = item?.children?.filter((child) => {
+              const lowerLabel = child.labelName?.toLowerCase()
+              return lowerLabel?.indexOf(lowerVal) > -1
+            })
+            if (childs.length > 0) {
+              item.children = childs
+              return childs
+            }
+            return false
+          } else {
+            const lowerLabel = item.labelName?.toLowerCase()
+            return lowerLabel?.indexOf(lowerVal) > -1
           }
-          return false
-        } else {
-          const lowerLabel = item.label.toLowerCase()
-          return lowerLabel.indexOf(lowerVal) > -1
-        }
-      })
-      setItems(arrs)
-      setSelectKeys([])
+        })
+        setItems(arrs)
+        setSelectKeys([])
+      } else {
+        setItems(list)
+        setSelectKeys([])
+      }
     },
     [historyItems]
   )
@@ -499,6 +580,8 @@ export const ResourceSelect: FC = observer((props: any) => {
       })
       if (!value) {
         setSelectKeys([])
+        setInputValue(selectKey)
+      } else {
         setInputValue(selectKey)
       }
     }

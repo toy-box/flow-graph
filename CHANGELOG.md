@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.16(2023-06-12)
+
+### No Change Log
+
 ## v2.0.15(2023-06-09)
 
 ### No Change Log
@@ -467,9 +471,5 @@
 1. [feat: SvgNode 增加回调方法](https://github.com/alibaba/designable/commit/75ab233) :point_right: ( [Huhui](https://github.com/Huhui) )
 
 ## v1.0.10(2021-08-23)
-
-### No Change Log
-
-## v1.0.9(2021-08-23)
 
 ### No Change Log
