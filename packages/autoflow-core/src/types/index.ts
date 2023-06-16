@@ -287,11 +287,18 @@ export interface IFieldMetaFlow extends IFieldMeta {
   isOutput?: boolean
   calcType?: string
   formula?: string
+  refObjectId?: string
 }
 
 export type IUpdateFieldMetaVariable = Pick<
   IFieldMetaFlow,
-  'name' | 'defaultValue' | 'description' | 'isInput' | 'isOutput' | 'formula'
+  | 'name'
+  | 'defaultValue'
+  | 'description'
+  | 'isInput'
+  | 'isOutput'
+  | 'formula'
+  | 'refObjectId'
 >
 
 export type FlowType =
@@ -363,6 +370,7 @@ export enum IContentTypeEnum {
   NONE = 'none',
   FORM_DATA = 'multipart/form-data',
   X_WWW_FORM_URLENCODED = 'application/x-www-form-urlencoded',
+  JSON = 'application/json',
   raw = 'raw',
   BINARY = 'binary',
   GRAPH_QL = 'GraphQL',

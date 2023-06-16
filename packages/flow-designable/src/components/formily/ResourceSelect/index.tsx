@@ -24,6 +24,7 @@ import {
   IFieldMetaFlow,
 } from '@toy-box/autoflow-core'
 import get from 'lodash.get'
+import cloneDeep from 'lodash.clonedeep'
 import { isArr, isBool } from '@designable/shared'
 import { FormulaModel, resourceEdit } from '../../../nodes'
 import './index.less'
@@ -37,10 +38,11 @@ export const ResourceSelect: FC = observer((props: any) => {
   const form = useForm()
   const formilyField = useField() as any
   const [visible, setVariable] = useState(false)
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState(null)
   const [selectKeys, setSelectKeys] = useState([])
   const [inputType, setInputType] = useState(InputtypeEnum.BASE)
   const ref = useRef()
+  const [flag, setFlag] = useState(true)
   const [items, setItems] = useState<MenuProps['items']>([])
   const [historyItems, setHistoryItems] = useState([])
 
@@ -94,62 +96,114 @@ export const ResourceSelect: FC = observer((props: any) => {
     [MetaValueType.ARRAY]: (
       <TextWidget>flowDesigner.flow.metaType.array</TextWidget>
     ),
+    [MetaValueType.SINGLE_OPTION]: (
+      <TextWidget>flowDesigner.flow.metaType.singleOption</TextWidget>
+    ),
+    [MetaValueType.MULTI_OPTION]: (
+      <TextWidget>flowDesigner.flow.metaType.multiOption</TextWidget>
+    ),
+    [MetaValueType.OBJECT_ID]: (
+      <TextWidget>flowDesigner.flow.metaType.refId</TextWidget>
+    ),
   }
 
   useEffect(() => {
+    if (flag) return
     const val = formilyField?.value
     const len = val?.length
     if (isStr(val) && val.startsWith('{!') && val.endsWith('}')) {
       const newVal = val.slice(2, len - 1)
-      setInputType(InputtypeEnum.FORMULA)
-      setInputValue(newVal)
-    } else if (isStr(val) && val.startsWith('{{') && val.endsWith('}}')) {
-      const newVal = val.slice(2, len - 2)
-      setSelectKeys(newVal?.split('.')?.reverse() || [])
+      const reval = newVal?.split('.')?.reverse()
+      setSelectKeys(reval || [])
       setInputValue(null)
+      initData(true, reval)
     } else {
-      if (val) {
+      if (isStr(val) && val) {
         const newVal = val?.split('.')?.reverse()
         setSelectKeys(newVal)
         setInputValue(null)
+        initData(false, newVal)
       } else {
         setSelectKeys([])
         setInputValue(null)
       }
     }
-  }, [formilyField?.value])
+  }, [flag])
 
   const onChange = useCallback(
     (value: string[] | string, parentType?: FlowResourceType) => {
       form.setFieldState(formilyField?.path?.entire, (state) => {
-        let val = value
-        if (isArr(value)) {
+        let val = cloneDeep(value)
+        if (isArr(val)) {
           val = props?.isFormula
-            ? `{{${value?.reverse()?.join('.')}}}`
-            : value?.reverse()?.join('.')
+            ? `{!${val?.reverse()?.join('.')}}`
+            : val?.reverse()?.join('.')
+        } else if (selectKeys.length > 0) {
+          val = props?.isFormula ? `{!${value}}` : value
         }
         state.value = val
         formilyField.validate()
       })
     },
-    [form, formilyField, props?.isFormula]
+    [form, formilyField, props?.isFormula, selectKeys]
   )
 
   const onChangeValue = useCallback(
     (value: string) => {
       form.setFieldState(formilyField?.path?.entire, (state) => {
         state.value = `{!${value}}`
+        // setInputValue(value)
+        const selects = value?.split('.') || []
+        setSelectKeys(selects)
+        const length = selects?.length
+        const selectKey = selects[length - 1]
+        let val = null
+        historyItems.some((item) => {
+          if (item.id === selectKey || item.key === selectKey) {
+            val = item.labelName
+            if (val) setInputValue(val)
+            return true
+          }
+          if (item?.children?.length > 0) {
+            val = findName(item?.children, selectKey, length)
+            setInputValue(val)
+            return val
+          }
+        })
+        if (!val) {
+          setSelectKeys([])
+          setInputValue(value)
+        }
         formilyField.validate()
       })
     },
-    [form, formilyField]
+    [form, formilyField, historyItems]
   )
 
-  const changeInputType = useCallback((type: InputtypeEnum) => {
-    setInputValue('')
-    setInputType(type)
-    setSelectKeys([])
-  }, [])
+  const changeInputType = useCallback(
+    (type: InputtypeEnum) => {
+      setInputType(type)
+      const val = clone(formilyField?.value)
+      const len = val?.length
+      if (isStr(val) && val.startsWith('{!') && val.endsWith('}')) {
+        if (selectKeys.length === 0 && type !== InputtypeEnum.FORMULA) {
+          form.setFieldState(formilyField?.path?.entire, (state) => {
+            const newVal = val.slice(2, len - 1)
+            state.value = newVal
+            formilyField.validate()
+          })
+        }
+      } else {
+        if (selectKeys.length > 0 || type === InputtypeEnum.FORMULA) {
+          form.setFieldState(formilyField?.path?.entire, (state) => {
+            state.value = `{!${val}}`
+            formilyField.validate()
+          })
+        }
+      }
+    },
+    [formilyField?.value]
+  )
 
   const reactionPath = useMemo(() => {
     const segments = formilyField?.path?.segments
@@ -173,6 +227,7 @@ export const ResourceSelect: FC = observer((props: any) => {
   }, [get(form.values, reactionKey)])
 
   useEffect(() => {
+    setFlag(true)
     if (props?.sourceMode === 'objectService') {
       let registerOps = []
       if (props.objectKey) {
@@ -274,9 +329,9 @@ export const ResourceSelect: FC = observer((props: any) => {
           })
         arr.push(...metaArr)
       }
-      const metaFlowDatas = props?.metaFlow?.metaFlowDatas
-      if (metaFlowDatas) {
-        metaFlowDatas.forEach((record) => {
+      const metaFlowNodes = props?.metaFlow?.metaFlowNodes
+      if (metaFlowNodes) {
+        metaFlowNodes.forEach((record) => {
           if (record.type === FlowMetaType.RECORD_LOOKUP) {
             if (
               !record.callArguments?.outputAssignments &&
@@ -379,6 +434,7 @@ export const ResourceSelect: FC = observer((props: any) => {
       }
       setItems(arr)
       setHistoryItems(arr)
+      setFlag(false)
     }
   }, [
     props?.metaFlow?.metaResourceDatas,
@@ -389,7 +445,7 @@ export const ResourceSelect: FC = observer((props: any) => {
     props.objectKey,
     props.isShowGlobal,
     props?.registerOpType,
-    props?.metaFlow?.metaFlowDatas,
+    props?.metaFlow?.metaFlowNodes,
   ])
 
   const setMetaChildren = useCallback(
@@ -440,7 +496,7 @@ export const ResourceSelect: FC = observer((props: any) => {
 
   const itemLabelName = useCallback((item, register?: any) => {
     return (
-      <div style={{ lineHeight: '15px' }}>
+      <div style={{ lineHeight: '15px', display: 'inline-block' }}>
         {!register ? (
           <div>{item.name}</div>
         ) : (
@@ -560,32 +616,36 @@ export const ResourceSelect: FC = observer((props: any) => {
     )
   }, [inputValue, disabled])
 
-  useEffect(() => {
-    const length = selectKeys.length
-    if (length > 0 && !inputValue) {
-      const selectKey = selectKeys[0]
-      let value = null
-      historyItems.some((item) => {
-        if (item.id === selectKey || item.key === selectKey) {
-          value = item.labelName
-          if (props?.isSetType) onChangeTypeValue(item.dataType)
-          if (value) setInputValue(value)
-          return true
+  const initData = useCallback(
+    (isVar: boolean, selectKeys: string[]) => {
+      const length = selectKeys.length
+      if (length > 0 && !inputValue) {
+        const selectKey = selectKeys[0]
+        let value = null
+        historyItems.some((item) => {
+          if (item.id === selectKey || item.key === selectKey) {
+            value = item.labelName
+            if (props?.isSetType) onChangeTypeValue(item.dataType)
+            if (value) setInputValue(value)
+            return true
+          }
+          if (item?.children?.length > 0) {
+            value = findName(item?.children, selectKey, length)
+            setInputValue(value)
+            return value
+          }
+        })
+        if (!value) {
+          setSelectKeys([])
+          setInputValue(selectKeys?.reverse()?.join('.'))
+          if (isVar) setInputType(InputtypeEnum.FORMULA)
+        } else {
+          setInputType(InputtypeEnum.BASE)
         }
-        if (item?.children?.length > 0) {
-          value = findName(item?.children, selectKey, length)
-          setInputValue(value)
-          return value
-        }
-      })
-      if (!value) {
-        setSelectKeys([])
-        setInputValue(selectKey)
-      } else {
-        setInputValue(selectKey)
       }
-    }
-  }, [historyItems, selectKeys, inputValue, props?.isSetType])
+    },
+    [historyItems, inputValue, props?.isSetType]
+  )
 
   const findName = (
     children: any[],
@@ -638,12 +698,29 @@ export const ResourceSelect: FC = observer((props: any) => {
           >
             <div style={{ width: '100%' }}>
               {selectKeys.length > 0 ? (
-                <div
-                  className={`resource-select-custom-input ${
-                    disabled ? 'disabled' : ''
-                  }`}
-                >
-                  {tagChild()}
+                <div className="resource-select-formula">
+                  <div
+                    className={`resource-select-custom-input ${
+                      disabled ? 'disabled' : ''
+                    }`}
+                  >
+                    {tagChild()}
+                  </div>
+                  {isFormula && (
+                    <span
+                      className={`resource-select-formula-check ${
+                        disabled ? 'disable' : ''
+                      }`}
+                      onClick={(e) => {
+                        if (!disabled) {
+                          e.stopPropagation()
+                          changeInputType(InputtypeEnum.FORMULA)
+                        }
+                      }}
+                    >
+                      <SettingOutlined />
+                    </span>
+                  )}
                 </div>
               ) : (
                 <div className="resource-select-formula">
@@ -681,7 +758,7 @@ export const ResourceSelect: FC = observer((props: any) => {
           <FormulaModel
             metaFlow={props.metaFlow}
             valueType={'string' as any}
-            value={inputValue}
+            value={selectKeys.length > 0 ? cloneDeep(selectKeys) : inputValue}
             disabled={disabled}
             onChange={(value: string) => onChangeValue(value)}
           />

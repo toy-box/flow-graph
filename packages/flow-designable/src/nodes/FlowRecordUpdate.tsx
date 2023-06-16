@@ -70,6 +70,7 @@ const submitParamData = (values) => {
     id: value.id,
     name: value.name,
     registerId: value.registerId,
+    description: value.description,
     callArguments: {
       criteria:
         value.criteria.logic === '$and'
@@ -178,6 +179,7 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
       id: flowData.id,
       name: flowData.name,
       registerId: flowData.registerId,
+      description: flowData.description,
       criteria: callArguments?.criteria ?? {
         conditions: [],
         logic: 'none',

@@ -1,6 +1,6 @@
 {
   "name": "@toy-box/autoflow-core",
-  "version": "2.0.17",
+  "version": "2.0.18",
   "license": "MIT",
   "description": "",
   "main": "lib/index.js",
@@ -30,7 +30,7 @@
     "react-is": ">=17.8.0 || >=18.0.0"
   },
   "dependencies": {
-    "@toy-box/flow-graph": "2.0.17",
+    "@toy-box/flow-graph": "2.0.18",
     "@toy-box/meta-schema": "^3.0.20",
     "@toy-box/toybox-shared": "^3.0.20",
     "immutability-helper": "^3.1.1"

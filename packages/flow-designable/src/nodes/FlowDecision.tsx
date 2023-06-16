@@ -20,7 +20,7 @@ import { opTypeEnum } from '@toy-box/autoflow-core'
 import { ResourceSelect, OperationSelect } from '../components/formily'
 
 import { BranchArrays } from '../components/formily'
-import { apiReg, IResourceMetaflow } from '../interface'
+import { apiReg, IResourceMetaflow, TypeModeEnum } from '../interface'
 import './flowNodes.less'
 import { setResourceMetaflow } from '../utils'
 import { RepeatErrorMessage } from './RepeatErrorMessage'
@@ -112,12 +112,12 @@ const decideRender = (isNew: boolean, metaFlow: IResourceMetaflow, node) => {
           id: {
             type: 'string',
             title: <TextWidget>flowDesigner.flow.form.comm.value</TextWidget>,
-            required: false,
+            required: true,
             'x-disabled': !isNew,
             'x-validator': [
               {
                 triggerType: 'onBlur',
-                required: false,
+                required: true,
                 message: (
                   <TextWidget>
                     flowDesigner.flow.form.validator.required
@@ -487,6 +487,7 @@ const decideRender = (isNew: boolean, metaFlow: IResourceMetaflow, node) => {
                                   ),
                                   reactionKey: 'fieldPattern',
                                   reactionTypeKey: 'type',
+                                  typeMode: TypeModeEnum.DECISION,
                                 },
                               },
                               value: {
@@ -600,7 +601,7 @@ export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
       setTimeout(() => {
         next({
           values: {
-            name: node.type,
+            name: node.name,
             description: node.description,
             defaultConnectorName:
               node.defaultConnectorName ||
@@ -653,6 +654,7 @@ export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
       const paramData = {
         id: value.id,
         name: value.name,
+        description: value.description,
         defaultConnectorName:
           value.defaultConnectorName ||
           useLocale('flowDesigner.flow.form.decision.defaultConnectorName'),

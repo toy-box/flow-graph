@@ -1861,6 +1861,12 @@ export const httpCallsSchema = (
                             ),
                             value: IContentTypeEnum.X_WWW_FORM_URLENCODED,
                           },
+                          {
+                            label: (
+                              <TextWidget token="flowDesigner.flow.form.httpCalls.json"></TextWidget>
+                            ),
+                            value: IContentTypeEnum.JSON,
+                          },
                           // {
                           //   label: (
                           //     <TextWidget token="flowDesigner.flow.form.httpCalls.enumRaw"></TextWidget>
@@ -2283,6 +2289,23 @@ export const HttpCall: FC<HttpCallsModelPorps> = ({
               state.visible = true
             })
             break
+          case IContentTypeEnum.JSON:
+            form.setFieldState('callArguments.body', (state) => {
+              state.componentType = 'ResourceSelect'
+              state.componentProps = {
+                suffix: "{{icon('SearchOutlined')}}",
+                placeholder: useLocale(
+                  'flowDesigner.flow.form.comm.valuePlace'
+                ),
+                style: {
+                  width: '50%',
+                },
+                metaFlow: metaFlow,
+                isFormula: true,
+              }
+              state.visible = true
+            })
+            break
           default:
             form.setFieldState('callArguments.body', (state) => {
               state.visible = false
@@ -2298,7 +2321,7 @@ export const HttpCall: FC<HttpCallsModelPorps> = ({
     if (isEdit) {
       form.setValues(
         converHttpJsonToFormily({
-          name: flowData.type,
+          name: flowData.name,
           description: flowData.description,
           id: flowData.id,
           callArguments: flowData.callArguments,
@@ -2307,7 +2330,6 @@ export const HttpCall: FC<HttpCallsModelPorps> = ({
       )
     } else {
       form.setValues({
-        id: flowData.id,
         name: flowData.name,
         description: flowData.description,
       })
@@ -2327,6 +2349,21 @@ export const HttpCall: FC<HttpCallsModelPorps> = ({
     case IContentTypeEnum.raw:
       form.setFieldState('callArguments.body', (state) => {
         state.componentType = 'Input'
+        state.visible = true
+      })
+      break
+    case IContentTypeEnum.JSON:
+      form.setFieldState('callArguments.body', (state) => {
+        state.componentType = 'ResourceSelect'
+        state.componentProps = {
+          suffix: "{{icon('SearchOutlined')}}",
+          style: {
+            width: '50%',
+          },
+          placeholder: useLocale('flowDesigner.flow.form.comm.valuePlace'),
+          metaFlow: metaFlow,
+          isFormula: true,
+        }
         state.visible = true
       })
       break

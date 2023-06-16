@@ -78,6 +78,7 @@ const submitParamData = (values) => {
   const paramData = {
     id: value.id,
     name: value.name,
+    description: value.description,
     registerId: value.registerId,
     callArguments: {
       criteria:
@@ -269,6 +270,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
     form.setValues({
       id: flowData.id,
       name: flowData.name,
+      description: flowData.description,
       registerId: flowData.registerId,
       criteria: callArguments?.criteria ?? {
         conditions: [],

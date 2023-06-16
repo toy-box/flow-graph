@@ -51,6 +51,7 @@ const submitParamData = (values) => {
     id: value.id,
     name: value.name,
     registerId: value.registerId,
+    description: value.description,
     callArguments: {
       criteria: {
         conditions,
@@ -154,6 +155,7 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
     form.setValues({
       id: flowData.id,
       name: flowData.name,
+      description: flowData.description,
       registerId: flowData.registerId,
       criteria: callArguments?.criteria,
     })

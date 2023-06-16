@@ -14,7 +14,7 @@ import * as ICONS from '@ant-design/icons'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
 import { FlowResourceType } from '@toy-box/autoflow-core'
 import { ResourceSelect, OperationSelect } from '../components/formily'
-import { apiReg, IResourceMetaflow } from '../interface'
+import { apiReg, IResourceMetaflow, TypeModeEnum } from '../interface'
 
 import './flowNodes.less'
 import { setResourceMetaflow } from '../utils'
@@ -300,6 +300,7 @@ const assignRender = (
                         ),
                         reactionKey: 'assignToReference',
                         reactionTypeKey: 'type',
+                        typeMode: TypeModeEnum.ASSIGNMENT,
                         isAssignment: true,
                       },
                     },
@@ -406,7 +407,7 @@ export const assignOnEdit = (node: any, at: string, additionInfo?: any) => {
       setTimeout(() => {
         next({
           values: {
-            name: node.type,
+            name: node.name,
             description: node.description,
             assignmentItems: node.assignmentItems ?? [
               { operation: undefined, type: undefined, value: undefined },

@@ -13,6 +13,7 @@ export interface IFieldMetaWithWeb extends IFieldMeta {
   isOutput?: boolean
   calcType?: string
   formula?: string
+  refObjectId?: string
 }
 
 export class FlowVariable {
@@ -52,6 +53,7 @@ export class FlowVariable {
   webType: FlowResourceType
   isInput?: boolean
   isOutput?: boolean
+  refObjectId?: string
 
   constructor(flowVariable: IFieldMetaWithWeb) {
     this.key = flowVariable.key
@@ -77,6 +79,7 @@ export class FlowVariable {
     this.isOutput = flowVariable.isOutput
     this.calcType = flowVariable.calcType
     this.formula = flowVariable.formula
+    this.refObjectId = flowVariable.refObjectId
     this.makeObservable()
   }
 
@@ -112,6 +115,7 @@ export class FlowVariable {
     this.isInput = updateData.isInput
     this.isOutput = updateData.isOutput
     this.formula = updateData?.formula
+    this.refObjectId = updateData.refObjectId
   }
 
   toJson = (): IFieldMetaWithWeb => {
@@ -139,6 +143,7 @@ export class FlowVariable {
       isOutput: this.isOutput,
       calcType: this.calcType,
       formula: this.formula,
+      refObjectId: this.refObjectId,
     }
   }
 }

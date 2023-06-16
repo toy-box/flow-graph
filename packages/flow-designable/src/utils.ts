@@ -9,5 +9,6 @@ export const setResourceMetaflow = (metaFlow: AutoFlow) => {
     shortCutDatas: metaFlow.shortCutDatas,
     createResource: metaFlow.createResource,
     editResource: metaFlow.editResource,
+    metaFlowNodes: metaFlow.toJsonList,
   }
 }

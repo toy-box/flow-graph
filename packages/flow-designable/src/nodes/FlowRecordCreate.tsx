@@ -62,6 +62,7 @@ const submitParamData = (values) => {
     id: value.id,
     name: value.name,
     registerId: value.registerId,
+    description: value.description,
     callArguments: {
       inputAssignments,
       storeOutputAutomatically: value.storeOutputAutomatically,
@@ -162,6 +163,7 @@ export const RecordCreate: FC<RecordCreateModelPorps> = ({
     form.setValues({
       id: flowData.id,
       name: flowData.name,
+      description: flowData.description,
       registerId: flowData.registerId,
       inputAssignments: callArguments?.inputAssignments,
       storeOutputAutomatically: callArguments?.storeOutputAutomatically,

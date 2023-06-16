@@ -308,7 +308,7 @@ export const loopOnEdit = (node: any, at?: string, additionInfo?: any) => {
       setTimeout(() => {
         next({
           values: {
-            name: node.type,
+            name: node.name,
             id: node.id,
             description: node.description,
             collectionReference: node.collectionReference,

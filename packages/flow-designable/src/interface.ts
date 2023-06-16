@@ -40,4 +40,9 @@ export enum RegisterOpTypeEnum {
   UPDATABLE = 'updatable',
 }
 
+export enum TypeModeEnum {
+  ASSIGNMENT = 'Assignment',
+  DECISION = 'decision',
+}
+
 export const apiReg = /^[A-Za-z][A-Za-z0-9_]*(\[[0-9]+\]|[A-Za-z0-9]*)$/

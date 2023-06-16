@@ -73,6 +73,7 @@ const zhCN = {
           singleOption: '单选列表',
           multiOption: '多选列表',
           array: '数组',
+          refId: '引用对象',
         },
         formula: {
           editTitle: '编辑公式',
@@ -333,6 +334,7 @@ const zhCN = {
             enumNone: 'none',
             enumFormData: 'form-data',
             enumFormUrl: 'x-www-form-urlencoded',
+            json: 'json',
             enumRaw: 'raw',
             enumBinary: 'binary',
             enumGraphQL: 'GraphQL',
@@ -449,6 +451,7 @@ const enUS = {
           singleOption: 'singleOption',
           multiOption: 'multiOption',
           array: 'array',
+          refId: 'refId',
         },
         formula: {
           editTitle: 'Editor Formula',
@@ -712,6 +715,7 @@ const enUS = {
             enumNone: 'none',
             enumFormData: 'form-data',
             enumFormUrl: 'x-www-form-urlencoded',
+            json: 'json',
             enumRaw: 'raw',
             enumBinary: 'binary',
             enumGraphQL: 'GraphQL',
