@@ -74,6 +74,7 @@ const zhCN = {
           multiOption: '多选列表',
           array: '数组',
           refId: '引用对象',
+          implict: '任意类型',
         },
         formula: {
           editTitle: '编辑公式',
@@ -133,6 +134,8 @@ const zhCN = {
             paramLabel: '在流外部可用',
             isInput: '可供输入',
             isOutput: '可供输出',
+            recordLookupLabel: '来自',
+            real: '的',
           },
           validator: {
             filter: '筛选记录是必填项',
@@ -452,6 +455,7 @@ const enUS = {
           multiOption: 'multiOption',
           array: 'array',
           refId: 'refId',
+          implict: 'any',
         },
         formula: {
           editTitle: 'Editor Formula',
@@ -511,6 +515,8 @@ const enUS = {
             paramLabel: 'Available Outside The Flow',
             isInput: 'Available Input',
             isOutput: 'Available OutPut',
+            recordLookupLabel: 'from',
+            real: 'on',
           },
           validator: {
             filter: 'filtering record is required',

@@ -77,6 +77,10 @@ const metaDataOps = [
     value: MetaValueType.DATETIME,
     label: <TextWidget>flowDesigner.flow.metaType.dateTime</TextWidget>,
   },
+  {
+    value: 'implict',
+    label: <TextWidget>flowDesigner.flow.metaType.implict</TextWidget>,
+  },
 ]
 
 const constMetaOps = [
@@ -85,6 +89,7 @@ const constMetaOps = [
   MetaValueType.NUMBER,
   MetaValueType.BOOLEAN,
   MetaValueType.DATE,
+  'implict',
 ]
 
 const formulaMetaOps = [
@@ -94,6 +99,7 @@ const formulaMetaOps = [
   MetaValueType.BOOLEAN,
   MetaValueType.DATE,
   MetaValueType.DATETIME,
+  'implict',
 ]
 
 const labelNames: any = {
@@ -137,18 +143,15 @@ const handleOk = (values, metaflow: IResourceMetaflow, isEdit: boolean) => {
     required: null,
     type: obj.type,
     defaultValue: obj.defaultValue,
-    refObjectId: obj.refObjectId,
+    refRegisterId: obj.refRegisterId,
     text: obj.text,
     calcType: obj.formula ? 'formula' : undefined,
     formula: obj.formula,
     webType: obj.flowType,
   }
-  // const register = flowGraph.registers.find(
-  //   (reg) => reg.id === obj.refObjectId
-  // )
-  // if (obj.refObjectId && obj.type === MetaValueType.OBJECT) {
-  //   resourceData.refRegisterId = register?.id
-  // }
+  const register = metaflow.registers.find(
+    (reg) => reg.id === obj.refRegisterId
+  )
   const valueTypeLen = obj.valueType ? obj.valueType.length : undefined
   if (valueTypeLen) {
     resourceData.type = MetaValueType.ARRAY
@@ -156,16 +159,9 @@ const handleOk = (values, metaflow: IResourceMetaflow, isEdit: boolean) => {
       type: obj.type,
       properties: undefined,
     }
+  } else if (obj.refRegisterId && obj.type === MetaValueType.OBJECT) {
+    resourceData.properties = register?.properties
   }
-  // if (valueTypeLen) {
-  //   resourceData.type = MetaValueType.ARRAY
-  //   resourceData.items = {
-  //     type: obj.type,
-  //     properties: register?.properties,
-  //   }
-  // } else if (obj.refObjectId && obj.type === MetaValueType.OBJECT) {
-  //   resourceData.properties = register?.properties
-  // }
   const flowDataType = obj.flowType
   if (flowDataType === FlowResourceType.VARIABLE) {
     resourceData.isInput = obj.paramLabel?.includes('isInput') ?? true
@@ -280,7 +276,8 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
           fieldObj.value &&
           fieldObj.value !== MetaValueType.MULTI_OPTION &&
           fieldObj.value !== MetaValueType.SINGLE_OPTION &&
-          fieldObj.value !== MetaValueType.OBJECT
+          fieldObj.value !== MetaValueType.OBJECT &&
+          fieldObj.value !== 'implict'
         state.display = isShowDefault && valFlag ? 'visible' : 'none'
       })
       service(fieldObj).then(
@@ -548,7 +545,7 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
               },
             },
           },
-          refObjectId: {
+          refRegisterId: {
             type: 'string',
             title: (
               <TextWidget>

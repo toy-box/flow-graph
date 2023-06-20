@@ -218,17 +218,15 @@ export const OperationSelect: FC = observer((props: any) => {
         const idx = compareOperation?.findIndex(
           (op) => op.value === field?.value
         )
-        if (idx < 0) handleSelectOptions(null)
+        if (idx < 0 || !compareOperation) handleSelectOptions(null)
         return compareOperation
       } else if (
         props?.typeMode === TypeModeEnum.DECISION &&
         reactionTypeValue
       ) {
         const compareOperation: any = FieldDecisionOpMap[reactionTypeValue]
-        const idx = compareOperation?.findIndex(
-          (op) => op.value === field?.value
-        )
-        if (idx < 0) handleSelectOptions(null)
+        const idx = compareOperation?.findIndex((op) => op === field?.value)
+        if (idx < 0 || !compareOperation) handleSelectOptions(null)
         const compareOperations = compareOperation?.map((op) => {
           return {
             label: useLocale(`flowDesigner.compareOperation.${op}`),
@@ -238,10 +236,8 @@ export const OperationSelect: FC = observer((props: any) => {
         return compareOperations
       } else if (reactionTypeValue) {
         const compareOperation: any = FieldOpMap[reactionTypeValue]
-        const idx = compareOperation?.findIndex(
-          (op) => op.value === field?.value
-        )
-        if (idx < 0) handleSelectOptions(null)
+        const idx = compareOperation?.findIndex((op) => op === field?.value)
+        if (idx < 0 || !compareOperation) handleSelectOptions(null)
         const compareOperations = compareOperation?.map((op) => {
           return {
             label: useLocale(`flowDesigner.compareOperation.${op}`),

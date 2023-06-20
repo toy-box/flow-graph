@@ -31,7 +31,7 @@ export const GatherInput: FC = observer((props: any) => {
 
   const handleSelectOptions = useCallback(
     (value: any) => {
-      form.setFieldState('refObjectId', (state) => {
+      form.setFieldState('refRegisterId', (state) => {
         state.value = value
       })
     },

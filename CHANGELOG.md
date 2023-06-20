@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.18(2023-06-16)
+
+### No Change Log
+
 ## v2.0.17(2023-06-12)
 
 ### No Change Log
@@ -467,9 +471,3 @@
 ### :beetle: Bug Fixes
 
 1. [fix: 修复 decision-node 样式](https://github.com/alibaba/designable/commit/934f266) :point_right: ( [Huhui](https://github.com/Huhui) )
-
-## v1.0.11(2021-08-23)
-
-### :tada: Enhancements
-
-1. [feat: SvgNode 增加回调方法](https://github.com/alibaba/designable/commit/75ab233) :point_right: ( [Huhui](https://github.com/Huhui) )

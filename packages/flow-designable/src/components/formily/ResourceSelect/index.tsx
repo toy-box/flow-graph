@@ -284,6 +284,7 @@ export const ResourceSelect: FC = observer((props: any) => {
       }
       setItems(registerOps)
       setHistoryItems(registerOps)
+      setFlag(false)
     } else {
       const metaResourceDatas = clone(props?.metaFlow?.metaResourceDatas)
       const arr = [
@@ -343,13 +344,18 @@ export const ResourceSelect: FC = observer((props: any) => {
                 (reg) => reg.id === record.registerId
               )
               const registerOps = []
+              const labelName = `${useLocale(
+                'flowDesigner.flow.form.resourceCreate.recordLookupLabel'
+              )} ${record.id} ${useLocale(
+                'flowDesigner.flow.form.resourceCreate.real'
+              )} ${register.name}`
               const resourceData: any = {
-                labelName: `来自${record.id}的 ${register.name}`,
-                label: itemLabelName(record, register),
-                webType: record.getFirstRecordOnly
+                labelName,
+                label: itemLabelName(record, labelName),
+                webType: record.callArguments?.getFirstRecordOnly
                   ? FlowResourceType.VARIABLE_RECORD
                   : FlowResourceType.VARIABLE_ARRAY_RECORD,
-                dataType: record.getFirstRecordOnly
+                dataType: record.callArguments?.getFirstRecordOnly
                   ? MetaValueType.OBJECT_ID
                   : MetaValueType.ARRAY,
                 key: record.id,
@@ -494,14 +500,10 @@ export const ResourceSelect: FC = observer((props: any) => {
     [props.rank, props?.registerOpType]
   )
 
-  const itemLabelName = useCallback((item, register?: any) => {
+  const itemLabelName = useCallback((item, labelName?: string) => {
     return (
       <div style={{ lineHeight: '15px', display: 'inline-block' }}>
-        {!register ? (
-          <div>{item.name}</div>
-        ) : (
-          <div>{`来自${item.id}的 ${register.name}`}</div>
-        )}
+        {!labelName ? <div>{item.name}</div> : <div>{labelName}</div>}
         <div style={{ fontSize: '12px', color: '#ccc' }}>
           {metaDataOps[item.type]}
         </div>

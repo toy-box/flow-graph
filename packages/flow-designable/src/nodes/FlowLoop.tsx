@@ -229,13 +229,13 @@ const loopRender = (isNew: boolean, metaFlow: IResourceMetaflow, node: any) => {
             label: (
               <TextWidget token="flowDesigner.flow.form.loop.iterationPositive" />
             ),
-            value: 1,
+            value: 'asc',
           },
           {
             label: (
               <TextWidget token="flowDesigner.flow.form.loop.iterationReverse" />
             ),
-            value: 2,
+            value: 'desc',
           },
         ],
         'x-decorator': 'FormItem',

@@ -6,7 +6,7 @@ import {
   useLocale,
   usePrefix,
 } from '@toy-box/studio-base'
-import { resourceEdit } from '@toy-box/flow-designable'
+import { onPanelEdit, resourceEdit } from '@toy-box/flow-designable'
 import {
   FlowResourceType,
   FreeFlow,
@@ -55,8 +55,12 @@ export const ResourceItemWidget: React.FC<IResourceItemWidgetProps> = observer(
         'toyboxStudio.flow.autoFlow.template'
       ),
     }
-    const editResource = useCallback((child: IFieldMetaFlow) => {
-      resourceEdit(props.metaFlow, true, child, props.source?.type)
+    const editResource = useCallback((child: IFieldMetaFlow | any) => {
+      if (child.registerId) {
+        onPanelEdit(props.metaFlow?.flowMetaNodeMap?.[child.key], child.key)
+      } else {
+        resourceEdit(props.metaFlow, true, child, props.source?.type)
+      }
     }, [])
     const deleteResource = useCallback((child: IFieldMetaFlow) => {
       props.metaFlow.deleteResource(props?.source?.type, child.key)
@@ -86,7 +90,7 @@ export const ResourceItemWidget: React.FC<IResourceItemWidgetProps> = observer(
             </div>
             <div className={prefix + '-content-wrapper'}>
               <div className={prefix + '-content'}>
-                {props.source.children.map((child, idx) => (
+                {props.source.children.map((child: any, idx) => (
                   <div key={idx} className={prefix + '-content-item'}>
                     <div
                       className={prefix + '-content-item-name'}
@@ -94,9 +98,11 @@ export const ResourceItemWidget: React.FC<IResourceItemWidgetProps> = observer(
                     >
                       {child.name}
                     </div>
-                    <div className={prefix + '-content-item-icon'}>
-                      <DeleteFilled onClick={() => deleteResource(child)} />
-                    </div>
+                    {!child.registerId && (
+                      <div className={prefix + '-content-item-icon'}>
+                        <DeleteFilled onClick={() => deleteResource(child)} />
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

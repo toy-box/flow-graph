@@ -287,7 +287,7 @@ export interface IFieldMetaFlow extends IFieldMeta {
   isOutput?: boolean
   calcType?: string
   formula?: string
-  refObjectId?: string
+  refRegisterId?: string
 }
 
 export type IUpdateFieldMetaVariable = Pick<
@@ -298,7 +298,7 @@ export type IUpdateFieldMetaVariable = Pick<
   | 'isInput'
   | 'isOutput'
   | 'formula'
-  | 'refObjectId'
+  | 'refRegisterId'
 >
 
 export type FlowType =
