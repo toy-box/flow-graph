@@ -270,7 +270,7 @@ export class FreeFlow extends AutoFlow {
 
   get toJsonList() {
     return this.flowMetaNodes.map((node) => {
-      return { ...node.toJson(), ...node.position }
+      return { ...node.toJson(), ...node?.position }
     })
   }
 
@@ -329,7 +329,14 @@ export class FreeFlow extends AutoFlow {
                 (source) => source.type === FlowResourceType.VARIABLE_RECORD
               )
               if (idx > -1) {
-                dataSources[idx].children.push(fieldMeta)
+                const childIdx = dataSources[idx].children.findIndex(
+                  (child) => child.key === fieldMeta.key
+                )
+                if (childIdx > -1) {
+                  dataSources[idx].children[childIdx] = fieldMeta
+                } else {
+                  dataSources[idx].children.push(fieldMeta)
+                }
               } else {
                 dataSources.push({
                   type: FlowResourceType.VARIABLE_RECORD,
@@ -346,7 +353,14 @@ export class FreeFlow extends AutoFlow {
                 properties: register.properties,
               }
               if (idx > -1) {
-                dataSources[idx].children.push(fieldMeta)
+                const childIdx = dataSources[idx].children.findIndex(
+                  (child) => child.key === fieldMeta.key
+                )
+                if (childIdx > -1) {
+                  dataSources[idx].children[childIdx] = fieldMeta
+                } else {
+                  dataSources[idx].children.push(fieldMeta)
+                }
               } else {
                 dataSources.push({
                   type: FlowResourceType.VARIABLE_ARRAY_RECORD,
