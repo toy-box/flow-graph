@@ -25,6 +25,7 @@ export abstract class AutoFlow {
   mode: FlowModeType = FlowModeEnum.EDIT
   flow: Flow
   metaFlowDatas: FlowMetaParam[] = []
+  metaResourceWithNodes: IResourceParam[] = []
   flowMetaNodeMap: Record<string, FlowMetaNode> = {}
   layoutMode?: LayoutModeEnum
   flowType: FlowType

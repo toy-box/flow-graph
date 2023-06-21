@@ -16,6 +16,7 @@ import {
 import { createSchemaField, FormProvider, observer } from '@formily/react'
 import {
   FlowMetaParam,
+  FlowMetaType,
   FlowResourceType,
   ICriteriaCondition,
   opTypeEnum,
@@ -80,6 +81,7 @@ const submitParamData = (values) => {
     name: value.name,
     description: value.description,
     registerId: value.registerId,
+    type: FlowMetaType.RECORD_LOOKUP,
     callArguments: {
       criteria:
         conditions && conditions.length > 0

@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.22(2023-06-21)
+
+### No Change Log
+
 ## v2.0.21(2023-06-21)
 
 ### No Change Log
@@ -465,7 +469,3 @@
 ### :beetle: Bug Fixes
 
 1. [fix: 修改节点类型命名；export type](https://github.com/alibaba/designable/commit/91b80aa) :point_right: ( [Huhui](https://github.com/Huhui) )
-
-## v1.0.15(2021-08-25)
-
-### No Change Log

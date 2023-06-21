@@ -6,7 +6,7 @@ import {
   EdgeTypeEnum,
 } from '@toy-box/flow-graph'
 import { IFlowNodeProps } from '@toy-box/flow-graph/src'
-import { uid } from '@toy-box/toybox-shared'
+import { clone, uid } from '@toy-box/toybox-shared'
 import {
   FlowMetaParam,
   FlowMetaUpdate,
@@ -190,6 +190,12 @@ export class FlowRecordLookup extends FlowMetaNode {
     this.callArguments =
       flowRecordLookup.callArguments as IcallArgumentRecordLookUp
     this.toJson()
+    const metaFlow = this.metaFlow as FreeFlow
+    const metaResourceWithNodes = clone(this.metaFlow.metaResourceWithNodes)
+    this.metaFlow.metaResourceWithNodes = metaFlow.updateDataSource(
+      flowRecordLookup,
+      metaResourceWithNodes
+    )
   }
 
   updateConnector(targetId: string, isFaultConnector?: boolean): void {

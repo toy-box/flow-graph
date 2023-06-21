@@ -1,4 +1,4 @@
-import { isArr, uid } from '@toy-box/toybox-shared'
+import { clone, isArr, uid } from '@toy-box/toybox-shared'
 import { define, observable, action, batch } from '@formily/reactive'
 import { Flow, LayoutModeEnum, FlowModeEnum } from '@toy-box/flow-graph'
 import { useLocale } from '@toy-box/studio-base'
@@ -234,6 +234,7 @@ export class FreeFlow extends AutoFlow {
       layoutMode: observable.ref,
       recordObject: observable.deep,
       i8nDataMap: observable.deep,
+      metaResourceWithNodes: observable.deep,
       setMetaFlow: batch,
       getFlowMetaNodeMap: batch,
       // removeNodeWithBind: batch,
@@ -293,88 +294,6 @@ export class FreeFlow extends AutoFlow {
     return varNodes
   }
 
-  get resourceAllMetas() {
-    const metaFlowNodes = this?.flowMetaNodes
-    const dataSources = this.metaResourceDatas
-    if (metaFlowNodes) {
-      metaFlowNodes.forEach((record: any) => {
-        if (record.type === FlowMetaType.RECORD_LOOKUP) {
-          if (
-            !record.callArguments?.outputAssignments &&
-            (record.callArguments?.storeOutputAutomatically ||
-              (record.callArguments?.queriedFields &&
-                !record.callArguments?.outputReference))
-          ) {
-            const register = this?.registers?.find(
-              (reg) => reg.id === record.registerId
-            )
-            const labelName = `${useLocale(
-              'flowDesigner.flow.form.resourceCreate.recordLookupLabel'
-            )} ${record.id} ${useLocale(
-              'flowDesigner.flow.form.resourceCreate.real'
-            )} ${register.name}`
-            const fieldMeta = {
-              key: record.id,
-              name: labelName,
-              type: record.callArguments?.getFirstRecordOnly
-                ? MetaValueType.OBJECT_ID
-                : MetaValueType.ARRAY,
-              registerId: register?.id,
-              properties: null,
-              items: null,
-            }
-            if (record.callArguments?.getFirstRecordOnly) {
-              fieldMeta.properties = register.properties
-              const idx = dataSources.findIndex(
-                (source) => source.type === FlowResourceType.VARIABLE_RECORD
-              )
-              if (idx > -1) {
-                const childIdx = dataSources[idx].children.findIndex(
-                  (child) => child.key === fieldMeta.key
-                )
-                if (childIdx > -1) {
-                  dataSources[idx].children[childIdx] = fieldMeta
-                } else {
-                  dataSources[idx].children.push(fieldMeta)
-                }
-              } else {
-                dataSources.push({
-                  type: FlowResourceType.VARIABLE_RECORD,
-                  children: [fieldMeta],
-                })
-              }
-            } else {
-              const idx = dataSources.findIndex(
-                (source) =>
-                  source.type === FlowResourceType.VARIABLE_ARRAY_RECORD
-              )
-              fieldMeta.items = {
-                type: MetaValueType.OBJECT,
-                properties: register.properties,
-              }
-              if (idx > -1) {
-                const childIdx = dataSources[idx].children.findIndex(
-                  (child) => child.key === fieldMeta.key
-                )
-                if (childIdx > -1) {
-                  dataSources[idx].children[childIdx] = fieldMeta
-                } else {
-                  dataSources[idx].children.push(fieldMeta)
-                }
-              } else {
-                dataSources.push({
-                  type: FlowResourceType.VARIABLE_ARRAY_RECORD,
-                  children: [fieldMeta],
-                })
-              }
-            }
-          }
-        }
-      })
-    }
-    return dataSources
-  }
-
   setMetaFlow(
     flowMeta: IFlowMeta,
     flowType: FlowType,
@@ -387,6 +306,7 @@ export class FreeFlow extends AutoFlow {
     // this.layoutMode = layoutMode
     this.onInitResource(this.flowMeta.resources)
     this.onInit()
+    this.metaResourceWithNodes = this.getMetaResourceWithNodes()
   }
 
   onInit() {
@@ -402,6 +322,92 @@ export class FreeFlow extends AutoFlow {
 
   getFlowMetaNodeMap(nodeMap: Record<string, FlowMetaNode> = {}) {
     this.flowMetaNodeMap = nodeMap
+  }
+
+  getMetaResourceWithNodes() {
+    const metaFlowNodes = this?.flowMetaNodes
+    const dataSources = clone(this.metaResourceDatas)
+    if (metaFlowNodes) {
+      metaFlowNodes.forEach((record: any) => {
+        this.updateDataSource(record, dataSources)
+      })
+    }
+    return dataSources
+  }
+
+  updateDataSource(record, dataSources) {
+    if (record.type === FlowMetaType.RECORD_LOOKUP) {
+      if (
+        !record.callArguments?.outputAssignments &&
+        (record.callArguments?.storeOutputAutomatically ||
+          (record.callArguments?.queriedFields &&
+            !record.callArguments?.outputReference))
+      ) {
+        const register = this?.registers?.find(
+          (reg) => reg.id === record.registerId
+        )
+        const labelName = `${useLocale(
+          'flowDesigner.flow.form.resourceCreate.recordLookupLabel'
+        )} ${record.id} ${useLocale(
+          'flowDesigner.flow.form.resourceCreate.real'
+        )} ${register.name}`
+        const fieldMeta = {
+          key: record.id,
+          name: labelName,
+          type: record.callArguments?.getFirstRecordOnly
+            ? MetaValueType.OBJECT_ID
+            : MetaValueType.ARRAY,
+          registerId: register?.id,
+          properties: null,
+          items: null,
+        }
+        if (record.callArguments?.getFirstRecordOnly) {
+          fieldMeta.properties = register.properties
+          const idx = dataSources.findIndex(
+            (source) => source.type === FlowResourceType.VARIABLE_RECORD
+          )
+          if (idx > -1) {
+            const childIdx = dataSources[idx].children.findIndex(
+              (child) => child.key === fieldMeta.key
+            )
+            if (childIdx > -1) {
+              dataSources[idx].children[childIdx] = fieldMeta
+            } else {
+              dataSources[idx].children.push(fieldMeta)
+            }
+          } else {
+            dataSources.push({
+              type: FlowResourceType.VARIABLE_RECORD,
+              children: [fieldMeta],
+            })
+          }
+        } else {
+          const idx = dataSources.findIndex(
+            (source) => source.type === FlowResourceType.VARIABLE_ARRAY_RECORD
+          )
+          fieldMeta.items = {
+            type: MetaValueType.OBJECT,
+            properties: register.properties,
+          }
+          if (idx > -1) {
+            const childIdx = dataSources[idx].children.findIndex(
+              (child) => child.key === fieldMeta.key
+            )
+            if (childIdx > -1) {
+              dataSources[idx].children[childIdx] = fieldMeta
+            } else {
+              dataSources[idx].children.push(fieldMeta)
+            }
+          } else {
+            dataSources.push({
+              type: FlowResourceType.VARIABLE_ARRAY_RECORD,
+              children: [fieldMeta],
+            })
+          }
+        }
+      }
+    }
+    return dataSources
   }
 
   parseFlow(nodes: IFlowMetaNodes) {
@@ -453,6 +459,7 @@ export class FreeFlow extends AutoFlow {
       updateMetaNodeMap: this.flowMetaNodeMap,
     })
     flowNode.appendFreeAt(flowData)
+    this.updateDataSource(flowData, this.metaResourceWithNodes)
   }
 
   mountNodes(flowDatas: FlowMetaParam[], parent?: FlowMetaNode) {
