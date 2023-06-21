@@ -294,10 +294,10 @@ export class FreeFlow extends AutoFlow {
   }
 
   get resourceAllMetas() {
-    const metaFlowNodes = this?.toJsonList
+    const metaFlowNodes = this?.flowMetaNodes
     const dataSources = this.metaResourceDatas
     if (metaFlowNodes) {
-      metaFlowNodes.forEach((record) => {
+      metaFlowNodes.forEach((record: any) => {
         if (record.type === FlowMetaType.RECORD_LOOKUP) {
           if (
             !record.callArguments?.outputAssignments &&
