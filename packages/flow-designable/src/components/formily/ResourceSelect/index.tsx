@@ -128,7 +128,7 @@ export const ResourceSelect: FC = observer((props: any) => {
         setInputValue(null)
       }
     }
-  }, [flag])
+  }, [flag, formilyField?.value])
 
   const onChange = useCallback(
     (value: string[] | string, parentType?: FlowResourceType) => {
@@ -621,7 +621,7 @@ export const ResourceSelect: FC = observer((props: any) => {
   const initData = useCallback(
     (isVar: boolean, selectKeys: string[]) => {
       const length = selectKeys.length
-      if (length > 0 && !inputValue) {
+      if (length > 0) {
         const selectKey = selectKeys[0]
         let value = null
         historyItems.some((item) => {
@@ -646,7 +646,7 @@ export const ResourceSelect: FC = observer((props: any) => {
         }
       }
     },
-    [historyItems, inputValue, props?.isSetType]
+    [historyItems, props?.isSetType]
   )
 
   const findName = (

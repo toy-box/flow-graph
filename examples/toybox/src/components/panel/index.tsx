@@ -251,7 +251,7 @@ export const Panel: React.FC<any> = observer(({ metaFlow }) => {
               <ResourceWidget
                 title="toyboxStudio.panels.resource"
                 sources={
-                  freeFlow instanceof FreeFlow && freeFlow?.metaResourceDatas
+                  freeFlow instanceof FreeFlow && freeFlow?.resourceAllMetas
                 }
                 metaFlow={freeFlow instanceof FreeFlow && freeFlow}
               />

@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.19(2023-06-20)
+
+### No Change Log
+
 ## v2.0.18(2023-06-16)
 
 ### No Change Log
@@ -465,9 +469,3 @@
 ## v1.0.13(2021-08-24)
 
 ### No Change Log
-
-## v1.0.12(2021-08-24)
-
-### :beetle: Bug Fixes
-
-1. [fix: 修复 decision-node 样式](https://github.com/alibaba/designable/commit/934f266) :point_right: ( [Huhui](https://github.com/Huhui) )
