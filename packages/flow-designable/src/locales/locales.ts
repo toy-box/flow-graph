@@ -18,8 +18,8 @@ const zhCN = {
         $lt: '小于',
         $gte: '大于等于',
         $lte: '小于等于',
-        $in: '包含',
-        $nin: '不包含',
+        $in: '在于',
+        $nin: '不在于',
         $like: '匹配',
         $unitDateRange: '在',
         $between: '介于',
@@ -38,6 +38,10 @@ const zhCN = {
         warn: '个警告信息。',
       },
       flow: {
+        globalConst: {
+          true: '真',
+          false: '假',
+        },
         extend: {
           title: '添加流程节点',
           assign: '分配',
@@ -61,6 +65,7 @@ const zhCN = {
           formula: '公式',
           template: '模板',
           global_variable: '全局变量',
+          global_constant: '全局常量',
         },
         metaType: {
           text: '大段文本',
@@ -417,6 +422,10 @@ const enUS = {
         warn: 'Warn Message',
       },
       flow: {
+        globalConst: {
+          true: 'True',
+          false: 'False',
+        },
         extend: {
           title: 'title',
           start: 'start',
@@ -442,6 +451,7 @@ const enUS = {
           formula: 'Formula',
           template: 'Template',
           global_variable: 'Global Variable',
+          global_constant: 'Global Constant',
         },
         metaType: {
           text: 'text',

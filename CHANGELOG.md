@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.25(2023-06-25)
+
+### No Change Log
+
 ## v2.0.24(2023-06-25)
 
 ### No Change Log
@@ -459,9 +463,3 @@
 ### :beetle: Bug Fixes
 
 1. [fix: 更新 node 扩展 panel 的样式](https://github.com/alibaba/designable/commit/55a6712) :point_right: ( [Huhui](https://github.com/Huhui) )
-
-## v1.0.18(2021-08-25)
-
-### :beetle: Bug Fixes
-
-1. [fix: context](https://github.com/alibaba/designable/commit/75762f9) :point_right: ( [Huhui](https://github.com/Huhui) )

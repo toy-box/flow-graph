@@ -10,5 +10,6 @@ export const setResourceMetaflow = (metaFlow: AutoFlow) => {
     createResource: metaFlow.createResource,
     editResource: metaFlow.editResource,
     metaFlowNodes: metaFlow.toJsonList,
+    globalConsts: metaFlow.globalConsts,
   }
 }

@@ -557,6 +557,7 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
                             reactionTypeKey: 'type',
                             isInput: true,
                             isFormula: true,
+                            isShowGlobalConst: true,
                           },
                         },
                         remove: {
@@ -729,6 +730,7 @@ export const RecordUpdate: FC<RecordUpdateModelPorps> = ({
                         reactionTypeKey: 'type',
                         isInput: true,
                         isFormula: true,
+                        isShowGlobalConst: true,
                       },
                     },
                     remove: {

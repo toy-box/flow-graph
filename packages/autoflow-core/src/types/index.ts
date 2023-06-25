@@ -48,6 +48,7 @@ export enum FlowResourceType {
   FORMULA = 'formulas',
   TEMPLATE = 'textTemplates',
   GLOBAL_VARIABLE = 'global_variable',
+  GLOBAL_CONST = 'global_constant',
 }
 
 export interface IFlowMetaResource {

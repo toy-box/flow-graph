@@ -527,6 +527,7 @@ const decideRender = (isNew: boolean, metaFlow: IResourceMetaflow, node) => {
                                   isInput: true,
                                   isFormula: true,
                                   reactionTypeKey: 'type',
+                                  isShowGlobalConst: true,
                                 },
                               },
                               remove: {

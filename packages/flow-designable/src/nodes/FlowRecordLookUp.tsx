@@ -830,6 +830,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
                             reactionTypeKey: 'type',
                             isInput: true,
                             isFormula: true,
+                            isShowGlobalConst: true,
                           },
                         },
                         remove: {
@@ -1349,6 +1350,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
                         reactionTypeKey: 'type',
                         isInput: true,
                         isFormula: true,
+                        isShowGlobalConst: true,
                       },
                     },
                     remove: {

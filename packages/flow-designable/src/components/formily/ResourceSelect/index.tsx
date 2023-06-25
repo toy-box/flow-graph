@@ -69,6 +69,9 @@ export const ResourceSelect: FC = observer((props: any) => {
     [FlowResourceType.GLOBAL_VARIABLE]: useLocale(
       'flowDesigner.flow.autoFlow.global_variable'
     ),
+    [FlowResourceType.GLOBAL_CONST]: useLocale(
+      'flowDesigner.flow.autoFlow.global_constant'
+    ),
   }
 
   const metaDataOps = {
@@ -294,6 +297,9 @@ export const ResourceSelect: FC = observer((props: any) => {
           icon: <PlusOutlined />,
         },
       ]
+      if (props.isShowGlobalConst) {
+        addGlobalConsts(arr)
+      }
       if (metaResourceDatas) {
         const metaArr = metaResourceDatas
           .filter((source) => {
@@ -450,9 +456,38 @@ export const ResourceSelect: FC = observer((props: any) => {
     props?.flowJsonTypes,
     props.objectKey,
     props.isShowGlobal,
+    props.isShowGlobalConst,
     props?.registerOpType,
     props?.metaFlow?.metaFlowNodes,
   ])
+
+  const addGlobalConsts = useCallback(
+    (arr) => {
+      const globalConsts = props?.metaFlow?.globalConsts
+      const children = []
+      globalConsts.forEach((p) => {
+        const obj = {
+          type: 'boolean',
+          name: useLocale(`flowDesigner.flow.globalConst.${p}`),
+          key: p,
+        }
+        const op = {
+          label: itemLabelName(obj),
+          labelName: obj.name,
+          key: obj.key,
+          dataType: obj.type,
+        }
+        children.push(op)
+      })
+      arr.push({
+        label: templateObj[FlowResourceType.GLOBAL_CONST],
+        key: FlowResourceType.GLOBAL_CONST,
+        type: 'group',
+        children,
+      } as any)
+    },
+    [props?.metaFlow?.globalConsts]
+  )
 
   const setMetaChildren = useCallback(
     (obj: any, meta: IFieldMeta) => {
@@ -553,10 +588,11 @@ export const ResourceSelect: FC = observer((props: any) => {
     if (selectKeys.length === 0 && !props.isInput) {
       setInputValue('')
       onChange(undefined)
+      setItems(historyItems)
     } else {
       onChange(inputValue)
     }
-  }, [selectKeys, props.isInput])
+  }, [selectKeys, props.isInput, historyItems])
 
   const onClick: MenuProps['onClick'] = (e: any) => {
     setVariable(false)

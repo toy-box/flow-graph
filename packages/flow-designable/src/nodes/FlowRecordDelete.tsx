@@ -523,6 +523,7 @@ export const RecordDelete: FC<RecordDeleteModelPorps> = ({
                             reactionTypeKey: 'type',
                             isInput: true,
                             isFormula: true,
+                            isShowGlobalConst: true,
                           },
                         },
                         remove: {

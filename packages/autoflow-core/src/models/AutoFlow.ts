@@ -35,6 +35,7 @@ export abstract class AutoFlow {
   shortCutDatas: FlowMetaParam[] = []
   recordObject: IRecordObject
   i8nDataMap: Record<string, string> = {}
+  globalConsts: string[] = ['true', 'false']
 
   constructor(mode: FlowModeType, layoutMode: LayoutModeEnum, flow: Flow) {
     this.mode = mode
