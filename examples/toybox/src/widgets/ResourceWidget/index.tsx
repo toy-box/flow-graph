@@ -25,7 +25,7 @@ export interface IResourceWidgetProps {
 export const ResourceWidget: React.FC<IResourceWidgetProps> = observer(
   (props) => {
     const prefix = usePrefix('resource')
-    const { sources } = props
+    const [sources] = useState(props.sources)
     const createResource = useCallback(() => {
       resourceEdit(props.metaFlow, false)
     }, [])

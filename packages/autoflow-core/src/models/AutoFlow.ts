@@ -1,8 +1,10 @@
 import { Flow, FlowModeEnum, LayoutModeEnum } from '@toy-box/flow-graph'
 import { IFieldMeta, MetaValueType } from '@toy-box/meta-schema'
 import { clone, isObj } from '@toy-box/toybox-shared'
+import { useLocale } from '@toy-box/studio-base'
 import {
   FlowMetaParam,
+  FlowMetaType,
   FlowResourceType,
   FlowType,
   IFieldMetaResource,
@@ -191,6 +193,86 @@ export abstract class AutoFlow {
       (meta) => meta.type === obj.webType
     )
     if (idx > -1) this.metaResourceDatas[idx].children.push(currentResource)
+    const idx1 = this.metaResourceWithNodes.findIndex(
+      (meta) => meta.type === obj.webType
+    )
+    if (idx1 > -1)
+      this.metaResourceWithNodes[idx].children.push(currentResource)
+  }
+
+  updateDataSource(record, dataSources) {
+    if (record.type === FlowMetaType.RECORD_LOOKUP) {
+      if (
+        !record.callArguments?.outputAssignments &&
+        (record.callArguments?.storeOutputAutomatically ||
+          (record.callArguments?.queriedFields &&
+            !record.callArguments?.outputReference))
+      ) {
+        const register = this?.registers?.find(
+          (reg) => reg.id === record.registerId
+        )
+        const labelName = `${useLocale(
+          'flowDesigner.flow.form.resourceCreate.recordLookupLabel'
+        )} ${record.id} ${useLocale(
+          'flowDesigner.flow.form.resourceCreate.real'
+        )} ${register.name}`
+        const fieldMeta = {
+          key: record.id,
+          name: labelName,
+          type: record.callArguments?.getFirstRecordOnly
+            ? MetaValueType.OBJECT_ID
+            : MetaValueType.ARRAY,
+          registerId: register?.id,
+          properties: null,
+          items: null,
+        }
+        if (record.callArguments?.getFirstRecordOnly) {
+          fieldMeta.properties = register.properties
+          const idx = dataSources.findIndex(
+            (source) => source.type === FlowResourceType.VARIABLE_RECORD
+          )
+          if (idx > -1) {
+            const childIdx = dataSources[idx].children.findIndex(
+              (child) => child.key === fieldMeta.key
+            )
+            if (childIdx > -1) {
+              dataSources[idx].children[childIdx] = fieldMeta
+            } else {
+              dataSources[idx].children.push(fieldMeta)
+            }
+          } else {
+            dataSources.push({
+              type: FlowResourceType.VARIABLE_RECORD,
+              children: [fieldMeta],
+            })
+          }
+        } else {
+          const idx = dataSources.findIndex(
+            (source) => source.type === FlowResourceType.VARIABLE_ARRAY_RECORD
+          )
+          fieldMeta.items = {
+            type: MetaValueType.OBJECT,
+            properties: register.properties,
+          }
+          if (idx > -1) {
+            const childIdx = dataSources[idx].children.findIndex(
+              (child) => child.key === fieldMeta.key
+            )
+            if (childIdx > -1) {
+              dataSources[idx].children[childIdx] = fieldMeta
+            } else {
+              dataSources[idx].children.push(fieldMeta)
+            }
+          } else {
+            dataSources.push({
+              type: FlowResourceType.VARIABLE_ARRAY_RECORD,
+              children: [fieldMeta],
+            })
+          }
+        }
+      }
+    }
+    return dataSources
   }
 
   editResource(type: FlowResourceType, resource: IFieldMetaResource) {

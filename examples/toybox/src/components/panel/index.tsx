@@ -34,6 +34,15 @@ export const Panel: React.FC<any> = observer(({ metaFlow }) => {
 
   const metaService = {
     getMetaObjectData: () => getAllBusinessObjects(),
+    getShortCuts: () => {
+      const promise = new Promise(function (resolve) {
+        setTimeout(function () {
+          console.log('处理完成result', [])
+          resolve([])
+        }, 1000)
+      })
+      return promise
+    },
   }
 
   const itemMapShortcut = useMemo(() => {
