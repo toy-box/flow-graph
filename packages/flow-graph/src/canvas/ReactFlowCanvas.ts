@@ -215,6 +215,14 @@ export class ReactFlowCanvas implements ICanvas {
           updateMetaFlowDatas = updateMetaFlowDatas.filter(
             (data) => data.id !== change.id
           )
+          if (
+            flowMetaNodeMap?.[change.id]?.type === FlowMetaType.RECORD_LOOKUP
+          ) {
+            nodesChange.freeFlow.deleteDataResource(
+              change.id,
+              nodesChange.freeFlow.metaResourceWithNodes
+            )
+          }
           const removeEdges = []
           const deleteEdges = this.edges
             .map((edge) => {

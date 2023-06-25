@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.24(2023-06-25)
+
+### No Change Log
+
 ## v2.0.23(2023-06-21)
 
 ### No Change Log
@@ -461,9 +465,3 @@
 ### :beetle: Bug Fixes
 
 1. [fix: context](https://github.com/alibaba/designable/commit/75762f9) :point_right: ( [Huhui](https://github.com/Huhui) )
-
-## v1.0.17(2021-08-25)
-
-### :beetle: Bug Fixes
-
-1. [fix： 类型错误](https://github.com/alibaba/designable/commit/5167c64) :point_right: ( [Huhui](https://github.com/Huhui) )

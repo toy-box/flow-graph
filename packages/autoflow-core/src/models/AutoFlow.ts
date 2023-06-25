@@ -202,6 +202,7 @@ export abstract class AutoFlow {
 
   updateDataSource(record, dataSources) {
     if (record.type === FlowMetaType.RECORD_LOOKUP) {
+      this.deleteDataResource(record.id, dataSources)
       if (
         !record.callArguments?.outputAssignments &&
         (record.callArguments?.storeOutputAutomatically ||
@@ -275,6 +276,18 @@ export abstract class AutoFlow {
     return dataSources
   }
 
+  deleteDataResource(id: string, dataSources) {
+    dataSources.forEach((meta) => {
+      if (
+        meta.type === FlowResourceType.VARIABLE_RECORD ||
+        meta.type === FlowResourceType.VARIABLE_ARRAY_RECORD
+      ) {
+        meta.children = meta.children.filter((child) => child.key !== id)
+      }
+    })
+    console.log(dataSources, 123)
+  }
+
   editResource(type: FlowResourceType, resource: IFieldMetaResource) {
     const currentResource = this.flowResourceMap[resource.key]
     currentResource.update(resource)
@@ -283,10 +296,19 @@ export abstract class AutoFlow {
   deleteResource(type: FlowResourceType, key: string) {
     delete this.flowResourceMap[key]
     const idx = this.metaResourceDatas.findIndex((meta) => meta.type === type)
-    if (idx > -1)
+    const idx1 = this.metaResourceWithNodes.findIndex(
+      (meta) => meta.type === type
+    )
+    if (idx > -1) {
       this.metaResourceDatas[idx].children = this.metaResourceDatas[
         idx
       ].children.filter((child) => child.key !== key)
+    }
+    if (idx1 > -1) {
+      this.metaResourceWithNodes[idx1].children = this.metaResourceWithNodes[
+        idx1
+      ].children.filter((child) => child.key !== key)
+    }
   }
 
   parseResource(resources: IFlowMetaResource) {
