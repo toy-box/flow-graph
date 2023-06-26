@@ -162,7 +162,7 @@ export const BranchArrays: FC = observer((props: any) => {
   const addRule = useCallback(() => {
     const ruleItem: IFlowMetaDecisionRule = {
       name: '',
-      id: uid(),
+      id: 'rule_' + uid(),
       criteria: {
         conditions: [{}],
         logic: '$and',

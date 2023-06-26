@@ -611,7 +611,7 @@ export const decideOnEdit = (node: any, at?: string, additionInfo?: any) => {
             rules: node.rules ?? [
               {
                 name: '',
-                id: uid(),
+                id: 'rule_' + uid(),
                 criteria: {
                   conditions: [{}],
                   logic: '$and',
