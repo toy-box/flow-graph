@@ -46,10 +46,14 @@ export const OperationSelect: FC = observer((props: any) => {
   ]
 
   const dateOps = [
-    CompareOP.UNIT_DATE_RANGE,
-    CompareOP.BETWEEN,
+    CompareOP.GT,
+    CompareOP.GTE,
+    CompareOP.LT,
+    CompareOP.LTE,
     CompareOP.EQ,
     CompareOP.NE,
+    CompareOP.UNIT_DATE_RANGE,
+    CompareOP.BETWEEN,
     CompareOP.IS_NULL,
   ]
 
@@ -81,7 +85,7 @@ export const OperationSelect: FC = observer((props: any) => {
     [MetaValueType.TEXT]: stringOps,
     [MetaValueType.BOOLEAN]: booleanOps,
     [MetaValueType.DATE]: dateOps,
-    // [MetaValueType.DATETIME]: dateOps,
+    [MetaValueType.DATETIME]: dateOps,
     // [MetaValueType.TIMESTAMP]: dateOps,
     // [MetaValueType.SINGLE_OPTION]: optionOps,
     // [MetaValueType.MULTI_OPTION]: optionMultiOps,
