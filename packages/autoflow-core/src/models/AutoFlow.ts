@@ -37,6 +37,12 @@ export abstract class AutoFlow {
   i8nDataMap: Record<string, string> = {}
   globalConsts: string[] = ['true', 'false']
 
+  get flowMetaNodes() {
+    return Object.keys(this.flowMetaNodeMap).map(
+      (key) => this.flowMetaNodeMap[key]
+    )
+  }
+
   constructor(mode: FlowModeType, layoutMode: LayoutModeEnum, flow: Flow) {
     this.mode = mode
     this.layoutMode = layoutMode
@@ -75,6 +81,8 @@ export abstract class AutoFlow {
 
   initRegisters(data: any[]) {
     this.registers = data
+    this.onInitResource(this.flowMeta.resources)
+    this.metaResourceWithNodes = this.getMetaResourceWithNodes()
     const objectRegister = this.registers.find(
       (reg) => reg.key === this?.recordObject?.objectId
     )
@@ -93,6 +101,17 @@ export abstract class AutoFlow {
         }
       }
     }
+  }
+
+  getMetaResourceWithNodes() {
+    const metaFlowNodes = this?.flowMetaNodes
+    const dataSources = clone(this.metaResourceDatas)
+    if (metaFlowNodes) {
+      metaFlowNodes.forEach((record: any) => {
+        this.updateDataSource(record, dataSources)
+      })
+    }
+    return dataSources
   }
 
   setMetaChildren = (obj: any, meta: IFieldMeta) => {
@@ -215,9 +234,9 @@ export abstract class AutoFlow {
         )
         const labelName = `${useLocale(
           'flowDesigner.flow.form.resourceCreate.recordLookupLabel'
-        )} ${record.id} ${useLocale(
+        )} ${record?.id} ${useLocale(
           'flowDesigner.flow.form.resourceCreate.real'
-        )} ${register.name}`
+        )} ${register?.name}`
         const fieldMeta = {
           key: record.id,
           name: labelName,
@@ -229,7 +248,7 @@ export abstract class AutoFlow {
           items: null,
         }
         if (record.callArguments?.getFirstRecordOnly) {
-          fieldMeta.properties = register.properties
+          fieldMeta.properties = register?.properties
           const idx = dataSources.findIndex(
             (source) => source.type === FlowResourceType.VARIABLE_RECORD
           )
@@ -254,7 +273,7 @@ export abstract class AutoFlow {
           )
           fieldMeta.items = {
             type: MetaValueType.OBJECT,
-            properties: register.properties,
+            properties: register?.properties,
           }
           if (idx > -1) {
             const childIdx = dataSources[idx].children.findIndex(

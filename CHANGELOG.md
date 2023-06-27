@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.28(2023-06-26)
+
+### No Change Log
+
 ## v2.0.27(2023-06-26)
 
 ### No Change Log
@@ -455,9 +459,5 @@
 ### No Change Log
 
 ## v1.0.24(2021-12-02)
-
-### No Change Log
-
-## v1.0.23(2021-12-02)
 
 ### No Change Log

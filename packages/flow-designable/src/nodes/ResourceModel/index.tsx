@@ -338,7 +338,7 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
               : 'none'
         })
         formData.setFieldState('defaultValue', (state) => {
-          state.value = null
+          state.value = field.value === MetaValueType.BOOLEAN ? false : null
         })
       })
     },

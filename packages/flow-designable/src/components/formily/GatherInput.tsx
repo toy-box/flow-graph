@@ -14,7 +14,7 @@ export const GatherInput: FC = observer((props: any) => {
   const changeValue = useCallback(
     (e: any) => {
       form.setFieldState('defaultValue', (state) => {
-        state.value = e.target.value
+        state.value = e.target.value == '' ? null : e.target.value
       })
     },
     [form]

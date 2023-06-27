@@ -708,6 +708,17 @@ export const ResourceSelect: FC = observer((props: any) => {
 
   const isFormula = useMemo(() => props.isFormula, [props.isFormula])
 
+  const inputPlaceholder = useMemo(() => {
+    const reactionTypeValue = get(form.values, reactionTypeKey)
+    if (reactionTypeValue === MetaValueType.DATE) {
+      return 'yyyy-MM-dd'
+    } else if (reactionTypeValue === MetaValueType.DATETIME) {
+      return 'yyyy-MM-dd HH:mm:ss'
+    } else {
+      return props.placeholder
+    }
+  }, [props.placeholder, get(form.values, reactionTypeKey)])
+
   return (
     <div ref={ref} style={props.style}>
       {inputType === InputtypeEnum.BASE ? (
@@ -767,7 +778,7 @@ export const ResourceSelect: FC = observer((props: any) => {
                     suffix={<SearchOutlined />}
                     onChange={changeValue}
                     value={inputValue}
-                    placeholder={props.placeholder}
+                    placeholder={inputPlaceholder}
                     onBlur={changeBlur}
                     disabled={disabled}
                   />

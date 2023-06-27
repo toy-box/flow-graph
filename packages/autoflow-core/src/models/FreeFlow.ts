@@ -65,12 +65,6 @@ export class FreeFlow extends AutoFlow {
   // layoutMode?: LayoutModeEnum
   // flowFree: FlowFree
 
-  get flowMetaNodes() {
-    return Object.keys(this.flowMetaNodeMap).map(
-      (key) => this.flowMetaNodeMap[key]
-    )
-  }
-
   constructor(mode: FlowModeType, flow?: Flow, layoutMode?: LayoutModeEnum) {
     super(mode, (layoutMode = layoutMode || LayoutModeEnum.FREE_LAYOUT), flow)
 
@@ -302,9 +296,7 @@ export class FreeFlow extends AutoFlow {
     this.flowType = flowType
     this.recordObject = recordObject
     // this.layoutMode = layoutMode
-    this.onInitResource(this.flowMeta.resources)
     this.onInit()
-    this.metaResourceWithNodes = this.getMetaResourceWithNodes()
   }
 
   onInit() {
@@ -320,17 +312,6 @@ export class FreeFlow extends AutoFlow {
 
   getFlowMetaNodeMap(nodeMap: Record<string, FlowMetaNode> = {}) {
     this.flowMetaNodeMap = nodeMap
-  }
-
-  getMetaResourceWithNodes() {
-    const metaFlowNodes = this?.flowMetaNodes
-    const dataSources = clone(this.metaResourceDatas)
-    if (metaFlowNodes) {
-      metaFlowNodes.forEach((record: any) => {
-        this.updateDataSource(record, dataSources)
-      })
-    }
-    return dataSources
   }
 
   parseFlow(nodes: IFlowMetaNodes) {
