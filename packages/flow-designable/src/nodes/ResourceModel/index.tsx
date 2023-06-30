@@ -78,8 +78,8 @@ const metaDataOps = [
     label: <TextWidget>flowDesigner.flow.metaType.dateTime</TextWidget>,
   },
   {
-    value: 'implict',
-    label: <TextWidget>flowDesigner.flow.metaType.implict</TextWidget>,
+    value: 'implicit',
+    label: <TextWidget>flowDesigner.flow.metaType.implicit</TextWidget>,
   },
 ]
 
@@ -89,7 +89,8 @@ const constMetaOps = [
   MetaValueType.NUMBER,
   MetaValueType.BOOLEAN,
   MetaValueType.DATE,
-  'implict',
+  MetaValueType.DATETIME,
+  'implicit',
 ]
 
 const formulaMetaOps = [
@@ -99,7 +100,7 @@ const formulaMetaOps = [
   MetaValueType.BOOLEAN,
   MetaValueType.DATE,
   MetaValueType.DATETIME,
-  'implict',
+  'implicit',
 ]
 
 const labelNames: any = {
@@ -277,7 +278,7 @@ export const ResourceCreate: FC<ResourceCreateProps> = ({
           fieldObj.value !== MetaValueType.MULTI_OPTION &&
           fieldObj.value !== MetaValueType.SINGLE_OPTION &&
           fieldObj.value !== MetaValueType.OBJECT &&
-          fieldObj.value !== 'implict'
+          fieldObj.value !== 'implicit'
         state.display = isShowDefault && valFlag ? 'visible' : 'none'
       })
       service(fieldObj).then(

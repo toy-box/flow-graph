@@ -79,7 +79,7 @@ const zhCN = {
           multiOption: '多选列表',
           array: '数组',
           refId: '引用对象',
-          implict: '任意类型',
+          implicit: '任意类型',
         },
         formula: {
           editTitle: '编辑公式',
@@ -465,7 +465,7 @@ const enUS = {
           multiOption: 'multiOption',
           array: 'array',
           refId: 'refId',
-          implict: 'any',
+          implicit: 'any',
         },
         formula: {
           editTitle: 'Editor Formula',

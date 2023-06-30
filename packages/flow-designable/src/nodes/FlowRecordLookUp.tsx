@@ -1314,7 +1314,7 @@ export const RecordLookUp: FC<RecordLookUpModelPorps> = ({
                         },
                       },
                     },
-                    value: {
+                    assignToReference: {
                       type: 'string',
                       title: (
                         <TextWidget>

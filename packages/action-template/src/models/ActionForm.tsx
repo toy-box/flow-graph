@@ -388,15 +388,24 @@ export function convertMetaToFormily(
 
 export function objArrayToKeyValue(array, type?: 'variable') {
   if (array && array.length) {
-    return array.reduce((acc, { key, value }) => {
-      if (type === 'variable') {
-        acc[key] = { type: value }
-      } else {
-        acc[key] = value
-      }
+    const acc = {}
+    // return array.reduce((acc, { key, value }) => {
+    //   if (type === 'variable') {
+    //     acc[key] = { type: value }
+    //   } else {
+    //     acc[key] = value
+    //   }
 
-      return acc
-    }, {})
+    //   return acc
+    // }, {})
+    array.forEach((item) => {
+      if (type === 'variable') {
+        acc[item.key] = { type: item.value }
+      } else {
+        acc[item.key] = item.value
+      }
+    })
+    return acc
   }
 }
 

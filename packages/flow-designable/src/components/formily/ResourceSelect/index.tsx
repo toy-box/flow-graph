@@ -141,14 +141,14 @@ export const ResourceSelect: FC = observer((props: any) => {
           val = props?.isFormula
             ? `{!${val?.reverse()?.join('.')}}`
             : val?.reverse()?.join('.')
-        } else if (selectKeys.length > 0) {
+        } else if (selectKeys.length > 0 && val) {
           val = props?.isFormula ? `{!${value}}` : value
         }
         state.value = val
         formilyField.validate()
       })
     },
-    [form, formilyField, props?.isFormula, selectKeys]
+    [form, formilyField, props?.isFormula, selectKeys?.length]
   )
 
   const onChangeValue = useCallback(
@@ -587,7 +587,7 @@ export const ResourceSelect: FC = observer((props: any) => {
   const changeBlur = useCallback(() => {
     if (selectKeys.length === 0 && !props.isInput) {
       setInputValue('')
-      onChange(undefined)
+      onChange(null)
       setItems(historyItems)
     } else {
       onChange(inputValue)
@@ -630,9 +630,9 @@ export const ResourceSelect: FC = observer((props: any) => {
   const handleClose = () => {
     // const newTags = selectKeys.filter((tag) => tag !== removedTag)
     setInputValue('')
-    onChange(undefined)
     setVariable(true)
     setSelectKeys([])
+    onChange('')
   }
 
   const tagChild = useCallback(() => {

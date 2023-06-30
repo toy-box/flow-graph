@@ -1266,36 +1266,36 @@ export const httpCallsSchema = (
                         ),
                         value: 'DELETE',
                       },
-                      {
-                        label: (
-                          <TextWidget token="flowDesigner.flow.form.httpCalls.enumHEAD"></TextWidget>
-                        ),
-                        value: 'HEAD',
-                      },
-                      {
-                        label: (
-                          <TextWidget token="flowDesigner.flow.form.httpCalls.enumOPTIONS"></TextWidget>
-                        ),
-                        value: 'OPTIONS',
-                      },
+                      // {
+                      //   label: (
+                      //     <TextWidget token="flowDesigner.flow.form.httpCalls.enumHEAD"></TextWidget>
+                      //   ),
+                      //   value: 'HEAD',
+                      // },
+                      // {
+                      //   label: (
+                      //     <TextWidget token="flowDesigner.flow.form.httpCalls.enumOPTIONS"></TextWidget>
+                      //   ),
+                      //   value: 'OPTIONS',
+                      // },
                       {
                         label: (
                           <TextWidget token="flowDesigner.flow.form.httpCalls.enumPATCH"></TextWidget>
                         ),
                         value: 'PATCH',
                       },
-                      {
-                        label: (
-                          <TextWidget token="flowDesigner.flow.form.httpCalls.enumCONNECT"></TextWidget>
-                        ),
-                        value: 'CONNECT',
-                      },
-                      {
-                        label: (
-                          <TextWidget token="flowDesigner.flow.form.httpCalls.enumTRACE"></TextWidget>
-                        ),
-                        value: 'TRACE',
-                      },
+                      // {
+                      //   label: (
+                      //     <TextWidget token="flowDesigner.flow.form.httpCalls.enumCONNECT"></TextWidget>
+                      //   ),
+                      //   value: 'CONNECT',
+                      // },
+                      // {
+                      //   label: (
+                      //     <TextWidget token="flowDesigner.flow.form.httpCalls.enumTRACE"></TextWidget>
+                      //   ),
+                      //   value: 'TRACE',
+                      // },
                     ],
                   },
                   url: {
@@ -1363,28 +1363,28 @@ export const httpCallsSchema = (
                         items: {
                           type: 'object',
                           properties: {
-                            column1: {
-                              type: 'void',
-                              'x-component': 'ArrayTable.Column',
-                              'x-component-props': {
-                                width: 50,
-                                title: (
-                                  <TextWidget token="flowDesigner.flow.form.comm.arrayTableSort"></TextWidget>
-                                ),
-                                align: 'center',
-                              },
-                              properties: {
-                                sort: {
-                                  type: 'void',
-                                  'x-component': 'ArrayTable.SortHandle',
-                                },
-                              },
-                            },
+                            // column1: {
+                            //   type: 'void',
+                            //   'x-component': 'ArrayTable.Column',
+                            //   'x-component-props': {
+                            //     width: 50,
+                            //     title: (
+                            //       <TextWidget token="flowDesigner.flow.form.comm.arrayTableSort"></TextWidget>
+                            //     ),
+                            //     align: 'center',
+                            //   },
+                            //   properties: {
+                            //     sort: {
+                            //       type: 'void',
+                            //       'x-component': 'ArrayTable.SortHandle',
+                            //     },
+                            //   },
+                            // },
                             column2: {
                               type: 'void',
                               'x-component': 'ArrayTable.Column',
                               'x-component-props': {
-                                width: 100,
+                                width: 150,
                                 title: (
                                   <TextWidget token="flowDesigner.flow.form.comm.arrayTableType"></TextWidget>
                                 ),
@@ -2057,28 +2057,28 @@ export const httpCallsSchema = (
                         items: {
                           type: 'object',
                           properties: {
-                            column1: {
-                              type: 'void',
-                              'x-component': 'ArrayTable.Column',
-                              'x-component-props': {
-                                width: 50,
-                                title: (
-                                  <TextWidget token="flowDesigner.flow.form.comm.arrayTableSort"></TextWidget>
-                                ),
-                                align: 'center',
-                              },
-                              properties: {
-                                sort: {
-                                  type: 'void',
-                                  'x-component': 'ArrayTable.SortHandle',
-                                },
-                              },
-                            },
+                            // column1: {
+                            //   type: 'void',
+                            //   'x-component': 'ArrayTable.Column',
+                            //   'x-component-props': {
+                            //     width: 50,
+                            //     title: (
+                            //       <TextWidget token="flowDesigner.flow.form.comm.arrayTableSort"></TextWidget>
+                            //     ),
+                            //     align: 'center',
+                            //   },
+                            //   properties: {
+                            //     sort: {
+                            //       type: 'void',
+                            //       'x-component': 'ArrayTable.SortHandle',
+                            //     },
+                            //   },
+                            // },
                             column3: {
                               type: 'void',
                               'x-component': 'ArrayTable.Column',
                               'x-component-props': {
-                                width: 200,
+                                width: 250,
                                 title: (
                                   <TextWidget token="flowDesigner.flow.form.comm.arrayTableName"></TextWidget>
                                 ),
