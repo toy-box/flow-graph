@@ -353,6 +353,10 @@ const zhCN = {
             cookies: 'Cookies',
             result: '请求响应变量',
             placeholderUrl: '请输入请求地址',
+            message: {
+              query: 'Query 参数请在下方参数中填写',
+              path: '路径中 Query 参数已自动提取，并填充到下方参数中',
+            },
           },
           variable: {
             addTitle: '新建中间变量',
@@ -742,6 +746,10 @@ const enUS = {
             cookies: 'Cookies',
             result: 'Result',
             placeholderUrl: 'Enter request URL',
+            message: {
+              query: 'Query Please fill in the parameters below',
+              path: 'The Query parameter in the path has been automatically extracted and filled in the parameters below',
+            },
           },
           variable: {
             addTitle: 'New Variable',

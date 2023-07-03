@@ -24,7 +24,11 @@ import {
   IAuthorizationEnum,
   ICallArgumentData,
 } from '@toy-box/autoflow-core'
-import { ResourceSelect, OperationSelect } from '../components/formily'
+import {
+  ResourceSelect,
+  OperationSelect,
+  InputUrl,
+} from '../components/formily'
 import { TextWidget, useLocale } from '@toy-box/studio-base'
 import cloneDeep from 'lodash.clonedeep'
 import {
@@ -70,6 +74,7 @@ const SchemaField = createSchemaField({
     AssignmentDesc,
     ResourceSelect,
     OperationSelect,
+    InputUrl,
   },
   scope: {
     icon(name) {
@@ -1311,7 +1316,7 @@ export const httpCallsSchema = (
                       gridSpan: 5,
                       feedbackLayout: 'terse',
                     },
-                    'x-component': 'Input',
+                    'x-component': 'InputUrl',
                     'x-component-props': {
                       placeholder: useLocale(
                         'flowDesigner.flow.form.httpCalls.placeholderUrl'
@@ -2280,12 +2285,22 @@ export const HttpCall: FC<HttpCallsModelPorps> = ({
           case IContentTypeEnum.X_WWW_FORM_URLENCODED:
             form.setFieldState('callArguments.body', (state) => {
               state.componentType = 'ArrayTable'
+              state.componentProps = {
+                style: {
+                  width: '100%',
+                },
+              }
               state.visible = true
             })
             break
           case IContentTypeEnum.raw:
             form.setFieldState('callArguments.body', (state) => {
               state.componentType = 'Input'
+              state.componentProps = {
+                style: {
+                  width: '100%',
+                },
+              }
               state.visible = true
             })
             break
@@ -2344,12 +2359,22 @@ export const HttpCall: FC<HttpCallsModelPorps> = ({
       form.setFieldState('callArguments.body', (state) => {
         state.componentType = 'ArrayTable'
         state.visible = true
+        state.componentProps = {
+          style: {
+            width: '100%',
+          },
+        }
       })
       break
     case IContentTypeEnum.raw:
       form.setFieldState('callArguments.body', (state) => {
         state.componentType = 'Input'
         state.visible = true
+        state.componentProps = {
+          style: {
+            width: '100%',
+          },
+        }
       })
       break
     case IContentTypeEnum.JSON:

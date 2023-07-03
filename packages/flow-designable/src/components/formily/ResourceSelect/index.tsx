@@ -137,6 +137,7 @@ export const ResourceSelect: FC = observer((props: any) => {
     (value: string[] | string, parentType?: FlowResourceType) => {
       form.setFieldState(formilyField?.path?.entire, (state) => {
         let val = cloneDeep(value)
+        console.log(val, 'va1')
         if (isArr(val)) {
           val = props?.isFormula
             ? `{!${val?.reverse()?.join('.')}}`
@@ -155,8 +156,7 @@ export const ResourceSelect: FC = observer((props: any) => {
     (value: string) => {
       form.setFieldState(formilyField?.path?.entire, (state) => {
         state.value = `{!${value}}`
-        // setInputValue(value)
-        const selects = value?.split('.') || []
+        const selects = value?.split('.').reverse() || []
         setSelectKeys(selects)
         const length = selects?.length
         const selectKey = selects[length - 1]
@@ -168,7 +168,7 @@ export const ResourceSelect: FC = observer((props: any) => {
             return true
           }
           if (item?.children?.length > 0) {
-            val = findName(item?.children, selectKey, length)
+            val = findName(item?.children, selectKey, selects, length)
             setInputValue(val)
             return val
           }
@@ -658,7 +658,7 @@ export const ResourceSelect: FC = observer((props: any) => {
     (isVar: boolean, selectKeys: string[]) => {
       const length = selectKeys.length
       if (length > 0) {
-        const selectKey = selectKeys[0]
+        const selectKey = selectKeys[length - 1]
         let value = null
         historyItems.some((item) => {
           if (item.id === selectKey || item.key === selectKey) {
@@ -668,7 +668,7 @@ export const ResourceSelect: FC = observer((props: any) => {
             return true
           }
           if (item?.children?.length > 0) {
-            value = findName(item?.children, selectKey, length)
+            value = findName(item?.children, selectKey, selectKeys, length)
             setInputValue(value)
             return value
           }
@@ -688,11 +688,13 @@ export const ResourceSelect: FC = observer((props: any) => {
   const findName = (
     children: any[],
     selectKey: string,
+    selects: string[],
     length: number,
     name = ''
   ) => {
     const num = length - 1
-    children.some((child) => {
+    const lh = children?.length
+    children.some((child, idx) => {
       if (num === 0) {
         if (child.id === selectKey || child.key === selectKey) {
           name = child.labelName
@@ -700,7 +702,12 @@ export const ResourceSelect: FC = observer((props: any) => {
           return true
         }
       } else if (child?.children?.length > 0 && num > 0) {
-        name = findName(child?.children, selectKey, num, name)
+        if (child.id === selectKey || child.key === selectKey) {
+          const selectKey = selects[num - 1]
+          name = findName(child?.children, selectKey, selects, num, name)
+        } else if (lh - 1 === idx) {
+          return true
+        }
       }
     })
     return name
